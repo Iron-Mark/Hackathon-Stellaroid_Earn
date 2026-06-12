@@ -386,7 +386,6 @@ async function signAndSubmit<T>(
 
   ensureConfigured();
   const server = getServer();
-
   const transaction = await buildTransaction(sourceAddress, method, args);
   const preparedTransaction = await prepareTransactionWithFallback(
     transaction,

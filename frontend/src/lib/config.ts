@@ -1,14 +1,16 @@
 import { Networks } from "@stellar/stellar-sdk";
-import { isE2EModeAllowed } from "@/lib/security";
+import { isE2EModeAllowed } from "./security.ts";
 
 const TESTNET_PASSPHRASE = "Test SDF Network ; September 2015";
+const DEFAULT_RPC_URL = "https://soroban-testnet.stellar.org";
 
 const configuredPassphrase =
   process.env.NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE ?? TESTNET_PASSPHRASE;
+const configuredRpcUrl =
+  process.env.NEXT_PUBLIC_STELLAR_RPC_URL ?? DEFAULT_RPC_URL;
 
 export const appConfig = {
-  rpcUrl:
-    process.env.NEXT_PUBLIC_STELLAR_RPC_URL ?? "https://soroban-testnet.stellar.org",
+  rpcUrl: configuredRpcUrl,
   network: process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "TESTNET",
   networkPassphrase: configuredPassphrase,
   e2eMode:

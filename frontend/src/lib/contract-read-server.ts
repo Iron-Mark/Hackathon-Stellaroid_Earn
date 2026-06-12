@@ -27,6 +27,7 @@ import {
   type OpportunityIdInput,
   opportunityIdToBigInt,
 } from "@/lib/opportunity-id";
+import { routeRpcOperation } from "@/lib/rpc-router";
 
 const FALLBACK_SIMULATION_SOURCE =
   "GBAKLRUJEOZGWKSHJFFWJ4DINXQZEJBT7JQTR5T4GATQU2SNO4ZFHZQ4";
@@ -126,12 +127,6 @@ function normalizeBigInt(value: unknown): bigint {
   }
   if (typeof value === "string") return BigInt(value);
   throw new Error("Unable to parse integer value returned by the contract.");
-}
-
-function getServer() {
-  return new rpc.Server(appConfig.rpcUrl, {
-    allowHttp: appConfig.rpcUrl.startsWith("http://"),
-  });
 }
 
 function ensureConfigured() {
@@ -241,47 +236,47 @@ export async function getCertificateServer(certHashHex: string) {
   }
 
   ensureConfigured();
-  const server = getServer();
   const transaction = buildSimulationTransaction(
     getSimulationSourceAddress(),
     certHashHex,
   );
 
-  try {
-    const simulation = await server.simulateTransaction(transaction);
+  return routeRpcOperation(async (server) => {
+    try {
+      const simulation = await server.simulateTransaction(transaction);
 
-    if (rpc.Api.isSimulationError(simulation)) {
-      throw new Error(simulation.error);
-    }
-    if (!simulation.result?.retval) {
-      throw new Error("Simulation for get_certificate returned no value.");
-    }
+      if (rpc.Api.isSimulationError(simulation)) {
+        throw new Error(simulation.error);
+      }
+      if (!simulation.result?.retval) {
+        throw new Error("Simulation for get_certificate returned no value.");
+      }
 
-    return normalizeCertificate(scValToNative(simulation.result.retval));
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    if (!/Bad union switch/i.test(message)) {
-      throw e;
-    }
+      return normalizeCertificate(scValToNative(simulation.result.retval));
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      if (!/Bad union switch/i.test(message)) {
+        throw e;
+      }
 
-    const rawSimulation = await server._simulateTransaction(transaction);
-    if (rawSimulation.error) {
-      throw new Error(rawSimulation.error);
-    }
+      const rawSimulation = await server._simulateTransaction(transaction);
+      if (rawSimulation.error) {
+        throw new Error(rawSimulation.error);
+      }
 
-    const rawResultXdr = rawSimulation.results?.[0]?.xdr;
-    if (!rawResultXdr) {
-      throw new Error("Simulation for get_certificate returned no value.");
-    }
+      const rawResultXdr = rawSimulation.results?.[0]?.xdr;
+      if (!rawResultXdr) {
+        throw new Error("Simulation for get_certificate returned no value.");
+      }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
-    return normalizeCertificate(scValToNative(rawScVal));
-  }
+      const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
+      return normalizeCertificate(scValToNative(rawScVal));
+    }
+  });
 }
 
 export async function getIssuerServer(issuer: string) {
   ensureConfigured();
-  const server = getServer();
   const sourceAccount = new Account(getSimulationSourceAddress(), "0");
   const args = [nativeToScVal(issuer, { type: "address" })];
 
@@ -299,36 +294,38 @@ export async function getIssuerServer(issuer: string) {
     .setTimeout(30)
     .build();
 
-  try {
-    const simulation = await server.simulateTransaction(transaction);
+  return routeRpcOperation(async (server) => {
+    try {
+      const simulation = await server.simulateTransaction(transaction);
 
-    if (rpc.Api.isSimulationError(simulation)) {
-      throw new Error(simulation.error);
-    }
-    if (!simulation.result?.retval) {
-      throw new Error("Simulation for get_issuer returned no value.");
-    }
+      if (rpc.Api.isSimulationError(simulation)) {
+        throw new Error(simulation.error);
+      }
+      if (!simulation.result?.retval) {
+        throw new Error("Simulation for get_issuer returned no value.");
+      }
 
-    return normalizeIssuer(scValToNative(simulation.result.retval));
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    if (!/Bad union switch/i.test(message)) {
-      throw e;
-    }
+      return normalizeIssuer(scValToNative(simulation.result.retval));
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      if (!/Bad union switch/i.test(message)) {
+        throw e;
+      }
 
-    const rawSimulation = await server._simulateTransaction(transaction);
-    if (rawSimulation.error) {
-      throw new Error(rawSimulation.error);
-    }
+      const rawSimulation = await server._simulateTransaction(transaction);
+      if (rawSimulation.error) {
+        throw new Error(rawSimulation.error);
+      }
 
-    const rawResultXdr = rawSimulation.results?.[0]?.xdr;
-    if (!rawResultXdr) {
-      throw new Error("Simulation for get_issuer returned no value.");
-    }
+      const rawResultXdr = rawSimulation.results?.[0]?.xdr;
+      if (!rawResultXdr) {
+        throw new Error("Simulation for get_issuer returned no value.");
+      }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
-    return normalizeIssuer(scValToNative(rawScVal));
-  }
+      const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
+      return normalizeIssuer(scValToNative(rawScVal));
+    }
+  });
 }
 
 function normalizeOpportunityStatus(value: unknown): OpportunityStatus {
@@ -369,7 +366,6 @@ function normalizeOpportunity(value: unknown): OpportunityRecord | null {
 
 export async function getOpportunityServer(oppId: OpportunityIdInput) {
   ensureConfigured();
-  const server = getServer();
   const sourceAccount = new Account(getSimulationSourceAddress(), "0");
   const args = [nativeToScVal(opportunityIdToBigInt(oppId), { type: "u64" })];
 
@@ -387,34 +383,36 @@ export async function getOpportunityServer(oppId: OpportunityIdInput) {
     .setTimeout(30)
     .build();
 
-  try {
-    const simulation = await server.simulateTransaction(transaction);
+  return routeRpcOperation(async (server) => {
+    try {
+      const simulation = await server.simulateTransaction(transaction);
 
-    if (rpc.Api.isSimulationError(simulation)) {
-      throw new Error(simulation.error);
-    }
-    if (!simulation.result?.retval) {
-      throw new Error("Simulation for get_opportunity returned no value.");
-    }
+      if (rpc.Api.isSimulationError(simulation)) {
+        throw new Error(simulation.error);
+      }
+      if (!simulation.result?.retval) {
+        throw new Error("Simulation for get_opportunity returned no value.");
+      }
 
-    return normalizeOpportunity(scValToNative(simulation.result.retval));
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    if (!/Bad union switch/i.test(message)) {
-      throw e;
-    }
+      return normalizeOpportunity(scValToNative(simulation.result.retval));
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      if (!/Bad union switch/i.test(message)) {
+        throw e;
+      }
 
-    const rawSimulation = await server._simulateTransaction(transaction);
-    if (rawSimulation.error) {
-      throw new Error(rawSimulation.error);
-    }
+      const rawSimulation = await server._simulateTransaction(transaction);
+      if (rawSimulation.error) {
+        throw new Error(rawSimulation.error);
+      }
 
-    const rawResultXdr = rawSimulation.results?.[0]?.xdr;
-    if (!rawResultXdr) {
-      throw new Error("Simulation for get_opportunity returned no value.");
-    }
+      const rawResultXdr = rawSimulation.results?.[0]?.xdr;
+      if (!rawResultXdr) {
+        throw new Error("Simulation for get_opportunity returned no value.");
+      }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
-    return normalizeOpportunity(scValToNative(rawScVal));
-  }
+      const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
+      return normalizeOpportunity(scValToNative(rawScVal));
+    }
+  });
 }

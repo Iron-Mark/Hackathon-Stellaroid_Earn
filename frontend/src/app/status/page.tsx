@@ -143,7 +143,7 @@ export default async function StatusPage() {
               {appConfig.contractId ? shortenAddress(appConfig.contractId, 8) : "Not configured"}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-text-muted">
-              Current contract ID is linked here. RPC health is checked by the app.
+              Current contract ID is linked here. Active RPC: {health.checks.rpc.providerName}.
             </p>
             <a
               href={contractUrl}
