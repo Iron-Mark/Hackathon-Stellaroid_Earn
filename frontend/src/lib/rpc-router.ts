@@ -181,6 +181,30 @@ function getErrorStatus(error: unknown): number | null {
   return statusMatch ? Number(statusMatch[1]) : null;
 }
 
+const TRANSIENT_SYSCALL_CODES = new Set([
+  "ECONNREFUSED",
+  "ECONNRESET",
+  "ENOTFOUND",
+  "EAI_AGAIN",
+  "ETIMEDOUT",
+  "EPIPE",
+  "EHOSTUNREACH",
+  "ENETUNREACH",
+  "UND_ERR_CONNECT_TIMEOUT",
+  "UND_ERR_SOCKET",
+]);
+
+function getErrorCode(error: unknown): string | null {
+  if (!error || typeof error !== "object") return null;
+  const record = error as Record<string, unknown>;
+  if (typeof record.code === "string") return record.code;
+  if (record.cause && typeof record.cause === "object") {
+    const cause = record.cause as Record<string, unknown>;
+    if (typeof cause.code === "string") return cause.code;
+  }
+  return null;
+}
+
 export function isTransientRpcError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
   const status = getErrorStatus(error);
@@ -189,6 +213,11 @@ export function isTransientRpcError(error: unknown): boolean {
   }
   if (/^TIMEOUT:/i.test(message)) return true;
   if (error instanceof Error && error.name === "AbortError") return true;
+  // Network-level failures (dead host, DNS, reset socket) must fail over —
+  // they are exactly the "kill the primary RPC live" demo scenario.
+  const code = getErrorCode(error);
+  if (code && TRANSIENT_SYSCALL_CODES.has(code)) return true;
+  if (error instanceof TypeError && /fetch failed/i.test(message)) return true;
   return /\b(?:timed out|timeout)\b/i.test(message);
 }
 

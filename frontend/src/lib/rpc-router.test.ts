@@ -346,3 +346,77 @@ test("browser contract client stays separated from the server RPC router", async
   assert.doesNotMatch(source, /rpc-router/);
   assert.doesNotMatch(source, /RPC_PROVIDERS/);
 });
+
+test("fails over when the primary connection is refused (dead provider)", async (t) => {
+  t.mock.timers.enable({ apis: ["Date", "setTimeout"], now: 0 });
+
+  // Node's undici fetch surfaces a dead host as TypeError("fetch failed")
+  // with the syscall error in `cause` — exactly what "kill the primary RPC
+  // live" produces in the demo.
+  const connectionRefused = new TypeError("fetch failed", {
+    cause: Object.assign(new Error("connect ECONNREFUSED 127.0.0.1:9999"), {
+      code: "ECONNREFUSED",
+    }),
+  });
+
+  const calls: string[] = [];
+  const router = createRpcRouter({
+    providers: [
+      { name: "dead", url: "http://127.0.0.1:9999" },
+      { name: "fallback", url: "https://fallback.test" },
+    ],
+    jitter: () => 0,
+    serverFactory: (provider) => ({ provider }),
+  });
+
+  const routed = router.request(async (server) => {
+    const providerName = (server as { provider: { name: string } }).provider.name;
+    calls.push(providerName);
+    if (providerName === "dead") {
+      throw connectionRefused;
+    }
+    return "fallback-ok";
+  });
+
+  await flushTasks();
+  t.mock.timers.tick(250);
+  await flushTasks();
+
+  assert.equal(await routed, "fallback-ok");
+  assert.deepEqual(calls, ["dead", "fallback"]);
+  assert.equal(router.getActiveProvider().name, "fallback");
+});
+
+test("DNS failures and socket resets are transient too", async (t) => {
+  t.mock.timers.enable({ apis: ["Date", "setTimeout"], now: 0 });
+
+  for (const cause of [
+    { code: "ENOTFOUND", message: "getaddrinfo ENOTFOUND rpc.example" },
+    { code: "ECONNRESET", message: "socket hang up" },
+    { code: "EAI_AGAIN", message: "getaddrinfo EAI_AGAIN rpc.example" },
+  ]) {
+    const error = new TypeError("fetch failed", {
+      cause: Object.assign(new Error(cause.message), { code: cause.code }),
+    });
+    const calls: string[] = [];
+    const router = createRpcRouter({
+      providers: [
+        { name: "dead", url: "https://dead.test" },
+        { name: "fallback", url: "https://fallback.test" },
+      ],
+      jitter: () => 0,
+      serverFactory: (provider) => ({ provider }),
+    });
+    const routed = router.request(async (server) => {
+      const providerName = (server as { provider: { name: string } }).provider.name;
+      calls.push(providerName);
+      if (providerName === "dead") throw error;
+      return "ok";
+    });
+    await flushTasks();
+    t.mock.timers.tick(250);
+    await flushTasks();
+    assert.equal(await routed, "ok", cause.code);
+    assert.deepEqual(calls, ["dead", "fallback"], cause.code);
+  }
+});
