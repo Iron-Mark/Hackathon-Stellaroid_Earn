@@ -3,6 +3,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { RpcStatusPill } from "@/components/layout/rpc-status-pill";
 import { WalletConnectButton } from "@/components/wallet/wallet-connect-button";
 import { EmployerOpportunityForm } from "@/components/employer/employer-opportunity-form";
+import { PayoutLinkForm } from "@/components/actions/payout-link-form";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -47,6 +48,10 @@ export default async function EmployerPage({ searchParams }: EmployerPageProps) 
           <EmployerOpportunityForm
             initialHash={initialHash}
             initialCandidate={initialCandidate}
+          />
+          <PayoutLinkForm
+            initialHash={initialHash}
+            initialRecipient={initialCandidate}
           />
         </div>
       </AppShell>
