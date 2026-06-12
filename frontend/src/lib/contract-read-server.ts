@@ -12,22 +12,22 @@ import {
   appConfig,
   getExpectedNetworkPassphrase,
   hasRequiredConfig,
-} from "@/lib/config";
-import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+} from "./config.ts";
+import { DEFAULT_SAMPLE_PROOF_HASH } from "./demo-data.ts";
 import type {
   CertificateStatus,
   IssuerRecord,
   IssuerStatus,
   OpportunityRecord,
   OpportunityStatus,
-} from "@/lib/types";
-import { MAX_OPPORTUNITY_MILESTONES } from "@/lib/types";
+} from "./types.ts";
+import { MAX_OPPORTUNITY_MILESTONES } from "./types.ts";
 import {
   normalizeOpportunityId,
   type OpportunityIdInput,
   opportunityIdToBigInt,
-} from "@/lib/opportunity-id";
-import { routeRpcOperation } from "@/lib/rpc-router";
+} from "./opportunity-id.ts";
+import { routeRpcOperation } from "./rpc-router.ts";
 
 const FALLBACK_SIMULATION_SOURCE =
   "GBAKLRUJEOZGWKSHJFFWJ4DINXQZEJBT7JQTR5T4GATQU2SNO4ZFHZQ4";
