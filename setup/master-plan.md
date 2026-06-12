@@ -1,446 +1,265 @@
-# Stellaroid Earn Master Plan
-
-**Created:** 2026-06-12
-**Source input:** `setup/SETUP_RESEARCH_BRIEF.md` plus local repo audit
-**Purpose:** Turn the setup research brief into a phased, PR-ready plan for offline proof access, PWA hardening, deterministic ops automation, AI-assisted maintenance, and headless CLI workflows.
-
-## Active Goal
-
-Finish the setup phase in a way that can become a clean fork PR for the presentation: `setup/master-plan.md` is the source of truth, `docs/superpowers/plans/2026-06-12-pwa-ops-automation.md` is the first execution plan, and implementation work is split across parallel agents with non-overlapping ownership.
-
-## Executive Summary
-
-1. Ship deterministic ops automation before product AI: convert `MAINTENANCE.md` into scripts and scheduled checks so the demo can prove health without a human clicking through every route.
-2. Add PWA capability in two steps: first an install/offline shell, then cached proof snapshots with explicit stale labels. Never show cached data as freshly verified.
-3. Use a service worker carefully because the app already has nonce-based CSP. The service worker route needs explicit headers and must never cache wallet state, Freighter calls, signed XDR, or RPC write requests.
-4. Keep AI automation behind deterministic checks. LLMs can summarize failures, refresh docs, and prepare maintenance PRs, but scripts must own contract ID drift, health checks, and proof route assertions.
-5. For UI, preserve the current dark trust surface: gold primary actions, purple technical accents, visible focus states, 44px touch targets, skeletons for waits over 300ms, and no stale green proof states.
-
-## Current Repo Reality
-
-- `setup/master-plan.md` was empty when this plan was created.
-- `setup/SETUP_RESEARCH_BRIEF.md` already contains the product context and desired research themes.
-- The app is a Next.js 15 / React 19 / Tailwind v4 dApp under `frontend/`.
-- `frontend/src/app/manifest.ts` exists, but there is no service worker yet.
-- Runtime status already exists through `frontend/src/app/status/page.tsx`, `frontend/src/app/api/health/route.ts`, and `frontend/src/lib/health-report.ts`.
-- CI already runs build, lint, typecheck, and Playwright from `.github/workflows/frontend-ci.yml`, but it should add `npm run test:unit` as a required gate.
-- Contract drift already exists: `README.md` points to `CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`, while `MAINTENANCE.md` still references an older `CA7P5...` contract in a manual Stellar Expert check. Phase 1 must make `ops:contract-drift` fail on this class of mismatch.
-- The project guardrails remain testnet-only, no heavy backend, no mainnet examples, and no claims that stale or cached proof data is live on-chain truth.
-
-## Prioritized Backlog
-
-| Priority | Theme | Work item | Why now | Effort | Impact | Risk | Guardrails |
-|---|---|---|---|---:|---|---|---|
-| P0 | Ops | Add a headless `ops:health` script that checks `/`, `/status`, `/api/health`, sample proof, OG image, and configured contract URL. | Turns manual maintenance into evidence before tomorrow's demo. | S | High | Low | Yes |
-| P0 | Ops | Add a contract ID drift script that compares README, `frontend` env/config expectations, and `/status` output. | Contract mismatch is the fastest way to lose demo trust. | S | High | Low | Yes |
-| P0 | CI | Add a scheduled GitHub Action for deterministic maintenance checks. | The checks can run without a backend or AI. | S | High | Low | Yes |
-| P1 | PWA | Add a minimal service worker and offline page using either Serwist or a hand-rolled worker. | Manifest exists, but installable/offline behavior is incomplete. | M | Medium | Medium | Yes |
-| P1 | Offline | Cache static marketing routes and last-viewed proof HTML/assets with stale badges. | Proof links are the strongest mobile artifact. | M | High | Medium | Yes, if stale is explicit |
-| P1 | UX | Add an offline/stale proof banner and `last verified at` copy. | Prevents cached proof data from lying about on-chain freshness. | M | High | Medium | Yes |
-| P1 | DX | Package ops scripts as npm commands in `frontend/package.json`. | Makes human and agent workflows share the same commands. | S | Medium | Low | Yes |
-| P1 | AI | Add a Claude/agent maintenance prompt and checklist for summarizing CI failures and doc drift. | Useful for a single maintainer, but not authoritative. | S | Medium | Low | Yes |
-| P2 | PWA | Add Lighthouse PWA/performance audit as non-blocking CI artifact. | Good presentation signal after P0 reliability exists. | M | Medium | Low | Yes |
-| P2 | Product AI | Add issuer metadata drafting helper as local/admin-only prototype. | Could improve issuer ergonomics, but trust and abuse risk are higher. | L | Medium | High | Only if clearly advisory |
-| P2 | Push | Defer web push notifications. | Push requires subscription storage and a backend-like concern. | L | Low | High | Not now |
-
-## Design System Guardrails
-
-Use these when implementing any UI from this plan:
-
-- Product shape: fintech/Web3 credential proof dashboard.
-- Style: dark professional trust surface, not a marketing-heavy page.
-- Colors: background `#0F172A`, primary gold `#F59E0B`, secondary gold `#FBBF24`, accent purple `#8B5CF6`, text `#F8FAFC`.
-- Typography: preserve the current `next/font` setup in `frontend/src/app/layout.tsx` unless a dedicated typography migration task is approved. The UI skill recommends IBM Plex Sans for fintech trust, but the existing app uses Orbitron, Exo 2, JetBrains Mono, and Share Tech Mono; do not mix font systems casually.
-- Accessibility: visible focus states, at least 44px touch targets, skeletons/spinners for async waits over 300ms, text labels paired with icons, and no color-only state.
-- Offline proof rule: cached proof data must use amber/neutral copy such as `Last verified at {timestamp}; reconnect to re-verify`, never a fresh green `Verified` state.
-- Freshness must gate every proof surface: `/proof/[hash]`, `/proof/[hash]/embed`, proof Open Graph image, JSON-LD, share copy, QR blocks, and `/status`.
-- Touch-target work must be enforceable: audit all buttons, links, summaries, icon controls, nav controls, locale toggles, copy buttons, and toast actions at mobile width. Existing small controls in shared UI should be treated as remediation candidates, not ignored because they are already present.
-- PWA/offline UI must reserve space for banners and skeletons, respect `prefers-reduced-motion`, use `aria-live="polite"` for connectivity/revalidation state, and avoid focus traps unless modal semantics are implemented.
-- Icon rule: use lucide icons or existing SVG assets, not emoji-as-icons.
-
-## Theme A: Offline-First Architecture
-
-### Recommendation
-
-Start with offline read surfaces, not wallet flows. Cache:
-
-- Static content: `/`, `/about`, `/slides`, shared images, icons, CSS, and JS app shell.
-- Public proof surfaces: previously visited `/proof/[hash]`, `/proof/[hash]/embed`, proof QR assets, and sample metadata.
-- Status shell: last successful `/status` payload can be shown as stale, but a failed live refresh should be prominent.
-
-Do not cache:
-
-- Freighter connection state.
-- Signed transactions or unsigned XDR waiting for a signature.
-- POST requests to Stellar RPC.
-- `/api/fee-bump` writes or any future transaction-relay endpoint.
-
-### Implementation Shape
-
-- Add `frontend/src/app/offline/page.tsx` for a branded offline fallback.
-- Add `frontend/src/components/proof/offline-proof-banner.tsx` for stale proof disclosure.
-- Add a small proof snapshot model in `frontend/src/lib/proof-cache.ts` only after the service worker shell exists.
-- Use Cache Storage for HTML/assets. Use IndexedDB only if storing structured proof snapshots becomes necessary.
-- Store `verifiedAt`, `sourceContractId`, `networkPassphrase`, and `hash` with every proof snapshot.
-- Validate cached proof snapshots locally by confirming the stored credential hash still matches the URL hash. This validates integrity of the cached artifact, not current on-chain status.
-- Prefer structured stale proof snapshots over direct cached live proof HTML. Cached server-rendered HTML can accidentally preserve a green verified state that is no longer fresh.
-- Snapshot metadata must include `schemaVersion`, `cacheWrittenAt`, `lastLiveVerifiedAt`, `status`, issuer state, `sourceContractId`, `networkPassphrase`, `hash`, and app/build version.
-
-### Trade-Off
-
-Offline proof pages improve demo resilience, especially on mobile, but can create false trust if freshness is unclear. This project should choose a conservative stale-data UI over aggressive offline optimism.
-
-### Route Caching Matrix
-
-| Route / Surface | Strategy | Requirement |
-|---|---|---|
-| `/`, `/about`, `/slides`, static images/icons/assets | Precache or stale-while-revalidate | Safe offline shell content |
-| `/proof` | Network-first | Offline fallback may show proof lookup shell only |
-| `/proof/[hash]` | Network-first, stale fallback only on offline/network failure/timeout | Live invalid/revoked/not-found overrides cache |
-| `/proof/[hash]/embed` | Network-first; no offline fallback unless stale label is visible in first viewport | Never embed a stale green badge |
-| `/proof/[hash]/opengraph-image` | Network-first | Do not serve stale green social cards without freshness metadata |
-| `/status` | Network-first with stale timestamp | Must show stale state if live check fails |
-| `/metrics`, `/employer`, `/opportunity/[id]`, `/talent/[address]` | App shell only or network-first stale-labeled | No implied complete live data |
-| `/app`, `/issuer`, `/issuer/register` | Network-only for live contract/wallet state; app shell may load offline | No wallet/session/transaction state caching |
-| `/api/health`, `/api/events` | Network-first or network-only depending endpoint | Stale JSON must be labeled if displayed |
-| `/api/fee-bump`, Stellar RPC, Freighter/signing flows | Network-only | Never cache writes, signatures, signed XDR, or sponsor payloads |
-
-## Theme B: PWA
-
-### Recommendation
-
-Use a two-stage PWA plan:
-
-1. Stage 1: Serwist install/offline shell with explicit CSP headers.
-2. Stage 2: route-aware caching for proof pages once stale-data UI exists.
-
-Use `@serwist/next` for the implementation path unless a branch explicitly chooses a no-new-dependency spike. Serwist gives a Next.js integration, generated precache support, and a typed service worker flow. Standardize on `frontend/src/app/sw.ts` as the source worker and `frontend/public/sw.js` as the generated output.
-
-### Service Worker Strategy
-
-- Add `public/sw.js` or `src/app/sw.ts` depending on the selected approach.
-- Serve `/sw.js` with `Content-Type: application/javascript; charset=utf-8`, `Cache-Control: no-cache, no-store, must-revalidate`, and a strict service-worker CSP.
-- Include `Service-Worker-Allowed: /` and ensure CSP allows the worker with `worker-src 'self'`.
-- Register the service worker from a small client component that is rendered once in `frontend/src/app/layout.tsx`.
-- Keep `middleware.ts` matcher exclusions updated so the service worker file is not forced through app-page nonce handling.
-- Cache static assets with stale-while-revalidate.
-- Use network-first for proof pages, falling back to cached proof only with stale disclosure.
-- Use network-only for RPC, fee-bump, wallet, and transaction routes.
-- Use user-prompted refresh for service worker updates. Do not force `skipWaiting` during a live demo unless the refresh UX is visible.
-
-### Install Prompt
-
-The app already has a manifest. Keep install UX modest:
-
-- Show an install affordance only when the browser exposes it or when iOS manual instructions are needed.
-- Do not rely on `beforeinstallprompt` as the only path because it is not cross-platform.
-- Test locally over HTTPS when validating install and notification behavior.
-
-### Push Notifications
-
-Defer push notifications. A legitimate use exists, such as notifying that a credential was verified or a payment settled, but subscriptions require durable storage and event delivery. That pushes against the no-heavy-backend guardrail.
-
-## Theme C: AI Automation
-
-### Recommendation
-
-Split AI work into deterministic checks and AI-assisted chores:
-
-Deterministic scripts:
-
-- Health endpoint checks.
-- Contract ID drift checks.
-- Proof sample availability.
-- Security header regression checks.
-- Build/lint/test/e2e.
-- Screenshot refresh.
-
-AI-assisted chores:
-
-- Summarize failed CI logs into a maintenance issue.
-- Draft release notes after a green release.
-- Review docs for stale contract IDs after deterministic scripts identify the exact mismatch.
-- Propose dependency update notes, but leave merges to CI and human review.
-
-### Claude / Agent Pattern
-
-- Use Claude Code locally or in a scheduled routine for weekly maintenance summaries.
-- Use the Claude Agent SDK only when the workflow needs programmable orchestration, tool allowlists, cost tracking, or subagents.
-- Use MCP for external context such as GitHub, Vercel, browser automation, or issue trackers.
-- Give agents read-only defaults for audits. Allow edits only on maintenance branches.
-- Require deterministic scripts to pass before an agent-generated PR is considered credible.
-
-### Product AI
-
-Possible later feature: issuer-side credential metadata drafting and employer-facing proof explanation. Constraints:
-
-- AI copy must be labeled as explanatory, not authoritative.
-- On-chain contract state and hash verification remain the source of truth.
-- Do not generate new claims that are not present in issuer input, proof metadata, or contract state.
-- Avoid public, unauthenticated AI endpoints unless abuse controls are in place.
-
-## Theme D: Headless / CLI Automation
-
-### Recommendation
-
-Add a tiny Node/TypeScript ops command set under `frontend/scripts/ops/` and wire it into `frontend/package.json`.
-
-Target scripts:
-
-- `npm run ops:health` - hit canonical URLs and validate HTTP status, JSON shape, and key proof route availability.
-- `npm run ops:contract-drift` - compare README contract ID, status route contract ID, configured env value, and Stellar Expert URL shape.
-- `npm run ops:proof -- c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3` - perform a read-only proof check using the existing server-read code path where possible.
-- `npm run ops:headers` - assert CSP, HSTS, `X-Frame-Options`, `Referrer-Policy`, and proof embed frame behavior.
-- `npm run ops:domain` - assert apex is live and `www`/`earn` redirect to the canonical domain.
-- `npm run ops:testnet-guard` - scan workflow/scripts/docs for mainnet/public-network examples, private-key patterns, and secret usage in scheduled jobs.
-- `npm run screenshots` - extend existing `scripts/capture-readme-screenshots.ts` into an explicit npm command.
-
-### CI Packaging
-
-Add `.github/workflows/maintenance.yml`:
-
-- `workflow_dispatch` for manual demo-day checks.
-- `schedule` once or twice weekly, off the top of the hour.
-- Run `npm ci`, `npm run ops:health`, `npm run ops:contract-drift`, `npm run ops:headers`, and optionally Playwright smoke.
-- Add `npm run test:unit` to `.github/workflows/frontend-ci.yml` so colocated `src/lib/*.test.ts` tests are a required gate.
-- Expand CI path filters so README, `MAINTENANCE.md`, `docs/**`, and `setup/master-plan.md` can trigger drift/maintenance checks.
-- Upload a JSON report artifact.
-
-### Stellar Automation
-
-- Continue using Stellar testnet only.
-- Prefer `stellar keys generate my-key --network testnet --fund` for disposable demo identities.
-- Use `stellar contract deploy --wasm target/wasm32v1-none/release/stellaroid_earn.wasm --source-account my-key --network testnet` in docs and scripts.
-- Keep secrets out of repo and CI logs.
-- Treat all deploy automation as opt-in, never part of scheduled jobs.
-
-## Theme E: Highest-Leverage Extras
-
-- RPC resilience: add configurable read RPC fallback providers and bounded retry/backoff around `simulateTransaction`. Keep write submission conservative.
-- Performance: code-split Stellar SDK-heavy dashboard/wallet paths away from public proof and landing pages.
-- SEO: keep proof pages crawl-controlled and structured data safe; do not let crawlers spider arbitrary proof hashes.
-- Accessibility: add automated checks after PWA work, especially for offline banners, install prompts, focus order, and icon-only controls.
-- Demo credibility: keep `README.md`, `/status`, and live contract links in lockstep via drift checks.
-
-## Do Not Do This
-
-- Do not deploy examples to mainnet.
-- Do not add a database-backed marketplace, LMS, or NFT source-of-truth layer.
-- Do not show cached proof data as freshly verified.
-- Do not cache signed transactions, Freighter state, wallet addresses as identity state, or fee-bump payloads.
-- Do not add push notifications until there is a justified storage/delivery model.
-- Do not let an LLM decide whether a proof is valid. It may explain deterministic results only.
-- Do not add a heavy backend just to make the PWA score look better.
-
-## One-Week Plan
-
-1. Day 1: Land this master plan PR and agree on P0 scope.
-2. Day 2: Add `ops:health` and `ops:contract-drift` scripts with JSON output.
-3. Day 3: Add a `maintenance.yml` GitHub Action with manual dispatch and weekly schedule.
-4. Day 4: Add security header assertions and update `MAINTENANCE.md` to point to commands.
-5. Day 5: Add offline UX copy/spec and service worker implementation plan for the next PR.
-6. Day 6: Run the full demo script from a clean checkout and record any paper cuts.
-7. Day 7: Present the maintenance evidence: green CI, health JSON, status route, sample proof, and contract links.
-
-## One-Month Plan
-
-1. Week 1: Deterministic maintenance automation and PR-ready evidence.
-2. Week 2: PWA shell, offline page, and service worker registration.
-3. Week 3: Proof snapshot caching with stale proof UI and e2e coverage.
-4. Week 4: AI-assisted maintenance workflow, screenshot refresh command, Lighthouse artifact, and RPC fallback hardening.
-
-## Presentation PR Scope
-
-This branch should stay focused on planning and setup:
-
-- Fill `setup/master-plan.md`.
-- Add a Superpowers implementation plan for the phased work.
-- Keep product code unchanged unless the PR explicitly moves into Phase 1.
-- Validate with markdown/file checks and git diff review.
-
-Suggested PR:
-
-- Branch: `codex/pwa-ops-master-plan`
-- Title: `[codex] add PWA and ops automation master plan`
-- Base: `main`
-
-## Parallel Multi-Agent Setup
-
-Use this setup when moving from planning into implementation. The main agent owns coordination, final integration, and verification. Worker agents own bounded file sets and must not revert or rewrite another worker's changes.
-
-### Agent Roster
-
-| Agent | Type | Workstream | Owned files | Output |
-|---|---|---|---|---|
-| Agent 1 | Worker | Deterministic ops CLI | `frontend/scripts/ops/**`, `frontend/package.json` | Adds `ops:health`, `ops:contract-drift`, `ops:headers`, and `ops:all` |
-| Agent 2 | Worker | Scheduled maintenance CI + runbook | `.github/workflows/maintenance.yml`, `MAINTENANCE.md` | Adds manual/scheduled workflow and script-first runbook |
-| Agent 3 | Worker | PWA shell design spike | `docs/superpowers/plans/2026-06-13-pwa-shell.md` only | Produces the next implementation plan for service worker/offline shell |
-| Agent 4 | Explorer | UI/UX verification | read-only over `frontend/src/app/**`, `frontend/src/components/**`, `frontend/src/styles/globals.css` | Reports accessibility, touch target, stale-proof, and responsive risks |
-| Agent 5 | Explorer | Security/offline risk review | read-only over `frontend/src/middleware.ts`, `frontend/next.config.ts`, `frontend/src/app/proof/**` | Reports CSP, frame, caching, and proof freshness risks |
-
-### Wave Matrix
-
-| Wave | Owner | Scope | Output |
-|---|---|---|---|
-| 0 | Coordinator | Freeze constants: canonical URL, sample hash, current testnet contract ID, no-secret rule | Shared env/command contract |
-| 1A | Ops Health/Proof worker | `ops:health`, `ops:proof`, JSON reports, live read-only proof simulation | Deterministic health/proof scripts |
-| 1B | Drift/Testnet worker | Contract ID scan, testnet-only scan, no-secret CI scan | `ops:contract-drift`, `ops:testnet-guard` |
-| 1C | Headers/Domain worker | CSP/HSTS/XFO checks, embed iframe smoke, apex/www/earn redirect/TLS checks | `ops:headers`, `ops:domain` |
-| 1D | CI Packaging worker | `maintenance.yml`, artifact upload, add `test:unit`, broaden doc-triggered checks | Scheduled/manual CI |
-| 1E | Runbook/AI worker | Update `MAINTENANCE.md`; AI prompt consumes JSON artifacts only | LLM summary workflow, non-authoritative |
-| 2 | Coordinator | Run full deterministic suite, inspect artifacts, resolve overlaps | PR-ready evidence bundle |
-
-### Dispatch Order
-
-1. Start Agents 1, 2, 4, and 5 in parallel.
-2. Main agent continues with branch hygiene, source review, and any docs that do not overlap with worker files.
-3. Wait for Agent 1 and Agent 2 before integration because their changes affect CI commands.
-4. Run `git diff --check`.
-5. Run `cd frontend && npm run lint && npm run build && npm run test:unit`.
-6. Run `cd frontend && OPS_CONTRACT_ID=CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3 npm run ops:all`.
-7. Start Agent 3 only after Phase 1 passes, so the PWA plan reflects the actual ops script names.
-
-### Agent Prompts
-
-Use these concrete prompts:
-
-```md
-You are working in `/Users/kuya/Documents/STELLAR/Hackathon-Stellaroid_Earn`.
-You are not alone in the codebase. Do not revert others' edits.
-
-Own only: `frontend/scripts/ops/common.ts`, `frontend/scripts/ops/health.ts`, `frontend/scripts/ops/contract-drift.ts`, `frontend/scripts/ops/headers.ts`, and `frontend/package.json`.
-Goal: add deterministic ops CLI commands for health, contract drift, security headers, and an `ops:all` wrapper.
-Constraints: testnet only, no backend, no secrets, no stale cached proof shown as live verified.
-Verification: run `cd frontend && npm run ops:all` with `OPS_CONTRACT_ID=CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`.
-Return: changed files, verification output, known risks.
+# Stellaroid Earn — Feature Spec (v2, June 2026) — testnet build + gated mainnet track
+
+> **How to use:** Drop this file into the repo (suggested: `docs/PORTFOLIO_TRACK_SPEC.md`) and point
+> Claude Code at it: *"Implement the next unchecked P0 item in docs/PORTFOLIO_TRACK_SPEC.md,
+> following the Working Agreement and Acceptance Criteria exactly."* Work items are ordered;
+> each is independently shippable.
+
+---
+
+## 0. Working Agreement (rules for any agent or human touching this repo)
+
+These override everything else in this file. If a task seems to require breaking one, STOP and ask.
+
+1. **Build for both networks; activation is human-keyed.** Agents may write, test, and merge ALL
+   code in this spec — including every Section 8 mainnet item — at any time. Activation is a
+   separate, maintainer-only act: `STELLAR_NETWORK=mainnet`, the mainnet contract ID, and PDAX
+   production credentials exist ONLY in maintainer-held Vercel encrypted env. Agents never set,
+   commit, default, or fabricate mainnet/production values; CI and local dev run testnet/mock.
+2. **Non-custodial, always.** Stellaroid never holds, routes, or takes custody of any user's
+   funds or keys. We verify credentials and orchestrate between users' OWN wallets/accounts.
+   (Layman's: we are the GPS, never the taxi.)
+3. **The proof loop is sacred.** issue → hash on-chain → public verify URL (no login) → employer
+   pays graduate. No feature may add login, wallet requirements, or payment dependencies to the
+   public `/proof/[hash]` route. Payment features may degrade; proofs never do.
+4. **Secrets are server-only.** `PDAX_ACCESS_KEY`, `PDAX_SECRET`, and any signing material live in
+   Vercel encrypted env vars and are used ONLY inside API routes / server modules. Never in
+   `NEXT_PUBLIC_*`, never in a `"use client"` file, never logged.
+5. **Mock-first PDAX.** All PDAX features must run fully in `PDAX_MODE=mock` (no keys, no network)
+   so the demo never depends on third-party access. `staging` activates when staging keys exist;
+   `production` only per §8.5 (G3).
+6. **Match repo conventions.** TypeScript strict; colocated `*.test.ts` run by the Node built-in
+   test runner; thin edge/serverless API routes; nonce-based CSP in `src/middleware.ts` must not
+   break; security headers in `next.config.ts` unchanged unless a task says otherwise.
+7. **Honest UX.** Never show a live-looking "Verified" or a price without a freshness timestamp.
+   Stale data is always badged as stale.
+8. **Run checks before declaring done:** `npm run lint && npm test && npm run build`. E2E
+   (`npm run test:e2e`) for any task touching routes.
+
+---
+
+## 1. Environment & config additions
+
+Add to `src/lib/config.ts` (server-side reads; do NOT prefix secrets with NEXT_PUBLIC):
+
+```
+PDAX_MODE=mock | staging | production    # default: mock; `production` set only by maintainer (§8)
+PDAX_BASE_URL=https://services-stage.pdax.ph   # staging; production URL only in maintainer env
+PDAX_ACCESS_KEY=                    # server-only, empty in mock
+PDAX_SECRET=                        # server-only, empty in mock
+QUOTE_TTL_SECONDS=60
+QUOTE_FALLBACK=coingecko            # provider id used when PDAX unavailable
+RPC_PROVIDERS=<comma-separated Soroban RPC URLs, primary first>
+STELLAR_NETWORK=testnet | mainnet   # default: testnet; mainnet set only by maintainer (§8)
+CONTRACT_ID_TESTNET=                # committed-safe
+CONTRACT_ID_MAINNET=                # exists only in maintainer-held env, never committed
+ENABLE_MAINNET_PAYMENTS=false       # feature flag, default false (§8.4)
 ```
 
-```md
-You are working in `/Users/kuya/Documents/STELLAR/Hackathon-Stellaroid_Earn`.
-You are not alone in the codebase. Do not revert others' edits.
+---
 
-Own only: `.github/workflows/maintenance.yml` and `MAINTENANCE.md`.
-Goal: add a manual/scheduled maintenance workflow and update the runbook so script-first checks are the default.
-Constraints: testnet only, no secrets, no writes to production, deterministic scripts are authoritative.
-Verification: run `ruby -e "require 'yaml'; YAML.load_file('.github/workflows/maintenance.yml'); puts 'workflow yaml ok'"` and `git diff --check`.
-Return: changed files, verification output, known risks.
-```
+## 2. P0 features (build in this order)
 
-```md
-You are working in `/Users/kuya/Documents/STELLAR/Hackathon-Stellaroid_Earn`.
-You are not alone in the codebase. Do not revert others' edits.
+### P0-1 · RPC fallback router — `src/lib/rpc-router.ts`
+**Goal:** Verify/issue/pay UX must survive testnet RPC flakiness (the app's #1 real failure mode).
+**What:** A router over `rpc.Server` holding an ordered provider list from `RPC_PROVIDERS`.
+Exponential backoff (250ms → 4s, jitter), per-provider timeout via existing `with-timeout.ts`
+(5s), circuit-breaker: pin a provider for 60s after success; fail over on timeout/429/5xx.
+Expose `getActiveProvider()` for `/status`.
+**Wire into:** `contract-read-server.ts` and `contract-client.ts` (replace direct server
+construction; public API of those modules unchanged).
+**Tests:** unit-test failover order, backoff timing (fake timers), circuit-breaker pinning,
+and that a single healthy provider short-circuits.
+**Acceptance:** kill the primary URL locally → reads still succeed via fallback; `/status`
+shows the active provider name.
 
-Read only: `frontend/src/app/**`, `frontend/src/components/**`, `frontend/src/styles/globals.css`, `frontend/src/middleware.ts`, `frontend/next.config.ts`, and `frontend/src/app/proof/**`.
-Goal: report UI, accessibility, CSP, frame, offline caching, and stale-proof risks before PWA implementation.
-Constraints: no edits; no emoji icons; 44px touch targets; visible focus; no stale green proof state.
-Verification: report exact file paths and line references for every finding.
-Return: findings grouped by severity plus recommended owner agent.
-```
+### P0-2 · PHP quote module — `src/lib/quote.ts` + `app/api/quote/route.ts`
+**Goal:** Show graduates/employers the real-peso value of XLM amounts. (Layman's: a currency
+ticker with a freshness label.)
+**What:** `getQuote(asset: "XLM", fiat: "PHP")` returns
+`{ price, asOf, source: "pdax-staging" | "coingecko" | "cache", stale: boolean }`.
+Provider chain: PDAX (only when `PDAX_MODE=staging`) → CoinGecko simple-price → last-good cached
+value flagged `stale: true`. Cache in-module with `QUOTE_TTL_SECONDS`; the API route sets
+`Cache-Control: s-maxage=60, stale-while-revalidate=300` and basic rate limiting (reuse the
+fee-bump policy pattern).
+**UI:** small `<FiatValue amount={xlm} />` client component rendering `≈ ₱X,XXX` + "as of HH:mm"
++ a stale badge when `stale`. Use on `/proof/[hash]` (payment section) and `/payout/[id]`.
+**Tests:** provider fallback order; TTL expiry; stale flag; never throws to the page (returns
+`null` quote on total failure — UI hides the peso line rather than erroring).
+**Acceptance:** with network blocked, proof page still renders fully (peso line hidden or stale-badged).
 
-### File Ownership Rules
+### P0-3 · PDAX client (mock-first) — `src/lib/pdax-client.ts` + `src/lib/pdax-sign.ts`
+**Goal:** Real exchange-integration code (HMAC request signing, typed endpoints) that runs today
+without keys. (Layman's: build the plug now; the socket arrives later.)
+**What:**
+- `pdax-sign.ts`: pure function `signRequest(secret, method, path, body, timestamp)` →
+  Access-Signature header value (HMAC-SHA256, per doc.restapi.pdax.ph conventions; document the
+  exact canonical-string format in JSDoc and verify against staging when keys arrive — flag any
+  mismatch in a `// TODO(verify-staging)` comment).
+- `pdax-client.ts`: server-only. Typed wrappers: `getBalances()`, `getTicker(pair)`,
+  `getTransactions()`, `cryptoOutDryRun(params)`. In `mock` mode, return deterministic fixtures
+  from `src/lib/pdax-fixtures.ts` (realistic shapes, fixed timestamps) — NO network calls.
+  In `staging` mode, call `PDAX_BASE_URL` with signed headers, 5s timeout, normalized errors
+  via existing `errors.ts`.
+- Guard: module throws at import time if evaluated in a client bundle (check `typeof window`).
+**Tests:** signature function golden-vectors; mock fixtures shape; mode switching; the
+client-bundle guard.
+**Acceptance:** `PDAX_MODE=mock` end-to-end with zero env secrets; no PDAX code in any client chunk
+(verify with bundle analyzer).
 
-- Agent 1 may edit only `frontend/scripts/ops/**` and `frontend/package.json`.
-- Agent 2 may edit only `.github/workflows/maintenance.yml` and `MAINTENANCE.md`.
-- Agent 3 may create only the PWA shell plan document.
-- Explorer agents are read-only and return findings; the main agent integrates their findings.
-- The main agent is the only one allowed to edit `setup/master-plan.md`, `frontend/src/app/layout.tsx`, `frontend/src/middleware.ts`, `frontend/next.config.ts`, and `frontend/playwright.config.ts` because those are cross-cutting integration files.
+### P0-4 · Credential-gated payout intents — `src/lib/payout-intent.ts` + `app/payout/[id]/page.tsx`
+**Goal:** THE differentiator: a payout that unlocks only on on-chain proof of skill
+("proof-of-skill to peso"). This is the hackathon demo centerpiece.
+**What:** A pure state machine (no DB — state derived from on-chain reads + URL params, consistent
+with "the contract is the DB"):
+`intent_created → credential_verified → payment_detected → offramp_guided → settled`.
+- Intent = signed, stateless token in the URL (reuse `opportunity-id.ts` patterns): encodes
+  `{credentialHash, recipientAddress, amountXlm, createdAt}` + HMAC (server secret) so intents
+  can't be forged. No storage required.
+- `/payout/[id]`: server component. Steps rendered as a checklist:
+  1. Verify `credentialHash` via `contract-read-server.ts` (through P0-1 router). Fail → clear
+     "credential not verified" state; nothing else unlocks.
+  2. Poll/read testnet for a payment of `amountXlm` to `recipientAddress` newer than `createdAt`
+     (Horizon/RPC read; no webhook, no backend). Show tx link when detected.
+  3. Show `<FiatValue>` peso equivalent (P0-2).
+  4. Off-ramp guidance step (P1-1 content; placeholder copy until then).
+- Employer view: existing pay flow gains a "create payout link" action producing the intent URL +
+  QR (reuse `qrcode`).
+**Tests:** intent encode/decode/forgery-rejection; state derivation for each step; payment-match
+logic (amount tolerance, time window, wrong-sender handling).
+**Acceptance:** full loop demoable on testnet in mock PDAX mode: create intent → open link →
+verified badge → send testnet XLM from a second wallet → page flips to payment_detected with tx
+evidence → peso value displayed.
 
-### Integration Checklist
+### P0-5 · Standards-aligned credential JSON — `app/proof/[hash]/credential.json/route.ts`
+**Goal:** Emit an Open Badges 3.0 / W3C VC Data Model 2.0 shaped payload alongside the existing
+proof page. (Layman's: publish the certificate in the universal language every verifier reads,
+not just our dialect.)
+**What:** Map existing `proof-metadata.ts` fields into an `OpenBadgeCredential` JSON-LD document:
+contexts `https://www.w3.org/ns/credentials/v2` + the 1EdTech OB 3.0 context; `issuer` from
+`issuer-registry.ts`; `credentialSubject.achievement` from proof metadata; `validFrom`; omit
+`proof` block in v1 (document as roadmap: Data Integrity / eddsa cryptosuite). Set
+`Content-Type: application/vc+ld+json`. Validate hash format before any read (same regex gate as
+the page). `revalidate=60`.
+**Tests:** golden snapshot of output for demo data; hash-format rejection; required-fields presence.
+**Acceptance:** `curl /proof/<demo-hash>/credential.json` returns valid JSON-LD; existing proof
+page and embed untouched.
 
-- Confirm each worker reports exact file paths changed.
-- Review `git diff --stat` and full diffs before accepting worker output.
-- Reject any worker change that touches secrets, mainnet, wallet state caching, or broad unrelated files.
-- Confirm `setup/master-plan.md` still matches the implementation plan.
-- Keep commits small: first docs/setup, then deterministic ops, then PWA shell in a later PR.
+---
 
-## Phase Execution Checklist
+## 3. P1 features
 
-### Phase 0: Planning PR
+### P1-1 · Off-ramp guide — `app/payout/[id]/offramp` section/component
+Plain-language, PH-localized steps for a graduate to cash out XLM to pesos **on their own PDAX
+account**: account/KYC requirements, deposit address flow, fees, the PHPT pairing quirk
+(verify current pairing before finalizing copy), realistic timelines. Explicit banner: "Stellaroid
+never holds your funds — this guide walks you through YOUR exchange account." Testnet demo shows
+the guide with a "demo mode — testnet XLM has no cash value" notice.
 
-- [ ] Keep `setup/SETUP_RESEARCH_BRIEF.md` in scope as the source brief.
-- [ ] Fill `setup/master-plan.md`.
-- [ ] Add `docs/superpowers/plans/2026-06-12-pwa-ops-automation.md`.
-- [ ] Run `git diff --check`.
-- [ ] Run a red-flag/source scan over the new docs.
-- [ ] Commit on `codex/pwa-ops-master-plan`.
+### P1-2 · Reconciliation script — `scripts/reconcile.ts` + `npm run ops:reconcile`
+Idempotent: given an intent URL/token, re-derive its full state from chain reads and print a
+machine-readable report. Safe to run repeatedly; exit non-zero on inconsistency. (Layman's:
+the auditor that re-checks the checklist from scratch.)
 
-### Phase 1: Deterministic Ops PR
+### P1-3 · Bundle split
+Dynamic-import every Freighter-touching component so wallet code loads only on
+`/app`, `/issuer`, `/employer`. Move remaining reads on `/about`, `/metrics`, `/status` to
+server components. Add `@next/bundle-analyzer`; record before/after first-load JS in the PR.
+**Acceptance:** landing + proof routes contain zero `@stellar/freighter-api` and zero PDAX code.
 
-- [ ] Add `frontend/scripts/ops/common.ts`.
-- [ ] Add `frontend/scripts/ops/health.ts`.
-- [ ] Add `frontend/scripts/ops/contract-drift.ts`.
-- [ ] Add `frontend/scripts/ops/headers.ts`.
-- [ ] Add `frontend/scripts/ops/proof.ts`.
-- [ ] Add `frontend/scripts/ops/domain.ts`.
-- [ ] Add `frontend/scripts/ops/testnet-guard.ts`.
-- [ ] Add npm scripts: `ops:health`, `ops:proof`, `ops:contract-drift`, `ops:headers`, `ops:domain`, `ops:testnet-guard`, `ops:all`.
-- [ ] Add `.github/workflows/maintenance.yml`.
-- [ ] Update `MAINTENANCE.md` with script-first checks.
-- [ ] Update `.github/workflows/frontend-ci.yml` to run `npm run test:unit`.
-- [ ] Verify lint, build, unit tests, typecheck, e2e, and `ops:all`.
+### P1-4 · `/status` additions
+Active RPC provider (P0-1), quote freshness + source (P0-2), PDAX mode + last staging latency
+(P0-3), last reconcile result timestamp (P1-2).
 
-### Phase 2: PWA Shell PR
+---
 
-- [ ] Add `/offline` page.
-- [ ] Add service worker registration client component.
-- [ ] Add `/sw.js` or Serwist-generated worker.
-- [ ] Update service worker headers and middleware exclusions.
-- [ ] Add Playwright coverage for offline fallback.
-- [ ] Verify installability and Lighthouse PWA signals without weakening CSP.
-- [ ] Add Playwright projects or specs for 375x667, 768x1024, 1024x768, 1440x900, reduced-motion, and proof embed at 320x220 and 420x220.
+## 4. P2 features (post-demo polish)
 
-### Phase 3: Offline Proof PR
+- **P2-1 Serwist PWA:** `@serwist/next`, precache shell, stale-while-revalidate for `/proof/*`,
+  offline page; offline proofs re-hash cached JSON via `crypto.subtle.digest` and badge
+  "verified offline at ledger N — reconnect to re-verify". `reloadOnOnline: false`; prompted
+  refresh via Sonner. Must not break nonce CSP (register SW from a tiny client component).
+- **P2-2 Revocation:** `revoked` flag in contract + W3C Bitstring Status List endpoint
+  `app/api/status-list/[id]/route.ts`; `credentialStatus` block added to P0-5 output.
+- **P2-3 Schema.org:** `EducationalOccupationalCredential` JSON-LD on `/proof/[hash]` via existing
+  `json-ld-safe.ts`.
 
-- [ ] Add stale proof banner.
-- [ ] Cache only previously viewed proof pages and assets.
-- [ ] Store `lastVerifiedAt`, `hash`, `contractId`, and `networkPassphrase` with snapshots.
-- [ ] Require live re-check before any green verified state.
-- [ ] Add e2e coverage for offline proof fallback and online revalidation.
-- [ ] Add proof freshness tests covering `/proof/[hash]`, embed, OG image, JSON-LD/share copy where applicable, and `/status`.
+---
 
-### Phase 4: AI-Assisted Maintenance PR
+## 5. Hackathon demo script (3 minutes, judge-facing)
 
-- [ ] Add a maintenance-agent prompt that consumes deterministic script output.
-- [ ] Add issue/PR summary templates.
-- [ ] Keep AI read-only by default.
-- [ ] Require deterministic checks before AI-authored maintenance PRs.
+1. (20s) Problem: fake PDF certificates; verification needs a middleman.
+2. (40s) Open a public proof URL — no login, no wallet — live on-chain verification. Show
+   `credential.json` in a second tab: "speaks the W3C/Open Badges standard."
+3. (60s) Employer creates a **credential-gated payout link**; open it: credential auto-verifies,
+   employer sends testnet XLM from their own wallet, page detects the payment live, shows tx
+   evidence + **real-time peso value** (PDAX/CoinGecko rail).
+4. (40s) Graduate's off-ramp guide: "money never touches us — non-custodial by design, which is
+   why this works under PH's 2025 CASP rules without a ₱100M license."
+5. (20s) Pull the plug moment: kill primary RPC live; page fails over and stays green.
+   "Single maintainer, production discipline."
 
-## Required Verification Commands
+---
 
-Run these before claiming any implementation phase is complete:
+## 6. Definition of done (every work item)
 
-```bash
-git diff --check
-cd frontend && npm run lint
-cd frontend && npm run build
-cd frontend && npm run test:unit
-cd frontend && npx tsc --noEmit --incremental false --pretty false
-cd frontend && npm run test:e2e
-cd frontend && OPS_BASE_URL=https://stellaroid.tech OPS_CONTRACT_ID=CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3 OPS_SAMPLE_HASH=c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3 npm run ops:all
-cd frontend && npm run ops:proof -- c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
-rg -n '\bC[A-Z2-7]{55}\b' README.md MAINTENANCE.md docs frontend/public setup
-rg -n 'secrets\.|FEE_SPONSOR_TOKEN|STELLAR_SECRET|PRIVATE_KEY|S[A-Z2-7]{55}' .github/workflows frontend/scripts
-ruby -e "require 'yaml'; YAML.load_file('.github/workflows/maintenance.yml'); puts 'workflow yaml ok'"
-```
+- [ ] Unit tests colocated, green via Node test runner
+- [ ] `npm run lint && npm run build` clean
+- [ ] No secrets in client bundles (analyzer check for P0-3/P1-3)
+- [ ] CSP + security headers unchanged (or task explicitly updated them)
+- [ ] `/status` reflects any new operational surface
+- [ ] README feature table row added; screenshots refreshed if UI changed
+- [ ] Works fully in `PDAX_MODE=mock`
 
-Add these once the relevant specs exist:
+---
 
-```bash
-cd frontend && npx playwright test e2e/a11y-responsive.spec.ts
-cd frontend && npx playwright test e2e/pwa-offline.spec.ts
-cd frontend && npx playwright test e2e/proof-freshness.spec.ts
-cd frontend && npx lighthouse http://127.0.0.1:3008/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3 --only-categories=accessibility,performance,best-practices,pwa --form-factor=mobile --chrome-flags="--headless=new"
-```
+## 7. Explicitly out of scope (do not let any agent talk you into these)
 
-## Source Links
+Custody of funds or keys (never unlocks, on any network) · committing or defaulting
+mainnet/production env values · automated `crypto_out` against real accounts (manual confirm +
+allowlist + spend cap only, §8.5) · marketplace/LMS features · NFTs as source of truth · a
+database (state derives from chain + signed tokens) · login on public proof routes.
 
-- Next.js PWA guide: https://nextjs.org/docs/app/guides/progressive-web-apps
-- Serwist Next.js getting started: https://serwist.pages.dev/docs/next/getting-started
-- Vercel Cron Jobs: https://vercel.com/docs/cron-jobs
-- GitHub Actions scheduled workflows: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
-- Stellar CLI install: https://developers.stellar.org/docs/tools/cli/install-cli
-- Stellar deploy to testnet: https://developers.stellar.org/docs/build/smart-contracts/getting-started/deploy-to-testnet
-- Stellar RPC `simulateTransaction`: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction
-- Claude Code overview: https://code.claude.com/docs/en/overview
-- Claude Agent SDK overview: https://code.claude.com/docs/en/agent-sdk/overview
-- Model Context Protocol overview: https://modelcontextprotocol.io/docs/getting-started/intro
+---
+
+## 8. Mainnet track — agent builds now, maintainer activates
+
+Everything below is implementable by the agent TODAY, fully tested via testnet/mock + config
+injection. It ships inert: real-money behavior turns on only when the maintainer supplies env
+values no agent can produce.
+
+### 8.1 Activation gates (human-only by nature)
+- **G1 — Independent contract audit.** Review by the implementing agent is not an audit.
+  Artifact: report in `docs/audit/`.
+- **G2 — Legal read** on CASP "facilitation" scope for non-custodial orchestration (one consult,
+  PH fintech counsel). Artifact: memo summary in `docs/legal/`.
+- **G3 — PDAX production access** via Platform Solutions (their team issues credentials).
+- **G4 — Ops readiness:** mainnet runbook, alerting, spend caps, kill-switch flag tested.
+Maintainer sets mainnet/production env values only when G1–G4 artifacts exist.
+
+### 8.2 M-1 · Dual-network architecture — **build now**
+`src/lib/network.ts`: resolve network from `STELLAR_NETWORK` → per-network contract ID, RPC
+provider list, passphrase, explorer base URLs. Persistent UI network badge; `/proof/[hash]` and
+`credential.json` state their network explicitly. Default testnet everywhere. Tests cover the
+mainnet path via injected config — no live mainnet calls in CI.
+
+### 8.3 M-2 · Mainnet credential anchoring — **build now**, activates on G1+G4
+`scripts/deploy.ts --network mainnet` for maintainer use; the script refuses to run if
+`docs/audit/` is empty (a tripwire, not a substitute for judgment). Issue/verify only; payment UI
+stays hidden on mainnet until M-3 is active.
+
+### 8.4 M-3 · Wallet-to-wallet mainnet payments — **build now**, activates on G1+G2+G4
+Reuses the P0-4 intent machine unchanged; detection reads the active network. The app never signs
+or holds funds on either network. Gated by `ENABLE_MAINNET_PAYMENTS` (default false).
+
+### 8.5 M-4 · PDAX production mode — **build now**, activates on G3
+`pdax-client.ts` gains `production` mode: same signer, prod base URL from maintainer env.
+Own-account reads (balances/ticker) first. `crypto_out` requires interactive confirmation, an
+address allowlist, and a per-tx cap from env. No automated movement of third-party funds — the
+graduate off-ramp remains guidance to their OWN accounts.
+
+### 8.6 Why activation stays human (for any future agent reading this)
+Code errors are caught at review time; money errors happen at runtime and are irreversible.
+Review-after-implementation covers the former, never the latter — so implementation is agent
+work, activation is maintainer work. That split is exactly what allows every line in this
+section to be written today.
