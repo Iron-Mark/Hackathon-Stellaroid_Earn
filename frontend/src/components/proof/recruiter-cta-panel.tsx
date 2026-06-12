@@ -4,6 +4,7 @@ import Link from "next/link";
 import { appConfig } from "@/lib/config";
 import { seoCanonicalUrl } from "@/lib/seo";
 import { CopyButton } from "@/components/ui/copy-button";
+import { FiatValue } from "@/components/ui/fiat-value";
 
 interface RecruiterCtaPanelProps {
   hash: string;
@@ -30,6 +31,9 @@ export function RecruiterCtaPanel({ hash, candidateAddress }: RecruiterCtaPanelP
       <p className="m-0 text-sm leading-relaxed text-text-muted">
         Start a paid trial from this verified credential. The employer form will
         carry over the certificate hash and candidate wallet.
+      </p>
+      <p className="m-0 text-sm text-text-muted">
+        1 XLM <FiatValue amount={1} />
       </p>
       <div className="flex gap-3 flex-wrap">
         <Link
