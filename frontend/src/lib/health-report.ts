@@ -3,6 +3,7 @@ import {
   getActiveProvider,
   routeRpcJsonRpc,
 } from "@/lib/rpc-router";
+import { getQuote } from "@/lib/quote";
 
 export type HealthStatus = "healthy" | "degraded" | "down";
 
@@ -19,8 +20,23 @@ export type HealthReport = {
       providerUrl: string;
     };
     contract: { ok: boolean; detail: string };
+    quote: {
+      ok: boolean;
+      detail: string;
+      source: string | null;
+      asOf: string | null;
+      stale: boolean;
+    };
+    pdax: { ok: boolean; mode: string; detail: string };
   };
 };
+
+function getPdaxModeForReport(): string {
+  const mode = process.env.PDAX_MODE?.toLowerCase() ?? "mock";
+  return mode === "mock" || mode === "staging" || mode === "production"
+    ? mode
+    : `invalid (${process.env.PDAX_MODE})`;
+}
 
 export async function getHealthReport(): Promise<HealthReport> {
   const timestamp = new Date().toISOString();
@@ -60,6 +76,16 @@ export async function getHealthReport(): Promise<HealthReport> {
     }
   }
 
+  const quote = await getQuote("XLM", "PHP");
+  const quoteOk = quote !== null;
+  const quoteDetail = !quote
+    ? "No quote available (providers unreachable, cache empty)"
+    : quote.stale
+      ? `Stale ₱${quote.price} via ${quote.source} (as of ${quote.asOf})`
+      : `₱${quote.price} via ${quote.source} (as of ${quote.asOf})`;
+
+  const pdaxMode = getPdaxModeForReport();
+
   const contractOk = Boolean(appConfig.contractId);
   const contractDetail = !configOk
     ? "Config missing"
@@ -88,6 +114,18 @@ export async function getHealthReport(): Promise<HealthReport> {
         providerUrl: rpcProvider.url,
       },
       contract: { ok: contractOk, detail: contractDetail },
+      quote: {
+        ok: quoteOk,
+        detail: quoteDetail,
+        source: quote?.source ?? null,
+        asOf: quote?.asOf ?? null,
+        stale: quote?.stale ?? false,
+      },
+      pdax: {
+        ok: !pdaxMode.startsWith("invalid"),
+        mode: pdaxMode,
+        detail: `PDAX_MODE=${pdaxMode}${pdaxMode === "mock" ? " (no keys, no network calls)" : ""}`,
+      },
     },
   };
 }
