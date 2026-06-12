@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ToastProvider } from "@/components/ui";
 import { JsonLd } from "@/components/ui/json-ld";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
+import { NetworkBadge } from "@/components/layout/network-badge";
 import "../styles/globals.css";
 import { cn } from "@/lib/utils";
 import {
@@ -156,6 +157,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={webSiteJsonLd} />
         <JsonLd data={authorProfileJsonLd} />
         {children}
+        <NetworkBadge />
         <ScrollToTop />
         <Analytics />
         <ToastProvider
