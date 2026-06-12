@@ -4,6 +4,33 @@
 
 **Goal:** Complete every remaining work item in `setup/master-plan.md` (P0-2, P0-4, P0-5, P1-1, P1-2, P1-3, P1-4, M-1) on top of the already-built P0-1 RPC router and P0-3 PDAX client.
 
+---
+
+## ✅ PLAN COMPLETE — 2026-06-12
+
+All tasks 0–9 finished and committed on `codex/pwa-ops-master-plan`. Final gates: lint clean, 77/77 unit, build clean, 7/7 e2e. Live testnet acceptance: credential read via Stellar CLI, payout intent → CLI payment (tx `af7ab6e1…`) → page flipped to payment_detected; reconcile script re-derived the same state (exit 0, forged token exit 1); pull-the-plug failover verified live (dead primary → fallback serves credential.json 200, /status shows `fallback`) after fixing a real router gap (connection-level errors weren't transient). Deferred per spec: M-2/M-3/M-4 activation (maintainer-keyed, §8), P2 items (post-demo).
+
+The checkpoint below is historical (mid-session stop on 2026-06-12):
+
+## ⏸ SESSION CHECKPOINT — stopped 2026-06-12 (usage limit)
+
+**Completed and committed** (each passed lint + unit tests + build; P0-2 also passed all 7 e2e):
+- Task 0 ✅ — checkpoint commits `37cad86` (P0-1), `b893bdf` (P0-3), `11e5b25` (spec+plan)
+- Task 1 ✅ P0-5 — commit `feat(proof): add Open Badges 3.0 credential.json route` (open-badge.ts + 4 tests + route; curl-verified 200 `application/vc+ld+json`, 404 on bad hash)
+- Task 2 ✅ P0-2 — commit `feat(quote): add PHP quote chain with FiatValue display` (quote.ts + rate-limit.ts + 8 tests + /api/quote + FiatValue mounted on recruiter panel)
+
+**Task 3 (P0-4) IN PROGRESS — all files written, lint ✅, unit 69/69 ✅, BUILD NOT YET RUN, UNCOMMITTED:**
+- `src/lib/payout-intent.ts` + 6 tests (HMAC base64url tokens, dev-secret fallback + `isDevSecret()`)
+- `src/lib/payment-detect.ts` + 9 tests (Horizon fetch, pure matcher, state ladder)
+- `src/app/api/payout-intent/route.ts` (POST, rate-limited, verifies cert on-chain before signing)
+- `src/app/payout/[id]/page.tsx` (force-dynamic server checklist, 4 steps, FiatValue, poller)
+- `src/components/payout/payment-poller.tsx`, `src/components/payout/offramp-guide.tsx` (placeholder — Task 4 replaces)
+- `src/components/actions/payout-link-form.tsx` mounted on `src/app/employer/page.tsx`
+
+**Resume with:** `npm run build` (was interrupted) → fix any compile issues (unverified assumptions: `SiteNav`/`SiteFooter` prop-less usage, `bg-surface-2`/`bg-verified-bg` token names, `Input`/`HashInput` prop shapes) → `npm run test:e2e` → Stellar CLI acceptance (step 3.8: `stellar keys generate employer-demo --network testnet --fund`, send payment, watch page flip) → commit P0-4 → continue Tasks 4–9.
+
+**Environment ready:** Stellar CLI 26.0.0, funded testnet key `my-key` (`GBS7TPSD…KFDN`, 10k XLM), Rust 1.96 + wasm targets, Playwright chromium installed.
+
 **Architecture:** All logic lives in pure, injectable modules under `frontend/src/lib/` with colocated `*.test.ts` run by the Node built-in runner (`--experimental-strip-types`, so lib-internal imports use relative `./x.ts` paths). Routes and pages stay thin. No DB: payout state derives from on-chain reads + HMAC-signed stateless tokens. Everything works in `PDAX_MODE=mock` with zero secrets.
 
 **Tech Stack:** Next.js 15 App Router, React 19, `@stellar/stellar-sdk` 13, Node test runner, Horizon testnet REST, CoinGecko simple-price API.
