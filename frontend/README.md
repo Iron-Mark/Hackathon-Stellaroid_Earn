@@ -40,6 +40,17 @@ Open http://localhost:3000. Install [Freighter](https://www.freighter.app/) and 
 | `/proof/[hash]/embed` | Compact iframe embed — for portfolios, Notion, blogs. `frame-ancestors *` CSP allows all hosts. |
 | `/issuer` | Issuer dashboard — wallet-aware issuer status plus admin-only issuer approval/suspension controls |
 | `/issuer/register` | Register the connected wallet as a pending issuer |
+| `/proof/[hash]/credential.json` | Open Badges 3.0 / W3C VC 2.0 JSON-LD view of a proof (P0-5). Same hash gate and 60 s cache as the page; `Content-Type: application/vc+ld+json`. |
+| `/api/quote` | PHP quote for XLM (P0-2): PDAX staging → CoinGecko → last-good cache flagged `stale`. Rate-limited; never errors the page — UI hides the peso line on total failure. |
+| `/payout/[id]` | Credential-gated payout checklist (P0-4): HMAC-signed stateless intent in the URL, on-chain credential check through the RPC fallback router, live Horizon payment detection with tx evidence, peso value, PH off-ramp guide (P1-1). |
+| `/api/payout-intent` | Employer mints a signed payout link (verifies the credential on-chain before signing). No DB — the token is the state. |
+| `/status` | Runtime health: active RPC provider (P0-1), PHP quote freshness + source (P0-2), PDAX mode (P0-3), config/contract checks (P1-4). |
+
+## Ops
+
+- `npm run ops:reconcile -- "<intent URL or token>"` (P1-2) — re-derives a payout intent's full state from chain reads, prints a JSON report, exits non-zero on inconsistency. Idempotent and read-only.
+- `STELLAR_NETWORK` resolves the active network via `src/lib/network.ts` (M-1) — testnet default everywhere; mainnet activates only via maintainer-held env (see `setup/master-plan.md` §8). A persistent badge states the active network on every page.
+- `ANALYZE=true npm run build` opens the bundle analyzer (P1-3). Wallet code stays isolated to `/app`, `/issuer*`, `/employer`, `/opportunity`; PDAX and intent-signing code never reach client chunks.
 
 ## Design system
 
