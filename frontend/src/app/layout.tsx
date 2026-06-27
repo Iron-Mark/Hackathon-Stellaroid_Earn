@@ -16,6 +16,8 @@ import {
 } from "@/lib/seo";
 
 const BASE_URL = SITE_CANONICAL_URL;
+const ENABLE_VERCEL_ANALYTICS =
+  Boolean(process.env.VERCEL) || process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS === "1";
 
 export const viewport: Viewport = {
   themeColor: "#f59e0b",
@@ -124,7 +126,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={authorProfileJsonLd} />
         {children}
         <ScrollToTop />
-        <Analytics />
+        {ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null}
         <DeferredToastProvider />
       </body>
     </html>
