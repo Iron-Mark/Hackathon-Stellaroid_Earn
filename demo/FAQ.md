@@ -21,12 +21,12 @@ No. The contract rejects duplicates — `AlreadyExists` is surfaced as a human-r
 Not in the current MVP. Adding `revoke_certificate(hash, reason)` with historical preservation is a v2 scope decision.
 
 **Q: How does a third party verify a claim without a wallet?**
-Anyone can open `/proof`, paste the 64-character SHA-256 hash (the input validates format before routing), and the Proof Block resolves read-only. No Freighter, no signing, no account. Employers, recruiters, and grant committees can verify a receipt from a phone browser.
+Anyone can open `/proof`, paste the 64-character SHA-256 hash (the input validates format before routing), and the proof page resolves read-only. No Freighter, no signing, no account. Employers, recruiters, and grant committees can verify a receipt from a phone browser.
 
 ## Business
 
 **Q: What's the revenue model?**
-Today: none. Future: small platform fee on the pay step (opt-in), SaaS tier for organizations that want white-labeled Proof Blocks, or stablecoin rails with spread.
+Today: none. Future: small platform fee on the pay step (opt-in), SaaS tier for organizations that want white-labeled proof pages, or stablecoin rails with spread.
 
 **Q: Who pays the transaction fees?**
 The signing wallet. Stellar fees are sub-cent, so it's a non-issue for demos and realistic use.
@@ -67,4 +67,4 @@ All contract errors flow through `humanizeError()` — 10 mapping rules covering
 **v1 (today):** register → verify → pay → share, testnet.
 **v1.1:** demo-mode fallback when RPC is cold, verified-events history feed.
 **v2:** mainnet, USDC-on-Stellar payment option, revocation, multi-signer issuers.
-**v3:** org dashboards, API for external verification, embeddable Proof Block widget.
+**v3:** org dashboards, API for external verification, embeddable proof widget.

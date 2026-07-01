@@ -434,7 +434,7 @@ export default function SlidesPage() {
                 variant: "amber" as const,
                 stroke: "#f59e0b",
                 title: "Smart Contract",
-                desc: "Soroban SDK 22, Rust, trust and escrow tests, source-verified",
+                desc: "Soroban SDK 22, Rust, trust and escrow tests, current testnet deploy",
                 icon: (
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 ),
@@ -541,7 +541,7 @@ export default function SlidesPage() {
               },
               {
                 num: "30+",
-                label: "Testnet Users",
+                label: "Testnet Wallets",
                 icon: (
                   <>
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -551,13 +551,13 @@ export default function SlidesPage() {
                 ),
               },
               {
-                num: "18",
-                label: "Contract Calls",
+                num: "Proof",
+                label: "Public URLs",
                 icon: <path d="M22 12h-4l-3 9L9 3l-3 9H2" />,
               },
               {
-                num: "4.2",
-                label: "Avg Rating / 5",
+                num: "Redacted",
+                label: "Feedback Logs",
                 icon: (
                   <>
                     <circle cx="12" cy="12" r="10" />
@@ -566,8 +566,8 @@ export default function SlidesPage() {
                 ),
               },
               {
-                num: "210+",
-                label: "Commits",
+                num: "Live",
+                label: "Demo Checklist",
                 icon: (
                   <>
                     <polyline points="16 18 22 12 16 6" />
@@ -683,7 +683,7 @@ export default function SlidesPage() {
                 variant: "amber" as const,
                 stroke: "#f59e0b",
                 title: "Feedback",
-                desc: "Google Form (5+ responses)",
+                desc: "Redacted feedback responses",
                 icon: (
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 ),

@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, Clock3, ExternalLink, ShieldCheck, TriangleAlert } from "lucide-react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  CheckCircle2,
+  ClipboardCheck,
+  Clock3,
+  ExternalLink,
+  Route,
+  SearchCheck,
+  ShieldCheck,
+  TriangleAlert,
+} from "lucide-react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteNav } from "@/components/layout/site-nav";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
@@ -68,6 +79,8 @@ export default async function StatusPage() {
     ? `${appConfig.explorerUrl}/contract/${appConfig.contractId}`
     : appConfig.explorerUrl;
   const sampleProofHref = `/proof/${DEFAULT_SAMPLE_PROOF_HASH}`;
+  const employerProofHref = `/employer?hash=${encodeURIComponent(DEFAULT_SAMPLE_PROOF_HASH)}`;
+  const sampleProofLabel = `${DEFAULT_SAMPLE_PROOF_HASH.slice(0, 10)}...${DEFAULT_SAMPLE_PROOF_HASH.slice(-10)}`;
   const updated = new Intl.DateTimeFormat("en", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -95,6 +108,80 @@ export default async function StatusPage() {
             <div className={`rounded-lg border px-4 py-3 text-sm font-semibold ${statusTone[health.status]}`}>
               {statusLabel(health.status)}
             </div>
+          </div>
+        </section>
+
+        <section className="mb-10" aria-labelledby="demo-runbook-title">
+          <div className="mb-4 flex items-center gap-2 text-primary">
+            <Route className="size-5" aria-hidden="true" />
+            <h2 id="demo-runbook-title" className="m-0 text-xl text-text">
+              Demo Runbook
+            </h2>
+          </div>
+          <div className="grid gap-3 md:grid-cols-4">
+            <Link
+              href={sampleProofHref}
+              className="group flex min-h-[164px] flex-col justify-between rounded-lg border border-border bg-surface p-4 text-text no-underline transition hover:border-primary hover:bg-surface-2"
+            >
+              <span>
+                <SearchCheck className="mb-3 size-5 text-verified" aria-hidden="true" />
+                <span className="block text-sm font-semibold">Verified proof</span>
+                <span className="mt-2 block text-sm leading-relaxed text-text-muted">
+                  Open the walletless proof page with the current testnet sample.
+                </span>
+              </span>
+              <code className="mt-4 block break-all rounded border border-border bg-bg px-2 py-1 font-mono text-[11px] text-text-muted">
+                {sampleProofLabel}
+              </code>
+            </Link>
+
+            <Link
+              href={employerProofHref}
+              className="group flex min-h-[164px] flex-col justify-between rounded-lg border border-border bg-surface p-4 text-text no-underline transition hover:border-primary hover:bg-surface-2"
+            >
+              <span>
+                <BriefcaseBusiness className="mb-3 size-5 text-primary" aria-hidden="true" />
+                <span className="block text-sm font-semibold">Employer handoff</span>
+                <span className="mt-2 block text-sm leading-relaxed text-text-muted">
+                  Carry the same proof into the paid-trial review workflow.
+                </span>
+              </span>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                Review escrow path <ArrowRight className="size-3.5" aria-hidden="true" />
+              </span>
+            </Link>
+
+            <Link
+              href="/issuer"
+              className="group flex min-h-[164px] flex-col justify-between rounded-lg border border-border bg-surface p-4 text-text no-underline transition hover:border-primary hover:bg-surface-2"
+            >
+              <span>
+                <ShieldCheck className="mb-3 size-5 text-verified" aria-hidden="true" />
+                <span className="block text-sm font-semibold">Issuer trust</span>
+                <span className="mt-2 block text-sm leading-relaxed text-text-muted">
+                  Inspect the registry path that separates issuer claims from approved issuers.
+                </span>
+              </span>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                Open console <ArrowRight className="size-3.5" aria-hidden="true" />
+              </span>
+            </Link>
+
+            <Link
+              href="/pilot"
+              className="group flex min-h-[164px] flex-col justify-between rounded-lg border border-border bg-surface p-4 text-text no-underline transition hover:border-primary hover:bg-surface-2"
+            >
+              <span>
+                <ClipboardCheck className="mb-3 size-5 text-accent" aria-hidden="true" />
+                <span className="block text-sm font-semibold">Pilot boundary</span>
+                <span className="mt-2 block text-sm leading-relaxed text-text-muted">
+                  Show the narrow testnet rollout scope for an issuer or employer pilot.
+                </span>
+              </span>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                View pilot scope <ArrowRight className="size-3.5" aria-hidden="true" />
+              </span>
+            </Link>
           </div>
         </section>
 
