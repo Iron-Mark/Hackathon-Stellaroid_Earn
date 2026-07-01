@@ -38,6 +38,7 @@ admin-key.json
 
 # Playwright MCP runtime files
 .playwright-mcp/
+output/playwright/
 frontend/test-results/
 frontend/playwright-report/
 

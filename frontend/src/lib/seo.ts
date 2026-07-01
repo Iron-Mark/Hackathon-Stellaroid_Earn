@@ -5,6 +5,8 @@ export const SITE_NAME = "Stellaroid Earn";
 export const SITE_AUTHOR_NAME = "Mark Siazon";
 export const SITE_AUTHOR_URL = "https://marksiazon.dev";
 export const SITE_AUTHOR_LINKEDIN = "https://www.linkedin.com/in/mark-siazon/";
+export const SITE_REPOSITORY_URL = "https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn";
+export const SITE_CONTRACT_SOURCE_URL = `${SITE_REPOSITORY_URL}/tree/main/contract`;
 
 const DEFAULT_CANONICAL_URL = "https://stellaroid.tech";
 

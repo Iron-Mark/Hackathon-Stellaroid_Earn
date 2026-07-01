@@ -375,7 +375,7 @@ Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 
 ## User Validation
 
-### Testnet Users
+### Testnet Wallet Evidence
 
 30+ Stellar testnet wallets are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). 18 wallets have direct contract interactions (`register_issuer`), 12 are funded explorers, and the committed feedback snapshot keeps participant names and emails redacted.
 
