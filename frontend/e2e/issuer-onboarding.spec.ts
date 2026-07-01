@@ -29,4 +29,6 @@ test("issuer dashboard shows the trust-state ladder", async ({ page }) => {
   await expect(page.getByText("Trust-state ladder")).toBeVisible();
   await expect(page.getByText("Profile -> Approval -> Issue credentials")).toBeVisible();
   await expect(page.getByText("Approved issuers can register, verify, suspend, and revoke credentials.")).toBeVisible();
+  await expect(page.getByText("Employer proof handoff")).toBeVisible();
+  await expect(page.getByText("Verify each credential before sending the proof to an employer.")).toBeVisible();
 });

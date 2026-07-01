@@ -53,6 +53,12 @@ test("employer export includes an explicit unsigned standards preview", () => {
   });
 
   assert.equal(payload.standardsAlignment.status, "unsigned_preview");
+  assert.equal(payload.employerReview.decision, "ready_for_paid_trial_review");
+  assert.equal(payload.employerReview.candidateWallet, cert.owner);
+  assert.deepEqual(
+    payload.employerReview.path.map((step) => step.title),
+    ["Confirm proof", "Match wallet", "Fund escrow"],
+  );
   assert.match(payload.standardsAlignment.warning, /not a signed Verifiable Credential/);
   assert.equal(payload.standardsAlignment.roleModel.issuer.name, issuer.name);
   assert.equal(payload.standardsAlignment.roleModel.holder.wallet, cert.owner);
