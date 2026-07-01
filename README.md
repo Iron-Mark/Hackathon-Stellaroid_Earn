@@ -31,6 +31,9 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 
 - **Roadmap:** [`ROADMAP.md`](ROADMAP.md)
 - **Maintenance checks:** [`MAINTENANCE.md`](MAINTENANCE.md)
+- **Branch strategy:** [`docs/BRANCH_STRATEGY.md`](docs/BRANCH_STRATEGY.md)
+- **Deployment runbook:** [`docs/DEPLOYMENT_RUNBOOK.md`](docs/DEPLOYMENT_RUNBOOK.md)
+- **Release checklist:** [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md)
 - **Custom domain cutover:** [`docs/STELLAROID_TECH_CUTOVER.md`](docs/STELLAROID_TECH_CUTOVER.md)
 - **Pro-research intake:** [`docs/spec/stellaroid/INTAKE-STATUS-2026-06-11.md`](docs/spec/stellaroid/INTAKE-STATUS-2026-06-11.md)
 - **Demo checklist:** [`docs/DEMO_CHECKLIST.md`](docs/DEMO_CHECKLIST.md)

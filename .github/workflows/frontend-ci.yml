@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+      - staging
     paths:
       - "frontend/**"
       - ".github/workflows/frontend-ci.yml"
   pull_request:
+    branches:
+      - main
+      - staging
     paths:
       - "frontend/**"
       - ".github/workflows/frontend-ci.yml"
@@ -15,6 +19,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: frontend-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   frontend:
