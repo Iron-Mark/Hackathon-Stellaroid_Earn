@@ -45,10 +45,12 @@ This wraps:
 
 - `scripts/verify-vercel-branch-domains.ps1` for domain mappings, DNS configuration, public access, and HTTPS checks.
 - `scripts/repair-vercel-branch-deployments.ps1` in dry-run mode for missing branch deployments or stale aliases.
-- `scripts/verify-github-branch-governance.ps1` for branch sync, branch protection, locked archives, and monthly-builder rulesets.
+- `scripts/verify-github-branch-governance.ps1` for branch content sync, branch protection, locked archives, and monthly-builder rulesets.
 - `git diff --check` for local whitespace hygiene.
 
 Use `-SkipHttp` on the operations verifier when you only need API and repository checks. Do not run the repair script with `-Deploy` unless its dry run reports a concrete missing deployment or alias.
+
+Protected PR merges can create different commit SHAs on `main`, `staging`, and `june-monthly-builder`. For governance, synced means the branch file trees match, not that the tip commit IDs are identical.
 
 ## Vercel Domains
 

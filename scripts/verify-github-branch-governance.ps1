@@ -87,6 +87,27 @@ function Get-RemoteBranchShas {
   return $shas
 }
 
+function Update-RemoteBranchObjects {
+  Param([string[]]$Branches)
+
+  & git -C $repoRoot fetch --quiet origin @Branches
+  if ($LASTEXITCODE -ne 0) {
+    throw "git fetch failed for branch content-sync verification"
+  }
+}
+
+function Get-CommitTree {
+  Param([string]$Sha)
+
+  $treeRef = "$Sha^{tree}"
+  $tree = (& git -C $repoRoot rev-parse $treeRef).Trim()
+  if ($LASTEXITCODE -ne 0) {
+    throw "git rev-parse failed for tree $treeRef"
+  }
+
+  return $tree
+}
+
 function Test-ProtectionDisabledFlag {
   Param(
     [object]$Protection,
@@ -209,17 +230,25 @@ foreach ($branch in $legacyBranchesExpectedAbsent) {
 }
 
 if ($syncedBranches | Where-Object { -not $branchShas.ContainsKey($_) }) {
-  Add-Failure "Cannot compare synced branch SHAs because one or more branches are missing"
+  Add-Failure "Cannot compare synced branch content because one or more branches are missing"
 } else {
+  Update-RemoteBranchObjects -Branches $syncedBranches
+
   $mainSha = $branchShas["main"]
+  $mainTree = Get-CommitTree -Sha $mainSha
+  $syncFailures = 0
+
   foreach ($branch in $syncedBranches) {
-    if ($branchShas[$branch] -ne $mainSha) {
-      Add-Failure "$branch is at $($branchShas[$branch]), expected $mainSha"
+    $branchSha = $branchShas[$branch]
+    $branchTree = Get-CommitTree -Sha $branchSha
+    if ($branchTree -ne $mainTree) {
+      Add-Failure "$branch tree is $branchTree at $branchSha, expected tree $mainTree from main@$mainSha"
+      $syncFailures += 1
     }
   }
 
-  if ($failures.Count -eq 0) {
-    Add-Pass "main, staging, and june-monthly-builder are synced at $mainSha"
+  if ($syncFailures -eq 0) {
+    Add-Pass "main, staging, and june-monthly-builder are content-synced at tree $mainTree"
   }
 }
 
