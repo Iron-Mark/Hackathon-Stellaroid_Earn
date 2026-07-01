@@ -81,11 +81,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-github-branch-governan
 
 Expected state:
 
-- `main`, `staging`, and `june-monthly-builder` are synced before promotion work starts.
+- `main`, `staging`, and `june-monthly-builder` are content-synced after promotion.
 - `main` and `staging` require pull-request based updates and resolved conversations.
 - `april-bootcamp` and `april-monthly-builder` are locked archive branches.
 - `*-monthly-builder` branches are protected against deletion and force-pushes by ruleset.
 - Legacy branches such as `dev`, `old-ver`, and `mark-siazon` remain deleted.
+
+Protected PR merges can leave each branch at a different merge commit. Treat them as synced when their Git tree IDs match.
 
 ## Promotion Steps
 

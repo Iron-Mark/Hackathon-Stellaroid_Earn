@@ -83,11 +83,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify-github-branch-governan
 
 That verifier checks:
 
-- `main`, `staging`, and `june-monthly-builder` are synced.
+- `main`, `staging`, and `june-monthly-builder` are content-synced.
 - Deleted legacy branches remain absent.
 - `main` and `staging` keep pull-request based protection.
 - `april-bootcamp` and `april-monthly-builder` remain locked archives.
 - The `*-monthly-builder` ruleset blocks deletion and force-pushes.
+
+Content-synced means the Git tree IDs match. The tip commit SHAs can differ because protected branch promotions are merged through pull requests.
 
 ## Deployment Repair
 
