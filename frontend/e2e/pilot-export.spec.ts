@@ -31,6 +31,9 @@ test("verified proof exposes an employer summary export", async ({ page, request
 
   const exportLink = page.getByRole("link", { name: /download proof pack/i });
   await expect(exportLink).toHaveAttribute("href", `/proof/${SAMPLE_PROOF_HASH}/export`);
+  await expect(page.getByText("Confirm proof", { exact: true })).toBeVisible();
+  await expect(page.getByText("Match wallet", { exact: true })).toBeVisible();
+  await expect(page.getByText("Fund escrow", { exact: true })).toBeVisible();
 
   const response = await request.get(`/proof/${SAMPLE_PROOF_HASH}/export`);
   expect(response.status()).toBe(200);
@@ -43,6 +46,12 @@ test("verified proof exposes an employer summary export", async ({ page, request
   expect(body.proofUrl).toBe(`https://stellaroid.tech/proof/${SAMPLE_PROOF_HASH}`);
   expect(body.trustSummary.status).toBe("verified");
   expect(body.trustSummary.verified).toBe(true);
+  expect(body.employerReview.decision).toBe("ready_for_paid_trial_review");
+  expect(body.employerReview.path.map((step: { title: string }) => step.title)).toEqual([
+    "Confirm proof",
+    "Match wallet",
+    "Fund escrow",
+  ]);
   expect(body.credential.hash).toBe(SAMPLE_PROOF_HASH);
   expect(body.standardsAlignment.status).toBe("unsigned_preview");
   expect(body.standardsAlignment.warning).toContain("not a signed Verifiable Credential");

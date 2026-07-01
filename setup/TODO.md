@@ -57,7 +57,7 @@ Facilitator update: skip C1–C2 (no facilitator repo). Built own contract `stel
 - [x] **D1.** Pushed to https://github.com/Iron-Mark/Stellar-Bootcamp-2026 (dev merged to main as PR #1)
 - [x] **D1b.** Live demo deployed to Vercel: https://stellaroid-earn-demo.vercel.app/
 - [x] **D2.** Submitted on Rise In — status: **Under review**
-  - GitHub: https://github.com/Iron-Mark/Workshop-Stellaroid_Earn
+  - GitHub: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn
   - Contract ID: `CA7P5EPYKC2IW4PCMAH6NRBLHH3WP7AN6WWC3QDRWO4HLE47FAGO6TET`
   - Stellar Expert: https://stellar.expert/explorer/testnet/contract/CA7P5EPYKC2IW4PCMAH6NRBLHH3WP7AN6WWC3QDRWO4HLE47FAGO6TET (source verified)
   - Live demo: https://stellaroid-earn-demo.vercel.app/

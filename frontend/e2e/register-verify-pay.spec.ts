@@ -55,7 +55,9 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Stellar Smart Contract Bootcamp Completion" }),
   ).toBeVisible();
-  await expect(page.getByText(/verified on-chain/i)).toBeVisible();
+  await expect(
+    page.getByText("This credential is verified on-chain.", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: "Fund paid trial" })).toHaveAttribute(
     "href",
     new RegExp(`candidate=${studentWallet}`),
@@ -93,6 +95,8 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Review before funding" })).toBeVisible();
   await expect(page.getByText("Verified credential loaded")).toBeVisible();
   await expect(page.getByText("The proof-link candidate matches the credential owner.")).toBeVisible();
+  await expect(page.getByText("Employer review brief")).toBeVisible();
+  await expect(page.getByText("Ready to configure escrow from this proof.")).toBeVisible();
   await expect(page.getByLabel("Opportunity title")).toHaveValue(
     "Paid trial: Stellar Smart Contract Bootcamp Completion",
   );
