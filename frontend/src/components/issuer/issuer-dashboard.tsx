@@ -17,6 +17,11 @@ import { ExternalLink } from "lucide-react";
 import type { IssuerRecord } from "@/lib/types";
 
 const knownIssuers = getAllIssuers();
+const issuerEmployerHandoffSteps = [
+  "Keep the issuer profile current before sharing credential links.",
+  "Verify each credential before sending the proof to an employer.",
+  "Share the proof page or proof pack so recruiters can start from the same record.",
+];
 
 function statusTone(status: IssuerRecord["status"]): "success" | "warning" | "danger" {
   switch (status) {
@@ -378,6 +383,16 @@ export function IssuerDashboard() {
                   <p className="mt-1 text-sm text-text-muted">{step.detail}</p>
                 </div>
               ))}
+            </div>
+            <div className="mt-4 rounded-xl border border-border bg-bg/60 p-4">
+              <p className="text-xs uppercase tracking-[0.14em] text-text-muted/70">
+                Employer proof handoff
+              </p>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-text-muted">
+                {issuerEmployerHandoffSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
             </div>
           </aside>
         </section>

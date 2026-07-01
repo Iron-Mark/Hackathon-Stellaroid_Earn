@@ -1,4 +1,5 @@
 import { appConfig } from "@/lib/config";
+import { EMPLOYER_REVIEW_STEPS } from "@/lib/employer-review";
 import { seoCanonicalUrl } from "@/lib/seo";
 import { CopyButton } from "@/components/ui/copy-button";
 
@@ -31,6 +32,21 @@ export function RecruiterCtaPanel({ hash, candidateAddress }: RecruiterCtaPanelP
         Start a paid trial from this verified credential. The employer form will
         carry over the certificate hash and candidate wallet.
       </p>
+      <ol className="grid list-none gap-2 p-0 text-sm">
+        {EMPLOYER_REVIEW_STEPS.map((step, index) => (
+          <li key={step.id} className="flex gap-2">
+            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-surface text-[0.6875rem] font-semibold text-primary">
+              {index + 1}
+            </span>
+            <span className="min-w-0">
+              <span className="block font-semibold text-text">{step.title}</span>
+              <span className="block leading-relaxed text-text-muted">
+                {step.detail}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ol>
       <div className="flex gap-3 flex-wrap">
         <a
           href={employerHref}

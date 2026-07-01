@@ -1,5 +1,9 @@
 import { appConfig } from "./config.ts";
 import type { CertificateRecord } from "./contract-read-server.ts";
+import {
+  EMPLOYER_REVIEW_CHECKLIST,
+  EMPLOYER_REVIEW_STEPS,
+} from "./employer-review.ts";
 import { seoCanonicalUrl } from "./seo.ts";
 import type { IssuerRecord, ProofEvidenceLink, ProofMetadata } from "./types.ts";
 
@@ -44,6 +48,15 @@ export function buildEmployerVerificationExport({
   const credentialDescription = proofMetadata?.description ?? null;
   const issuerName = issuer?.name || cert.issuer;
   const issuerId = issuer?.website || cert.issuer;
+  const employerUrl = seoCanonicalUrl(
+    `/employer?hash=${encodeURIComponent(hash)}&candidate=${encodeURIComponent(cert.owner)}`,
+  );
+  const employerReviewPath = EMPLOYER_REVIEW_STEPS.map((step, index) => ({
+    order: index + 1,
+    id: step.id,
+    title: step.title,
+    detail: step.detail,
+  }));
 
   return {
     type: "stellaroid.employer_verification_summary",
@@ -68,6 +81,17 @@ export function buildEmployerVerificationExport({
           ? "Eligible for employer review and paid-trial workflows."
           : "Inspect only. Do not treat as verified until the on-chain status is verified.",
       sourceOfTruth: "Stellar testnet contract state plus the public proof page.",
+    },
+    employerReview: {
+      decision: verified ? "ready_for_paid_trial_review" : "inspect_only",
+      employerUrl,
+      candidateWallet: cert.owner,
+      path: employerReviewPath,
+      blockers: verified
+        ? []
+        : [
+            `Credential status is ${cert.status}; funding should wait until the proof is verified.`,
+          ],
     },
     credential: {
       hash,
@@ -174,12 +198,6 @@ export function buildEmployerVerificationExport({
         "Formal credential status list or revocation registry outside the demo contract mapping",
       ],
     },
-    recruiterChecklist: [
-      "Open proofUrl and confirm the status shown on the public proof page.",
-      "Open contract.eventsUrl and confirm recent certificate lifecycle events when needed.",
-      "Check issuer.status before relying on issuer branding or issuer claims.",
-      "Read standardsAlignment.warning before treating this export as a standards credential.",
-      "Use credential.hash as the immutable lookup key in applicant tracking notes.",
-    ],
+    recruiterChecklist: [...EMPLOYER_REVIEW_CHECKLIST],
   };
 }

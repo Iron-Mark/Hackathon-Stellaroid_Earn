@@ -377,7 +377,7 @@ Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 
 ### Testnet Users
 
-30+ users tested the MVP on Stellar testnet. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). 18 wallets have direct contract interactions (`register_issuer`), 12 are funded explorers.
+30+ Stellar testnet wallets are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). 18 wallets have direct contract interactions (`register_issuer`), 12 are funded explorers, and the committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
 <summary><strong>View all 30 wallet addresses</strong></summary>
@@ -420,16 +420,16 @@ Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 ### Feedback Collection
 
 - **Google Form:** [Stellaroid Earn - User Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSftFt8grSRUPecRVQWSRROLA8DAUOn4T61CrZQHtPQaMTxaWw/viewform)
-- **Exported responses:** [`docs/user-feedback-responses.csv`](docs/user-feedback-responses.csv)
+- **Anonymized response snapshot:** [`docs/user-feedback-responses.csv`](docs/user-feedback-responses.csv)
 - **Full feedback documentation:** [`docs/USER_FEEDBACK.md`](docs/USER_FEEDBACK.md)
 
 ### Improvements Based on Feedback
 
-After collecting feedback from testnet users, the following iteration was completed:
+After reviewing the anonymized pilot feedback snapshot, the following iteration was completed:
 
 | Feedback | Improvement | Commit |
 |----------|-------------|--------|
-| Users confused about which role (Issuer vs Employer) to pick after connecting wallet | Added contextual role guidance hints below the persona toggle | [`c1450bf`](https://github.com/Iron-Mark/Workshop-Stellaroid_Earn/commit/c1450bf) |
+| Users confused about which role (Issuer vs Employer) to pick after connecting wallet | Added contextual role guidance hints below the persona toggle | [`c1450bf`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/c1450bf) |
 
 ---
 

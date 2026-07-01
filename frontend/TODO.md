@@ -45,6 +45,7 @@ Open http://localhost:3000 with [Freighter](https://www.freighter.app/) installe
 - [x] Persona-first public entry: primary nav and landing cards now route visitors to Issue, Verify, Hire, Pilot, and Status
 - [x] Employer proof pack now includes an unsigned W3C VC 2.0 / Open Badges 3.0 alignment preview with explicit non-conformance warning
 - [x] Proof-to-employer handoff: `/employer?hash=...&candidate=...` auto-loads verified proofs, shows a review checklist, and blocks candidate wallet mismatches before escrow creation
+- [x] Employer / issuer / proof polish: proof pages, `/employer`, `/issuer`, and the proof pack now share the same confirm proof -> match wallet -> fund escrow review path
 - [x] Proof-to-passport handoff: `/talent/[address]?proof=...` shows a known proof only when the proof owner matches the wallet, while keeping wallet-wide discovery marked as indexer-dependent
 - [x] Issuer onboarding clarity: registration shows approval readiness, and `/issuer` explains the profile -> approval -> issue credentials trust-state ladder
 - [x] Pilot scope guardrails: `/pilot` keeps the first rollout bounded to 5-10 testnet credentials with no mainnet or production payroll claims

@@ -5,6 +5,7 @@ import { Button, CopyButton, Input, useToast } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
 import { appConfig, hasRequiredConfig } from "@/lib/config";
+import { EMPLOYER_REVIEW_STEPS } from "@/lib/employer-review";
 import {
   getCertificate,
   createOpportunity,
@@ -12,7 +13,7 @@ import {
 } from "@/lib/contract-client";
 import type { CertificateRecord } from "@/lib/contract-client";
 import { humanizeError } from "@/lib/errors";
-import { isValidDecimalAmount, parseAmountToInt } from "@/lib/format";
+import { isValidDecimalAmount, parseAmountToInt, shortenAddress } from "@/lib/format";
 import { MAX_OPPORTUNITY_MILESTONES } from "@/lib/types";
 import { withTimeout } from "@/lib/with-timeout";
 import {
@@ -273,6 +274,12 @@ export function EmployerOpportunityForm({
       : undefined;
   const proofLink = validHashFormat ? `/proof/${cleanHash}` : null;
   const proofPackLink = validHashFormat ? `/proof/${cleanHash}/export` : null;
+  const employerReviewDecision =
+    cert?.status === "verified" && candidateMatchesProof
+      ? "Ready to configure escrow from this proof."
+      : cert
+        ? "Inspect only until proof status and candidate wallet are clear."
+        : "Look up a proof before creating an opportunity.";
   const checklist = [
     {
       complete: Boolean(cert && cert.status === "verified"),
@@ -463,6 +470,48 @@ export function EmployerOpportunityForm({
             <span className="text-xs text-text-muted font-mono">
               Owner: {cert.owner}
             </span>
+            <div className="border-t border-border pt-3">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <span className="text-xs uppercase tracking-[0.14em] text-text-muted">
+                  Employer review brief
+                </span>
+                <Badge
+                  tone={
+                    cert.status === "verified" && candidateMatchesProof
+                      ? "success"
+                      : "warning"
+                  }
+                  dot
+                >
+                  {cert.status === "verified" && candidateMatchesProof
+                    ? "ready"
+                    : "review needed"}
+                </Badge>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                {employerReviewDecision} Candidate wallet:{" "}
+                <span className="font-mono text-text">
+                  {shortenAddress(cert.owner, 8)}
+                </span>
+              </p>
+              <ol className="mt-3 grid list-none gap-2 p-0">
+                {EMPLOYER_REVIEW_STEPS.map((step, index) => (
+                  <li key={step.id} className="flex gap-2 text-sm">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border bg-surface-2 text-[0.6875rem] font-semibold text-text-muted">
+                      {index + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-semibold text-text">
+                        {step.title}
+                      </span>
+                      <span className="block leading-relaxed text-text-muted">
+                        {step.detail}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
             <div className="flex flex-wrap gap-2 pt-2">
               {proofLink ? (
                 <Button variant="ghost" size="sm" href={proofLink}>

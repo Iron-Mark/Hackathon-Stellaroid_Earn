@@ -37,7 +37,7 @@ Ship to the `dev` branch only. Do not auto-merge to `main`.
 | Contract crate | `contract/` — `stellaroid_earn`, `soroban-sdk = 22` |
 | Frontend | `frontend/` — Next.js 15 (App Router) + React 19 + `@stellar/stellar-sdk` + `@stellar/freighter-api` |
 | Existing screenshots (on `main`) | `images/{app-dashboard, proof-card-verified, proof-card-locked, stellar-expert}.png` — usable but **must be retaken** (see capture spec below) |
-| Repo redirect | GitHub reports the repo moved to `Iron-Mark/Workshop-Stellaroid_Earn` — pushes to old origin still work via redirect; do not change `origin` URL unless asked |
+| Repo | Current submission repo is `Iron-Mark/Hackathon-Stellaroid_Earn`; do not push to the facilitator upstream unless explicitly asked |
 | Multi-AI workflow | Pull origin/dev with `--rebase` before any push. Touch only files you actually edit this turn. |
 | Commit style | Conventional commits (`docs:`, `feat:`, `fix:`, `chore:`). **Never** include `Co-Authored-By: Claude` or any Claude trailer. |
 | Existing dev `next.config.ts` | Already has `devIndicators: false` — screenshots will not show the floating "N" badge. |
