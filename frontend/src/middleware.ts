@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const isDev = process.env.NODE_ENV === "development";
+const isVercelPreview = process.env.VERCEL_ENV === "preview";
 
 function createNonce() {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -14,11 +15,11 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
 
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com`,
+    `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com${isVercelPreview ? " https://vercel.live" : ""}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob:",
-    "connect-src 'self' https://*.stellar.org",
+    `connect-src 'self' https://*.stellar.org${isVercelPreview ? " https://vercel.live https://*.vercel.live" : ""}`,
     "frame-src 'none'",
     "object-src 'none'",
     "base-uri 'self'",
