@@ -89,7 +89,7 @@
 
 > "Three weeks compressed into a proof URL and an employer review path. Stellaroid Earn turns a certificate hash into something an issuer, candidate, and employer can all act on."
 
-**Action:** Leave the proof page or `/status` visible. Point judges at [`ONE_PAGER.md`](./ONE_PAGER.md), [`FAQ.md`](./FAQ.md), and [`docs/DEMO_CHECKLIST.md`](../docs/DEMO_CHECKLIST.md).
+**Action:** Leave the proof page or `/status` visible. Point judges at [`ONE_PAGER.md`](./ONE_PAGER.md), [`FAQ.md`](./FAQ.md), and [`docs/operations/demo-checklist.md`](../docs/operations/demo-checklist.md).
 
 ---
 

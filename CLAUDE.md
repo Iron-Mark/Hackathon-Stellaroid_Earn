@@ -7,11 +7,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is the **Stellar PH Bootcamp** bootcamp repository — a participant-facing guide, not a production codebase. It packages:
 
 1. **`README.md`** — 5-step walkthrough: install toolchain → complete assigned Soroban contract → `cargo test` (≥3 tests) → deploy to Stellar **testnet** → submit on Rise In.
-2. **`setup/[ENG] Pre-Workshop Setup Guide.pdf`** — participant install guide (Rust, Stellar CLI, WASM target, Freighter).
-3. **`setup/STELLAR_FREIGHTER_INTEGRATION_GUIDE.md`** — generalized Next.js + Soroban + Freighter integration recipe.
+2. **`docs/reference/pre-workshop-setup-guide.pdf`** — participant install guide (Rust, Stellar CLI, WASM target, Freighter).
+3. **`docs/reference/freighter-integration.md`** — generalized Next.js + Soroban + Freighter integration recipe.
 4. **`frontend/`** — Next.js 15 (App Router) + React 19 dApp using `@stellar/stellar-sdk` and `@stellar/freighter-api`. Composition: `app/` (layout, page, `/about`, `/app`, `/issuer`, `/issuer/register`, `/proof`, `/proof/[hash]`, `/proof/[hash]/embed`), `components/` (`about/`, `actions/`, `activity/`, `app/`, `demo/`, `issuer/`, `landing/`, `layout/`, `milestones/`, `onboarding/`, `proof/`, `ui/`, `wallet/`), `hooks/`, `lib/` (config, contract-client, contract-read-server, demo-data, errors, events, format, freighter, i18n, issuer-registry, motion, proof-metadata, types, utils, validators, with-timeout), `styles/globals.css` (Tailwind v4 `@theme` design tokens). Security: HTTP security headers + CSP in `next.config.ts`; dynamic proof routes cached with `revalidate=60` and guarded with a hex-format check before any RPC call.
-5. **`setup/TODO.md`** — local setup progress tracker (A–E sections: Environment, Manual pre-workshop, Contract deploy, Rise In, Phase 2 fullstack).
-6. **`setup/FULLSTACK_PROMPT_TEMPLATE.md`** — v3 prompt template for generating a Stellar dApp idea + Soroban contract files + frontend design brief. Used in Phase 2 after the Contract ID is deployed. Refined against the `stellar-dev`, `ui-ux-pro-max`, and `superpowers/writing-skills` plugins.
+5. **`docs/archive/bootcamp-setup-2026-04/setup-todo.md`** — archived local setup progress tracker (A–E sections: Environment, Manual pre-workshop, Contract deploy, Rise In, Phase 2 fullstack).
+6. **`docs/archive/bootcamp-setup-2026-04/fullstack-prompt-template.md`** — archived v3 prompt template for generating a Stellar dApp idea + Soroban contract files + frontend design brief. Used in Phase 2 after the Contract ID is deployed. Refined against the `stellar-dev`, `ui-ux-pro-max`, and `superpowers/writing-skills` plugins.
 
 The assigned Soroban contract itself is **not** in this repo — participants clone a separate facilitator-provided contract repo.
 
@@ -52,7 +52,7 @@ stellar contract deploy \
 
 ## Frontend architecture (at a glance)
 
-The integration follows the flow documented in `setup/STELLAR_FREIGHTER_INTEGRATION_GUIDE.md`:
+The integration follows the flow documented in `docs/reference/freighter-integration.md`:
 
 - **Config layer** reads `NEXT_PUBLIC_*` env vars (RPC URL, network passphrase, contract ID, read address). Network passphrase **must** match the network the contract is deployed on.
 - **Wallet layer** (`lib/` + `hooks/`) wraps `@stellar/freighter-api` — connection state, public key, network check, sign.
