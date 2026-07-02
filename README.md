@@ -304,14 +304,16 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 
 ## Metrics & Monitoring
 
-- **Status metrics:** [`/status#metrics`](https://stellaroid.tech/status#metrics)  - on-chain stats (events, proofs, transactions, certificates, rewards, payments) on the operational status page
+- **Status metrics:** [`/status#metrics`](https://stellaroid.tech/status#metrics)  - public contract-event evidence, proof hashes, reward/payment events, and source labels on the operational status page
 - **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health)  - cached JSON health check (config, RPC latency, contract availability)
 - **Events API:** [`/api/events`](https://stellaroid.tech/api/events)  - structured contract event data for external consumers
 - **Vercel Analytics:** Web analytics integrated via `@vercel/analytics`
 
 ### Data Indexing
 
-Contract events are indexed by querying Soroban RPC's `getEvents` method across a 60,000-ledger window (~2 days). Events are decoded from ScVal, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), and served via the `/api/events` REST endpoint and the `/status#metrics` dashboard section. The approach is lightweight and serverless  - no external indexer infrastructure required.
+Contract events are read from two public sources. The app first queries Soroban RPC `getEvents` for recent contract events, then supplements that result with Stellar Expert's public contract event index so older testnet activity does not disappear from the demo surface when the RPC retention window moves on. Events are decoded from ScVal/XDR where possible, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), deduplicated, source-labelled, and served through `/api/events` plus `/status#metrics`.
+
+This remains a lightweight serverless evidence layer, not a full analytics warehouse. Proof views, share actions, employer actions, and long-term product analytics still require a first-party read model or analytics event plan.
 
 ---
 
@@ -379,7 +381,7 @@ Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 
 ### Testnet Wallet Evidence
 
-30+ Stellar testnet wallets are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). 18 wallets have direct contract interactions (`register_issuer`), 12 are funded explorers, and the committed feedback snapshot keeps participant names and emails redacted.
+30 Stellar testnet wallet addresses are listed for public review as test evidence, not as a production user-count claim. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded exploration wallets used during testing. The committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
 <summary><strong>View all 30 wallet addresses</strong></summary>

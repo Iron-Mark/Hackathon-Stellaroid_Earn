@@ -85,6 +85,22 @@ function eventTone(kind: RecentActivityItem["kind"]) {
   return "bg-surface-2 text-text-muted";
 }
 
+function sourceLabel(source: RecentActivityItem["source"]) {
+  if (source === "stellar_expert") return "Stellar Expert";
+  if (source === "rpc") return "RPC";
+  return "E2E";
+}
+
+function sourceTone(source: RecentActivityItem["source"]) {
+  if (source === "stellar_expert") {
+    return "border-sky-400/30 bg-sky-500/10 text-sky-200";
+  }
+  if (source === "rpc") {
+    return "border-emerald-400/30 bg-emerald-500/10 text-emerald-200";
+  }
+  return "border-purple-400/30 bg-purple-500/10 text-purple-200";
+}
+
 async function getMetricsReport(): Promise<MetricsReport> {
   let events: RecentActivityItem[] = [];
   let error: string | null = null;
@@ -204,8 +220,8 @@ function MetricsSection({
           {report.events.length === 0 ? (
             <p className="m-0 rounded-lg border border-border bg-bg px-4 py-3 text-sm text-text-muted">
               {report.error
-                ? "No decoded events are available while the RPC check is degraded."
-                : "No decoded contract events found in the current RPC event window."}
+                ? "No decoded events are available while the public event checks are degraded."
+                : "No decoded contract events found from RPC or the public Stellar Expert index yet."}
             </p>
           ) : (
             <div className="grid gap-2">
@@ -221,7 +237,15 @@ function MetricsSection({
                     {event.label}
                   </span>
                   <span className="min-w-0 truncate text-text-muted">{event.detail}</span>
-                  <span className="text-xs text-text-muted">{formatRelativeTime(event.ledgerClosedAt)}</span>
+                  <span className="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+                    <span
+                      className={`rounded border px-1.5 py-0.5 font-pixel text-[9px] uppercase tracking-wider ${sourceTone(event.source)}`}
+                    >
+                      {sourceLabel(event.source)}
+                    </span>
+                    <span>{event.reference}</span>
+                    <span>{formatRelativeTime(event.ledgerClosedAt)}</span>
+                  </span>
                 </a>
               ))}
             </div>

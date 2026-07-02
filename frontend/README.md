@@ -45,7 +45,7 @@ Open http://localhost:3000. Install [Freighter](https://www.freighter.app/) and 
 | `/employer` | Employer console for verified-credential paid-trial escrow. When opened from a proof page, it auto-loads the proof hash, shows a candidate/trust checklist, and blocks mismatched candidate links. |
 | `/talent/[address]` | Candidate passport for one Stellar wallet. With `?proof=<hash>`, it shows that specific verified proof if the proof owner matches the wallet; it does not claim automatic wallet-wide discovery. |
 | `/pilot` | Issuer pilot and employer integration intake, including testnet scope guardrails for the first 5-10 credential rollout |
-| `/status` | Operational status surface for demo health and config checks |
+| `/status` | Operational status surface for demo health, config checks, and source-labelled public contract-event evidence |
 
 ## Design system
 
@@ -74,7 +74,7 @@ frontend/
 │   │   ├── contract-read-server.ts  Server-side read-only simulation
 │   │   ├── demo-data.ts          Fallback sample hashes for E2E / demo mode
 │   │   ├── errors.ts             humanizeError — friendly error copy, no raw XDR leakage
-│   │   ├── events.ts             RPC event polling + decoding
+│   │   ├── events.ts             RPC + Stellar Expert event reads, decoding, dedupe, and source labels
 │   │   ├── format.ts             Amount + address formatting
 │   │   ├── freighter.ts          Freighter wrapper (E2E mock included)
 │   │   ├── issuer-registry.ts    Known issuer label lookup

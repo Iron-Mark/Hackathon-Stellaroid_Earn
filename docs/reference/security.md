@@ -20,7 +20,7 @@ smart-contract, frontend, infrastructure, and operational layers.
 | 8 | **TTL management** | PASS | Storage TTL set to 518,400–1,036,800 ledgers; entries are extended on access to prevent premature archival. |
 | 9 | **Re-entrancy** | N/A | Soroban's single-contract execution model makes cross-contract re-entrancy impossible by design. |
 | 10 | **Unbounded iteration** | PASS | All storage reads/writes are O(1) keyed lookups; opportunity milestone counts are capped at 24 and UI render paths clamp defensively. |
-| 11 | **Source verification** | PASS | Deployed WASM hash verified on Stellar Expert and linked to commit `71d2b03`. |
+| 11 | **Source verification** | PENDING | Current README records the deployed WASM hash; Stellar Expert source re-verification for the latest security-hardened testnet deploy is still pending. |
 
 ---
 
@@ -61,7 +61,7 @@ smart-contract, frontend, infrastructure, and operational layers.
 | 1 | **Testnet only** | PASS | All contract deployments and transactions target Stellar testnet; mainnet deployment is explicitly out of scope. |
 | 2 | **Admin key separation** | PASS | The admin key used for contract deployment is separate from the participant's personal wallet. |
 | 3 | **No private key storage** | PASS | No private keys are stored in code, environment variables, or version control. |
-| 4 | **RPC health monitoring** | PASS | App surfaces a visible error state when the Soroban RPC endpoint is unreachable; `/api/health` is cached for 30 seconds to reduce amplification risk. |
+| 4 | **RPC health monitoring** | PASS | App surfaces a visible error state when the Soroban RPC endpoint is unreachable; `/api/health` is cached for 30 seconds to reduce amplification risk. `/status#metrics` also labels event sources and can supplement recent RPC reads with Stellar Expert's public index. |
 
 ---
 
@@ -77,4 +77,4 @@ out of scope for this testnet MVP submission:
 
 ---
 
-Last reviewed: 2026-05-20
+Last reviewed: 2026-07-02

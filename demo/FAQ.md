@@ -18,7 +18,7 @@ The hash remains on-chain forever, but the hash alone cannot reconstruct the fil
 No. The contract rejects duplicates — `AlreadyExists` is surfaced as a human-readable toast.
 
 **Q: Can a proof be revoked?**
-Not in the current MVP. Adding `revoke_certificate(hash, reason)` with historical preservation is a v2 scope decision.
+Yes. Approved issuers or the admin can revoke or suspend a credential, and public proof pages render those states. A richer reason taxonomy and signed standards-grade status list remain future work.
 
 **Q: How does a third party verify a claim without a wallet?**
 Anyone can open `/proof`, paste the 64-character SHA-256 hash (the input validates format before routing), and the proof page resolves read-only. No Freighter, no signing, no account. Employers, recruiters, and grant committees can verify a receipt from a phone browser.
@@ -40,13 +40,13 @@ Sub-cent fees + 5-second finality + Freighter's smooth onboarding + native payme
 On-chain: SHA-256 hash, issuer address, student address, amount, status flags, timestamps. Off-chain: the deliverable file itself (user-held).
 
 **Q: What's the stack?**
-Next.js 15 (App Router) + React 19, `@stellar/stellar-sdk`, `@stellar/freighter-api`, Rust + Soroban SDK for the contract. No Tailwind, no component library — pure CSS modules + design tokens.
+Next.js 15 (App Router) + React 19, Tailwind CSS v4 design tokens, `@stellar/stellar-sdk`, `@stellar/freighter-api`, and Rust + Soroban SDK for the contract.
 
 **Q: Is it mainnet-ready?**
 No. Testnet-only for the MVP. Mainnet readiness is a dedicated work item: contract audit, gas/fee review, error budget, rate limits on the RPC.
 
 **Q: What happens when Soroban RPC goes down?**
-The health pill turns red within 60 seconds. `withTimeout` (15s) prevents UI hangs. Humanized error messages ship to the user — never raw ScVal or HostError. Route-level errors hit a branded error boundary (`app/error.tsx`) with a retry action; unknown URLs and malformed proof hashes hit a branded 404 (`app/not-found.tsx`) that links back to the `/proof` lookup.
+The health pill turns red within 60 seconds. `withTimeout` (15s) prevents UI hangs. Humanized error messages ship to the user — never raw ScVal or HostError. Route-level errors hit a branded error boundary (`app/error.tsx`) with a retry action; unknown URLs and malformed proof hashes hit a branded 404 (`app/not-found.tsx`) that links back to the `/proof` lookup. Status metrics also use Stellar Expert as a public index fallback so older event evidence can remain visible when RPC retention moves past the original transactions.
 
 **Q: Accessibility?**
 WCAG AA contrast on all tokens. `:focus-visible` rings everywhere. `prefers-reduced-motion` respected globally. 44×44 minimum touch targets. Inline SVG icons (no emoji).
@@ -64,7 +64,7 @@ All contract errors flow through `humanizeError()` — 10 mapping rules covering
 
 ## Roadmap
 
-**v1 (today):** register → verify → pay → share, testnet.
-**v1.1:** demo-mode fallback when RPC is cold, verified-events history feed.
-**v2:** mainnet, USDC-on-Stellar payment option, revocation, multi-signer issuers.
+**v1 (today):** register -> verify -> revoke/suspend when needed -> pay -> share, testnet.
+**v1.1:** batch issuance preview, richer event evidence, pilot feedback loop.
+**v2:** mainnet readiness, USDC-on-Stellar payment option, multi-signer issuers, signed VC/Open Badges export.
 **v3:** org dashboards, API for external verification, embeddable proof widget.
