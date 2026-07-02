@@ -116,21 +116,21 @@ export function SiteFooter() {
           </div>
         </div>
 
-        {/* Bottom bar — stacked on mobile, single row on sm+ */}
-        <div className="mt-10 pt-5 border-t border-border-glass flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+        {/* Bottom bar — stay stacked through tablet widths so attribution never collides. */}
+        <div className="mt-10 grid gap-3 border-t border-border-glass pt-5 pr-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6 lg:pr-0">
           <FooterProgramLink year={new Date().getFullYear()} />
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="grid min-w-0 justify-items-start gap-2 sm:grid-cols-[auto_auto] sm:items-center sm:gap-x-4 lg:flex lg:flex-wrap lg:justify-end lg:gap-y-2">
             <a
               href="https://marksiazon.dev"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 py-1 text-xs text-text-muted hover:text-primary transition-colors no-underline"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap py-1 text-xs text-text-muted hover:text-primary transition-colors no-underline"
             >
               <Globe className="w-3 h-3 opacity-70" aria-hidden="true" />
               Solo developed by Mark Siazon
               <span className="visually-hidden"> (opens in new tab)</span>
             </a>
-            <span className="font-pixel text-[10px] text-text-muted/70 uppercase tracking-widest select-none" aria-hidden="true">
+            <span className="whitespace-nowrap font-pixel text-[10px] text-text-muted/70 uppercase tracking-widest select-none" aria-hidden="true">
               Built on Stellar testnet
             </span>
             <LocaleToggle />

@@ -40,7 +40,7 @@ export function FooterProgramLink({ year }: { year: number }) {
   }, [open]);
 
   return (
-    <span ref={rootRef} className="relative inline-flex w-fit">
+    <span ref={rootRef} className="relative inline-flex w-fit max-w-full">
       <a
         href={SITE_RISE_EVENT_URL}
         target="_blank"
@@ -49,7 +49,7 @@ export function FooterProgramLink({ year }: { year: number }) {
         onFocus={() => setOpen(true)}
         onMouseEnter={() => setOpen(true)}
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 py-1 text-xs text-text-muted font-mono tracking-wide no-underline transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
+        className="inline-flex max-w-full items-center gap-1.5 whitespace-nowrap py-1 text-xs text-text-muted font-mono tracking-wide no-underline transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
       >
         © Stellar PH x Rise · {year}
         <ExternalLink className="h-3 w-3 opacity-60" aria-hidden="true" />
