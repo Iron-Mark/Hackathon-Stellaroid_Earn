@@ -115,7 +115,7 @@ export async function RecentActivity({
         {events.map((event) => (
           <a
             key={event.id}
-            href={`${appConfig.explorerUrl}/tx/${event.txHash}`}
+            href={event.externalUrl}
             target="_blank"
             rel="noreferrer"
             className={cn(
@@ -126,7 +126,7 @@ export async function RecentActivity({
             <span className={kindTag(event.kind)}>{event.label}</span>
             <span className="text-[13px] text-text flex-1 min-w-0 truncate">{event.detail}</span>
             <code className="font-mono text-[12px] text-text-muted hidden sm:inline">
-              {event.txHash.slice(0, 10)}…{event.txHash.slice(-6)}
+              {event.reference}
             </code>
             <span className="text-[11px] text-text-muted whitespace-nowrap">{formatRelativeTime(event.ledgerClosedAt)}</span>
           </a>
