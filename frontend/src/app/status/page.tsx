@@ -20,6 +20,7 @@ import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
 import { appConfig } from "@/lib/config";
 import {
   formatRelativeTime,
+  getContractIndexedEventCount,
   getRecentEvents,
   type RecentActivityItem,
 } from "@/lib/events";
@@ -68,6 +69,7 @@ type MetricsReport = {
   events: RecentActivityItem[];
   error: string | null;
   cards: MetricCard[];
+  indexedEventCount: number | null;
 };
 
 function eventTone(kind: RecentActivityItem["kind"]) {
@@ -83,9 +85,26 @@ function eventTone(kind: RecentActivityItem["kind"]) {
   return "bg-surface-2 text-text-muted";
 }
 
+function sourceLabel(source: RecentActivityItem["source"]) {
+  if (source === "stellar_expert") return "Stellar Expert";
+  if (source === "rpc") return "RPC";
+  return "E2E";
+}
+
+function sourceTone(source: RecentActivityItem["source"]) {
+  if (source === "stellar_expert") {
+    return "border-sky-400/30 bg-sky-500/10 text-sky-200";
+  }
+  if (source === "rpc") {
+    return "border-emerald-400/30 bg-emerald-500/10 text-emerald-200";
+  }
+  return "border-purple-400/30 bg-purple-500/10 text-purple-200";
+}
+
 async function getMetricsReport(): Promise<MetricsReport> {
   let events: RecentActivityItem[] = [];
   let error: string | null = null;
+  const indexedEventCount = await getContractIndexedEventCount(appConfig.contractId);
 
   try {
     events = await getRecentEvents(appConfig.contractId, 40);
@@ -101,15 +120,20 @@ async function getMetricsReport(): Promise<MetricsReport> {
   const uniqueProofs = new Set(
     events.filter((event) => event.hashHex).map((event) => event.hashHex),
   ).size;
-  const uniqueTxHashes = new Set(events.map((event) => event.txHash)).size;
+  const uniqueEventRefs = new Set(events.map((event) => event.txHash ?? event.id)).size;
 
   return {
     events,
     error,
+    indexedEventCount,
     cards: [
-      { label: "Recent events", value: events.length, detail: "Decoded contract events" },
+      {
+        label: "Indexed events",
+        value: indexedEventCount ?? events.length,
+        detail: indexedEventCount === null ? "Decoded contract events" : "Public contract events",
+      },
       { label: "Proof hashes", value: uniqueProofs, detail: "Unique proof IDs found" },
-      { label: "Transactions", value: uniqueTxHashes, detail: "Unique Stellar tx hashes" },
+      { label: "Event refs", value: uniqueEventRefs, detail: "Unique tx or event refs" },
       { label: "Registered", value: byKind.cert_reg ?? 0, detail: "Certificate registrations" },
       { label: "Verified", value: byKind.cert_ver ?? 0, detail: "Certificate verifications" },
       { label: "Rewards", value: byKind.reward ?? 0, detail: "Reward events" },
@@ -196,15 +220,15 @@ function MetricsSection({
           {report.events.length === 0 ? (
             <p className="m-0 rounded-lg border border-border bg-bg px-4 py-3 text-sm text-text-muted">
               {report.error
-                ? "No decoded events are available while the RPC check is degraded."
-                : "No decoded contract events found in the current RPC event window."}
+                ? "No decoded events are available while the public event checks are degraded."
+                : "No decoded contract events found from RPC or the public Stellar Expert index yet."}
             </p>
           ) : (
             <div className="grid gap-2">
               {report.events.slice(0, 8).map((event) => (
                 <a
                   key={event.id}
-                  href={`${appConfig.explorerUrl}/tx/${event.txHash}`}
+                  href={event.externalUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="grid gap-2 rounded-lg border border-border bg-bg px-4 py-3 text-sm text-text no-underline transition hover:border-primary sm:grid-cols-[auto_1fr_auto] sm:items-center"
@@ -213,7 +237,15 @@ function MetricsSection({
                     {event.label}
                   </span>
                   <span className="min-w-0 truncate text-text-muted">{event.detail}</span>
-                  <span className="text-xs text-text-muted">{formatRelativeTime(event.ledgerClosedAt)}</span>
+                  <span className="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+                    <span
+                      className={`rounded border px-1.5 py-0.5 font-pixel text-[9px] uppercase tracking-wider ${sourceTone(event.source)}`}
+                    >
+                      {sourceLabel(event.source)}
+                    </span>
+                    <span>{event.reference}</span>
+                    <span>{formatRelativeTime(event.ledgerClosedAt)}</span>
+                  </span>
                 </a>
               ))}
             </div>
@@ -411,7 +443,7 @@ export default async function StatusPage() {
             </p>
           </article>
 
-          <aside className="rounded-lg border border-border bg-surface p-5">
+          <article className="rounded-lg border border-border bg-surface p-5">
             <h2 className="m-0 text-xl text-text">Proof Links</h2>
             <p className="mt-2 text-sm leading-relaxed text-text-muted">
               Public proof pages are the main artifact to preserve after the event.
@@ -436,7 +468,7 @@ export default async function StatusPage() {
                 Run demo flow
               </Link>
             </div>
-          </aside>
+          </article>
         </section>
 
         <MetricsSection contractUrl={contractUrl} report={metrics} />

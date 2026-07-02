@@ -89,6 +89,9 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 1. **Server-side (RSC):** `/proof/[hash]` pages use `contract-read-server` with `simulateTransaction` via a read-only funded address. CDN-cached with `revalidate=60`.
 2. **Client-side:** Dashboard components call `simulateTransaction` directly for real-time state.
 
+**Event evidence path:**
+- `/api/events` and `/status#metrics` read recent events from Soroban RPC `getEvents` and supplement them with Stellar Expert's public contract event index. Events are decoded, deduplicated, source-labelled (`rpc`, `stellar_expert`, or `e2e`), and displayed as public evidence. This is not a full product analytics warehouse; proof views, employer actions, and conversion tracking require a future first-party read model.
+
 **Write path (1):**
 - All mutations route through Freighter: build tx → `signTransaction()` → `sendTransaction()` → poll `getTransaction()` until confirmed.
 
@@ -139,3 +142,4 @@ Anyone opens /proof/<hash> → Next.js RSC calls simulateTransaction
 | Persistent storage with long TTLs | Credentials should outlive short-term contract state; 518k–1M ledger TTLs provide months of persistence |
 | Typed `#[contracterror]` | Provides clear, actionable errors instead of opaque integer codes |
 | Fee sponsorship behind server auth | Prevents arbitrary public XDR from being sponsor-signed by requiring bearer authorization plus contract/method/fee validation |
+| Public indexer fallback for metrics | Stellar RPC event retention is limited to recent ledgers; supplementing with Stellar Expert keeps older public contract evidence visible without claiming first-party analytics |

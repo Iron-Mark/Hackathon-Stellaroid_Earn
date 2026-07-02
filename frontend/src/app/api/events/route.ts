@@ -31,6 +31,14 @@ export async function GET(request: Request) {
       uniqueProofs: new Set(
         events.filter((e) => e.hashHex).map((e) => e.hashHex),
       ).size,
+      uniqueEventRefs: new Set(events.map((e) => e.txHash ?? e.id)).size,
+      bySource: events.reduce(
+        (acc, e) => {
+          acc[e.source] = (acc[e.source] ?? 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
       latestEvent: events[0]?.ledgerClosedAt ?? null,
       oldestEvent: events[events.length - 1]?.ledgerClosedAt ?? null,
     };

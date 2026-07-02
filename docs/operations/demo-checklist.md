@@ -10,7 +10,7 @@ Use this short checklist before a submission, demo, or public share.
 - Open the verified proof:
   https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
 - From the proof page, click `Fund paid trial` and confirm `/employer` opens with the proof context.
-- Open https://stellaroid.tech/status and confirm it shows the canonical URL and current project state.
+- Open https://stellaroid.tech/status#metrics and confirm it shows the canonical URL, current project state, and public contract-event evidence with source labels.
 
 ## Social Preview
 
@@ -22,6 +22,7 @@ Use this short checklist before a submission, demo, or public share.
 
 - Live app: https://stellaroid.tech
 - Status page: https://stellaroid.tech/status
+- Events API: https://stellaroid.tech/api/events
 - Verified proof: https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
 - Stellar testnet contract:
   https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3
@@ -31,4 +32,4 @@ Use this short checklist before a submission, demo, or public share.
 1. Start with the homepage: Stellaroid Earn turns completed work into a public credential proof.
 2. Open a verified proof: the proof is walletless, shareable, and anchored to a Stellar testnet record.
 3. Click into employer flow: employers can carry verified proof context into a paid trial.
-4. End on status: the project has a canonical domain, operational status route, and traceable testnet evidence.
+4. End on status: the project has a canonical domain, operational status route, source-labelled event evidence, and a bounded testnet pilot path.
