@@ -1,14 +1,21 @@
 import { appConfig } from "@/lib/config";
 import { EMPLOYER_REVIEW_STEPS } from "@/lib/employer-review";
+import type { ProofVerificationBreakdown } from "@/lib/proof-verification";
 import { seoCanonicalUrl } from "@/lib/seo";
 import { CopyButton } from "@/components/ui/copy-button";
+import { Badge } from "@/components/ui/badge";
 
 interface RecruiterCtaPanelProps {
   hash: string;
   candidateAddress?: string;
+  verificationBreakdown?: ProofVerificationBreakdown | null;
 }
 
-export function RecruiterCtaPanel({ hash, candidateAddress }: RecruiterCtaPanelProps) {
+export function RecruiterCtaPanel({
+  hash,
+  candidateAddress,
+  verificationBreakdown,
+}: RecruiterCtaPanelProps) {
   const proofUrl = seoCanonicalUrl(`/proof/${hash}`);
   const employerHref = candidateAddress
     ? `/employer?hash=${encodeURIComponent(hash)}&candidate=${encodeURIComponent(candidateAddress)}`
@@ -25,12 +32,29 @@ export function RecruiterCtaPanel({ hash, candidateAddress }: RecruiterCtaPanelP
       className="rounded-lg border border-primary/30 bg-primary/5 px-4 py-4 flex flex-col gap-3"
       aria-label="Recruiter actions"
     >
-      <span className="font-pixel text-xs font-medium text-primary uppercase tracking-wider">
-        Recruiter actions
-      </span>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="font-pixel text-xs font-medium text-primary uppercase tracking-wider">
+          Recruiter actions
+        </span>
+        {verificationBreakdown ? (
+          <Badge
+            tone={
+              verificationBreakdown.decision === "ready_for_paid_trial_review"
+                ? "success"
+                : "warning"
+            }
+            dot
+          >
+            {verificationBreakdown.decision === "ready_for_paid_trial_review"
+              ? "trust-ready"
+              : "inspect first"}
+          </Badge>
+        ) : null}
+      </div>
       <p className="m-0 text-sm leading-relaxed text-text-muted">
-        Start a paid trial from this verified credential. The employer form will
-        carry over the certificate hash and candidate wallet.
+        {verificationBreakdown?.employerTrustSummary ??
+          "Start a paid trial from this verified credential."} The employer form
+        will carry over the certificate hash and candidate wallet.
       </p>
       <ol className="grid list-none gap-2 p-0 text-sm">
         {EMPLOYER_REVIEW_STEPS.map((step, index) => (
