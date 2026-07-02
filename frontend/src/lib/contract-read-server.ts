@@ -280,6 +280,16 @@ export async function getCertificateServer(certHashHex: string) {
 }
 
 export async function getIssuerServer(issuer: string) {
+  if (appConfig.e2eMode) {
+    return normalizeIssuer({
+      address: issuer,
+      name: "Stellaroid Academy",
+      website: "https://stellaroid.tech",
+      category: "bootcamp",
+      status: "approved",
+    });
+  }
+
   ensureConfigured();
   const server = getServer();
   const sourceAccount = new Account(getSimulationSourceAddress(), "0");
