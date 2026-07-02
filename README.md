@@ -31,12 +31,10 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 
 - **Roadmap:** [`ROADMAP.md`](ROADMAP.md)
 - **Maintenance checks:** [`MAINTENANCE.md`](MAINTENANCE.md)
-- **Branch strategy:** [`docs/BRANCH_STRATEGY.md`](docs/BRANCH_STRATEGY.md)
-- **Deployment runbook:** [`docs/DEPLOYMENT_RUNBOOK.md`](docs/DEPLOYMENT_RUNBOOK.md)
-- **Release checklist:** [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md)
-- **Custom domain cutover:** [`docs/STELLAROID_TECH_CUTOVER.md`](docs/STELLAROID_TECH_CUTOVER.md)
-- **Pro-research intake:** [`docs/spec/stellaroid/INTAKE-STATUS-2026-06-11.md`](docs/spec/stellaroid/INTAKE-STATUS-2026-06-11.md)
-- **Demo checklist:** [`docs/DEMO_CHECKLIST.md`](docs/DEMO_CHECKLIST.md)
+- **Docs index:** [`docs/README.md`](docs/README.md)
+- **Release and deployment:** [`docs/operations/release-and-deployment.md`](docs/operations/release-and-deployment.md)
+- **Pro-research intake:** [`docs/planning/research-intake-status.md`](docs/planning/research-intake-status.md)
+- **Demo checklist:** [`docs/operations/demo-checklist.md`](docs/operations/demo-checklist.md)
 - **Canonical live URL:** [`stellaroid.tech`](https://stellaroid.tech/)
 - **Operational status route:** [`/status`](https://stellaroid.tech/status)
 - **Pilot intake route:** [`/pilot`](https://stellaroid.tech/pilot)
@@ -111,7 +109,7 @@ Contract on Stellar Expert: [`CDMUOHMA…IKTTW3`](https://stellar.expert/explore
 
 ## Architecture
 
-> Full architecture document: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+> Full architecture document: [`docs/reference/architecture.md`](docs/reference/architecture.md)
 
 ```mermaid
 sequenceDiagram
@@ -160,7 +158,7 @@ sequenceDiagram
 - Node.js 20+ and npm
 - [Freighter](https://www.freighter.app/) browser extension set to **Testnet**
 
-Full setup guide: [`setup/[ENG] Pre-Workshop Setup Guide.pdf`](setup/%5BENG%5D%20Pre-Workshop%20Setup%20Guide.pdf)
+Full setup guide: [`docs/reference/pre-workshop-setup-guide.pdf`](docs/reference/pre-workshop-setup-guide.pdf)
 
 ### Smart Contract
 
@@ -279,7 +277,7 @@ test result: ok. 12 passed; 0 failed; 0 ignored
 
 ## Security
 
-Full security checklist: [`docs/SECURITY.md`](docs/SECURITY.md)
+Full security checklist: [`docs/reference/security.md`](docs/reference/security.md)
 
 Covers: smart contract access control, frontend CSP/HSTS/X-Frame-Options, strict input validation, JSON-LD escaping, URL sanitization, proof-claim integrity, fee-sponsor restrictions, error normalization, SSRF prevention, and operational security.
 
@@ -306,14 +304,16 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 
 ## Metrics & Monitoring
 
-- **Metrics dashboard:** [`/metrics`](https://stellaroid.tech/metrics)  - on-chain stats (events, proofs, transactions, certificates, rewards, payments) refreshed every 30s
+- **Status metrics:** [`/status#metrics`](https://stellaroid.tech/status#metrics)  - public contract-event evidence, proof hashes, reward/payment events, and source labels on the operational status page
 - **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health)  - cached JSON health check (config, RPC latency, contract availability)
 - **Events API:** [`/api/events`](https://stellaroid.tech/api/events)  - structured contract event data for external consumers
 - **Vercel Analytics:** Web analytics integrated via `@vercel/analytics`
 
 ### Data Indexing
 
-Contract events are indexed by querying Soroban RPC's `getEvents` method across a 60,000-ledger window (~2 days). Events are decoded from ScVal, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), and served via the `/api/events` REST endpoint and the `/metrics` dashboard. The approach is lightweight and serverless  - no external indexer infrastructure required.
+Contract events are read from two public sources. The app first queries Soroban RPC `getEvents` for recent contract events, then supplements that result with Stellar Expert's public contract event index so older testnet activity does not disappear from the demo surface when the RPC retention window moves on. Events are decoded from ScVal/XDR where possible, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), deduplicated, source-labelled, and served through `/api/events` plus `/status#metrics`.
+
+This remains a lightweight serverless evidence layer, not a full analytics warehouse. Proof views, share actions, employer actions, and long-term product analytics still require a first-party read model or analytics event plan.
 
 ---
 
@@ -335,6 +335,7 @@ Contract events are indexed by querying Soroban RPC's `getEvents` method across 
 
 ```
 stellaroid-earn/
+├── Cargo.toml                   # Rust workspace for learning + examples
 ├── contract/
 │   ├── src/
 │   │   ├── lib.rs              # Soroban credential + payment contract
@@ -350,9 +351,12 @@ stellaroid-earn/
 │   │   ├── hooks/              # Freighter wallet state
 │   │   └── lib/                # Contract client, RPC helpers, types
 │   └── .env.example
+├── docs/                       # Product docs, setup references, operations, and archives
 ├── demo/                       # Demo script, FAQ, press kit
-├── scripts/                    # Screenshot capture (Playwright)
 ├── images/                     # README screenshots
+├── learning/                   # Rust/Soroban workshop exercises
+├── soroban-examples/           # Standalone Soroban examples
+├── scripts/                    # Screenshot capture and operations scripts
 ├── LICENSE
 └── README.md
 ```
@@ -369,15 +373,15 @@ Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 
 **Demo Day slides:** [`/slides`](https://stellaroid.tech/slides) (integrated into the app, arrow keys to navigate)
 
-**Submission/demo checklist:** [`docs/DEMO_CHECKLIST.md`](docs/DEMO_CHECKLIST.md)
+**Submission/demo checklist:** [`docs/operations/demo-checklist.md`](docs/operations/demo-checklist.md)
 
 ---
 
 ## User Validation
 
-### Testnet Users
+### Testnet Wallet Evidence
 
-30+ Stellar testnet wallets are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). 18 wallets have direct contract interactions (`register_issuer`), 12 are funded explorers, and the committed feedback snapshot keeps participant names and emails redacted.
+30 Stellar testnet wallet addresses are listed for public review as test evidence, not as a production user-count claim. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded exploration wallets used during testing. The committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
 <summary><strong>View all 30 wallet addresses</strong></summary>
@@ -420,8 +424,8 @@ Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 ### Feedback Collection
 
 - **Google Form:** [Stellaroid Earn - User Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSftFt8grSRUPecRVQWSRROLA8DAUOn4T61CrZQHtPQaMTxaWw/viewform)
-- **Anonymized response snapshot:** [`docs/user-feedback-responses.csv`](docs/user-feedback-responses.csv)
-- **Full feedback documentation:** [`docs/USER_FEEDBACK.md`](docs/USER_FEEDBACK.md)
+- **Anonymized response snapshot:** [`docs/planning/user-feedback-responses.csv`](docs/planning/user-feedback-responses.csv)
+- **Full feedback documentation:** [`docs/planning/user-feedback.md`](docs/planning/user-feedback.md)
 
 ### Improvements Based on Feedback
 

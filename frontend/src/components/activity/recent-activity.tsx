@@ -24,6 +24,12 @@ function kindTag(kind: RecentActivityItem["kind"]) {
   return "font-pixel text-[11px] text-text-muted bg-surface-2 px-2 py-0.5 rounded";
 }
 
+function sourceLabel(source: RecentActivityItem["source"]) {
+  if (source === "stellar_expert") return "Stellar Expert";
+  if (source === "rpc") return "RPC";
+  return "E2E";
+}
+
 export async function RecentActivity({
   className,
   compact = false,
@@ -90,7 +96,7 @@ export async function RecentActivity({
           />
           <p className={cn("text-sm text-text-muted m-0", (compact || sidebar) && "text-[12px]")}>
             {hasContractLink
-              ? "No events yet. Complete the app flow to see live on-chain activity here."
+              ? "No decoded events found from RPC or the public Stellar Expert index yet."
               : "Contract ID not configured yet. Add it to enable live on-chain activity."}
           </p>
         </div>
@@ -115,7 +121,7 @@ export async function RecentActivity({
         {events.map((event) => (
           <a
             key={event.id}
-            href={`${appConfig.explorerUrl}/tx/${event.txHash}`}
+            href={event.externalUrl}
             target="_blank"
             rel="noreferrer"
             className={cn(
@@ -126,8 +132,11 @@ export async function RecentActivity({
             <span className={kindTag(event.kind)}>{event.label}</span>
             <span className="text-[13px] text-text flex-1 min-w-0 truncate">{event.detail}</span>
             <code className="font-mono text-[12px] text-text-muted hidden sm:inline">
-              {event.txHash.slice(0, 10)}…{event.txHash.slice(-6)}
+              {event.reference}
             </code>
+            <span className="font-pixel text-[10px] uppercase tracking-wider text-text-muted/80">
+              {sourceLabel(event.source)}
+            </span>
             <span className="text-[11px] text-text-muted whitespace-nowrap">{formatRelativeTime(event.ledgerClosedAt)}</span>
           </a>
         ))}

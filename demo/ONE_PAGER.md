@@ -20,8 +20,8 @@ Maria's school hashes her diploma and anchors it on Stellar. The Singapore emplo
 1. **Register** — Issuer anchors a SHA-256 hash of the deliverable on-chain.
 2. **Verify** — Employer confirms the hash matches their copy.
 3. **Pay** — Settlement happens in the same flow, in the same app, on the same ledger.
-4. **Share** — The result is a public **Proof Block** URL — a receipt anyone can open.
-5. **Lookup** — Anyone can paste a hash at `/proof` and resolve a Proof Block **without a wallet**.
+4. **Share** — The result is a public proof URL — a receipt anyone can open.
+5. **Lookup** — Anyone can paste a hash at `/proof` and resolve a proof page **without a wallet**.
 
 The canonical output isn't the UI — it's the **event stream on stellar.expert**. A reviewer with no frontend access still sees every issuance, verification, and payment. The proof is public by default.
 
@@ -48,7 +48,7 @@ No backend. No database. No middleman. Just a contract, a wallet, and a link.
 
 - **Proof-first UX** — the artifact *is* the product, not a tab in a dashboard.
 - **Shareable by default** — every completed flow produces a link, not a record.
-- **Walletless verification** — any third party can resolve a Proof Block from a hash at `/proof` without installing Freighter or creating an account.
+- **Walletless verification** — any third party can resolve a proof page from a hash at `/proof` without installing Freighter or creating an account.
 - **Payment is a step, not an afterthought** — most credentialing dApps stop at verification.
 - **Production-grade polish** — 15s RPC timeouts, humanized errors, branded 404 / error boundary, WCAG AA, reduced-motion, 44×44 touch targets.
 

@@ -13,6 +13,7 @@ next-env.d.ts
 .env
 .env.local
 .env.*.local
+.local/
 
 # Testnet credentials (secret keys)
 docs-new/_credentials/
@@ -38,6 +39,7 @@ admin-key.json
 
 # Playwright MCP runtime files
 .playwright-mcp/
+output/playwright/
 frontend/test-results/
 frontend/playwright-report/
 

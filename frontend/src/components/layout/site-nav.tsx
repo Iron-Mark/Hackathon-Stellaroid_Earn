@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Menu, X, GitFork } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SITE_REPOSITORY_URL } from "@/lib/seo";
 
 const navLinks = [
   { href: "/proof", label: "Verify" },
@@ -15,8 +16,6 @@ const navLinks = [
   { href: "/pilot", label: "Pilot" },
   { href: "/status", label: "Status" },
 ];
-
-const githubHref = "https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn";
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
@@ -83,7 +82,7 @@ export function SiteNav() {
           {/* Right actions */}
           <div className="hidden md:flex items-center gap-2.5 shrink-0">
             <a
-              href={githubHref}
+              href={SITE_REPOSITORY_URL}
               target="_blank"
               rel="noreferrer"
               className="inline-flex min-h-9 items-center justify-center gap-2 rounded-full border border-border-glass bg-transparent px-3 text-[13px] font-semibold text-text no-underline transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
@@ -127,7 +126,7 @@ export function SiteNav() {
           ))}
           <div className="mt-3 flex flex-col gap-2">
             <a
-              href={githubHref}
+              href={SITE_REPOSITORY_URL}
               target="_blank"
               rel="noreferrer"
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border-glass bg-transparent px-4 text-sm font-semibold text-text no-underline transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"

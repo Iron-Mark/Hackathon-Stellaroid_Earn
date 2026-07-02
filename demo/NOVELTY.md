@@ -79,7 +79,7 @@ A Filipino freelancer billing a US client today loses ~20% to Fiverr, waits 30�
 
 ## Why it's marketable — the growth-loop thesis
 
-### 1. The Proof Block is a built-in growth channel
+### 1. The proof URL is a built-in growth channel
 
 Every completed cycle produces a public URL. Users share it on LinkedIn, X, portfolios, offer emails, pull requests. Each share is:
 
@@ -113,7 +113,7 @@ Nothing in that list is domain-specific. A diploma hash and a freelance-delivera
 
 Same four fields every row. The branding changes. The contract doesn&rsquo;t.
 
-The Proof Block is universal too. `/proof/[hash]` is just a URL &mdash; a recruiter, grant LP, client, employer, or collaborator consumes it the same way: **click, read, trust, act.** A Wordle grid works for every Wordle player. A GitHub contribution graph works for every developer. A Proof Block works for every kind of work. The social object is the moat, and the moat is shape-agnostic.
+The proof URL is universal too. `/proof/[hash]` is just a URL &mdash; a recruiter, grant LP, client, employer, or collaborator consumes it the same way: **click, read, trust, act.** A Wordle grid works for every Wordle player. A GitHub contribution graph works for every developer. A proof URL works for every kind of work. The social object is the moat, and the moat is shape-agnostic.
 
 ### 3. Stellar-native unit economics
 
@@ -151,7 +151,7 @@ Infrastructure scales with Stellar's fees, not the app's costs. That unlocks pri
 
 Defensibility is **UX + distribution**, not cryptography. The contract is intentionally simple.
 
-1. **Proof Blocks as social objects** — each one is a dormant growth channel, permanently on-chain
+1. **Proof URLs as social objects** — each one is a dormant growth channel, permanently on-chain
 2. **Compressed two-sided UX** — issuer and verifier share one surface, not two apps
 3. **Walletless verification surface** — `/proof` hash-lookup lets recruiters and committees validate a claim with zero install, zero account
 4. **Polish trust** — non-crypto users feel safe enough to try it
