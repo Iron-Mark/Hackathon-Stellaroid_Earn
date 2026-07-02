@@ -4,6 +4,7 @@ import {
   EMPLOYER_REVIEW_CHECKLIST,
   EMPLOYER_REVIEW_STEPS,
 } from "./employer-review.ts";
+import { buildProofVerificationBreakdown } from "./proof-verification.ts";
 import { seoCanonicalUrl } from "./seo.ts";
 import type { IssuerRecord, ProofEvidenceLink, ProofMetadata } from "./types.ts";
 
@@ -48,6 +49,11 @@ export function buildEmployerVerificationExport({
   const credentialDescription = proofMetadata?.description ?? null;
   const issuerName = issuer?.name || cert.issuer;
   const issuerId = issuer?.website || cert.issuer;
+  const verificationBreakdown = buildProofVerificationBreakdown({
+    hash,
+    cert,
+    issuer,
+  });
   const employerUrl = seoCanonicalUrl(
     `/employer?hash=${encodeURIComponent(hash)}&candidate=${encodeURIComponent(cert.owner)}`,
   );
@@ -77,21 +83,18 @@ export function buildEmployerVerificationExport({
       status: cert.status,
       verified,
       employerUse:
-        verified
-          ? "Eligible for employer review and paid-trial workflows."
-          : "Inspect only. Do not treat as verified until the on-chain status is verified.",
+        verificationBreakdown.employerTrustSummary,
       sourceOfTruth: "Stellar testnet contract state plus the public proof page.",
+      issuerRegistryStatus: verificationBreakdown.issuerTrust.status,
     },
+    verificationBreakdown,
     employerReview: {
-      decision: verified ? "ready_for_paid_trial_review" : "inspect_only",
+      decision: verificationBreakdown.decision,
       employerUrl,
       candidateWallet: cert.owner,
       path: employerReviewPath,
-      blockers: verified
-        ? []
-        : [
-            `Credential status is ${cert.status}; funding should wait until the proof is verified.`,
-          ],
+      blockers: verificationBreakdown.blockers,
+      warnings: verificationBreakdown.warnings,
     },
     credential: {
       hash,

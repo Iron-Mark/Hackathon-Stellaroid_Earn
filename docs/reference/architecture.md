@@ -119,7 +119,8 @@ Issuer registers → Admin approves issuer → Issuer registers certificate
 ### Verification Flow (Zero-Wallet)
 ```
 Anyone opens /proof/<hash> → Next.js RSC calls simulateTransaction
-→ Contract returns CertificateRecord → Page renders verified/unverified badge
+→ Contract returns CertificateRecord + issuer registry evidence
+→ Page renders status, issuer trust, and verification breakdown
 → No wallet, no login, no API key required
 ```
 

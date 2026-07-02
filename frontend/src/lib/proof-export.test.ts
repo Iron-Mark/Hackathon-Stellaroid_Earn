@@ -57,7 +57,19 @@ test("employer export includes an explicit unsigned standards preview", () => {
   assert.equal(payload.employerReview.candidateWallet, cert.owner);
   assert.deepEqual(
     payload.employerReview.path.map((step) => step.title),
-    ["Confirm proof", "Match wallet", "Fund escrow"],
+    ["Review proof breakdown", "Match wallet", "Save proof pack", "Fund escrow"],
+  );
+  assert.equal(payload.verificationBreakdown.decision, "ready_for_paid_trial_review");
+  assert.equal(payload.verificationBreakdown.issuerTrust.status, "approved");
+  assert.deepEqual(
+    payload.verificationBreakdown.checks.map((check) => check.title),
+    [
+      "Hash anchor",
+      "Contract record",
+      "Credential status",
+      "Issuer registry",
+      "Employer handoff",
+    ],
   );
   assert.match(payload.standardsAlignment.warning, /not a signed Verifiable Credential/);
   assert.equal(payload.standardsAlignment.roleModel.issuer.name, issuer.name);
@@ -73,6 +85,11 @@ test("employer export includes an explicit unsigned standards preview", () => {
   assert.ok(
     payload.recruiterChecklist.includes(
       "Read standardsAlignment.warning before treating this export as a standards credential.",
+    ),
+  );
+  assert.ok(
+    payload.recruiterChecklist.includes(
+      "Open proofUrl and review verificationBreakdown.checks before funding.",
     ),
   );
 });

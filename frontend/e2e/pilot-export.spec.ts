@@ -31,8 +31,13 @@ test("verified proof exposes an employer summary export", async ({ page, request
 
   const exportLink = page.getByRole("link", { name: /download proof pack/i });
   await expect(exportLink).toHaveAttribute("href", `/proof/${SAMPLE_PROOF_HASH}/export`);
-  await expect(page.getByText("Confirm proof", { exact: true })).toBeVisible();
+  const breakdown = page.getByRole("region", { name: "Proof verification breakdown" });
+  await expect(breakdown.getByText("Verification breakdown", { exact: true })).toBeVisible();
+  await expect(breakdown.getByText("Hash anchor", { exact: true })).toBeVisible();
+  await expect(breakdown.getByText("Issuer registry", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Review proof breakdown", { exact: true })).toBeVisible();
   await expect(page.getByText("Match wallet", { exact: true })).toBeVisible();
+  await expect(page.getByText("Save proof pack", { exact: true })).toBeVisible();
   await expect(page.getByText("Fund escrow", { exact: true })).toBeVisible();
 
   const response = await request.get(`/proof/${SAMPLE_PROOF_HASH}/export`);
@@ -46,10 +51,21 @@ test("verified proof exposes an employer summary export", async ({ page, request
   expect(body.proofUrl).toBe(`https://stellaroid.tech/proof/${SAMPLE_PROOF_HASH}`);
   expect(body.trustSummary.status).toBe("verified");
   expect(body.trustSummary.verified).toBe(true);
+  expect(body.trustSummary.issuerRegistryStatus).toBe("approved");
+  expect(body.verificationBreakdown.decision).toBe("ready_for_paid_trial_review");
+  expect(body.verificationBreakdown.issuerTrust.status).toBe("approved");
+  expect(body.verificationBreakdown.checks.map((check: { title: string }) => check.title)).toEqual([
+    "Hash anchor",
+    "Contract record",
+    "Credential status",
+    "Issuer registry",
+    "Employer handoff",
+  ]);
   expect(body.employerReview.decision).toBe("ready_for_paid_trial_review");
   expect(body.employerReview.path.map((step: { title: string }) => step.title)).toEqual([
-    "Confirm proof",
+    "Review proof breakdown",
     "Match wallet",
+    "Save proof pack",
     "Fund escrow",
   ]);
   expect(body.credential.hash).toBe(SAMPLE_PROOF_HASH);
@@ -60,5 +76,8 @@ test("verified proof exposes an employer summary export", async ({ page, request
   );
   expect(body.recruiterChecklist).toContain(
     "Read standardsAlignment.warning before treating this export as a standards credential.",
+  );
+  expect(body.recruiterChecklist).toContain(
+    "Open proofUrl and review verificationBreakdown.checks before funding.",
   );
 });
