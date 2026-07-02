@@ -473,7 +473,7 @@ export default function SlidesPage() {
                 variant: "purple" as const,
                 stroke: "#a78bfa",
                 title: "Monitoring",
-                desc: "/api/health, /metrics dashboard, /api/events indexing",
+                desc: "/api/health, /status#metrics, /api/events indexing",
                 icon: (
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 ),

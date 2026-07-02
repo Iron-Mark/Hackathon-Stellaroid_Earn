@@ -2,7 +2,7 @@
 
 Next.js 15 (App Router) + React 19 dApp connecting to a Soroban certificate contract on Stellar testnet via Freighter.
 
-Built following `../setup/STELLAR_FREIGHTER_INTEGRATION_GUIDE.md`.
+Built following [`../docs/reference/freighter-integration.md`](../docs/reference/freighter-integration.md).
 
 ## Setup
 
@@ -20,7 +20,7 @@ Then in `.env.local`:
 4. Set `NEXT_PUBLIC_CANONICAL_URL` to the production domain used for search metadata and canonical links.
 5. Leave `NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS=0` locally unless you explicitly want to test the Vercel Analytics script outside Vercel.
 
-If you pulled the new trust-layer frontend bindings, the old demo contract ID is no longer ABI-compatible. Rebuild and redeploy the contract before testing register / verify / issuer approval flows. The step-by-step checklist lives in `../docs/superpowers/plans/2026-04-18-trust-layer-redeploy-checklist.md`.
+If you pulled the new trust-layer frontend bindings, the old demo contract ID is no longer ABI-compatible. Rebuild and redeploy the contract before testing register / verify / issuer approval flows. The historical trust-layer checklist lives in `../docs/archive/superpowers/plans/2026-04-18-trust-layer-redeploy-checklist.md`; revalidate it before use.
 
 ## Run
 

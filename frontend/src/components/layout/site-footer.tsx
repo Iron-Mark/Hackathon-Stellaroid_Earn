@@ -3,8 +3,9 @@ import Image from "next/image";
 import { ExternalLink, Globe } from "lucide-react";
 import { appConfig } from "@/lib/config";
 import { FooterTagline } from "@/components/layout/footer-tagline";
+import { FooterProgramLink } from "@/components/layout/footer-program-link";
 import { LocaleToggle } from "@/components/layout/locale-toggle";
-import { SITE_CONTRACT_SOURCE_URL, SITE_REPOSITORY_URL } from "@/lib/seo";
+import { SITE_CONTRACT_SOURCE_URL, SITE_REPOSITORY_URL, SITE_RISE_EVENT_URL } from "@/lib/seo";
 
 export function SiteFooter() {
   const contractUrl = appConfig.contractId
@@ -58,8 +59,8 @@ export function SiteFooter() {
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:flex sm:flex-row sm:gap-10 lg:contents">
 
             {/* Site */}
-            <nav aria-label="Site links" className="flex flex-col text-[13px]">
-              <h2 className="font-pixel text-[11px] font-medium text-text-muted uppercase tracking-widest mb-3">Site</h2>
+            <nav aria-label="Site links" className="grid grid-cols-2 gap-x-7 text-[13px]">
+              <h2 className="col-span-2 font-pixel text-[11px] font-medium text-primary uppercase tracking-widest mb-3">Site</h2>
               <Link href="/" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Home</Link>
               <Link href="/app" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">App</Link>
               <Link href="/proof" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Verify</Link>
@@ -88,7 +89,7 @@ export function SiteFooter() {
                 <span className="visually-hidden"> (opens in new tab)</span>
                 <ExternalLink className="w-3 h-3 shrink-0 opacity-50" aria-hidden="true" />
               </a>
-              <Link href="/metrics" prefetch={false} className="py-1.5 text-text-muted hover:text-primary transition-colors no-underline">Metrics</Link>
+              <Link href="/status#metrics" prefetch={false} className="py-1.5 text-text-muted hover:text-primary transition-colors no-underline">Metrics</Link>
               <Link href="/slides" prefetch={false} className="py-1.5 text-text-muted hover:text-primary transition-colors no-underline">Demo Presentation</Link>
             </nav>
 
@@ -105,7 +106,7 @@ export function SiteFooter() {
                 <span className="visually-hidden"> (opens in new tab)</span>
                 <ExternalLink className="w-3 h-3 shrink-0 opacity-50" aria-hidden="true" />
               </a>
-              <a href="https://risein.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 py-1.5 text-text-muted hover:text-text transition-colors no-underline">
+              <a href={SITE_RISE_EVENT_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 py-1.5 text-text-muted hover:text-text transition-colors no-underline">
                 Rise In
                 <span className="visually-hidden"> (opens in new tab)</span>
                 <ExternalLink className="w-3 h-3 shrink-0 opacity-50" aria-hidden="true" />
@@ -117,9 +118,7 @@ export function SiteFooter() {
 
         {/* Bottom bar — stacked on mobile, single row on sm+ */}
         <div className="mt-10 pt-5 border-t border-border-glass flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
-          <span className="text-xs text-text-muted font-mono tracking-wide">
-            © Stellar PH Bootcamp · {new Date().getFullYear()}
-          </span>
+          <FooterProgramLink year={new Date().getFullYear()} />
           <div className="flex items-center gap-4 flex-wrap">
             <a
               href="https://marksiazon.dev"

@@ -29,13 +29,6 @@ export function SiteNav() {
 
   return (
     <>
-      <a
-        href="#main"
-        className="absolute left-4 -top-12 focus:top-3 z-50 px-3 py-2 rounded-md bg-primary text-on-primary font-semibold text-sm no-underline transition-[top] duration-150"
-      >
-        Skip to content
-      </a>
-
       {/* Glassmorphism nav */}
       <nav
         className={cn(

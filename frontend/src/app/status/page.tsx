@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  Activity,
   ArrowRight,
+  BarChart3,
   BriefcaseBusiness,
   CheckCircle2,
   ClipboardCheck,
@@ -16,6 +18,11 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteNav } from "@/components/layout/site-nav";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
 import { appConfig } from "@/lib/config";
+import {
+  formatRelativeTime,
+  getRecentEvents,
+  type RecentActivityItem,
+} from "@/lib/events";
 import { getHealthReport, type HealthStatus } from "@/lib/health-report";
 import { shortenAddress } from "@/lib/format";
 import { buildPageMetadata, SITE_CANONICAL_URL } from "@/lib/seo";
@@ -49,6 +56,68 @@ function statusLabel(status: HealthStatus) {
   return "Down";
 }
 
+type KindCount = Record<string, number>;
+
+type MetricCard = {
+  label: string;
+  value: number;
+  detail: string;
+};
+
+type MetricsReport = {
+  events: RecentActivityItem[];
+  error: string | null;
+  cards: MetricCard[];
+};
+
+function eventTone(kind: RecentActivityItem["kind"]) {
+  if (kind === "payment" || kind === "reward") {
+    return "bg-amber-500/10 text-primary";
+  }
+  if (kind === "cert_ver") {
+    return "bg-emerald-500/10 text-emerald-300";
+  }
+  if (kind === "cert_reg") {
+    return "bg-sky-500/10 text-sky-300";
+  }
+  return "bg-surface-2 text-text-muted";
+}
+
+async function getMetricsReport(): Promise<MetricsReport> {
+  let events: RecentActivityItem[] = [];
+  let error: string | null = null;
+
+  try {
+    events = await getRecentEvents(appConfig.contractId, 40);
+  } catch (err) {
+    error = err instanceof Error ? err.message : "Failed to load on-chain metrics.";
+  }
+
+  const byKind = events.reduce<KindCount>((acc, event) => {
+    acc[event.kind] = (acc[event.kind] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const uniqueProofs = new Set(
+    events.filter((event) => event.hashHex).map((event) => event.hashHex),
+  ).size;
+  const uniqueTxHashes = new Set(events.map((event) => event.txHash)).size;
+
+  return {
+    events,
+    error,
+    cards: [
+      { label: "Recent events", value: events.length, detail: "Decoded contract events" },
+      { label: "Proof hashes", value: uniqueProofs, detail: "Unique proof IDs found" },
+      { label: "Transactions", value: uniqueTxHashes, detail: "Unique Stellar tx hashes" },
+      { label: "Registered", value: byKind.cert_reg ?? 0, detail: "Certificate registrations" },
+      { label: "Verified", value: byKind.cert_ver ?? 0, detail: "Certificate verifications" },
+      { label: "Rewards", value: byKind.reward ?? 0, detail: "Reward events" },
+      { label: "Payments", value: byKind.payment ?? 0, detail: "Employer payment events" },
+    ],
+  };
+}
+
 function CheckRow({
   label,
   detail,
@@ -73,8 +142,90 @@ function CheckRow({
   );
 }
 
+function MetricsSection({
+  contractUrl,
+  report,
+}: {
+  contractUrl: string;
+  report: MetricsReport;
+}) {
+  return (
+    <section id="metrics" className="mt-10 scroll-mt-24" aria-labelledby="metrics-title">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-primary">
+          <BarChart3 className="size-5" aria-hidden="true" />
+          <h2 id="metrics-title" className="m-0 text-xl text-text">
+            On-chain Metrics
+          </h2>
+        </div>
+        <a
+          href={`${contractUrl}#events`}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary no-underline hover:underline"
+        >
+          Open events <ExternalLink className="size-3.5" aria-hidden="true" />
+        </a>
+      </div>
+
+      <div className="rounded-lg border border-border bg-surface p-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {report.cards.map((card) => (
+            <article key={card.label} className="rounded-lg border border-border bg-bg px-4 py-3">
+              <p className="m-0 font-pixel text-[10px] uppercase tracking-widest text-text-muted">
+                {card.label}
+              </p>
+              <p className="m-0 mt-2 font-heading text-2xl font-bold text-text">{card.value}</p>
+              <p className="m-0 mt-1 text-xs leading-relaxed text-text-muted">{card.detail}</p>
+            </article>
+          ))}
+        </div>
+
+        {report.error ? (
+          <div className="mt-5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm leading-relaxed text-amber-200">
+            Metrics RPC is degraded: {report.error}
+          </div>
+        ) : null}
+
+        <div className="mt-6">
+          <div className="mb-3 flex items-center gap-2">
+            <Activity className="size-4 text-primary" aria-hidden="true" />
+            <h3 className="m-0 text-base text-text">Recent Activity</h3>
+          </div>
+
+          {report.events.length === 0 ? (
+            <p className="m-0 rounded-lg border border-border bg-bg px-4 py-3 text-sm text-text-muted">
+              {report.error
+                ? "No decoded events are available while the RPC check is degraded."
+                : "No decoded contract events found in the current RPC event window."}
+            </p>
+          ) : (
+            <div className="grid gap-2">
+              {report.events.slice(0, 8).map((event) => (
+                <a
+                  key={event.id}
+                  href={`${appConfig.explorerUrl}/tx/${event.txHash}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="grid gap-2 rounded-lg border border-border bg-bg px-4 py-3 text-sm text-text no-underline transition hover:border-primary sm:grid-cols-[auto_1fr_auto] sm:items-center"
+                >
+                  <span className={`w-fit rounded px-2 py-0.5 font-pixel text-[11px] ${eventTone(event.kind)}`}>
+                    {event.label}
+                  </span>
+                  <span className="min-w-0 truncate text-text-muted">{event.detail}</span>
+                  <span className="text-xs text-text-muted">{formatRelativeTime(event.ledgerClosedAt)}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function StatusPage() {
-  const health = await getHealthReport();
+  const [health, metrics] = await Promise.all([getHealthReport(), getMetricsReport()]);
   const contractUrl = appConfig.contractId
     ? `${appConfig.explorerUrl}/contract/${appConfig.contractId}`
     : appConfig.explorerUrl;
@@ -273,7 +424,7 @@ export default async function StatusPage() {
                 Open sample proof
               </Link>
               <Link
-                href="/metrics"
+                href="#metrics"
                 className="inline-flex items-center justify-center rounded-md border border-border px-4 py-2.5 text-sm font-semibold text-text no-underline transition hover:bg-surface-2"
               >
                 View metrics
@@ -287,6 +438,8 @@ export default async function StatusPage() {
             </div>
           </aside>
         </section>
+
+        <MetricsSection contractUrl={contractUrl} report={metrics} />
       </main>
       <SiteFooter />
     </div>
