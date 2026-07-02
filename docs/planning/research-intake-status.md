@@ -33,7 +33,7 @@ Do not expand into marketplace, NFT, broad AI, or mainnet payment scope before i
 | Batch credential issuance | Accepted backlog | Track as issuer pilot requirement: CSV preview, validation, and signing queue after one issuer pilot. |
 | Revocation and suspension UX | Implemented, needs richer reason taxonomy later | Contract supports revoke/suspend, dashboard action buttons exist, and proof pages render revoked/suspended status banners. Reason taxonomy remains backlog. |
 | Expiration and renewal flow | Accepted backlog | Contract has `expires_at` and UI status handling. Actual issuer renewal workflow remains future work because current issuance sets `expires_at = 0`. |
-| Employer export pack | Implemented | `/proof/[hash]/export` returns a recruiter-safe JSON proof pack with status, issuer, timestamps, metadata, proof URL, explorer links, and an unsigned standards-alignment preview. |
+| Employer export pack | Implemented | `/proof/[hash]/export` returns a recruiter-safe JSON proof pack with status, issuer, timestamps, metadata, proof URL, explorer links, verification breakdown checks, issuer-trust evidence, and an unsigned standards-alignment preview. |
 | Issuer pilot and employer integration request flows | Implemented | `/pilot` provides issuer pilot and employer integration paths with explicit testnet boundary. |
 | Role-based admin model | Accepted backlog | Future org admin, reviewer, viewer, and support roles are documented here and in roadmap; not implemented in testnet MVP. |
 | Audit-log requirements | Accepted backlog | Future read-model/audit trail requirement; current on-chain events and `/metrics` provide only public chain activity. |

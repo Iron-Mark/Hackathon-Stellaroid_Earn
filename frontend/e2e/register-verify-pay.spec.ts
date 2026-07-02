@@ -93,10 +93,15 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
     new RegExp(`/employer\\?hash=${certHash}&candidate=${studentWallet}`),
   );
   await expect(page.getByRole("heading", { name: "Review before funding" })).toBeVisible();
-  await expect(page.getByText("Verified credential loaded")).toBeVisible();
+  await expect(page.getByText("Hash anchor", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Issuer registry", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("The proof-link candidate matches the credential owner.")).toBeVisible();
   await expect(page.getByText("Employer review brief")).toBeVisible();
-  await expect(page.getByText("Ready to configure escrow from this proof.")).toBeVisible();
+  await expect(
+    page.getByText(
+      "Ready for employer review: the credential is verified on-chain and the issuer registry status is approved.",
+    ),
+  ).toBeVisible();
   await expect(page.getByLabel("Opportunity title")).toHaveValue(
     "Paid trial: Stellar Smart Contract Bootcamp Completion",
   );

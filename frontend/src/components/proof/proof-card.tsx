@@ -15,6 +15,8 @@ import { CredentialMetadataPanel } from "./credential-metadata-panel";
 import { IssuerTrustCard } from "./issuer-trust-card";
 import { CredentialStatusTimeline } from "./credential-status-timeline";
 import { RecruiterCtaPanel } from "./recruiter-cta-panel";
+import { VerificationBreakdownCard } from "./verification-breakdown-card";
+import { buildProofVerificationBreakdown } from "@/lib/proof-verification";
 
 interface ProofCardProps {
   hash: string;
@@ -164,6 +166,14 @@ export function ProofCard({
   const shortHash = shortenAddress(hash, 8);
   const status = statusMeta(cert, lookupFailed);
   const issuerState = issuerMeta(cert, issuer, issuerLookupFailed);
+  const verificationBreakdown = cert
+    ? buildProofVerificationBreakdown({
+        hash,
+        cert,
+        issuer: issuer ?? null,
+        issuerLookupFailed,
+      })
+    : null;
 
   return (
     <div className="max-w-3xl mx-auto px-8 max-sm:px-3">
@@ -222,6 +232,9 @@ export function ProofCard({
             {issuer && issuer.status !== "pending" ? (
               <IssuerTrustCard issuer={issuer} />
             ) : null}
+            {verificationBreakdown ? (
+              <VerificationBreakdownCard breakdown={verificationBreakdown} />
+            ) : null}
           </section>
         ) : (
           <div className="flex flex-col items-center gap-1 text-sm text-text-muted border border-dashed border-border rounded-lg p-6 text-center">
@@ -260,7 +273,11 @@ export function ProofCard({
               expiresAt={cert.expiresAt}
             />
             {cert.status === "verified" ? (
-              <RecruiterCtaPanel hash={hash} candidateAddress={cert.owner} />
+              <RecruiterCtaPanel
+                hash={hash}
+                candidateAddress={cert.owner}
+                verificationBreakdown={verificationBreakdown}
+              />
             ) : null}
           </div>
         ) : null}

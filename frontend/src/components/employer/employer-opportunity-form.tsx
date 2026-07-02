@@ -8,13 +8,18 @@ import { appConfig, hasRequiredConfig } from "@/lib/config";
 import { EMPLOYER_REVIEW_STEPS } from "@/lib/employer-review";
 import {
   getCertificate,
+  getIssuer,
   createOpportunity,
   fundOpportunity,
 } from "@/lib/contract-client";
 import type { CertificateRecord } from "@/lib/contract-client";
 import { humanizeError } from "@/lib/errors";
 import { isValidDecimalAmount, parseAmountToInt, shortenAddress } from "@/lib/format";
-import { MAX_OPPORTUNITY_MILESTONES } from "@/lib/types";
+import {
+  buildProofVerificationBreakdown,
+  type ProofVerificationCheckStatus,
+} from "@/lib/proof-verification";
+import { MAX_OPPORTUNITY_MILESTONES, type IssuerRecord } from "@/lib/types";
 import { withTimeout } from "@/lib/with-timeout";
 import {
   AlertTriangle,
@@ -44,23 +49,31 @@ function ReviewItem({
   complete,
   label,
   detail,
+  status,
 }: {
   complete: boolean;
   label: string;
   detail: string;
+  status?: ProofVerificationCheckStatus;
 }) {
+  const effectiveStatus = status ?? (complete ? "pass" : "warning");
+  const toneClass =
+    effectiveStatus === "pass"
+      ? "text-success"
+      : effectiveStatus === "fail"
+        ? "text-danger"
+        : "text-warning";
+
   return (
     <li className="flex gap-3 rounded-lg border border-border bg-bg px-3 py-3">
       <span
-        className={
-          complete
-            ? "mt-0.5 text-success"
-            : "mt-0.5 text-text-muted/70"
-        }
+        className={`mt-0.5 ${toneClass}`}
         aria-hidden="true"
       >
-        {complete ? (
+        {effectiveStatus === "pass" ? (
           <CheckCircle2 className="h-4 w-4" />
+        ) : effectiveStatus === "fail" ? (
+          <AlertTriangle className="h-4 w-4" />
         ) : (
           <span className="block h-4 w-4 rounded-full border border-current" />
         )}
@@ -84,6 +97,8 @@ export function EmployerOpportunityForm({
 
   const [certHash, setCertHash] = useState(initialHash);
   const [cert, setCert] = useState<CertificateRecord | null>(null);
+  const [issuer, setIssuer] = useState<IssuerRecord | null>(null);
+  const [issuerLookupError, setIssuerLookupError] = useState<string | null>(null);
   const [lookupBusy, setLookupBusy] = useState(false);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -123,6 +138,8 @@ export function EmployerOpportunityForm({
 
       setLookupBusy(true);
       setCert(null);
+      setIssuer(null);
+      setIssuerLookupError(null);
       setInitialLookupError(null);
       setCreatedOppId(null);
       setOpportunityFunded(false);
@@ -143,6 +160,13 @@ export function EmployerOpportunityForm({
               detail: "No certificate on-chain for that hash.",
               tone: "warning",
             });
+          }
+        } else {
+          try {
+            setIssuer(await getIssuer(record.issuer));
+          } catch (e) {
+            const h = humanizeError(e);
+            setIssuerLookupError(h.detail ?? h.title);
           }
         }
       } catch (e) {
@@ -250,11 +274,22 @@ export function EmployerOpportunityForm({
     parsedMilestones >= 1 &&
     parsedMilestones <= MAX_OPPORTUNITY_MILESTONES;
   const amountIsValid = isValidDecimalAmount(amount, appConfig.assetDecimals);
+  const verificationBreakdown = cert
+    ? buildProofVerificationBreakdown({
+        hash: cleanHash,
+        cert,
+        issuer,
+        issuerLookupFailed: Boolean(issuerLookupError),
+      })
+    : null;
+  const trustReady =
+    verificationBreakdown?.decision === "ready_for_paid_trial_review";
   const canCreate = Boolean(
     configured &&
     walletConnected &&
     cert &&
     cert.status === "verified" &&
+    trustReady &&
     candidateMatchesProof &&
     !submitting &&
     amountIsValid &&
@@ -275,23 +310,41 @@ export function EmployerOpportunityForm({
   const proofLink = validHashFormat ? `/proof/${cleanHash}` : null;
   const proofPackLink = validHashFormat ? `/proof/${cleanHash}/export` : null;
   const employerReviewDecision =
-    cert?.status === "verified" && candidateMatchesProof
-      ? "Ready to configure escrow from this proof."
-      : cert
-        ? "Inspect only until proof status and candidate wallet are clear."
+    cert && !candidateMatchesProof
+      ? "Inspect only: the proof-link candidate does not match the credential owner."
+      : verificationBreakdown
+        ? verificationBreakdown.employerTrustSummary
         : "Look up a proof before creating an opportunity.";
+  const proofChecklist = verificationBreakdown
+    ? verificationBreakdown.checks.map((check) => ({
+        complete: check.status === "pass",
+        status: check.status,
+        label: check.title,
+        detail: `${check.label}: ${check.detail}`,
+      }))
+    : [
+        {
+          complete: Boolean(cert && cert.status === "verified"),
+          status: (cert?.status === "verified"
+            ? "pass"
+            : "warning") as ProofVerificationCheckStatus,
+          label: "Verified credential loaded",
+          detail: cert
+            ? cert.status === "verified"
+              ? "This credential is in the verified on-chain state."
+              : `Current status is ${cert.status}; funding stays locked until verification.`
+            : "Look up the proof hash before creating an opportunity.",
+        },
+      ];
   const checklist = [
-    {
-      complete: Boolean(cert && cert.status === "verified"),
-      label: "Verified credential loaded",
-      detail: cert
-        ? cert.status === "verified"
-          ? "This credential is in the verified on-chain state."
-          : `Current status is ${cert.status}; funding stays locked until verification.`
-        : "Look up the proof hash before creating an opportunity.",
-    },
+    ...proofChecklist,
     {
       complete: Boolean(cert && candidateMatchesProof),
+      status: (cert
+        ? candidateMatchesProof
+          ? "pass"
+          : "fail"
+        : "warning") as ProofVerificationCheckStatus,
       label: "Candidate wallet matches",
       detail:
         cert && candidateFromLink
@@ -304,6 +357,7 @@ export function EmployerOpportunityForm({
     },
     {
       complete: walletConnected,
+      status: (walletConnected ? "pass" : "warning") as ProofVerificationCheckStatus,
       label: "Employer wallet ready",
       detail: walletConnected
         ? "Freighter is connected to the expected Stellar network."
@@ -311,6 +365,7 @@ export function EmployerOpportunityForm({
     },
     {
       complete: amountIsValid && validMilestoneCount,
+      status: (amountIsValid && validMilestoneCount ? "pass" : "warning") as ProofVerificationCheckStatus,
       label: "Escrow terms ready",
       detail:
         amountIsValid && validMilestoneCount
@@ -417,6 +472,17 @@ export function EmployerOpportunityForm({
               <p className="m-0 leading-relaxed">{initialLookupError}</p>
             </div>
           ) : null}
+          {issuerLookupError ? (
+            <div className="mt-4 flex gap-3 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-text">
+              <AlertTriangle
+                className="mt-0.5 h-4 w-4 shrink-0 text-warning"
+                aria-hidden="true"
+              />
+              <p className="m-0 leading-relaxed">
+                Issuer registry evidence could not be loaded: {issuerLookupError}
+              </p>
+            </div>
+          ) : null}
         </section>
       )}
 
@@ -435,6 +501,8 @@ export function EmployerOpportunityForm({
             onChange={(e) => {
               setCertHash(e.target.value);
               setCert(null);
+              setIssuer(null);
+              setIssuerLookupError(null);
               setCreatedOppId(null);
               setOpportunityFunded(false);
             }}
@@ -476,14 +544,10 @@ export function EmployerOpportunityForm({
                   Employer review brief
                 </span>
                 <Badge
-                  tone={
-                    cert.status === "verified" && candidateMatchesProof
-                      ? "success"
-                      : "warning"
-                  }
+                  tone={trustReady && candidateMatchesProof ? "success" : "warning"}
                   dot
                 >
-                  {cert.status === "verified" && candidateMatchesProof
+                  {trustReady && candidateMatchesProof
                     ? "ready"
                     : "review needed"}
                 </Badge>
@@ -493,6 +557,13 @@ export function EmployerOpportunityForm({
                 <span className="font-mono text-text">
                   {shortenAddress(cert.owner, 8)}
                 </span>
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-text-muted">
+                Issuer evidence:{" "}
+                <span className="font-semibold text-text">
+                  {issuer?.status ?? (issuerLookupError ? "lookup failed" : "loading")}
+                </span>
+                {issuer?.name ? ` · ${issuer.name}` : ""}
               </p>
               <ol className="mt-3 grid list-none gap-2 p-0">
                 {EMPLOYER_REVIEW_STEPS.map((step, index) => (
@@ -567,8 +638,11 @@ export function EmployerOpportunityForm({
                 as a separate signed step.
               </p>
             </div>
-            <Badge tone={candidateMatchesProof ? "success" : "danger"} dot>
-              {candidateMatchesProof ? "ready for escrow" : "blocked"}
+            <Badge
+              tone={trustReady && candidateMatchesProof ? "success" : "danger"}
+              dot
+            >
+              {trustReady && candidateMatchesProof ? "ready for escrow" : "blocked"}
             </Badge>
           </div>
           <Input
@@ -606,6 +680,11 @@ export function EmployerOpportunityForm({
                 {!candidateMatchesProof ? (
                   <li>
                     Use a proof link whose candidate matches the credential owner.
+                  </li>
+                ) : null}
+                {!trustReady ? (
+                  <li>
+                    Resolve proof breakdown warnings, especially issuer registry status.
                   </li>
                 ) : null}
                 {!amountIsValid ? (
