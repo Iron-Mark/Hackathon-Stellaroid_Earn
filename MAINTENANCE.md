@@ -58,14 +58,14 @@ Invoke-WebRequest -Uri "https://www.stellaroid.tech/" -Method Get -MaximumRedire
 Invoke-WebRequest -Uri "https://earn.stellaroid.tech/" -Method Get -MaximumRedirection 0 -TimeoutSec 30
 ```
 
-Pass criteria are in `docs/STELLAROID_TECH_CUTOVER.md`.
+Pass criteria are in `docs/operations/release-and-deployment.md`.
 
 The Vercel fallback alias may still exist for recovery checks, but it should not be used as the public demo URL.
 
 ## Release Discipline
 
 - Run lint, build, E2E, and `git diff --check` before any checkpoint commit.
-- Keep `docs-new/research/` out of canonical claims unless citations are normalized and claims are reverified.
+- Keep pruned scratch research and staging artifacts out of canonical claims unless citations are normalized and claims are reverified.
 - Never paste raw secrets into issues, commits, docs, or chat.
 - Keep generated Playwright artifacts out of git.
 - Commit only when the user explicitly asks for a checkpoint commit.

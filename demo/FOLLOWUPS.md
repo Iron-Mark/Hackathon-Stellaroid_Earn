@@ -88,7 +88,7 @@ Use this as the live backlog. Items already shipped are called out so we do not 
 ### 1. Mobile = Freighter absent (no empty state)
 
 **What**
-Freighter is a desktop browser extension. `/app` still assumes the wallet flow and does not swap into a mobile-safe empty state that points users to desktop or a sample Proof Block.
+Freighter is a desktop browser extension. `/app` still assumes the wallet flow and does not swap into a mobile-safe empty state that points users to desktop or a sample proof page.
 
 **Current behavior**
 - The modal explains how to install Freighter, but it does not solve the mobile dead-end.
@@ -97,8 +97,8 @@ Freighter is a desktop browser extension. `/app` still assumes the wallet flow a
 **Fix**
 - Detect mobile user-agent and/or unsupported wallet state early.
 - Swap the action column for a clear empty state:
-  "Freighter is desktop-only. Open this on desktop, or view a sample Proof Block."
-- Keep the right-side Proof Block preview visible so mobile visitors still see a useful demo artifact.
+  "Freighter is desktop-only. Open this on desktop, or view a sample proof page."
+- Keep the right-side proof preview visible so mobile visitors still see a useful demo artifact.
 
 **Files**
 - `frontend/src/components/wallet/*`

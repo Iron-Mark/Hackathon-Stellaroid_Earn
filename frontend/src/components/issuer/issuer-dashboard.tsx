@@ -256,8 +256,8 @@ export function IssuerDashboard() {
           </div>
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-          <div className="rounded-2xl border border-border bg-surface p-6">
+        <section className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
+          <div className="min-w-0 rounded-2xl border border-border bg-surface p-5 sm:p-6">
             <h2 className="text-xl font-semibold text-text">Connected wallet</h2>
             <div className="mt-4 rounded-xl border border-border bg-bg px-4 py-3 text-sm text-text-muted">
               {wallet.address ? (
@@ -304,7 +304,7 @@ export function IssuerDashboard() {
                   </div>
                 </div>
               ) : (
-                <div className="mt-4 flex flex-col items-center gap-4 rounded-xl border border-dashed border-border/60 bg-bg/50 px-6 py-8 text-center">
+                <div className="mt-4 flex min-w-0 flex-col items-center gap-4 rounded-xl border border-dashed border-border/60 bg-bg/50 px-4 py-8 text-center sm:px-6">
                   <img
                     src="/illust/illust-issuer-empty.svg"
                     alt=""
@@ -316,11 +316,11 @@ export function IssuerDashboard() {
                     <p className="text-base font-semibold text-text">No issuer record yet :(</p>
                     <p className="text-sm text-text-muted">Register your wallet as an issuer, then ask the admin to approve it.</p>
                   </div>
-                  <div className="flex gap-3 mt-1">
-                    <Button variant="primary" href="/issuer/register">
+                  <div className="mt-1 flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:flex-row">
+                    <Button variant="primary" href="/issuer/register" className="w-full sm:w-auto">
                       Register now
                     </Button>
-                    <Button variant="ghost" disabled>
+                    <Button variant="ghost" disabled className="w-full whitespace-normal text-center sm:w-auto">
                       App writes locked
                     </Button>
                   </div>
@@ -329,28 +329,28 @@ export function IssuerDashboard() {
             </div>
           </div>
 
-          <aside className="rounded-2xl border border-border bg-surface p-6">
+          <aside className="min-w-0 rounded-2xl border border-border bg-surface p-5 sm:p-6">
             <h2 className="text-xl font-semibold text-text">Next actions</h2>
             <div className="mt-4 flex flex-col gap-3">
               {!issuer ? (
-                <Button variant="primary" className="w-full" href="/issuer/register">
+                <Button variant="primary" className="w-full whitespace-normal text-center" href="/issuer/register">
                   Register issuer profile
                 </Button>
               ) : canIssue ? (
-                <Button variant="primary" className="w-full" href="/app">
+                <Button variant="primary" className="w-full whitespace-normal text-center" href="/app">
                   Issue credential
                 </Button>
               ) : (
-                <Button variant="secondary" className="w-full" href="/issuer/register">
+                <Button variant="secondary" className="w-full whitespace-normal text-center" href="/issuer/register">
                   Review issuer profile
                 </Button>
               )}
               {canIssue ? (
-                <Button variant="secondary" className="w-full" href="/app">
+                <Button variant="secondary" className="w-full whitespace-normal text-center" href="/app">
                   Open app flow
                 </Button>
               ) : (
-                <Button variant="ghost" className="w-full" disabled>
+                <Button variant="ghost" className="w-full whitespace-normal text-center" disabled>
                   App writes locked until approval
                 </Button>
               )}
@@ -374,7 +374,7 @@ export function IssuerDashboard() {
                   key={step.label}
                   className={`rounded-xl border px-4 py-3 ${flowToneClasses(step.tone)}`}
                 >
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm font-semibold text-text">{step.label}</span>
                     <span className="text-xs font-semibold uppercase tracking-[0.12em]">
                       {step.state}

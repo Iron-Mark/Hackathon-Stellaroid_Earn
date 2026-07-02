@@ -24,3 +24,19 @@ test("status page exposes project health, domain state, and proof links", async 
     /stellar\.expert\/explorer\/testnet\/contract\//,
   );
 });
+
+test("events API exposes source-labelled event evidence", async ({ request }) => {
+  const response = await request.get("/api/events?limit=3");
+  expect(response.ok()).toBe(true);
+
+  const body = await response.json();
+  expect(body.summary.totalEvents).toBeGreaterThan(0);
+  expect(body.summary.bySource.e2e).toBeGreaterThan(0);
+  expect(body.summary.uniqueEventRefs).toBeGreaterThan(0);
+
+  for (const event of body.events) {
+    expect(event.source).toMatch(/^(rpc|stellar_expert|e2e)$/);
+    expect(event.externalUrl).toContain("stellar.expert");
+    expect(event.reference.length).toBeGreaterThan(0);
+  }
+});

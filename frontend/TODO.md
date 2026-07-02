@@ -1,6 +1,6 @@
 # Frontend TODO
 
-Status snapshot for the Stellaroid Earn frontend. Project-level tracker lives at `../setup/TODO.md`.
+Status snapshot for the Stellaroid Earn frontend. Product-level tracker lives at `../docs/planning/research-intake-status.md`.
 
 ## Done
 
@@ -39,7 +39,7 @@ Open http://localhost:3000 with [Freighter](https://www.freighter.app/) installe
 - [x] `/talent/[address]` passport shell route
 - [x] Navigation links added (site-nav + site-footer)
 - [x] `issuer-registry.ts` marked as deprecated display-only fallback
-- [x] Pro-research intake archived under `../docs/spec/stellaroid`
+- [x] Pro-research intake summarized under `../docs/planning/research-intake-status.md` and archived under `../docs/archive/pro-research-2026-06`
 - [x] `/proof/[hash]/export` employer verification summary route
 - [x] `/pilot` issuer/employer pilot capture route
 - [x] Persona-first public entry: primary nav and landing cards now route visitors to Issue, Verify, Hire, Pilot, and Status

@@ -1,6 +1,6 @@
-import { formatAmount } from "@/lib/format";
-import { appConfig } from "@/lib/config";
-import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+import { formatAmount } from "./format";
+import { appConfig } from "./config";
+import { DEFAULT_SAMPLE_PROOF_HASH } from "./demo-data";
 import { xdr, scValToNative } from "@stellar/stellar-sdk";
 
 type RpcEvent = {
@@ -18,6 +18,26 @@ type RpcHealthResponse = {
   oldestLedger: number;
 };
 
+type StellarExpertContractStats = {
+  events?: number | null;
+};
+
+type StellarExpertEvent = {
+  id?: string;
+  paging_token?: string;
+  ts?: number;
+  contract?: string;
+  topics?: string[];
+  topicsXdr?: string[];
+  bodyXdr?: string;
+};
+
+type StellarExpertEventsResponse = {
+  _embedded?: {
+    records?: StellarExpertEvent[];
+  };
+};
+
 export type RecentActivityItem = {
   id: string;
   kind: string;
@@ -25,7 +45,10 @@ export type RecentActivityItem = {
   detail: string;
   hashHex: string | null;
   ledgerClosedAt: string;
-  txHash: string;
+  txHash: string | null;
+  externalUrl: string;
+  reference: string;
+  source: "rpc" | "stellar_expert" | "e2e";
 };
 
 function decodeScVal(base64: string) {
@@ -55,31 +78,94 @@ function topicSymbol(base64: string) {
   return typeof native === "string" ? native : "event";
 }
 
-function describeEvent(event: RpcEvent): RecentActivityItem | null {
-  const kind = topicSymbol(event.topic[0] ?? "");
-  const payload = decodeScValToNative(event.value);
-  const hashHex = toHexString(payload);
+function contractEventsUrl(contractId: string) {
+  return `${appConfig.explorerUrl}/contract/${contractId}#events`;
+}
 
+function txUrl(txHash: string) {
+  return `${appConfig.explorerUrl}/tx/${txHash}`;
+}
+
+function shortTxHash(txHash: string) {
+  return `${txHash.slice(0, 10)}…${txHash.slice(-6)}`;
+}
+
+function ledgerFromStellarExpertEventId(id: string) {
+  const pagingToken = id.split("-")[0];
+  if (!/^\d+$/.test(pagingToken)) return null;
+
+  try {
+    return Number(BigInt(pagingToken) / 4_294_967_296n);
+  } catch {
+    return null;
+  }
+}
+
+function amountEventDetail(payload: unknown, action: "reward" | "payment") {
+  const fallback =
+    action === "reward" ? "Student reward sent" : "Employer payment sent";
+
+  if (
+    typeof payload !== "bigint" &&
+    typeof payload !== "number" &&
+    typeof payload !== "string"
+  ) {
+    return fallback;
+  }
+
+  try {
+    return `${formatAmount(BigInt(payload), appConfig.assetDecimals)} ${appConfig.assetCode} ${action}`;
+  } catch {
+    return fallback;
+  }
+}
+
+function detailForKind(kind: string, hashHex: string | null, payload: unknown) {
+  switch (kind) {
+    case "init":
+      return "Contract bootstrapped";
+    case "iss_reg":
+      return "Issuer registered";
+    case "iss_appr":
+      return "Issuer approved";
+    case "iss_susp":
+      return "Issuer suspended";
+    case "cert_reg":
+      return hashHex ? `Proof ${hashHex.slice(0, 10)}… registered` : "Certificate registered";
+    case "cert_ver":
+      return hashHex ? `Proof ${hashHex.slice(0, 10)}… verified` : "Certificate verified";
+    case "reward":
+      return amountEventDetail(payload, "reward");
+    case "payment":
+      return amountEventDetail(payload, "payment");
+    default:
+      return null;
+  }
+}
+
+function buildRecentActivityItem({
+  id,
+  kind,
+  payload,
+  ledgerClosedAt,
+  txHash,
+  externalUrl,
+  reference,
+  source,
+}: {
+  id: string;
+  kind: string;
+  payload: unknown;
+  ledgerClosedAt: string;
+  txHash: string | null;
+  externalUrl: string;
+  reference: string;
+  source: RecentActivityItem["source"];
+}): RecentActivityItem | null {
+  const hashHex = toHexString(payload);
   if (kind === "cert_fail") {
     return null;
   }
-
-  const detailByKind: Record<string, string> = {
-    init: "Contract bootstrapped",
-    iss_reg: "Issuer registered",
-    iss_appr: "Issuer approved",
-    iss_susp: "Issuer suspended",
-    cert_reg: hashHex ? `Proof ${hashHex.slice(0, 10)}… registered` : "Certificate registered",
-    cert_ver: hashHex ? `Proof ${hashHex.slice(0, 10)}… verified` : "Certificate verified",
-    reward:
-      typeof payload === "bigint" || typeof payload === "number" || typeof payload === "string"
-        ? `${formatAmount(BigInt(payload), appConfig.assetDecimals)} ${appConfig.assetCode} reward`
-        : "Student reward sent",
-    payment:
-      typeof payload === "bigint" || typeof payload === "number" || typeof payload === "string"
-        ? `${formatAmount(BigInt(payload), appConfig.assetDecimals)} ${appConfig.assetCode} payment`
-        : "Employer payment sent",
-  };
 
   const labelByKind: Record<string, string> = {
     init: "Init",
@@ -92,19 +178,64 @@ function describeEvent(event: RpcEvent): RecentActivityItem | null {
     payment: "Payment",
   };
 
-  if (!detailByKind[kind] || !labelByKind[kind]) {
+  const detail = detailForKind(kind, hashHex, payload);
+  if (!detail || !labelByKind[kind]) {
     return null;
   }
 
   return {
-    id: event.id,
+    id,
     kind,
     label: labelByKind[kind],
-    detail: detailByKind[kind],
+    detail,
     hashHex,
+    ledgerClosedAt,
+    txHash,
+    externalUrl,
+    reference,
+    source,
+  };
+}
+
+function describeRpcEvent(event: RpcEvent): RecentActivityItem | null {
+  const kind = topicSymbol(event.topic[0] ?? "");
+  const payload = decodeScValToNative(event.value);
+
+  return buildRecentActivityItem({
+    id: event.id,
+    kind,
+    payload,
     ledgerClosedAt: event.ledgerClosedAt,
     txHash: event.txHash,
-  };
+    externalUrl: txUrl(event.txHash),
+    reference: shortTxHash(event.txHash),
+    source: "rpc",
+  });
+}
+
+function describeStellarExpertEvent(
+  event: StellarExpertEvent,
+  contractId: string,
+): RecentActivityItem | null {
+  const id = event.id ?? event.paging_token;
+  if (!id || !event.bodyXdr) return null;
+
+  const kind =
+    event.topics?.[0] ??
+    (event.topicsXdr?.[0] ? topicSymbol(event.topicsXdr[0]) : "event");
+  const payload = decodeScValToNative(event.bodyXdr);
+  const ledger = ledgerFromStellarExpertEventId(id);
+
+  return buildRecentActivityItem({
+    id,
+    kind,
+    payload,
+    ledgerClosedAt: event.ts ? new Date(event.ts * 1000).toISOString() : new Date().toISOString(),
+    txHash: null,
+    externalUrl: contractEventsUrl(contractId),
+    reference: ledger ? `ledger ${ledger}` : "indexed event",
+    source: "stellar_expert",
+  });
 }
 
 async function rpcRequest<T>(method: string, params: object) {
@@ -140,6 +271,112 @@ async function rpcRequest<T>(method: string, params: object) {
   return json.result;
 }
 
+function stellarExpertNetworkSegment() {
+  const match = appConfig.explorerUrl.match(/\/explorer\/([^/?#]+)/);
+  if (match?.[1]) return match[1];
+
+  const network = appConfig.network.toUpperCase();
+  return network === "PUBLIC" || network === "PUBNET" ? "public" : "testnet";
+}
+
+async function stellarExpertRequest<T>(path: string) {
+  const baseUrl = `https://api.stellar.expert/explorer/${stellarExpertNetworkSegment()}`;
+  const response = await fetch(`${baseUrl}${path}`, {
+    headers: { "Content-Type": "application/json" },
+    next: { revalidate: 60 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Stellar Expert ${path} failed with ${response.status}.`);
+  }
+
+  return (await response.json()) as T;
+}
+
+async function getRpcRecentEvents(contractId: string, limit: number) {
+  const health = await rpcRequest<RpcHealthResponse>("getHealth", {});
+  const eventResult = await rpcRequest<{ events: RpcEvent[] }>("getEvents", {
+    startLedger: health.oldestLedger,
+    endLedger: health.latestLedger + 1,
+    filters: [
+      {
+        type: "contract",
+        contractIds: [contractId],
+      },
+    ],
+    pagination: {
+      limit: Math.min(Math.max(limit, 40), 200),
+    },
+  });
+
+  return eventResult.events
+    .map((event) => {
+      try {
+        return describeRpcEvent(event);
+      } catch {
+        return null;
+      }
+    })
+    .filter((event): event is RecentActivityItem => Boolean(event));
+}
+
+async function getStellarExpertRecentEvents(contractId: string, limit: number) {
+  const result = await stellarExpertRequest<StellarExpertEventsResponse>(
+    `/contract/${contractId}/events?order=desc&limit=${Math.min(Math.max(limit, 20), 200)}`,
+  );
+
+  return (result._embedded?.records ?? [])
+    .map((event) => {
+      try {
+        return describeStellarExpertEvent(event, contractId);
+      } catch {
+        return null;
+      }
+    })
+    .filter((event): event is RecentActivityItem => Boolean(event));
+}
+
+function eventIdentity(event: RecentActivityItem) {
+  if (event.hashHex && (event.kind === "cert_reg" || event.kind === "cert_ver")) {
+    return `${event.kind}:${event.hashHex}`;
+  }
+
+  return `${event.kind}:${event.detail}:${event.ledgerClosedAt}`;
+}
+
+function mergeRecentEvents(events: RecentActivityItem[], limit: number) {
+  const merged = new Map<string, RecentActivityItem>();
+
+  for (const event of events) {
+    const key = eventIdentity(event);
+    const existing = merged.get(key);
+
+    if (!existing || (existing.source === "stellar_expert" && event.source === "rpc")) {
+      merged.set(key, event);
+    }
+  }
+
+  return Array.from(merged.values())
+    .sort(
+      (left, right) =>
+        new Date(right.ledgerClosedAt).getTime() - new Date(left.ledgerClosedAt).getTime(),
+    )
+    .slice(0, limit);
+}
+
+export async function getContractIndexedEventCount(contractId: string) {
+  if (!contractId) return null;
+
+  try {
+    const stats = await stellarExpertRequest<StellarExpertContractStats>(
+      `/contract/${contractId}`,
+    );
+    return typeof stats.events === "number" ? stats.events : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getRecentEvents(contractId: string, limit = 5) {
   if (appConfig.e2eMode) {
     return [
@@ -151,6 +388,9 @@ export async function getRecentEvents(contractId: string, limit = 5) {
         hashHex: DEFAULT_SAMPLE_PROOF_HASH,
         ledgerClosedAt: new Date().toISOString(),
         txHash: "e2e000000000000000000000000000000000000000000000000000000000001",
+        externalUrl: contractEventsUrl(contractId),
+        reference: "e2e register",
+        source: "e2e" as const,
       },
       {
         id: "e2e-cert-ver",
@@ -160,6 +400,9 @@ export async function getRecentEvents(contractId: string, limit = 5) {
         hashHex: DEFAULT_SAMPLE_PROOF_HASH,
         ledgerClosedAt: new Date().toISOString(),
         txHash: "e2e000000000000000000000000000000000000000000000000000000000002",
+        externalUrl: contractEventsUrl(contractId),
+        reference: "e2e verify",
+        source: "e2e" as const,
       },
       {
         id: "e2e-payment",
@@ -169,36 +412,41 @@ export async function getRecentEvents(contractId: string, limit = 5) {
         hashHex: null,
         ledgerClosedAt: new Date().toISOString(),
         txHash: "e2e000000000000000000000000000000000000000000000000000000000003",
+        externalUrl: contractEventsUrl(contractId),
+        reference: "e2e payment",
+        source: "e2e" as const,
       },
     ].slice(0, limit);
   }
 
   if (!contractId) return [];
 
-  const health = await rpcRequest<RpcHealthResponse>("getHealth", {});
-  const startLedger = Math.max(health.oldestLedger, health.latestLedger - 60000);
-  const eventResult = await rpcRequest<{ events: RpcEvent[] }>("getEvents", {
-    startLedger,
-    endLedger: health.latestLedger + 1,
-    filters: [
-      {
-        type: "contract",
-        contractIds: [contractId],
-      },
-    ],
-    pagination: {
-      limit: 40,
-    },
-  });
+  const [rpcResult, stellarExpertResult] = await Promise.allSettled([
+    getRpcRecentEvents(contractId, limit),
+    getStellarExpertRecentEvents(contractId, limit),
+  ]);
 
-  return eventResult.events
-    .map(describeEvent)
-    .filter((event): event is RecentActivityItem => Boolean(event))
-    .sort(
-      (left, right) =>
-        new Date(right.ledgerClosedAt).getTime() - new Date(left.ledgerClosedAt).getTime(),
-    )
-    .slice(0, limit);
+  const events = mergeRecentEvents(
+    [
+      ...(rpcResult.status === "fulfilled" ? rpcResult.value : []),
+      ...(stellarExpertResult.status === "fulfilled" ? stellarExpertResult.value : []),
+    ],
+    limit,
+  );
+
+  if (events.length > 0) return events;
+
+  if (rpcResult.status === "rejected" && stellarExpertResult.status === "rejected") {
+    throw new Error(
+      `${rpcResult.reason instanceof Error ? rpcResult.reason.message : "RPC events failed"}; ${
+        stellarExpertResult.reason instanceof Error
+          ? stellarExpertResult.reason.message
+          : "Stellar Expert events failed"
+      }`,
+    );
+  }
+
+  return [];
 }
 
 export async function getRecentProofHashes(contractId: string, limit = 3) {

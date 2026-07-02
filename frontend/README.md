@@ -2,7 +2,7 @@
 
 Next.js 15 (App Router) + React 19 dApp connecting to a Soroban certificate contract on Stellar testnet via Freighter.
 
-Built following `../setup/STELLAR_FREIGHTER_INTEGRATION_GUIDE.md`.
+Built following [`../docs/reference/freighter-integration.md`](../docs/reference/freighter-integration.md).
 
 ## Setup
 
@@ -20,7 +20,7 @@ Then in `.env.local`:
 4. Set `NEXT_PUBLIC_CANONICAL_URL` to the production domain used for search metadata and canonical links.
 5. Leave `NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS=0` locally unless you explicitly want to test the Vercel Analytics script outside Vercel.
 
-If you pulled the new trust-layer frontend bindings, the old demo contract ID is no longer ABI-compatible. Rebuild and redeploy the contract before testing register / verify / issuer approval flows. The step-by-step checklist lives in `../docs/superpowers/plans/2026-04-18-trust-layer-redeploy-checklist.md`.
+For current deployment and verification steps, use [`../docs/operations/release-and-deployment.md`](../docs/operations/release-and-deployment.md). Historical trust-layer redeploy notes were pruned after the issuer-aware contract flow became the active baseline.
 
 ## Run
 
@@ -45,7 +45,7 @@ Open http://localhost:3000. Install [Freighter](https://www.freighter.app/) and 
 | `/employer` | Employer console for verified-credential paid-trial escrow. When opened from a proof page, it auto-loads the proof hash, shows a candidate/trust checklist, and blocks mismatched candidate links. |
 | `/talent/[address]` | Candidate passport for one Stellar wallet. With `?proof=<hash>`, it shows that specific verified proof if the proof owner matches the wallet; it does not claim automatic wallet-wide discovery. |
 | `/pilot` | Issuer pilot and employer integration intake, including testnet scope guardrails for the first 5-10 credential rollout |
-| `/status` | Operational status surface for demo health and config checks |
+| `/status` | Operational status surface for demo health, config checks, and source-labelled public contract-event evidence |
 
 ## Design system
 
@@ -74,7 +74,7 @@ frontend/
 │   │   ├── contract-read-server.ts  Server-side read-only simulation
 │   │   ├── demo-data.ts          Fallback sample hashes for E2E / demo mode
 │   │   ├── errors.ts             humanizeError — friendly error copy, no raw XDR leakage
-│   │   ├── events.ts             RPC event polling + decoding
+│   │   ├── events.ts             RPC + Stellar Expert event reads, decoding, dedupe, and source labels
 │   │   ├── format.ts             Amount + address formatting
 │   │   ├── freighter.ts          Freighter wrapper (E2E mock included)
 │   │   ├── issuer-registry.ts    Known issuer label lookup

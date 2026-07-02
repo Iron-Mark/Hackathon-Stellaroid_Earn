@@ -10,7 +10,14 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/ui/json-ld";
-import { buildPageMetadata, seoCanonicalUrl, SITE_CANONICAL_URL, SITE_NAME } from "@/lib/seo";
+import {
+  buildPageMetadata,
+  seoCanonicalUrl,
+  SITE_CANONICAL_URL,
+  SITE_CONTRACT_SOURCE_URL,
+  SITE_NAME,
+  SITE_REPOSITORY_URL,
+} from "@/lib/seo";
 import { buildAboutSoftwareProductSchema } from "@/lib/schema";
 import { LocalizedAboutCopy } from "@/components/about/localized-about-copy";
 import { StatCard } from "@/components/about/stat-dialog";
@@ -989,7 +996,7 @@ export default function About() {
                   </dt>
                   <dd className="m-0 inline-flex items-center gap-2.5 flex-wrap">
                     <a
-                      href="https://github.com/Iron-Mark/Stellar-Bootcamp-2026"
+                      href={SITE_REPOSITORY_URL}
                       target="_blank"
                       rel="noreferrer"
                       className="text-[13px] text-primary no-underline hover:underline"
@@ -997,12 +1004,12 @@ export default function About() {
                       GitHub <ExternalLink className="inline w-3 h-3 ml-1" />
                     </a>
                     <a
-                      href="https://github.com/Iron-Mark/Stellar-Bootcamp-2026/tree/main/contract"
+                      href={SITE_CONTRACT_SOURCE_URL}
                       target="_blank"
                       rel="noreferrer"
                       className="text-[13px] text-primary no-underline hover:underline"
                     >
-                      Contract crate <ExternalLink className="inline w-3 h-3 ml-1" />
+                      Contract source <ExternalLink className="inline w-3 h-3 ml-1" />
                     </a>
                   </dd>
                 </div>
