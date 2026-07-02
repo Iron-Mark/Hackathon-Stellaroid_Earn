@@ -21,10 +21,9 @@ Do not execute these archived plans without revalidating against the current cod
 | PDFs/Web Audits and SEO/Stellaroid.tech - SEO Performance and Roadmap Audit.pdf | roadmap | Stellaroid.tech Audit - SEO, Performance & Roadmap | 1709 words, 5 pages | 8fdf44c00514 |
 
 ## Archive Contents
-- `spec-driven-development.md`, `product-context.md`, `execution-roadmap.md`, and `seo-performance.md` are generated synthesis docs.
 - `ref/original/` holds the source evidence.
 
-The bulky generated source coverage and suggestion registers were pruned during the docs cleanup. Use the preserved source evidence and active planning docs instead.
+Generated synthesis docs, action checklists, source coverage registers, suggestion registers, and duplicate PDF text extracts were pruned during the docs cleanup. Use the preserved source evidence and active planning docs instead.
 
 ## North Star
 Complete the credential proof loop before expanding marketplace scope: issue, verify, revoke/suspend, export, and share trusted proof pages quickly.

@@ -65,7 +65,7 @@ The Vercel fallback alias may still exist for recovery checks, but it should not
 ## Release Discipline
 
 - Run lint, build, E2E, and `git diff --check` before any checkpoint commit.
-- Keep pruned `docs-new` scratch research out of canonical claims unless citations are normalized and claims are reverified.
+- Keep pruned scratch research and staging artifacts out of canonical claims unless citations are normalized and claims are reverified.
 - Never paste raw secrets into issues, commits, docs, or chat.
 - Keep generated Playwright artifacts out of git.
 - Commit only when the user explicitly asks for a checkpoint commit.

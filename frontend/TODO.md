@@ -1,6 +1,6 @@
 # Frontend TODO
 
-Status snapshot for the Stellaroid Earn frontend. Product-level tracker lives at `../docs/planning/research-intake-status.md`; the completed bootcamp setup log is archived at `../docs/archive/bootcamp-setup-2026-04/setup-todo.md`.
+Status snapshot for the Stellaroid Earn frontend. Product-level tracker lives at `../docs/planning/research-intake-status.md`.
 
 ## Done
 

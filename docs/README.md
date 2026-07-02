@@ -20,9 +20,8 @@ This folder keeps the active documentation lean. Start with planning, then use r
 
 Archived material is preserved for provenance, not day-to-day execution.
 
-- [archive/pro-research-2026-06/](archive/pro-research-2026-06/) contains the closed pro-research intake, source evidence, and generated synthesis docs.
-- [archive/bootcamp-setup-2026-04/](archive/bootcamp-setup-2026-04/) contains old bootcamp setup logs, prompts, research, and redesign plans.
+- [archive/pro-research-2026-06/](archive/pro-research-2026-06/) contains the closed pro-research source evidence.
+- [archive/bootcamp-setup-2026-04/](archive/bootcamp-setup-2026-04/) contains the old April 2026 bootcamp research artifact.
 - [archive/superpowers/](archive/superpowers/) contains historical Superpowers plans and design specs.
-- [archive/docs-new/](archive/docs-new/) contains the old staging workspace material.
 
 Before executing any archived plan, revalidate it against the current code, active roadmap, and live environment.
