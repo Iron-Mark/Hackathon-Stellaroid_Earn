@@ -15,15 +15,15 @@ Do not create additional Vercel projects for branch showcase domains.
 ## Branch Flow
 
 ```text
-feature branch or *-monthly-builder -> staging -> main
+feature branch -> july-monthly-builder -> staging -> main
 ```
 
 - `main`: production-ready source of truth.
 - `staging`: integration branch before promotion to `main`.
-- `*-monthly-builder`: short-lived or archived monthly-builder feature batches.
-- `april-bootcamp` and older named archive branches: historical snapshots, read-only unless recovery is explicitly needed.
+- `july-monthly-builder`: active monthly-builder branch, seeded from the June production release.
+- `june-monthly-builder`, `april-monthly-builder`, and `april-bootcamp`: historical snapshots, read-only unless recovery is explicitly needed.
 
-Open feature and monthly-builder PRs against `staging`. Promote `staging` to `main` by PR after local verification and one meaningful CI pass when frontend code changed.
+Open feature PRs against `july-monthly-builder`. Promote `july-monthly-builder` to `staging`, then `staging` to `main`, by PR after local verification and one meaningful CI pass when frontend code changed.
 
 ## CI and Local Checks
 
@@ -47,11 +47,13 @@ Frontend CI is path-filtered. Push CI runs on `main` and `staging` only for `fro
 | --- | --- | --- |
 | `stellaroid.tech` | `main` | Production-ready site |
 | `beta.stellaroid.tech` | `staging` | Integration preview |
-| `v2.stellaroid.tech` | `june-monthly-builder` | Current monthly-builder showcase |
+| `v2.stellaroid.tech` | `june-monthly-builder` | Archived June monthly-builder showcase |
 | `v1.stellaroid.tech` | `april-monthly-builder` | Archived monthly-builder showcase |
 | `v0.stellaroid.tech` | `april-bootcamp` | Archived bootcamp showcase |
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect permanently to `https://stellaroid.tech/`.
+
+`july-monthly-builder` currently has no custom showcase domain. Use the Vercel branch preview for July until a new domain, such as `v3.stellaroid.tech`, is intentionally configured.
 
 The apex domain uses third-party nameservers, not Vercel nameservers. Manage subdomain records at the external DNS host:
 
@@ -129,7 +131,7 @@ The script deploys from temporary directories only. It does not commit, push, un
 
 ## Promotion Steps
 
-Monthly builder to `staging`:
+Active monthly builder to `staging`:
 
 1. Confirm the monthly-builder branch contains the intended work.
 2. Run the relevant local checks.

@@ -8,8 +8,9 @@ Set-StrictMode -Version Latest
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $protectedIntegrationBranches = @("main", "staging")
-$syncedBranches = @("main", "staging", "june-monthly-builder")
-$lockedArchiveBranches = @("april-bootcamp", "april-monthly-builder")
+$syncedBranches = @("main", "staging", "july-monthly-builder")
+$lockedArchiveBranches = @("april-bootcamp", "april-monthly-builder", "june-monthly-builder")
+$monthlyBuilderBranches = @("july-monthly-builder", "june-monthly-builder", "april-monthly-builder")
 $legacyBranchesExpectedAbsent = @("dev", "dev-archive-before-staging", "old-ver", "mark-siazon")
 $monthlyPattern = "refs/heads/*-monthly-builder"
 $failures = New-Object System.Collections.Generic.List[string]
@@ -248,7 +249,7 @@ if ($syncedBranches | Where-Object { -not $branchShas.ContainsKey($_) }) {
   }
 
   if ($syncFailures -eq 0) {
-    Add-Pass "main, staging, and june-monthly-builder are content-synced at tree $mainTree"
+    Add-Pass "$($syncedBranches -join ', ') are content-synced at tree $mainTree"
   }
 }
 
@@ -297,7 +298,7 @@ if ($rulesetSummary.Count -eq 0) {
     }
   }
 
-  foreach ($branch in @("june-monthly-builder", "april-monthly-builder")) {
+  foreach ($branch in $monthlyBuilderBranches) {
     $branchInfo = Invoke-GhJson "repos/$Repo/branches/$branch"
     if ($branchInfo.protected -ne $true) {
       Add-Failure "$branch should be protected by the monthly-builder ruleset"
