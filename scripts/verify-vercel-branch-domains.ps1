@@ -3,6 +3,7 @@ Param(
   [string]$ProjectName = "stellaroid-earn-demo",
   [string]$Scope = "marksiazon-dev",
   [int]$TimeoutSec = 30,
+  [string]$DohUrl = "",
   [switch]$SkipHttp,
   [switch]$CheckLocalResolver
 )
@@ -30,6 +31,12 @@ $expected = @(
     Public = $true
   },
   @{
+    Domain = "v3.stellaroid.tech"
+    Branch = "july-monthly-builder"
+    TitleContains = "Stellaroid Earn"
+    Public = $true
+  },
+  @{
     Domain = "v1.stellaroid.tech"
     Branch = "april-monthly-builder"
     TitleContains = "Stellaroid Earn"
@@ -44,6 +51,7 @@ $expected = @(
 )
 
 $expectedCname = "82586c23ca506f63.vercel-dns-017.com."
+$expectedAValues = @("216.150.1.1", "216.150.16.1")
 $failures = New-Object System.Collections.Generic.List[string]
 
 function Write-Section {
@@ -121,16 +129,14 @@ foreach ($item in $expected | Where-Object { $_.Domain -ne "stellaroid.tech" }) 
     continue
   }
 
-  if ($config.configuredBy -ne "CNAME") {
-    Add-Failure "$domain should be configured by CNAME, found $($config.configuredBy)"
-    continue
-  }
-
   $cnames = @($config.cnames)
-  if ($cnames -notcontains $expectedCname) {
-    Add-Failure "$domain CNAME does not include $expectedCname"
-  } else {
+  $aValues = @($config.aValues)
+  if ($config.configuredBy -eq "CNAME" -and $cnames -contains $expectedCname) {
     Add-Pass "$domain DNS config uses expected CNAME"
+  } elseif ($config.configuredBy -eq "A" -and (@($expectedAValues | Where-Object { $aValues -contains $_ }).Count -eq $expectedAValues.Count)) {
+    Add-Pass "$domain DNS config uses expected Vercel A records"
+  } else {
+    Add-Failure "$domain DNS config is $($config.configuredBy), expected CNAME $expectedCname or A records $($expectedAValues -join ', ')"
   }
 }
 
@@ -139,12 +145,23 @@ if ($CheckLocalResolver) {
   foreach ($item in $expected | Where-Object { $_.Domain -ne "stellaroid.tech" }) {
     $domain = $item.Domain
     try {
-      $records = Resolve-DnsName $domain -Type CNAME -ErrorAction Stop
-      $nameHosts = @($records | ForEach-Object { $_.NameHost })
+      $records = Resolve-DnsName $domain -ErrorAction Stop
+      $nameHosts = @($records | ForEach-Object {
+        if ($_.PSObject.Properties["NameHost"]) {
+          $_.NameHost
+        }
+      })
+      $ipAddresses = @($records | ForEach-Object {
+        if ($_.PSObject.Properties["IPAddress"]) {
+          $_.IPAddress
+        }
+      })
       if ($nameHosts -contains $expectedCname.TrimEnd(".")) {
         Add-Pass "$domain resolves locally to expected CNAME"
+      } elseif (@($expectedAValues | Where-Object { $ipAddresses -contains $_ }).Count -eq $expectedAValues.Count) {
+        Add-Pass "$domain resolves locally to expected Vercel A records"
       } else {
-        Add-Failure "$domain local resolver returned: $($nameHosts -join ', ')"
+        Add-Failure "$domain local resolver returned hosts '$($nameHosts -join ', ')' and IPs '$($ipAddresses -join ', ')'"
       }
     } catch {
       Add-Failure "$domain local resolver lookup failed: $($_.Exception.Message)"
@@ -170,7 +187,13 @@ if (-not $SkipHttp) {
     $domain = $item.Domain
     $bodyPath = [System.IO.Path]::GetTempFileName()
     try {
-      $statusOutput = & curl.exe -L -sS --max-time $TimeoutSec -o $bodyPath -w "%{http_code}" "https://$domain"
+      $curlArgs = @("-L", "-sS", "--max-time", "$TimeoutSec", "-o", $bodyPath, "-w", "%{http_code}")
+      if (-not [string]::IsNullOrWhiteSpace($DohUrl)) {
+        $curlArgs = @("--doh-url", $DohUrl) + $curlArgs
+      }
+      $curlArgs += "https://$domain"
+
+      $statusOutput = & curl.exe @curlArgs
       if ($LASTEXITCODE -ne 0) {
         throw "curl exited with code $LASTEXITCODE"
       }

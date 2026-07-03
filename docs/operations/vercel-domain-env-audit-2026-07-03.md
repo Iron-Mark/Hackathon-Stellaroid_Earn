@@ -10,13 +10,14 @@ Scope: `marksiazon-dev/stellaroid-earn-demo`.
 | --- | --- | --- |
 | `stellaroid.tech` | production / `main` | Verified, production root domain, HTTPS 200 |
 | `beta.stellaroid.tech` | `staging` | Verified, branch mapped, HTTPS 200 |
+| `v3.stellaroid.tech` | `july-monthly-builder` | Verified, active July showcase, HTTPS 200 via DNS-over-HTTPS while local resolver propagation catches up |
 | `v2.stellaroid.tech` | `june-monthly-builder` | Verified, archived June showcase, HTTPS 200 |
 | `v1.stellaroid.tech` | `april-monthly-builder` | Verified, branch mapped, HTTPS 200 |
 | `v0.stellaroid.tech` | `april-bootcamp` | Verified, branch mapped, HTTPS 200 |
 
-`beta`, `v2`, `v1`, and `v0` also report the expected Vercel CNAME configuration. Project SSO deployment protection is disabled, so public showcase domains are reachable.
+`beta`, `v3`, `v2`, `v1`, and `v0` report the expected Vercel CNAME configuration. `v3` is attached to the Vercel project with a ready July deployment; Google DNS-over-HTTPS resolves the CNAME and an HTTPS probe using DoH returns `200 OK`. Some recursive resolvers can temporarily keep the previous NXDOMAIN response during DNS propagation. Project SSO deployment protection is disabled, so public showcase domains are reachable after resolver caches refresh.
 
-After the June release, `june-monthly-builder` became the archived `v2` showcase branch. `july-monthly-builder` is the active monthly-builder branch and uses Vercel branch previews until a dedicated July showcase domain is intentionally configured.
+After the June release, `june-monthly-builder` became the archived `v2` showcase branch. `july-monthly-builder` is the active monthly-builder branch and is mapped to `v3.stellaroid.tech`.
 
 ## Env Parity
 

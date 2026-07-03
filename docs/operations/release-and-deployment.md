@@ -47,13 +47,16 @@ Frontend CI is path-filtered. Push CI runs on `main` and `staging` only for `fro
 | --- | --- | --- |
 | `stellaroid.tech` | `main` | Production-ready site |
 | `beta.stellaroid.tech` | `staging` | Integration preview |
+| `v3.stellaroid.tech` | `july-monthly-builder` | Active July monthly-builder showcase |
 | `v2.stellaroid.tech` | `june-monthly-builder` | Archived June monthly-builder showcase |
 | `v1.stellaroid.tech` | `april-monthly-builder` | Archived monthly-builder showcase |
 | `v0.stellaroid.tech` | `april-bootcamp` | Archived bootcamp showcase |
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect permanently to `https://stellaroid.tech/`.
 
-`july-monthly-builder` currently has no custom showcase domain. Use the Vercel branch preview for July until a new domain, such as `v3.stellaroid.tech`, is intentionally configured.
+`v3.stellaroid.tech` is the active July showcase domain. Keep it mapped to `july-monthly-builder` until the next monthly archive handoff.
+
+If `v3.stellaroid.tech` fails the HTTPS verifier with a DNS resolution error, first confirm the `v3` CNAME exists at the external DNS host. After adding the record, some recursive resolvers can temporarily keep the previous NXDOMAIN response while Vercel and other resolvers already see the CNAME.
 
 The apex domain uses third-party nameservers, not Vercel nameservers. Manage subdomain records at the external DNS host:
 
@@ -62,6 +65,7 @@ The apex domain uses third-party nameservers, not Vercel nameservers. Manage sub
 | `v0` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 | `v1` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 | `v2` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
+| `v3` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 | `beta` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 
 Do not include `https://` in DNS values. Branch showcase domains are public; Vercel SSO deployment protection should remain disabled unless the showcase URLs are intentionally made private.
@@ -78,6 +82,12 @@ Domain-focused check:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-vercel-branch-domains.ps1
+```
+
+If local DNS has stale NXDOMAIN cache after a new subdomain is added, verify through DNS-over-HTTPS:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-vercel-branch-domains.ps1 -DohUrl https://dns.google/dns-query
 ```
 
 Branch-governance check:

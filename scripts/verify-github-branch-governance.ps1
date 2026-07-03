@@ -8,9 +8,10 @@ Set-StrictMode -Version Latest
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $protectedIntegrationBranches = @("main", "staging")
-$syncedBranches = @("main", "staging", "july-monthly-builder")
+$syncedBranches = @("main", "staging")
+$activeMonthlyBuilderBranches = @("july-monthly-builder")
 $lockedArchiveBranches = @("april-bootcamp", "april-monthly-builder", "june-monthly-builder")
-$monthlyBuilderBranches = @("july-monthly-builder", "june-monthly-builder", "april-monthly-builder")
+$monthlyBuilderBranches = @($activeMonthlyBuilderBranches + @("june-monthly-builder", "april-monthly-builder"))
 $legacyBranchesExpectedAbsent = @("dev", "dev-archive-before-staging", "old-ver", "mark-siazon")
 $monthlyPattern = "refs/heads/*-monthly-builder"
 $failures = New-Object System.Collections.Generic.List[string]
@@ -69,6 +70,7 @@ function Invoke-GhJson {
 function Get-RemoteBranchShas {
   $branchNames = @(
     $syncedBranches
+    $activeMonthlyBuilderBranches
     $lockedArchiveBranches
     $legacyBranchesExpectedAbsent
   ) | ForEach-Object { $_ } | Sort-Object -Unique
@@ -214,7 +216,7 @@ Add-Pass "Git found"
 Write-Section "Remote Branches"
 $branchShas = Get-RemoteBranchShas
 
-foreach ($branch in ($syncedBranches + $lockedArchiveBranches)) {
+foreach ($branch in (($syncedBranches + $activeMonthlyBuilderBranches + $lockedArchiveBranches) | Sort-Object -Unique)) {
   if (-not $branchShas.ContainsKey($branch)) {
     Add-Failure "Missing remote branch $branch"
   } else {
@@ -233,7 +235,7 @@ foreach ($branch in $legacyBranchesExpectedAbsent) {
 if ($syncedBranches | Where-Object { -not $branchShas.ContainsKey($_) }) {
   Add-Failure "Cannot compare synced branch content because one or more branches are missing"
 } else {
-  Update-RemoteBranchObjects -Branches $syncedBranches
+  Update-RemoteBranchObjects -Branches ($syncedBranches + $activeMonthlyBuilderBranches)
 
   $mainSha = $branchShas["main"]
   $mainTree = Get-CommitTree -Sha $mainSha
@@ -250,6 +252,20 @@ if ($syncedBranches | Where-Object { -not $branchShas.ContainsKey($_) }) {
 
   if ($syncFailures -eq 0) {
     Add-Pass "$($syncedBranches -join ', ') are content-synced at tree $mainTree"
+  }
+
+  foreach ($branch in $activeMonthlyBuilderBranches) {
+    if (-not $branchShas.ContainsKey($branch)) {
+      continue
+    }
+
+    $branchSha = $branchShas[$branch]
+    & git -C $repoRoot merge-base --is-ancestor $mainSha $branchSha
+    if ($LASTEXITCODE -ne 0) {
+      Add-Failure "$branch does not contain main@$mainSha"
+    } else {
+      Add-Pass "$branch contains main@$mainSha and may be ahead for active July work"
+    }
   }
 }
 
