@@ -82,6 +82,7 @@ Acceptance criteria:
 - If RPC has no old events but Stellar Expert has indexed events, metrics still show useful public evidence.
 - Event links open the best available explorer target.
 - `/api/events` includes `bySource` and unique event refs.
+- `/api/events/stream` provides a short-lived live event stream for demo refreshes without claiming permanent analytics retention.
 - Tests/build pass.
 
 ### Slice 2 - Evidence-First Demo Readiness

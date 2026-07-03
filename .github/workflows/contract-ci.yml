@@ -1,0 +1,63 @@
+name: Contract CI
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - "*-monthly-builder"
+    paths:
+      - "contract/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/contract-ci.yml"
+  pull_request:
+    branches:
+      - main
+      - staging
+      - "*-monthly-builder"
+    paths:
+      - "contract/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/contract-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Test and build Soroban contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: contract-cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'contract/Cargo.toml') }}
+          restore-keys: |
+            contract-cargo-${{ runner.os }}-
+
+      - name: Run contract tests
+        run: cargo test -p stellaroid_earn --locked
+
+      - name: Build contract WASM
+        run: cargo build -p stellaroid_earn --target wasm32v1-none --release --locked
