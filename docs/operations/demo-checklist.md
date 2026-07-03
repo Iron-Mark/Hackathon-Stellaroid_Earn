@@ -12,6 +12,7 @@ Use this short checklist before a submission, demo, or public share.
 - Confirm the proof shows `Verification breakdown` with hash anchor, contract record, credential status, issuer registry, and employer handoff checks.
 - From the proof page, click `Fund paid trial` and confirm `/employer` opens with the proof context.
 - Open https://stellaroid.tech/status#metrics and confirm it shows the canonical URL, current project state, and public contract-event evidence with source labels.
+- On `/status#metrics`, confirm the `Event stream` panel moves from connecting to a snapshot/live state and reports RPC/indexer source counts.
 
 ## Social Preview
 
@@ -24,6 +25,9 @@ Use this short checklist before a submission, demo, or public share.
 - Live app: https://stellaroid.tech
 - Status page: https://stellaroid.tech/status
 - Events API: https://stellaroid.tech/api/events
+- Events stream: https://stellaroid.tech/api/events/stream
+- Frontend CI: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/frontend-ci.yml
+- Contract CI: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml
 - Verified proof: https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
 - Stellar testnet contract:
   https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3

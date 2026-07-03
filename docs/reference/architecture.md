@@ -90,7 +90,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 2. **Client-side:** Dashboard components call `simulateTransaction` directly for real-time state.
 
 **Event evidence path:**
-- `/api/events` and `/status#metrics` read recent events from Soroban RPC `getEvents` and supplement them with Stellar Expert's public contract event index. Events are decoded, deduplicated, source-labelled (`rpc`, `stellar_expert`, or `e2e`), and displayed as public evidence. This is not a full product analytics warehouse; proof views, employer actions, and conversion tracking require a future first-party read model.
+- `/api/events`, `/api/events/stream`, and `/status#metrics` read recent events from Soroban RPC `getEvents` and supplement them with Stellar Expert's public contract event index. Events are decoded, deduplicated, source-labelled (`rpc`, `stellar_expert`, or `e2e`), and displayed as public evidence. The stream route uses short-lived Server-Sent Events for live demo refreshes. This is not a full product analytics warehouse; proof views, employer actions, and conversion tracking require a future first-party read model.
 
 **Write path (1):**
 - All mutations route through Freighter: build tx → `signTransaction()` → `sendTransaction()` → poll `getTransaction()` until confirmed.

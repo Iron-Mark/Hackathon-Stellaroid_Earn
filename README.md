@@ -7,6 +7,7 @@ Issue, verify, and pay graduates on Stellar testnet  - Soroban + Freighter, end-
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3)
 [![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-22.0.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/22.0.0)
+[![Contract CI](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
@@ -174,6 +175,8 @@ stellar contract deploy \
   --source my-key --network testnet
 ```
 
+CI runs the contract gate with `cargo test -p stellaroid_earn --locked` and `cargo build -p stellaroid_earn --target wasm32v1-none --release --locked` in [`Contract CI`](.github/workflows/contract-ci.yml).
+
 ### Frontend
 
 ```bash
@@ -307,11 +310,12 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 - **Status metrics:** [`/status#metrics`](https://stellaroid.tech/status#metrics)  - public contract-event evidence, proof hashes, reward/payment events, and source labels on the operational status page
 - **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health)  - cached JSON health check (config, RPC latency, contract availability)
 - **Events API:** [`/api/events`](https://stellaroid.tech/api/events)  - structured contract event data for external consumers
+- **Events stream:** [`/api/events/stream`](https://stellaroid.tech/api/events/stream)  - short-lived Server-Sent Events stream for live demo refreshes without adding a database
 - **Vercel Analytics:** Web analytics integrated via `@vercel/analytics`
 
 ### Data Indexing
 
-Contract events are read from two public sources. The app first queries Soroban RPC `getEvents` for recent contract events, then supplements that result with Stellar Expert's public contract event index so older testnet activity does not disappear from the demo surface when the RPC retention window moves on. Events are decoded from ScVal/XDR where possible, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), deduplicated, source-labelled, and served through `/api/events` plus `/status#metrics`.
+Contract events are read from two public sources. The app first queries Soroban RPC `getEvents` for recent contract events, then supplements that result with Stellar Expert's public contract event index so older testnet activity does not disappear from the demo surface when the RPC retention window moves on. Events are decoded from ScVal/XDR where possible, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), deduplicated, source-labelled, and served through `/api/events`, `/api/events/stream`, plus `/status#metrics`.
 
 This remains a lightweight serverless evidence layer, not a full analytics warehouse. Proof views, share actions, employer actions, and long-term product analytics still require a first-party read model or analytics event plan.
 
@@ -365,15 +369,17 @@ stellaroid-earn/
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/stellaroid-earn-demo.mp4
+[`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 
 > Full walkthrough: landing page → about → app dashboard (wallet connect) → issuer console → verified proof page → on-chain evidence on Stellar Expert.
 
-Local copy: [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
+The demo video is committed in this repository so the submission does not depend on an expiring external upload URL.
 
 **Demo Day slides:** [`/slides`](https://stellaroid.tech/slides) (integrated into the app, arrow keys to navigate)
 
 **Submission/demo checklist:** [`docs/operations/demo-checklist.md`](docs/operations/demo-checklist.md)
+
+**Submission evidence map:** [`docs/operations/submission-evidence.md`](docs/operations/submission-evidence.md)
 
 ---
 
