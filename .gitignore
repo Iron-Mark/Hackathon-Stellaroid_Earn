@@ -1,6 +1,8 @@
 # Rust / Soroban
 target/
-Cargo.lock
+**/Cargo.lock
+# The root lockfile is committed so Contract CI can run with --locked.
+!Cargo.lock
 
 # Node / Next.js
 node_modules/

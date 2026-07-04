@@ -19,5 +19,6 @@ jobs:
       release_description: 'Stellaroid Earn — on-chain credential registry for Stellar PH Bootcamp'
       relative_path: 'contract'
       package: 'stellaroid_earn'
+      home_domain: 'stellaroid.tech'
     secrets:
       release_token: ${{ secrets.GITHUB_TOKEN }}
