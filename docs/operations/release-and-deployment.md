@@ -37,9 +37,11 @@ Pick checks by changed surface area.
 | Vercel/domain settings | `scripts/verify-vercel-branch-domains.ps1` and repair dry run |
 | Branch protection or branch strategy | `scripts/verify-github-branch-governance.ps1` |
 | Operations docs/scripts | `scripts/verify-operations.ps1 -SkipHttp` |
-| Contract changes | `cargo test` and the Stellar CLI checks in `AGENTS.md` |
+| Contract changes | `cargo test -p stellaroid_earn --locked`, `cargo build -p stellaroid_earn --target wasm32v1-none --release --locked`, and [`docs/operations/contract-verification.md`](contract-verification.md) |
 
 Frontend CI is path-filtered. Push CI runs on `main` and `staging` only for `frontend/**` or `.github/workflows/frontend-ci.yml`; PR CI targets `main` and `staging` for the same paths. Monthly-builder branches do not run push CI by default.
+
+Contract CI is path-filtered. Push and PR CI run on `main`, `staging`, and `*-monthly-builder` only for `contract/**`, root Cargo files, or `.github/workflows/contract-ci.yml`.
 
 ## Domains
 
@@ -82,6 +84,12 @@ Branch-governance check:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-github-branch-governance.ps1
+```
+
+Contract source-verification audit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-contract-source.ps1
 ```
 
 Canonical live checks:

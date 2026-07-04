@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { buildEventsSummary } from "@/lib/event-summary";
 import { getRecentEvents } from "@/lib/events";
 import { appConfig } from "@/lib/config";
 
@@ -18,30 +19,7 @@ export async function GET(request: Request) {
 
   try {
     const events = await getRecentEvents(appConfig.contractId, limit);
-
-    const summary = {
-      totalEvents: events.length,
-      byKind: events.reduce(
-        (acc, e) => {
-          acc[e.kind] = (acc[e.kind] ?? 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>,
-      ),
-      uniqueProofs: new Set(
-        events.filter((e) => e.hashHex).map((e) => e.hashHex),
-      ).size,
-      uniqueEventRefs: new Set(events.map((e) => e.txHash ?? e.id)).size,
-      bySource: events.reduce(
-        (acc, e) => {
-          acc[e.source] = (acc[e.source] ?? 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>,
-      ),
-      latestEvent: events[0]?.ledgerClosedAt ?? null,
-      oldestEvent: events[events.length - 1]?.ledgerClosedAt ?? null,
-    };
+    const summary = buildEventsSummary(events);
 
     return NextResponse.json({ events, summary });
   } catch (err) {

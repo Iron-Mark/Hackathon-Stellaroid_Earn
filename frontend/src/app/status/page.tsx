@@ -16,8 +16,10 @@ import {
 } from "lucide-react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteNav } from "@/components/layout/site-nav";
+import { LiveEventsStream } from "@/components/status/live-events-stream";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
 import { appConfig } from "@/lib/config";
+import { buildEventsSummary, type EventsSummary } from "@/lib/event-summary";
 import {
   formatRelativeTime,
   getContractIndexedEventCount,
@@ -70,6 +72,7 @@ type MetricsReport = {
   error: string | null;
   cards: MetricCard[];
   indexedEventCount: number | null;
+  summary: EventsSummary;
 };
 
 function eventTone(kind: RecentActivityItem["kind"]) {
@@ -121,11 +124,13 @@ async function getMetricsReport(): Promise<MetricsReport> {
     events.filter((event) => event.hashHex).map((event) => event.hashHex),
   ).size;
   const uniqueEventRefs = new Set(events.map((event) => event.txHash ?? event.id)).size;
+  const summary = buildEventsSummary(events);
 
   return {
     events,
     error,
     indexedEventCount,
+    summary,
     cards: [
       {
         label: "Indexed events",
@@ -210,6 +215,8 @@ function MetricsSection({
             Metrics RPC is degraded: {report.error}
           </div>
         ) : null}
+
+        <LiveEventsStream initialSummary={report.summary} />
 
         <div className="mt-6">
           <div className="mb-3 flex items-center gap-2">
