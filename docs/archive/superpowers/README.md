@@ -1,6 +1,6 @@
 # Superpowers Archive
 
-This folder preserves historical Superpowers plans and design specs that still contain open backlog, future production ideas, or broad roadmap context.
+This folder preserves historical Superpowers planning context that still contains useful backlog, future production ideas, or broad roadmap notes.
 
 Do not execute these plans directly. Many were written against older branch, contract, UI, deployment, or tool states. Before using any archived plan, revalidate the target files, current product direction, live deployment state, and repository instructions.
 
@@ -14,7 +14,6 @@ Use active docs first:
 
 ## Remaining Contents
 
-- `plans/2026-04-18-credential-opportunity-checklist.md` and `specs/2026-04-18-credential-opportunity-roadmap.md` preserve broad credential-to-opportunity roadmap context with unfinished checklist items.
-- `plans/2026-04-19-production-readiness.md` preserves future production/mainnet readiness ideas.
-- `plans/2026-04-23-black-belt-requirements.md` preserves security and readiness requirements with unresolved items.
-- `plans/2026-04-24-opportunity-layer-and-remaining-features.md` preserves a large unfinished opportunity-layer implementation plan.
+- [credential-opportunity-archive.md](credential-opportunity-archive.md) consolidates the old credential-to-opportunity roadmap, implementation checklists, black-belt readiness notes, and production/mainnet backlog into one compact reference.
+
+The previous generated plan/spec files were intentionally removed to avoid churn and stale checklist maintenance.
