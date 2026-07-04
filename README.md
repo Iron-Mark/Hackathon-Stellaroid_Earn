@@ -387,7 +387,7 @@ The demo video is committed in this repository so the submission does not depend
 
 ### Testnet Wallet Evidence
 
-30 Stellar testnet wallet addresses are listed for public review as test evidence, not as a production user-count claim. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded exploration wallets used during testing. The committed feedback snapshot keeps participant names and emails redacted.
+30 real participant wallet addresses from the Stellar testnet review are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded participant wallets used during the review flow. The committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
 <summary><strong>View all 30 wallet addresses</strong></summary>

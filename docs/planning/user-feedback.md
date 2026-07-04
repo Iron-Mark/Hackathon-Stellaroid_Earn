@@ -15,7 +15,7 @@ Privacy note: raw form responses are not committed to this repository. The publi
 
 ---
 
-## Testnet Users
+## Participant Wallet Evidence
 
 The following wallet addresses interacted with the Stellaroid Earn contract on Stellar testnet. Each is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet).
 
