@@ -15,6 +15,10 @@ test("status page exposes project health, domain state, and proof links", async 
   await expect(page.getByText("Fallback demo", { exact: true })).toBeVisible();
   await expect(page.getByText("Custom domain", { exact: true })).toBeVisible();
   await expect(page.getByText("Stellar testnet", { exact: true })).toBeVisible();
+  await expect(page.getByText("Event stream", { exact: true })).toBeVisible();
+  await expect(page.getByText("Streamed events", { exact: true })).toBeVisible();
+  await expect(page.getByText("RPC source", { exact: true })).toBeVisible();
+  await expect(page.getByText("Indexer source", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open sample proof" })).toHaveAttribute(
     "href",
     /^\/proof\/[0-9a-f]{64}$/,
@@ -39,4 +43,16 @@ test("events API exposes source-labelled event evidence", async ({ request }) =>
     expect(event.externalUrl).toContain("stellar.expert");
     expect(event.reference.length).toBeGreaterThan(0);
   }
+});
+
+test("events stream emits a snapshot and closes cleanly", async ({ request }) => {
+  const response = await request.get("/api/events/stream?limit=3&ticks=1");
+  expect(response.ok()).toBe(true);
+  expect(response.headers()["content-type"]).toContain("text/event-stream");
+
+  const body = await response.text();
+  expect(body).toContain("event: snapshot");
+  expect(body).toContain("event: end");
+  expect(body).toContain('"totalEvents"');
+  expect(body).toContain('"bySource"');
 });
