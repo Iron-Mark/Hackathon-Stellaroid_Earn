@@ -4,6 +4,8 @@ Canonical live URL: https://stellaroid.tech
 
 Use this short checklist before a submission, demo, or public share.
 
+Last live smoke pass: 2026-07-04. `stellaroid.tech`, `beta.stellaroid.tech`, and `v3.stellaroid.tech` returned `200 OK` on `/` and `/status` with Stellaroid page titles/content.
+
 ## Public Demo Path
 
 - Open https://stellaroid.tech and confirm the homepage loads as Stellaroid Earn.
@@ -23,7 +25,11 @@ Use this short checklist before a submission, demo, or public share.
 ## Evidence Links
 
 - Live app: https://stellaroid.tech
+- Staging app: https://beta.stellaroid.tech
+- July showcase: https://v3.stellaroid.tech
 - Status page: https://stellaroid.tech/status
+- Beta status page: https://beta.stellaroid.tech/status
+- July status page: https://v3.stellaroid.tech/status
 - Events API: https://stellaroid.tech/api/events
 - Events stream: https://stellaroid.tech/api/events/stream
 - Frontend CI: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/frontend-ci.yml
@@ -36,5 +42,5 @@ Use this short checklist before a submission, demo, or public share.
 
 1. Start with the homepage: Stellaroid Earn turns completed work into a public credential proof.
 2. Open a verified proof: the proof is walletless, shareable, and separates hash, contract, issuer, and employer-readiness evidence.
-3. Click into employer flow: employers can carry verified proof context and proof-pack evidence into a paid trial.
+3. Click into employer flow: employers can carry verified proof context, save candidates into a local review shortlist, and use proof-pack evidence before creating a paid trial.
 4. End on status: the project has a canonical domain, operational status route, source-labelled event evidence, and a bounded testnet pilot path.
