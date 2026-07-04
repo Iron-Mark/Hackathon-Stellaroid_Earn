@@ -6,7 +6,7 @@ Issue, verify, and pay graduates on Stellar testnet  - Soroban + Freighter, end-
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3)
-[![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-22.0.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/22.0.0)
+[![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
 [![Contract CI](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
@@ -142,7 +142,7 @@ sequenceDiagram
 
 **Design decisions:**
 
-- **soroban-sdk 22** with typed `#[contracterror]` enum (17 variants), persistent + instance storage, TTL 518k/1.04M ledgers
+- **soroban-sdk 26.1** with typed `#[contracterror]` enum (17 variants), persistent + instance storage, TTL 518k/1.04M ledgers
 - **Issuer trust layer**: self-register → admin approve → issue credentials. Suspended issuers are blocked on-chain
 - **Two read paths**: server-side RSC with `revalidate=60` (CDN-cached proof pages) + client-side `simulateTransaction` (dashboard state)
 - **One write path**: Freighter signs → `sendTransaction` → poll for result
@@ -325,7 +325,7 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 
 | Component | Version |
 |---|---|
-| Soroban SDK | 22.0.0 |
+| Soroban SDK | 26.1.0 |
 | Stellar CLI | 26+ |
 | Next.js | 15 (App Router) |
 | React | 19 |
