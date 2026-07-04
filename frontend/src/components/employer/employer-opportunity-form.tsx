@@ -24,10 +24,12 @@ import { withTimeout } from "@/lib/with-timeout";
 import {
   AlertTriangle,
   CheckCircle2,
+  ClipboardList,
   ExternalLink,
   FileDown,
   Search,
   ShieldCheck,
+  Trash2,
   UserCheck,
   WalletCards,
 } from "lucide-react";
@@ -36,6 +38,17 @@ interface EmployerOpportunityFormProps {
   initialHash?: string;
   initialCandidate?: string;
 }
+
+interface EmployerShortlistItem {
+  hash: string;
+  owner: string;
+  title: string;
+  status: CertificateRecord["status"];
+  issuerStatus: string;
+  savedAt: string;
+}
+
+const SHORTLIST_STORAGE_KEY = "stellaroid.employerShortlist.v1";
 
 function isValidCertificateHash(value: string) {
   return /^[0-9a-f]{64}$/i.test(value.trim());
@@ -111,6 +124,7 @@ export function EmployerOpportunityForm({
   const [initialLookupError, setInitialLookupError] = useState<string | null>(
     null,
   );
+  const [shortlist, setShortlist] = useState<EmployerShortlistItem[]>([]);
 
   const walletConnected =
     wallet.status === "connected" && !!wallet.address && wallet.isExpectedNetwork;
@@ -196,6 +210,65 @@ export function EmployerOpportunityForm({
     setAutoLookupAttempted(true);
     void handleLookup(hashFromProof, { silent: true });
   }, [autoLookupAttempted, handleLookup, initialHash]);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(SHORTLIST_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as EmployerShortlistItem[];
+      if (Array.isArray(parsed)) {
+        setShortlist(
+          parsed.filter(
+            (item) =>
+              item &&
+              typeof item.hash === "string" &&
+              typeof item.owner === "string" &&
+              typeof item.title === "string",
+          ),
+        );
+      }
+    } catch {
+      window.localStorage.removeItem(SHORTLIST_STORAGE_KEY);
+    }
+  }, []);
+
+  function persistShortlist(items: EmployerShortlistItem[]) {
+    setShortlist(items);
+    window.localStorage.setItem(SHORTLIST_STORAGE_KEY, JSON.stringify(items));
+  }
+
+  function handleAddToShortlist() {
+    if (!cert || !validHashFormat) return;
+    const item: EmployerShortlistItem = {
+      hash: cleanHash,
+      owner: cert.owner,
+      title: cert.title || "Untitled credential",
+      status: cert.status,
+      issuerStatus: issuer?.status ?? (issuerLookupError ? "lookup failed" : "unknown"),
+      savedAt: new Date().toISOString(),
+    };
+    const next = [
+      item,
+      ...shortlist.filter(
+        (candidate) =>
+          candidate.hash.toLowerCase() !== item.hash.toLowerCase(),
+      ),
+    ].slice(0, 6);
+    persistShortlist(next);
+    toast({
+      title: "Candidate saved",
+      detail: "This proof is now in your local employer review shortlist.",
+      tone: "success",
+    });
+  }
+
+  function handleRemoveFromShortlist(hash: string) {
+    persistShortlist(
+      shortlist.filter(
+        (candidate) => candidate.hash.toLowerCase() !== hash.toLowerCase(),
+      ),
+    );
+  }
 
   async function handleCreate() {
     if (!wallet.address || !cert) return;
@@ -309,6 +382,13 @@ export function EmployerOpportunityForm({
       : undefined;
   const proofLink = validHashFormat ? `/proof/${cleanHash}` : null;
   const proofPackLink = validHashFormat ? `/proof/${cleanHash}/export` : null;
+  const savedCurrentCandidate = Boolean(
+    validHashFormat &&
+      shortlist.some(
+        (candidate) =>
+          candidate.hash.toLowerCase() === cleanHash.toLowerCase(),
+      ),
+  );
   const employerReviewDecision =
     cert && !candidateMatchesProof
       ? "Inspect only: the proof-link candidate does not match the credential owner."
@@ -594,6 +674,15 @@ export function EmployerOpportunityForm({
                   Download proof pack
                 </Button>
               ) : null}
+              <Button
+                variant={savedCurrentCandidate ? "secondary" : "ghost"}
+                size="sm"
+                onClick={handleAddToShortlist}
+                icon={<ClipboardList className="h-4 w-4" />}
+                disabled={!validHashFormat}
+              >
+                {savedCurrentCandidate ? "Saved for review" : "Save for review"}
+              </Button>
             </div>
           </div>
         ) : initialCandidate ? (
@@ -627,6 +716,119 @@ export function EmployerOpportunityForm({
           </div>
         </div>
       ) : null}
+
+      <section
+        className="rounded-2xl border border-border bg-surface p-5"
+        aria-label="Employer candidate shortlist"
+      >
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.16em] text-primary">
+              Review shortlist
+            </p>
+            <h2 className="mt-1 text-xl font-semibold text-text">
+              Saved proof candidates
+            </h2>
+            <p className="mt-1 max-w-[680px] text-sm leading-relaxed text-text-muted">
+              Keep up to six proof-backed candidates in this browser while you
+              compare issuer evidence, proof packs, and escrow readiness.
+            </p>
+          </div>
+          <Badge tone={shortlist.length ? "success" : "neutral"} dot>
+            {shortlist.length ? `${shortlist.length} saved` : "empty"}
+          </Badge>
+        </div>
+
+        {shortlist.length ? (
+          <ul className="mt-4 grid list-none gap-3 p-0 lg:grid-cols-2">
+            {shortlist.map((candidate) => {
+              const savedDate = new Intl.DateTimeFormat("en", {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              }).format(new Date(candidate.savedAt));
+
+              return (
+                <li
+                  key={candidate.hash}
+                  className="rounded-xl border border-border bg-bg p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-text">
+                        {candidate.title}
+                      </p>
+                      <p className="mt-1 text-xs text-text-muted">
+                        Saved {savedDate}
+                      </p>
+                    </div>
+                    <Badge
+                      tone={candidate.status === "verified" ? "success" : "warning"}
+                      dot
+                    >
+                      {candidate.status}
+                    </Badge>
+                  </div>
+                  <dl className="mt-3 grid gap-2 text-xs">
+                    <div>
+                      <dt className="uppercase tracking-[0.12em] text-text-muted">
+                        Candidate
+                      </dt>
+                      <dd className="mt-1 break-all font-mono text-text">
+                        {candidate.owner}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="uppercase tracking-[0.12em] text-text-muted">
+                        Issuer status
+                      </dt>
+                      <dd className="mt-1 text-text">{candidate.issuerStatus}</dd>
+                    </div>
+                  </dl>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button variant="secondary" size="sm" href={`/proof/${candidate.hash}`}>
+                      Proof
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      href={`/proof/${candidate.hash}/export`}
+                    >
+                      Pack
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      href={`/talent/${candidate.owner}?proof=${candidate.hash}`}
+                    >
+                      Passport
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveFromShortlist(candidate.hash)}
+                      icon={<Trash2 className="h-4 w-4" />}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div className="mt-4 rounded-xl border border-border bg-bg px-4 py-4">
+            <p className="text-sm font-semibold text-text">
+              No saved candidates yet
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-text-muted">
+              Look up a proof hash, then save the candidate for side-by-side
+              employer review.
+            </p>
+          </div>
+        )}
+      </section>
 
       {cert && cert.status === "verified" ? (
         <section className="rounded-2xl border border-border bg-surface p-5 flex flex-col gap-4">
