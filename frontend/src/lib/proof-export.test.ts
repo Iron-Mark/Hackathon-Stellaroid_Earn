@@ -55,6 +55,11 @@ test("employer export includes an explicit unsigned standards preview", () => {
   assert.equal(payload.standardsAlignment.status, "unsigned_preview");
   assert.equal(payload.employerReview.decision, "ready_for_paid_trial_review");
   assert.equal(payload.employerReview.candidateWallet, cert.owner);
+  assert.equal(payload.trustSummary.issuerEvidenceScore, 90);
+  assert.equal(
+    payload.trustSummary.issuerDecisionLabel,
+    "Employer-ready issuer evidence",
+  );
   assert.deepEqual(
     payload.employerReview.path.map((step) => step.title),
     ["Review proof breakdown", "Match wallet", "Save proof pack", "Fund escrow"],

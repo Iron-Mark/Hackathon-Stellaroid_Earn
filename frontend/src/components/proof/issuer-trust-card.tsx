@@ -22,6 +22,12 @@ function statusTone(status: IssuerRecord["status"]): "success" | "warning" | "da
   }
 }
 
+function evidenceTone(status: "pass" | "warning" | "fail") {
+  if (status === "pass") return "success" as const;
+  if (status === "fail") return "danger" as const;
+  return "warning" as const;
+}
+
 export function IssuerTrustCard({ issuer }: IssuerTrustCardProps) {
   const safeWebsite = isSafeExternalHttpUrl(issuer.website) ? issuer.website : "";
   const evidence = buildIssuerTrustEvidence({ issuer });
@@ -41,7 +47,27 @@ export function IssuerTrustCard({ issuer }: IssuerTrustCardProps) {
           {issuer.name || "Unnamed issuer"}
         </p>
         <p className="mt-1 text-xs leading-relaxed text-text-muted">
-          {evidence.registryEvidence}
+          {evidence.decisionLabel}. {evidence.employerNote}
+        </p>
+      </div>
+      <div className="rounded-md border border-border bg-bg px-3 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-[0.6875rem] uppercase tracking-[0.14em] text-text-muted">
+            Evidence score
+          </span>
+          <span className="font-mono text-sm font-semibold text-text">
+            {evidence.evidenceScore}/100
+          </span>
+        </div>
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
+          <span
+            className="block h-full rounded-full bg-accent"
+            style={{ width: `${evidence.evidenceScore}%` }}
+          />
+        </div>
+        <p className="mt-2 text-xs leading-relaxed text-text-muted">
+          Score reflects registry status and available review metadata. It does
+          not certify legal identity.
         </p>
       </div>
       <dl className="grid gap-3 sm:grid-cols-2">
@@ -91,6 +117,34 @@ export function IssuerTrustCard({ issuer }: IssuerTrustCardProps) {
           </dd>
         </div>
       </dl>
+      <div className="grid gap-2">
+        <span className="text-[0.6875rem] uppercase tracking-[0.14em] text-text-muted">
+          Dossier checks
+        </span>
+        <ul className="grid list-none gap-2 p-0 sm:grid-cols-2">
+          {evidence.evidenceItems.map((item) => (
+            <li
+              key={item.id}
+              className="rounded-md border border-border bg-bg px-3 py-2"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-text">
+                  {item.title}
+                </span>
+                <Badge tone={evidenceTone(item.status)}>{item.label}</Badge>
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-text-muted">
+                {item.detail}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {evidence.missingItems.length > 0 ? (
+        <p className="text-xs leading-relaxed text-text-muted">
+          Missing or limited evidence: {evidence.missingItems.join(", ")}.
+        </p>
+      ) : null}
       <p className="rounded-md border border-warning/20 bg-warning/10 px-3 py-2 text-xs leading-relaxed text-text-muted">
         {evidence.brandingNote}
       </p>
