@@ -90,7 +90,10 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 2. **Client-side:** Dashboard components call `simulateTransaction` directly for real-time state.
 
 **Event evidence path:**
-- `/api/events`, `/api/events/stream`, and `/status#metrics` read recent events from Soroban RPC `getEvents` and supplement them with Stellar Expert's public contract event index. Events are decoded, deduplicated, source-labelled (`rpc`, `stellar_expert`, or `e2e`), and displayed as public evidence. The stream route uses short-lived Server-Sent Events for live demo refreshes. This is not a full product analytics warehouse; proof views, employer actions, and conversion tracking require a future first-party read model.
+- `/api/events`, `/api/events/stream`, and `/status#metrics` read recent events from Soroban RPC `getEvents` and supplement them with Stellar Expert's public contract event index. Events are decoded, deduplicated, source-labelled (`rpc`, `stellar_expert`, or `e2e`), and displayed as public evidence. The stream route uses short-lived Server-Sent Events for live demo refreshes. This is not a full product analytics warehouse; durable proof history, issuer conversion, and audit-grade action history require a future first-party read model.
+
+**Product action telemetry:**
+- Vercel Web Analytics is loaded in production. The app also emits privacy-safe custom events for proof sharing, proof-pack downloads, proof-to-employer handoff, employer shortlist saves, and escrow create/fund starts. Event properties are limited to coarse state such as proof status, hash shape, source surface, channel, issuer trust tier, and validation state; raw wallet addresses and proof hashes are not sent. These events support demo/product iteration, not durable audit history.
 
 **Write path (1):**
 - All mutations route through Freighter: build tx → `signTransaction()` → `sendTransaction()` → poll `getTransaction()` until confirmed.
