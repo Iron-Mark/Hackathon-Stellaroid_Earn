@@ -34,6 +34,26 @@ export type IssuerTrustEvidenceStatus =
   | "lookup_failed"
   | "not_loaded";
 
+export type IssuerTrustTier =
+  | "registry_verified"
+  | "registry_limited"
+  | "registry_blocked"
+  | "registry_unavailable";
+
+export type IssuerTrustEvidenceItemStatus = "pass" | "warning" | "fail";
+
+export type IssuerTrustEvidenceItem = {
+  id:
+    | "registry_status"
+    | "issuer_wallet"
+    | "issuer_profile"
+    | "website_metadata";
+  title: string;
+  status: IssuerTrustEvidenceItemStatus;
+  label: string;
+  detail: string;
+};
+
 export type IssuerTrustEvidence = {
   wallet: string | null;
   name: string | null;
@@ -45,6 +65,12 @@ export type IssuerTrustEvidence = {
     | "issuer_supplied_https_url"
     | "omitted_unsafe_or_non_https_url"
     | "not_supplied";
+  tier: IssuerTrustTier;
+  evidenceScore: number;
+  decisionLabel: string;
+  employerNote: string;
+  evidenceItems: IssuerTrustEvidenceItem[];
+  missingItems: string[];
   registryEvidence: string;
   brandingNote: string;
 };
@@ -61,6 +87,41 @@ export type ProofVerificationBreakdown = {
 
 export function normalizeProofHash(hash: string) {
   return hash.trim().replace(/^0x/i, "").toLowerCase();
+}
+
+function issuerTrustTier(status: IssuerTrustEvidenceStatus): IssuerTrustTier {
+  if (status === "approved") return "registry_verified";
+  if (status === "suspended") return "registry_blocked";
+  if (status === "pending") return "registry_limited";
+  return "registry_unavailable";
+}
+
+function issuerTrustDecisionLabel(tier: IssuerTrustTier) {
+  switch (tier) {
+    case "registry_verified":
+      return "Employer-ready issuer evidence";
+    case "registry_limited":
+      return "Limited issuer evidence";
+    case "registry_blocked":
+      return "Issuer evidence blocks funding";
+    case "registry_unavailable":
+    default:
+      return "Issuer evidence unavailable";
+  }
+}
+
+function issuerTrustEmployerNote(tier: IssuerTrustTier) {
+  switch (tier) {
+    case "registry_verified":
+      return "Issuer is approved in the contract registry. Employers should still confirm organization control before relying on branding.";
+    case "registry_limited":
+      return "Issuer is not approved yet. Keep this proof in review mode until registry approval is complete.";
+    case "registry_blocked":
+      return "Issuer is suspended. Do not use this proof for paid-trial funding decisions.";
+    case "registry_unavailable":
+    default:
+      return "Issuer registry evidence was not available. Retry lookup before funding from this proof.";
+  }
 }
 
 export function buildIssuerTrustEvidence({
@@ -101,17 +162,104 @@ export function buildIssuerTrustEvidence({
     }
   }
 
+  const wallet = issuer?.address || fallbackWallet || null;
+  const hasName = Boolean(issuer?.name?.trim());
+  const hasCategory = Boolean(issuer?.category?.trim());
+  const tier = issuerTrustTier(status);
+  const missingItems: string[] = [];
+
+  if (!wallet) missingItems.push("issuer wallet");
+  if (!hasName) missingItems.push("issuer display name");
+  if (!hasCategory) missingItems.push("issuer category");
+  if (!website) {
+    missingItems.push("public HTTPS website");
+  } else if (!websiteSafe) {
+    missingItems.push("safe public HTTPS website");
+  }
+  if (status !== "approved") missingItems.push("approved registry status");
+
+  const registryStatus: IssuerTrustEvidenceItemStatus =
+    status === "approved"
+      ? "pass"
+      : status === "suspended"
+        ? "fail"
+        : "warning";
+  const websiteStatus: IssuerTrustEvidenceItemStatus = websiteSafe
+    ? "pass"
+    : "warning";
+  const issuerProfileStatus: IssuerTrustEvidenceItemStatus =
+    hasName && hasCategory ? "pass" : "warning";
+  const evidenceItems: IssuerTrustEvidenceItem[] = [
+    {
+      id: "registry_status",
+      title: "Registry status",
+      status: registryStatus,
+      label: status.replace("_", " "),
+      detail: registryEvidence,
+    },
+    {
+      id: "issuer_wallet",
+      title: "Issuer wallet",
+      status: wallet ? "pass" : "warning",
+      label: wallet ? "present" : "missing",
+      detail: wallet
+        ? "Issuer wallet is available for contract and explorer review."
+        : "No issuer wallet was available for this proof render.",
+    },
+    {
+      id: "issuer_profile",
+      title: "Issuer profile",
+      status: issuerProfileStatus,
+      label: hasName && hasCategory ? "named" : "incomplete",
+      detail:
+        hasName && hasCategory
+          ? "Issuer name and category are present in the registry record."
+          : "Issuer name or category is missing from the registry record.",
+    },
+    {
+      id: "website_metadata",
+      title: "Website metadata",
+      status: websiteStatus,
+      label: websiteSafe
+        ? "https supplied"
+        : website
+          ? "not trusted"
+          : "not supplied",
+      detail: websiteSafe
+        ? "Issuer supplied a public HTTPS website. Treat this as metadata until organization control is verified."
+        : website
+          ? "Issuer website was omitted from trusted links because it is not a safe public HTTPS URL."
+          : "No issuer website was supplied for independent organization review.",
+    },
+  ];
+
+  let evidenceScore = 0;
+  if (status === "approved") evidenceScore += 50;
+  if (status === "pending") evidenceScore += 25;
+  if (status === "lookup_failed") evidenceScore += 10;
+  if (status === "not_loaded") evidenceScore += 5;
+  if (wallet) evidenceScore += 10;
+  if (hasName) evidenceScore += 10;
+  if (hasCategory) evidenceScore += 5;
+  if (websiteSafe) evidenceScore += 15;
+
   return {
-    wallet: issuer?.address || fallbackWallet || null,
+    wallet,
     name: issuer?.name || null,
     category: issuer?.category || null,
     status,
     website,
     websiteSafe,
     websiteEvidence,
+    tier,
+    evidenceScore: Math.min(evidenceScore, 100),
+    decisionLabel: issuerTrustDecisionLabel(tier),
+    employerNote: issuerTrustEmployerNote(tier),
+    evidenceItems,
+    missingItems,
     registryEvidence,
     brandingNote:
-      "Website and display name are issuer-supplied metadata; verify organization control independently before relying on branding.",
+      "Website and display name are issuer-supplied metadata. Registry approval proves contract permission, not domain ownership or legal identity.",
   };
 }
 

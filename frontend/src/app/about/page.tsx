@@ -109,8 +109,8 @@ const stack = [
     ),
   },
   {
-    title: "Freighter wallet",
-    desc: "@stellar/freighter-api signing",
+    title: "Freighter + Albedo",
+    desc: "Multi-wallet signing (desktop & mobile)",
     icon: (
       <svg
         viewBox="0 0 24 24"

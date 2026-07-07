@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { Copy, Check } from "lucide-react";
 import { getProofShareCopy } from "@/lib/proof-claims";
+import {
+  buildProofActionProperties,
+  trackProductEvent,
+} from "@/lib/product-analytics";
 import type { CertificateStatus } from "@/lib/types";
 
 interface ShareButtonsProps {
@@ -33,11 +37,23 @@ Built on Stellar + Soroban. #Stellar #Soroban #ProofOfWork`;
     window.open(href, "_blank", "noopener,noreferrer");
   }
 
+  function handleShare(channel: "x" | "linkedin") {
+    trackProductEvent("proof_share_clicked", {
+      ...buildProofActionProperties({ hash, status, source: "proof_page" }),
+      channel,
+    });
+    openInNewTab(channel === "x" ? tweetUrl : linkedInUrl);
+  }
+
   async function handleCopy() {
     if (!url) return;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
+      trackProductEvent("proof_share_clicked", {
+        ...buildProofActionProperties({ hash, status, source: "proof_page" }),
+        channel: "copy_link",
+      });
       setTimeout(() => setCopied(false), 1500);
     } catch {
       // clipboard write failed silently
@@ -53,7 +69,7 @@ Built on Stellar + Soroban. #Stellar #Soroban #ProofOfWork`;
       <button
         type="button"
         className={buttonClass}
-        onClick={() => openInNewTab(tweetUrl)}
+        onClick={() => handleShare("x")}
         aria-label={shareCopy.verified ? "Share verified proof on X (Twitter)" : "Share proof lookup on X (Twitter)"}
       >
         {/* X (Twitter) mark — brand SVG, no Lucide equivalent */}
@@ -78,7 +94,7 @@ Built on Stellar + Soroban. #Stellar #Soroban #ProofOfWork`;
       <button
         type="button"
         className={buttonClass}
-        onClick={() => openInNewTab(linkedInUrl)}
+        onClick={() => handleShare("linkedin")}
         aria-label={shareCopy.verified ? "Share verified proof on LinkedIn" : "Share proof lookup on LinkedIn"}
       >
         {/* LinkedIn "in" mark — brand SVG, no Lucide equivalent */}

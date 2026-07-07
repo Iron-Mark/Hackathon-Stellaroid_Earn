@@ -86,6 +86,8 @@ export function buildEmployerVerificationExport({
         verificationBreakdown.employerTrustSummary,
       sourceOfTruth: "Stellar testnet contract state plus the public proof page.",
       issuerRegistryStatus: verificationBreakdown.issuerTrust.status,
+      issuerEvidenceScore: verificationBreakdown.issuerTrust.evidenceScore,
+      issuerDecisionLabel: verificationBreakdown.issuerTrust.decisionLabel,
     },
     verificationBreakdown,
     employerReview: {

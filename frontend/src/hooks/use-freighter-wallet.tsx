@@ -4,14 +4,17 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
 import {
-  connectFreighterWallet,
-  disconnectFreighterWallet,
-  readFreighterWallet,
-} from "@/lib/freighter";
+  connectWallet as connectWalletProvider,
+  disconnectWallet as disconnectWalletProvider,
+  listProviders,
+  readWallet,
+} from "@/lib/wallet";
+import type { WalletProviderId, WalletProviderMeta } from "@/lib/wallet/types";
 import type { WalletSnapshot } from "@/lib/types";
 
 const initialWalletState: WalletSnapshot = {
@@ -24,10 +27,18 @@ const initialWalletState: WalletSnapshot = {
 
 export type FreighterWalletState = {
   wallet: WalletSnapshot;
-  connectWallet: () => Promise<WalletSnapshot>;
+  connectWallet: (providerId: WalletProviderId) => Promise<WalletSnapshot>;
   disconnectWallet: () => void;
   refreshWallet: () => Promise<WalletSnapshot>;
   isMobileBrowser: boolean;
+  /** Every supported wallet. */
+  providers: WalletProviderMeta[];
+  /** Wallets usable in the current environment (web wallets always; extensions on desktop only). */
+  availableProviders: WalletProviderMeta[];
+  /** True when at least one cross-platform (web) wallet can be used here. */
+  hasWebWallet: boolean;
+  /** The provider backing the current connection, if any. */
+  activeProvider: WalletProviderId | null;
 };
 
 const FreighterWalletContext = createContext<FreighterWalletState | null>(null);
@@ -41,6 +52,16 @@ function useFreighterWalletState(): FreighterWalletState {
   const [wallet, setWallet] = useState<WalletSnapshot>(initialWalletState);
   const [isMobileBrowser, setIsMobileBrowser] = useState(false);
 
+  const providers = useMemo(() => listProviders(), []);
+  const availableProviders = useMemo(
+    () => providers.filter((provider) => provider.kind === "web" || !isMobileBrowser),
+    [providers, isMobileBrowser],
+  );
+  const hasWebWallet = useMemo(
+    () => availableProviders.some((provider) => provider.kind === "web"),
+    [availableProviders],
+  );
+
   async function refreshWallet() {
     setWallet((current) => ({
       ...current,
@@ -48,18 +69,15 @@ function useFreighterWalletState(): FreighterWalletState {
     }));
 
     try {
-      const snapshot = await readFreighterWallet();
+      const snapshot = await readWallet();
       setWallet(snapshot);
       return snapshot;
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unable to read wallet state.";
       const fallback: WalletSnapshot = {
+        ...initialWalletState,
         status: "unsupported",
-        address: null,
-        network: null,
-        networkPassphrase: null,
-        isExpectedNetwork: false,
         error: message,
       };
       setWallet(fallback);
@@ -67,21 +85,18 @@ function useFreighterWalletState(): FreighterWalletState {
     }
   }
 
-  async function connectWallet() {
+  async function connectWallet(providerId: WalletProviderId) {
     setWallet((current) => ({ ...current, status: "connecting" }));
     try {
-      const snapshot = await connectFreighterWallet();
+      const snapshot = await connectWalletProvider(providerId);
       setWallet(snapshot);
       return snapshot;
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Unable to connect to Freighter.";
+        error instanceof Error ? error.message : "Unable to connect wallet.";
       const fallback: WalletSnapshot = {
+        ...initialWalletState,
         status: "disconnected",
-        address: null,
-        network: null,
-        networkPassphrase: null,
-        isExpectedNetwork: false,
         error: message,
       };
       setWallet(fallback);
@@ -90,7 +105,7 @@ function useFreighterWalletState(): FreighterWalletState {
   }
 
   function disconnectWallet() {
-    disconnectFreighterWallet();
+    disconnectWalletProvider();
     setWallet(initialWalletState);
   }
 
@@ -99,12 +114,23 @@ function useFreighterWalletState(): FreighterWalletState {
     void refreshWallet();
   }, []);
 
+  const activeProvider =
+    wallet.status === "connected" && wallet.provider === "albedo"
+      ? "albedo"
+      : wallet.status === "connected" && wallet.provider === "freighter"
+        ? "freighter"
+        : null;
+
   return {
     wallet,
     connectWallet,
     disconnectWallet,
     refreshWallet,
     isMobileBrowser,
+    providers,
+    availableProviders,
+    hasWebWallet,
+    activeProvider,
   };
 }
 
@@ -125,3 +151,6 @@ export function useFreighterWallet() {
   }
   return context;
 }
+
+// Provider-agnostic alias for new code.
+export const useWallet = useFreighterWallet;
