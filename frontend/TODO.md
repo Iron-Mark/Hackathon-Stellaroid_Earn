@@ -56,7 +56,8 @@ Open http://localhost:3000 with [Freighter](https://www.freighter.app/) installe
 - [ ] Expiration/renewal workflow beyond current `expires_at` display handling
 - [ ] Admin trust model: org admin, reviewer, viewer, support roles, and audit logs
 - [ ] Branded proof pages: issuer logo, policy links, custom OG variants, optional issuer domain mapping
-- [ ] Verification analytics: proof views, shares, verification requests, employer actions, and issuer conversion
+- [x] Privacy-safe custom events: proof share, proof pack, employer handoff, shortlist save, and escrow-start actions without raw wallet/proof identifiers
+- [ ] Durable analytics read model: proof history, verification requests, issuer conversion, funnel reporting, and audit-grade action history
 - [ ] Standards export: signed VC 2.0 / Open Badges 3.0 compatible JSON after pilot demand is proven
 
 ## Nice-to-haves (out of scope for bootcamp submission)

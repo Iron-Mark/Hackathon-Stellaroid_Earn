@@ -33,6 +33,7 @@ Use this as the reviewer-facing evidence index for the Rise In Level 3 checklist
 | Writing tests for contracts and frontend | Contract suite has 12 tests; frontend unit suite covers security, schema, proof export/verification, SEO, formatting, and fee-bump policy |
 | Production-ready architecture practices | Security headers, CSP, cache boundaries, path-filtered CI, proof route validation, and operations docs are in repo |
 | Documentation & demo presentation | README, demo checklist, one-pager, FAQ, press kit, slides route, and committed demo video are present |
+| Product iteration telemetry | Vercel page analytics plus privacy-safe custom events cover proof share, proof-pack, employer handoff, shortlist, and escrow-start interactions without sending raw wallet addresses or proof hashes |
 
 ## Latest Live Smoke Evidence
 
@@ -51,5 +52,6 @@ Checked on 2026-07-04:
 
 - The deployed app runs on Stellar testnet, not mainnet.
 - `/api/events` and `/api/events/stream` are evidence surfaces, not a durable analytics warehouse.
+- Vercel custom events are product-iteration signals, not audit logs or proof of unique users.
 - W3C VC and Open Badges exports are standards-alignment previews until issuer signatures and verification methods are added.
 - Stellar Expert source re-verification is tracked separately from the deployed testnet contract address.

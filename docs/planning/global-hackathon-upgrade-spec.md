@@ -121,7 +121,7 @@ Acceptance criteria:
 - Revocation reason taxonomy.
 - First-party event read model/database.
 - Signed VC 2.0 / Open Badges 3.0 export.
-- Proof analytics and employer action tracking.
+- Durable proof history, issuer conversion, funnel reporting, and audit-grade analytics beyond the current Vercel page/custom-event baseline.
 - Branded issuer proof pages.
 - Stablecoin / local anchor payout routes.
 

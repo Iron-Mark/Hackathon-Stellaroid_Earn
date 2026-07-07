@@ -7,7 +7,7 @@
 
 ## Missing Evidence or Inputs
 - Pilot issuer/employer validation evidence.
-- Proof page analytics and employer action tracking.
+- Durable proof history, issuer conversion, and audit-grade analytics beyond the current Vercel page/custom-event baseline.
 - Detailed admin role model and revocation reason taxonomy.
 
 ## Source-Type Gaps

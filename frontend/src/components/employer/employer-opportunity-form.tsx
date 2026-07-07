@@ -19,6 +19,11 @@ import {
   buildProofVerificationBreakdown,
   type ProofVerificationCheckStatus,
 } from "@/lib/proof-verification";
+import {
+  analyticsBoolean,
+  buildProofActionProperties,
+  trackProductEvent,
+} from "@/lib/product-analytics";
 import { MAX_OPPORTUNITY_MILESTONES, type IssuerRecord } from "@/lib/types";
 import { withTimeout } from "@/lib/with-timeout";
 import {
@@ -56,6 +61,12 @@ function isValidCertificateHash(value: string) {
 
 function normalizeAddressForCompare(address: string) {
   return address.trim().toUpperCase();
+}
+
+function issuerTrustTone(tier: string) {
+  if (tier === "registry_verified") return "success" as const;
+  if (tier === "registry_blocked") return "danger" as const;
+  return "warning" as const;
 }
 
 function ReviewItem({
@@ -208,8 +219,16 @@ export function EmployerOpportunityForm({
     }
 
     setAutoLookupAttempted(true);
+    trackProductEvent("employer_handoff_loaded", {
+      ...buildProofActionProperties({
+        hash: hashFromProof,
+        status: null,
+        source: "employer_console",
+      }),
+      candidate_supplied: analyticsBoolean(initialCandidate.trim()),
+    });
     void handleLookup(hashFromProof, { silent: true });
-  }, [autoLookupAttempted, handleLookup, initialHash]);
+  }, [autoLookupAttempted, handleLookup, initialCandidate, initialHash]);
 
   useEffect(() => {
     try {
@@ -255,6 +274,16 @@ export function EmployerOpportunityForm({
       ),
     ].slice(0, 6);
     persistShortlist(next);
+    trackProductEvent("employer_candidate_saved", {
+      ...buildProofActionProperties({
+        hash: cleanHash,
+        status: cert.status,
+        source: "employer_console",
+      }),
+      issuer_status: item.issuerStatus,
+      trust_tier: verificationBreakdown?.issuerTrust.tier ?? "unknown",
+      candidate_matches_proof: analyticsBoolean(candidateMatchesProof),
+    });
     toast({
       title: "Candidate saved",
       detail: "This proof is now in your local employer review shortlist.",
@@ -273,6 +302,16 @@ export function EmployerOpportunityForm({
   async function handleCreate() {
     if (!wallet.address || !cert) return;
     setSubmitting(true);
+    trackProductEvent("employer_escrow_create_started", {
+      ...buildProofActionProperties({
+        hash: certHash.trim(),
+        status: cert.status,
+        source: "employer_console",
+      }),
+      trust_tier: verificationBreakdown?.issuerTrust.tier ?? "unknown",
+      milestone_count: Number.parseInt(milestones.trim(), 10) || null,
+      amount_valid: analyticsBoolean(amountIsValid),
+    });
     try {
       const milestoneCount = Number.parseInt(milestones.trim(), 10);
       const result = await withTimeout(
@@ -314,6 +353,14 @@ export function EmployerOpportunityForm({
   async function handleFund() {
     if (!wallet.address || createdOppId === null) return;
     setFunding(true);
+    trackProductEvent("employer_escrow_fund_started", {
+      ...buildProofActionProperties({
+        hash: certHash.trim(),
+        status: cert?.status,
+        source: "employer_console",
+      }),
+      trust_tier: verificationBreakdown?.issuerTrust.tier ?? "unknown",
+    });
     try {
       const result = await withTimeout(
         fundOpportunity(wallet.address, createdOppId),
@@ -395,6 +442,7 @@ export function EmployerOpportunityForm({
       : verificationBreakdown
         ? verificationBreakdown.employerTrustSummary
         : "Look up a proof before creating an opportunity.";
+  const issuerTrust = verificationBreakdown?.issuerTrust ?? null;
   const proofChecklist = verificationBreakdown
     ? verificationBreakdown.checks.map((check) => ({
         complete: check.status === "pass",
@@ -645,6 +693,21 @@ export function EmployerOpportunityForm({
                 </span>
                 {issuer?.name ? ` · ${issuer.name}` : ""}
               </p>
+              {issuerTrust ? (
+                <div className="mt-3 rounded-lg border border-border bg-surface-2 px-3 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-text">
+                      {issuerTrust.decisionLabel}
+                    </span>
+                    <Badge tone={issuerTrustTone(issuerTrust.tier)}>
+                      {issuerTrust.evidenceScore}/100 evidence
+                    </Badge>
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-text-muted">
+                    {issuerTrust.employerNote}
+                  </p>
+                </div>
+              ) : null}
               <ol className="mt-3 grid list-none gap-2 p-0">
                 {EMPLOYER_REVIEW_STEPS.map((step, index) => (
                   <li key={step.id} className="flex gap-2 text-sm">

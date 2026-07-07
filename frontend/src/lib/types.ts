@@ -19,6 +19,8 @@ export type WalletSnapshot = {
   networkPassphrase: string | null;
   isExpectedNetwork: boolean;
   error?: string;
+  /** Which wallet provider produced this snapshot (e.g. "freighter", "albedo"). */
+  provider?: string;
 };
 
 export type TxFeedback = {

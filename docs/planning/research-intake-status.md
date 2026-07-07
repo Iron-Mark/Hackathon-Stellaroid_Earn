@@ -38,7 +38,7 @@ Do not expand into marketplace, NFT, broad AI, or mainnet payment scope before i
 | Role-based admin model | Accepted backlog | Future org admin, reviewer, viewer, and support roles are documented here and in roadmap; not implemented in testnet MVP. |
 | Audit-log requirements | Accepted backlog | Future read-model/audit trail requirement; current on-chain events and `/metrics` provide only public chain activity. |
 | Branded proof-page requirements | Accepted backlog | Current proof metadata, issuer trust card, OG image, and public proof route provide foundation; per-issuer logo/policy/domain mapping remains backlog. |
-| Verification analytics | Partial | `/metrics`, `/api/events`, and Vercel Analytics exist. Proof views, shares, verification requests, and employer actions require a read model or analytics event plan. |
+| Verification analytics | Partial | `/metrics`, `/api/events`, Vercel page analytics, and privacy-safe custom events now cover proof shares, proof-pack downloads, employer handoff, shortlist saves, and escrow-start actions. Durable proof history, issuer conversion, and audit-grade analytics still require a first-party read model. |
 | Canonical apex domain and redirects | Verified externally | Live checks should keep confirming `https://stellaroid.tech` canonical behavior and `www`/`earn` redirects. |
 | Metadata, hreflang, Open Graph, Twitter, structured data | Implemented | Shared metadata helpers, proof metadata tests, JSON-LD, OG image tests, sitemap, and robots route exist. |
 | Bound Soroban RPC/testnet calls with caching/API boundaries | Implemented | Proof pages use server reads with `revalidate = 60`; status/events use cached routes; client writes use Freighter and timeouts. |
@@ -55,7 +55,7 @@ These are accepted product backlog items, not open pro-research intake tasks:
 - Batch issuance: CSV import, row validation, duplicate/hash checks, signing queue, preview before issue.
 - Expiration and renewal: issuer-defined validity windows, renewal reminder state, reissue workflow, and proof-page copy for expired/renewed credentials.
 - Admin and trust: org admin, reviewer, viewer, support roles, reviewer evidence, issuer domain verification, and audit-log surfaces.
-- Analytics: proof views, share actions, verification requests, employer actions, and issuer conversion to pilot.
+- Analytics: durable proof history, verification requests, issuer conversion to pilot, funnel reporting, and audit-grade action history beyond Vercel page/custom events.
 - Branded proof pages: issuer logos, policy links, custom OG variants, optional issuer domain mapping.
 - Standards export: signed VC 2.0 / Open Badges 3.0 compatible JSON and issuer-signed envelopes after pilot demand is proven. Current proof packs include only an unsigned alignment preview and must not be treated as standards-conformant credentials.
 

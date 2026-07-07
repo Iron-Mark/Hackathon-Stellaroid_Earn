@@ -4,6 +4,7 @@ import type { ProofVerificationBreakdown } from "@/lib/proof-verification";
 import { seoCanonicalUrl } from "@/lib/seo";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Badge } from "@/components/ui/badge";
+import { TrackedProofActionLink } from "./tracked-proof-action-link";
 
 interface RecruiterCtaPanelProps {
   hash: string;
@@ -26,6 +27,18 @@ export function RecruiterCtaPanel({
   const contractEventsHref = appConfig.contractId
     ? `${appConfig.explorerUrl}/contract/${appConfig.contractId}#events`
     : null;
+  const proofStatus =
+    verificationBreakdown?.checks.find((check) => check.id === "credential_status")
+      ?.label ?? null;
+  const proofStatusForAnalytics =
+    proofStatus === "verified" ||
+    proofStatus === "issued" ||
+    proofStatus === "revoked" ||
+    proofStatus === "suspended" ||
+    proofStatus === "expired" ||
+    proofStatus === "unknown"
+      ? proofStatus
+      : null;
 
   return (
     <section
@@ -72,19 +85,26 @@ export function RecruiterCtaPanel({
         ))}
       </ol>
       <div className="flex gap-3 flex-wrap">
-        <a
+        <TrackedProofActionLink
           href={employerHref}
+          eventName="proof_employer_handoff_clicked"
+          hash={hash}
+          proofStatus={proofStatusForAnalytics}
+          trustTier={verificationBreakdown?.issuerTrust.tier ?? "unknown"}
           className="inline-flex min-h-11 items-center px-4 py-2 rounded-md bg-primary text-on-primary font-semibold text-sm no-underline hover:bg-primary-hover transition-colors"
         >
           Fund paid trial
-        </a>
-        <a
+        </TrackedProofActionLink>
+        <TrackedProofActionLink
           href={`/proof/${hash}/export`}
           download
+          eventName="proof_pack_opened"
+          hash={hash}
+          proofStatus={proofStatusForAnalytics}
           className="inline-flex min-h-11 items-center px-4 py-2 rounded-md border border-border bg-surface-2 text-text font-semibold text-sm no-underline hover:border-primary transition-colors"
         >
           Download proof pack
-        </a>
+        </TrackedProofActionLink>
         <CopyButton value={proofUrl} label="Copy proof link" ariaLabel="Copy proof link" />
       </div>
       {candidatePassportHref ? (

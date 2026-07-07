@@ -293,10 +293,19 @@ async function stellarExpertRequest<T>(path: string) {
   return (await response.json()) as T;
 }
 
+// Bound the getEvents scan to a recent ledger window instead of the whole
+// retained history, so each upstream call stays cheap even under connection
+// pressure. ~7 days at 5s/ledger; still floored at the RPC's oldest ledger.
+const MAX_EVENT_LEDGER_WINDOW = 120_960;
+
 async function getRpcRecentEvents(contractId: string, limit: number) {
   const health = await rpcRequest<RpcHealthResponse>("getHealth", {});
+  const startLedger = Math.max(
+    health.oldestLedger,
+    health.latestLedger - MAX_EVENT_LEDGER_WINDOW,
+  );
   const eventResult = await rpcRequest<{ events: RpcEvent[] }>("getEvents", {
-    startLedger: health.oldestLedger,
+    startLedger,
     endLedger: health.latestLedger + 1,
     filters: [
       {
@@ -447,6 +456,35 @@ export async function getRecentEvents(contractId: string, limit = 5) {
   }
 
   return [];
+}
+
+// Short-TTL, in-flight-deduplicating cache. Every concurrent /api/events and
+// /api/events/stream reader shares one upstream fetch per (contract, limit)
+// per window instead of each triggering its own RPC + indexer round-trips —
+// this is the primary guard against connection-flood amplification.
+const EVENT_CACHE_TTL_MS = 15_000;
+const recentEventsCache = new Map<
+  string,
+  { at: number; value: Promise<RecentActivityItem[]> }
+>();
+
+export function getRecentEventsCached(contractId: string, limit = 5) {
+  const key = `${contractId}:${limit}`;
+  const now = Date.now();
+  const cached = recentEventsCache.get(key);
+  if (cached && now - cached.at < EVENT_CACHE_TTL_MS) {
+    return cached.value;
+  }
+
+  const value = getRecentEvents(contractId, limit);
+  recentEventsCache.set(key, { at: now, value });
+  // Never persist a rejection: drop it so the next reader retries upstream.
+  value.catch(() => {
+    if (recentEventsCache.get(key)?.value === value) {
+      recentEventsCache.delete(key);
+    }
+  });
+  return value;
 }
 
 export async function getRecentProofHashes(contractId: string, limit = 3) {

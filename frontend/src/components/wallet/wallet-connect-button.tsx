@@ -17,10 +17,21 @@ function cardFormat(address: string) {
 }
 
 export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProps) {
-  const { wallet, connectWallet, disconnectWallet } = useFreighterWallet();
+  const {
+    wallet,
+    connectWallet,
+    disconnectWallet,
+    availableProviders,
+    activeProvider,
+    providers,
+    isMobileBrowser,
+  } = useFreighterWallet();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const activeLabel =
+    providers.find((provider) => provider.id === activeProvider)?.label ?? "wallet";
 
   function handleCopyAddress() {
     if (copyTimer.current) clearTimeout(copyTimer.current);
@@ -109,12 +120,12 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
               <button
                 type="button"
                 onClick={disconnectWallet}
-                aria-label="Disconnect Freighter"
+                aria-label={`Disconnect ${activeLabel}`}
                 className="flex items-center gap-2 group cursor-pointer"
               >
                 <Wifi className="w-4 h-4 -rotate-90 text-text-muted group-hover:text-danger/70 transition-colors" aria-hidden="true" />
                 <span className="font-pixel text-[10px] tracking-widest uppercase leading-none text-text-muted group-hover:text-danger transition-colors">
-                  Freighter
+                  {activeLabel}
                 </span>
               </button>
             </div>
@@ -164,18 +175,13 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
 
   /* ── sidebar: disconnected / unsupported / connecting ────── */
   if (sidebar) {
-    const isUnsupported = wallet.status === "unsupported";
-    const isConnecting  = wallet.status === "connecting";
+    const isConnecting = wallet.status === "connecting";
 
     return (
       <div className="flex flex-col gap-2.5">
-        {/* Ghost card shell — clickable to connect */}
+        {/* Ghost card shell — illustration + prompt */}
         <div
-          role={!isUnsupported ? "button" : undefined}
-          tabIndex={!isUnsupported ? 0 : undefined}
-          onClick={!isUnsupported ? () => void connectWallet() : undefined}
-          onKeyDown={!isUnsupported ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); void connectWallet(); } } : undefined}
-          className={`relative overflow-hidden rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 text-center bg-surface-2 shadow-[inset_0_2px_6px_rgba(0,0,0,0.3)] ${!isUnsupported ? "cursor-pointer hover:border-primary/40 hover:bg-surface hover:shadow-[inset_0_2px_8px_rgba(245,158,11,0.1)] transition-all" : ""}`}
+          className="relative overflow-hidden rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 text-center bg-surface-2 shadow-[inset_0_2px_6px_rgba(0,0,0,0.3)]"
           style={{ aspectRatio: "1.586", padding: "20px" }}
         >
           <img
@@ -186,40 +192,44 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
             style={{ imageRendering: "pixelated" }}
           />
           <div>
-            <p className="text-[13px] font-semibold text-text">
-              {isUnsupported ? "Freighter not found" : "No wallet connected"}
-            </p>
+            <p className="text-[13px] font-semibold text-text">No wallet connected</p>
             <p className="text-[11px] text-text-muted leading-relaxed mt-0.5 max-w-40">
-              {isUnsupported
-                ? "Install the Freighter extension to continue."
-                : "Connect Freighter to sign transactions."}
+              Choose a wallet to sign transactions.
             </p>
           </div>
         </div>
 
-        {!isUnsupported ? (
-          <Button
-            variant="primary"
-            size="sm"
-            loading={isConnecting}
-            onClick={() => void connectWallet()}
-            className="w-full"
-          >
-            {!isConnecting && <Wallet className="w-3.5 h-3.5" aria-hidden="true" />}
-            {isConnecting ? "Connecting…" : "Connect Freighter"}
+        {isConnecting ? (
+          <Button variant="primary" size="sm" loading className="w-full">
+            Connecting…
           </Button>
         ) : (
-          <Button variant="secondary" size="sm" disabled className="w-full">
-            Freighter unavailable
-          </Button>
+          availableProviders.map((provider, index) => (
+            <Button
+              key={provider.id}
+              variant={index === 0 ? "primary" : "secondary"}
+              size="sm"
+              onClick={() => void connectWallet(provider.id)}
+              className="w-full"
+            >
+              <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
+              Connect {provider.label}
+            </Button>
+          ))
         )}
+
+        {isMobileBrowser ? (
+          <p className="text-[11px] text-text-muted leading-relaxed">
+            On mobile? Albedo signs right in your browser — no extension needed.
+          </p>
+        ) : null}
       </div>
     );
   }
 
   /* ── inline (nav bar) ───────────────────────────────────── */
   if (wallet.status === "connecting") {
-    return <Button variant="primary" size="sm" loading>Connect Freighter</Button>;
+    return <Button variant="primary" size="sm" loading>Connecting…</Button>;
   }
 
   if (wallet.status === "connected" && wallet.address) {
@@ -232,15 +242,20 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
     );
   }
 
-  if (wallet.status === "unsupported") {
-    return <Button variant="secondary" size="sm" disabled>Freighter unavailable</Button>;
-  }
-
   return (
-    <Button variant="primary" size="sm" onClick={() => void connectWallet()}>
-      <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
-      Connect Freighter
-    </Button>
+    <div className="flex items-center gap-2 flex-wrap">
+      {availableProviders.map((provider, index) => (
+        <Button
+          key={provider.id}
+          variant={index === 0 ? "primary" : "secondary"}
+          size="sm"
+          onClick={() => void connectWallet(provider.id)}
+        >
+          <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
+          Connect {provider.label}
+        </Button>
+      ))}
+    </div>
   );
 }
 
