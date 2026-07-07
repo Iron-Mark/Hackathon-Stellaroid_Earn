@@ -454,17 +454,23 @@ impl StellaroidEarn {
             .instance()
             .get(&DataKey::Token)
             .ok_or(Error::NotInitialized)?;
+
+        // Checks-effects-interactions: persist the new status BEFORE the external
+        // token transfer, so a re-entrant token callback sees Funded and fails
+        // the Draft guard. The transfer stays inside this atomic tx, so if it
+        // fails the status write is rolled back with it.
+        opp.status = OpportunityStatus::Funded;
+        env.storage().persistent().set(&key, &opp);
+        env.storage()
+            .persistent()
+            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
+
         token::Client::new(&env, &token_addr).transfer(
             &employer,
             &env.current_contract_address(),
             &opp.amount,
         );
 
-        opp.status = OpportunityStatus::Funded;
-        env.storage().persistent().set(&key, &opp);
-        env.storage()
-            .persistent()
-            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
         env.events()
             .publish((symbol_short!("opp_fund"), employer), opp_id);
         Ok(())
@@ -553,17 +559,22 @@ impl StellaroidEarn {
             .instance()
             .get(&DataKey::Token)
             .ok_or(Error::NotInitialized)?;
+
+        // Checks-effects-interactions: mark Released and persist BEFORE paying
+        // out, so a re-entrant token cannot clear the Approved guard twice and
+        // double-spend the pooled escrow.
+        opp.status = OpportunityStatus::Released;
+        env.storage().persistent().set(&key, &opp);
+        env.storage()
+            .persistent()
+            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
+
         token::Client::new(&env, &token_addr).transfer(
             &env.current_contract_address(),
             &opp.candidate,
             &opp.amount,
         );
 
-        opp.status = OpportunityStatus::Released;
-        env.storage().persistent().set(&key, &opp);
-        env.storage()
-            .persistent()
-            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
         env.events().publish(
             (symbol_short!("pay_rel"), employer),
             opp_id,
@@ -595,17 +606,21 @@ impl StellaroidEarn {
             .instance()
             .get(&DataKey::Token)
             .ok_or(Error::NotInitialized)?;
+
+        // Checks-effects-interactions: persist Refunded BEFORE the payout so a
+        // re-entrant token sees the terminal status and fails the guard.
+        opp.status = OpportunityStatus::Refunded;
+        env.storage().persistent().set(&key, &opp);
+        env.storage()
+            .persistent()
+            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
+
         token::Client::new(&env, &token_addr).transfer(
             &env.current_contract_address(),
             &opp.employer,
             &opp.amount,
         );
 
-        opp.status = OpportunityStatus::Refunded;
-        env.storage().persistent().set(&key, &opp);
-        env.storage()
-            .persistent()
-            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
         env.events().publish(
             (symbol_short!("pay_ref"), employer),
             opp_id,

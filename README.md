@@ -311,13 +311,13 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 - **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health)  - cached JSON health check (config, RPC latency, contract availability)
 - **Events API:** [`/api/events`](https://stellaroid.tech/api/events)  - structured contract event data for external consumers
 - **Events stream:** [`/api/events/stream`](https://stellaroid.tech/api/events/stream)  - short-lived Server-Sent Events stream for live demo refreshes without adding a database
-- **Vercel Analytics:** Web analytics integrated via `@vercel/analytics`
+- **Vercel Analytics:** Page analytics plus privacy-safe custom events for proof sharing, proof-pack downloads, employer handoff, shortlist saves, and escrow-start actions
 
 ### Data Indexing
 
 Contract events are read from two public sources. The app first queries Soroban RPC `getEvents` for recent contract events, then supplements that result with Stellar Expert's public contract event index so older testnet activity does not disappear from the demo surface when the RPC retention window moves on. Events are decoded from ScVal/XDR where possible, categorized by kind (`cert_reg`, `cert_ver`, `reward`, `payment`), deduplicated, source-labelled, and served through `/api/events`, `/api/events/stream`, plus `/status#metrics`.
 
-This remains a lightweight serverless evidence layer, not a full analytics warehouse. Proof views, share actions, employer actions, and long-term product analytics still require a first-party read model or analytics event plan.
+This remains a lightweight serverless evidence layer, not a full analytics warehouse. Vercel page analytics and custom events help inspect proof/share/employer flow interest without storing raw wallet addresses or proof hashes; durable proof history, issuer conversion, and long-term product analytics still require a first-party read model.
 
 ---
 

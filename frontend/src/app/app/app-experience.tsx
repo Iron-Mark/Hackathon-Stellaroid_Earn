@@ -29,7 +29,7 @@ interface AppExperienceProps {
 }
 
 export function AppExperience({ sidebarActivity }: AppExperienceProps) {
-  const { wallet, isMobileBrowser } = useFreighterWallet();
+  const { wallet, isMobileBrowser, hasWebWallet } = useFreighterWallet();
   const contractId = appConfig.contractId ?? "";
   const contractUrl = contractId
     ? `${appConfig.explorerUrl}/contract/${contractId}`
@@ -58,9 +58,10 @@ export function AppExperience({ sidebarActivity }: AppExperienceProps) {
 
   const walletConnected =
     wallet.status === "connected" && !!wallet.address && wallet.isExpectedNetwork;
-  const showDesktopOnlyFallback = isMobileBrowser;
-  const showInstallFallback = wallet.status === "unsupported" && !isMobileBrowser;
-  const showWalletEmptyState = showDesktopOnlyFallback || showInstallFallback;
+  // A cross-platform (web) wallet lets mobile and extension-less desktop users
+  // sign, so only fall back to the "no wallet" screen when nothing works here.
+  const showWalletEmptyState =
+    !hasWebWallet && (isMobileBrowser || wallet.status === "unsupported");
 
   return (
     <AppShell rpcPill={<RpcStatusPill />} walletButton={<WalletConnectButton />} sidebarMode>
@@ -72,7 +73,7 @@ export function AppExperience({ sidebarActivity }: AppExperienceProps) {
           <div className="flex flex-col gap-6 min-w-0">
             {showWalletEmptyState ? (
               <WalletEmptyState
-                mode={showDesktopOnlyFallback ? "desktop-only" : "install-extension"}
+                mode={isMobileBrowser ? "desktop-only" : "install-extension"}
               />
             ) : (
               <>

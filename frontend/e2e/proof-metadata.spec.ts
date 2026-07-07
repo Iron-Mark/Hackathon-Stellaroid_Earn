@@ -48,6 +48,12 @@ test("about page exposes product software structured data", async ({ page }) => 
 test("sample proof page exposes article structured data linked to the credential document", async ({ page }) => {
   await page.goto(`/proof/${SAMPLE_PROOF_HASH}`);
 
+  await expect(
+    page.getByText("Employer-ready issuer evidence", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("90/100 evidence").first()).toBeVisible();
+  await expect(page.getByText("Evidence score")).toBeVisible();
+
   const schemas = await getJsonLd(page);
   const article = schemas.find((schema) => schema["@type"] === "Article");
   const document = schemas.find((schema) => schema["@type"] === "DigitalDocument");
@@ -58,6 +64,41 @@ test("sample proof page exposes article structured data linked to the credential
   expect(article.image).toBe(`${SAMPLE_PROOF_URL}/opengraph-image`);
   expect(article.author.name).toBe("Mark Siazon");
   expect(article.about.identifier).toBe(SAMPLE_PROOF_HASH);
+});
+
+test("proof share event avoids raw proof identifiers", async ({ page }) => {
+  await page.addInitScript(() => {
+    const analyticsWindow = window as typeof window & {
+      va?: (...params: unknown[]) => void;
+      __vaEvents?: unknown[];
+    };
+    window.open = () => null;
+    analyticsWindow.va = (...params: unknown[]) => {
+      analyticsWindow.__vaEvents = [
+        ...(analyticsWindow.__vaEvents ?? []),
+        params,
+      ];
+    };
+  });
+
+  await page.goto(`/proof/${SAMPLE_PROOF_HASH}`);
+  await page
+    .getByRole("button", { name: "Share verified proof on X (Twitter)" })
+    .click();
+
+  const events = await page.evaluate(
+    () =>
+      (
+        window as typeof window & {
+          __vaEvents?: unknown[];
+        }
+      ).__vaEvents ?? [],
+  );
+  const serialized = JSON.stringify(events);
+
+  expect(serialized).toContain("proof_share_clicked");
+  expect(serialized).toContain("proof_hash_shape");
+  expect(serialized).not.toContain(SAMPLE_PROOF_HASH);
 });
 
 test("proof Open Graph image renders as png", async ({ page, request }) => {

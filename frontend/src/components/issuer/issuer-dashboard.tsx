@@ -94,7 +94,7 @@ function getIssuerFlowSteps(issuer: IssuerRecord | null) {
 }
 
 export function IssuerDashboard() {
-  const { wallet, isMobileBrowser } = useFreighterWallet();
+  const { wallet, isMobileBrowser, hasWebWallet } = useFreighterWallet();
   const { toast } = useToast();
   const [issuer, setIssuer] = useState<IssuerRecord | null>(null);
   const [loading, setLoading] = useState(false);
@@ -103,9 +103,8 @@ export function IssuerDashboard() {
   const [targetLookupBusy, setTargetLookupBusy] = useState(false);
   const [adminBusy, setAdminBusy] = useState<"approve" | "suspend" | null>(null);
 
-  const showDesktopOnlyFallback = isMobileBrowser;
-  const showInstallFallback = wallet.status === "unsupported" && !isMobileBrowser;
-  const showWalletEmptyState = showDesktopOnlyFallback || showInstallFallback;
+  const showWalletEmptyState =
+    !hasWebWallet && (isMobileBrowser || wallet.status === "unsupported");
   const walletConnected =
     wallet.status === "connected" && !!wallet.address && wallet.isExpectedNetwork;
   const configuredAdmin = appConfig.adminAddress.trim().toUpperCase();
@@ -225,7 +224,7 @@ export function IssuerDashboard() {
 
         {showWalletEmptyState ? (
           <WalletEmptyState
-            mode={showDesktopOnlyFallback ? "desktop-only" : "install-extension"}
+            mode={isMobileBrowser ? "desktop-only" : "install-extension"}
           />
         ) : null}
 

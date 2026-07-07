@@ -64,6 +64,27 @@ export function VerificationBreakdownCard({
       <p className="mt-2 text-sm leading-relaxed text-text-muted">
         {breakdown.summary}
       </p>
+      <div className="mt-3 rounded-lg border border-border bg-surface-2 px-3 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-semibold text-text">
+            {breakdown.issuerTrust.decisionLabel}
+          </span>
+          <Badge
+            tone={
+              breakdown.issuerTrust.tier === "registry_verified"
+                ? "success"
+                : breakdown.issuerTrust.tier === "registry_blocked"
+                  ? "danger"
+                  : "warning"
+            }
+          >
+            {breakdown.issuerTrust.evidenceScore}/100 evidence
+          </Badge>
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-text-muted">
+          {breakdown.issuerTrust.employerNote}
+        </p>
+      </div>
       <ol className="mt-4 grid list-none gap-3 p-0 md:grid-cols-2">
         {breakdown.checks.map((check) => (
           <li

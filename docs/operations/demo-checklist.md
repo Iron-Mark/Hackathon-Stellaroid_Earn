@@ -11,8 +11,9 @@ Last live smoke pass: 2026-07-04. `stellaroid.tech`, `beta.stellaroid.tech`, and
 - Open https://stellaroid.tech and confirm the homepage loads as Stellaroid Earn.
 - Open the verified proof:
   https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
-- Confirm the proof shows `Verification breakdown` with hash anchor, contract record, credential status, issuer registry, and employer handoff checks.
+- Confirm the proof shows `Verification breakdown` with hash anchor, contract record, credential status, issuer registry, employer handoff checks, and an issuer trust dossier score.
 - From the proof page, click `Fund paid trial` and confirm `/employer` opens with the proof context.
+- In `/employer`, confirm the employer review brief repeats the issuer trust dossier before escrow creation.
 - Open https://stellaroid.tech/status#metrics and confirm it shows the canonical URL, current project state, and public contract-event evidence with source labels.
 - On `/status#metrics`, confirm the `Event stream` panel moves from connecting to a snapshot/live state and reports RPC/indexer source counts.
 
