@@ -8,6 +8,11 @@ import {
 } from "@stellar/stellar-sdk";
 import { appConfig } from "@/lib/config";
 import { validateFeeBumpRequestShape } from "@/lib/fee-bump-policy";
+import {
+  checkRateLimit,
+  getClientId,
+  tryConsumeBudget,
+} from "@/lib/rate-limit";
 
 const SPONSOR_SECRET = process.env.FEE_SPONSOR_SECRET ?? "";
 const SPONSOR_TOKEN = process.env.FEE_SPONSOR_TOKEN ?? "";
@@ -15,6 +20,33 @@ const NETWORK_PASSPHRASE =
   process.env.NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE ?? Networks.TESTNET;
 const MAX_XDR_LENGTH = 32_000;
 const MAX_INNER_FEE = 1_000_000;
+
+// Abuse limits so a leaked/shared bearer token cannot script an unbounded
+// sponsor-account drain. Both are per-warm-instance guards (see rate-limit.ts);
+// override via env, and pair with an edge rate limit for a hard global cap.
+const RATE_WINDOW_MS = 60_000;
+const MAX_REQUESTS_PER_WINDOW = clampEnvInt(
+  process.env.FEE_SPONSOR_MAX_REQUESTS_PER_MIN,
+  30,
+);
+// Rolling stroop budget across all callers. Default 20 XLM/min ceiling — with
+// MAX_INNER_FEE = 0.1 XLM that is ~200 sponsored fee-bumps per minute.
+const MAX_STROOPS_PER_WINDOW = clampEnvInt(
+  process.env.FEE_SPONSOR_MAX_STROOPS_PER_MIN,
+  200_000_000,
+);
+
+function clampEnvInt(value: string | undefined, fallback: number) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+}
+
+function tooManyRequests(retryAfterSec: number) {
+  return NextResponse.json(
+    { error: "Fee sponsorship rate limit exceeded. Retry shortly." },
+    { status: 429, headers: { "Retry-After": String(Math.max(1, retryAfterSec)) } },
+  );
+}
 const ALLOWED_METHODS = new Set([
   "register_issuer",
   "register_certificate",
@@ -88,6 +120,18 @@ export async function POST(request: Request) {
     );
   }
 
+  // Cheap per-IP flood control before any parsing or signing work.
+  const clientId = getClientId(request.headers);
+  const rate = checkRateLimit(
+    "fee-bump",
+    clientId,
+    MAX_REQUESTS_PER_WINDOW,
+    RATE_WINDOW_MS,
+  );
+  if (!rate.ok) {
+    return tooManyRequests(rate.retryAfterSec);
+  }
+
   let body: { signedXdr?: string };
   try {
     body = await request.json();
@@ -113,6 +157,19 @@ export async function POST(request: Request) {
       NETWORK_PASSPHRASE,
     ) as Transaction;
     validateInnerTransaction(innerTx, sponsorPublicKey);
+
+    // Only debit the rolling budget once the request is proven sponsorable, so
+    // a valid caller cannot drain the sponsor account faster than the cap.
+    if (
+      !tryConsumeBudget(
+        "fee-bump",
+        MAX_INNER_FEE,
+        MAX_STROOPS_PER_WINDOW,
+        RATE_WINDOW_MS,
+      )
+    ) {
+      return tooManyRequests(Math.ceil(RATE_WINDOW_MS / 1000));
+    }
 
     const feeBumpTx = TransactionBuilder.buildFeeBumpTransaction(
       sponsorKeypair,
