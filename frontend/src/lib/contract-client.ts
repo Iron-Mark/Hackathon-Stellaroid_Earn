@@ -18,7 +18,7 @@ import {
   hasRequiredConfig,
 } from "@/lib/config";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
-import { signWithFreighter } from "@/lib/freighter";
+import { signTransaction as signWithWallet } from "@/lib/wallet";
 import {
   opportunityIdToBigInt,
   type OpportunityIdInput,
@@ -454,7 +454,7 @@ async function signAndSubmit<T>(
     transaction,
   );
 
-  const signedXdr = await signWithFreighter(
+  const signedXdr = await signWithWallet(
     preparedTransaction.toXDR(),
     sourceAddress,
   );
