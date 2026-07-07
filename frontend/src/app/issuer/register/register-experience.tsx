@@ -9,10 +9,9 @@ import { IssuerRegisterForm } from "@/components/issuer/issuer-register-form";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
 
 export function RegisterIssuerExperience() {
-  const { wallet, isMobileBrowser } = useFreighterWallet();
-  const showDesktopOnlyFallback = isMobileBrowser;
-  const showInstallFallback = wallet.status === "unsupported" && !isMobileBrowser;
-  const showWalletEmptyState = showDesktopOnlyFallback || showInstallFallback;
+  const { wallet, isMobileBrowser, hasWebWallet } = useFreighterWallet();
+  const showWalletEmptyState =
+    !hasWebWallet && (isMobileBrowser || wallet.status === "unsupported");
 
   return (
     <AppShell rpcPill={<RpcStatusPill />} walletButton={<WalletConnectButton />}>
@@ -20,7 +19,7 @@ export function RegisterIssuerExperience() {
         <NetworkBanner wallet={wallet} />
         {showWalletEmptyState ? (
           <WalletEmptyState
-            mode={showDesktopOnlyFallback ? "desktop-only" : "install-extension"}
+            mode={isMobileBrowser ? "desktop-only" : "install-extension"}
           />
         ) : (
           <IssuerRegisterForm />
