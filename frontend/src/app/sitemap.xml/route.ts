@@ -1,6 +1,7 @@
 import { seoCanonicalUrl } from "@/lib/seo";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
 import { guides } from "@/lib/content/guides";
+import { docsPages } from "@/lib/content/docs";
 
 type ChangeFrequency = "weekly" | "monthly" | "daily";
 
@@ -38,6 +39,12 @@ const routes: SitemapRoute[] = [
     path: `/guides/${g.slug}`,
     changeFrequency: "monthly" as ChangeFrequency,
     priority: 0.6,
+  })),
+  // Developer documentation hub
+  ...docsPages.map((d) => ({
+    path: d.slug === "index" ? "/docs" : `/docs/${d.slug}`,
+    changeFrequency: "monthly" as ChangeFrequency,
+    priority: d.slug === "index" ? 0.7 : 0.6,
   })),
 ];
 

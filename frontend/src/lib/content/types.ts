@@ -33,7 +33,7 @@ export interface GlossaryTerm {
   definition: string;
 }
 
-/** Ordered content block for a guide article body. */
+/** Ordered content block for a guide/docs article body. */
 export type Block =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
@@ -41,7 +41,8 @@ export type Block =
   | { type: "ul"; items: string[] }
   | { type: "ol"; items: string[] }
   | { type: "code"; text: string; lang?: string }
-  | { type: "callout"; text: string };
+  | { type: "callout"; text: string }
+  | { type: "table"; headers: string[]; rows: string[][] };
 
 export interface LandingContent {
   slug: string;
@@ -88,6 +89,20 @@ export interface GuideIndexContent {
   faq?: FaqItem[];
   primaryCta?: Cta;
   secondaryCta?: Cta;
+}
+
+export interface DocPage {
+  /** Path segment under /docs/ — "index" for the hub page itself. */
+  slug: string;
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+  /** Short sidebar label. */
+  navLabel: string;
+  lede: string;
+  blocks: Block[];
+  faq: FaqItem[];
 }
 
 export interface GuideArticle {

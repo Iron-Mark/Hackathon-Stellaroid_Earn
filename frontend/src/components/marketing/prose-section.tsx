@@ -96,6 +96,37 @@ export function ProseBlocks({ blocks }: { blocks: Block[] }) {
                 {renderInline(b.text)}
               </div>
             );
+          case "table":
+            return (
+              <div key={i} className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full border-collapse text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-surface">
+                      {b.headers.map((h, j) => (
+                        <th
+                          key={j}
+                          scope="col"
+                          className="px-4 py-2.5 font-pixel text-[11px] font-semibold uppercase tracking-widest text-text-muted"
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {b.rows.map((row, j) => (
+                      <tr key={j} className="border-b border-border/60 last:border-b-0 bg-surface/50">
+                        {row.map((cell, k) => (
+                          <td key={k} className="px-4 py-2.5 align-top leading-relaxed text-text-muted [&_code]:whitespace-nowrap">
+                            {renderInline(cell)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
           case "p":
           default:
             return (

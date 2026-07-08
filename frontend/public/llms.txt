@@ -29,6 +29,11 @@
 - Instant payouts in XLM: https://stellaroid.tech/instant-payouts
 - Glossary of verifiable-credential terms: https://stellaroid.tech/glossary
 - Guides library: https://stellaroid.tech/guides
+- Developer docs (overview + quickstart): https://stellaroid.tech/docs
+- Contract reference (functions, errors, events): https://stellaroid.tech/docs/contract
+- Wallet & frontend integration: https://stellaroid.tech/docs/integration
+- Architecture: https://stellaroid.tech/docs/architecture
+- Security posture: https://stellaroid.tech/docs/security
 
 ## Source
 - Repository: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn

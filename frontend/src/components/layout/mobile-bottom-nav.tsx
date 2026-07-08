@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   Activity,
   BadgeCheck,
+  BookOpen,
   BriefcaseBusiness,
   ExternalLink,
   FlaskConical,
@@ -36,13 +37,14 @@ const tabs = [
 
 const moreLinks = [
   { href: "/app", label: "Launch App", detail: "Register, endorse, and pay on-chain", Icon: Rocket },
+  { href: "/docs", label: "Docs", detail: "Contract, integration, and security reference", Icon: BookOpen },
   { href: "/pilot", label: "Pilot", detail: "Run a cohort pilot with us", Icon: FlaskConical },
   { href: "/status", label: "Status", detail: "Network health and live events", Icon: Activity },
   { href: "/about", label: "About", detail: "How Stellaroid Earn works", Icon: Info },
 ];
 
 const moreMatch = (p: string) =>
-  ["/app", "/pilot", "/status", "/about", "/metrics", "/talent"].some(prefix => p.startsWith(prefix));
+  ["/app", "/docs", "/pilot", "/status", "/about", "/metrics", "/talent"].some(prefix => p.startsWith(prefix));
 
 export function MobileBottomNav() {
   const [open, setOpen] = useState(false);

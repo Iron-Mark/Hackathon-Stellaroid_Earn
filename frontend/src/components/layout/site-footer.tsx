@@ -74,6 +74,7 @@ export function SiteFooter() {
             {/* Learn */}
             <nav aria-label="Learn links" className="flex flex-col text-[13px]">
               <h2 className="font-pixel text-[11px] font-medium text-primary uppercase tracking-widest mb-3">Learn</h2>
+              <Link href="/docs" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Docs</Link>
               <Link href="/guides" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Guides</Link>
               <Link href="/glossary" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Glossary</Link>
               <Link href="/verify-bootcamp-certificate" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">For bootcamps</Link>
