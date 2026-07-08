@@ -108,12 +108,12 @@ function Step({ label, status, vertical }: StepProps) {
     status === "done" ? "complete" : status === "active" ? "in progress" : "pending";
 
   return (
-    <div className={vertical ? "flex flex-row items-center gap-3 shrink-0" : "flex flex-col items-center gap-2 shrink-0 max-sm:flex-row max-sm:gap-3"}>
+    <div className={vertical ? "flex flex-row items-center gap-3 shrink-0" : "flex flex-col items-center gap-2 shrink-0 max-sm:gap-1.5"}>
       <div key={status} className={["w-11 h-11 flex items-center justify-center rounded-full shrink-0", iconColorClass].join(" ")}>
         {status === "done" ? <CheckIcon /> : status === "active" ? <ActiveCircleIcon /> : <EmptyCircleIcon />}
       </div>
       <div className={vertical ? "flex flex-col min-w-0" : undefined}>
-        <span className={["font-mono text-[13px] font-medium", vertical ? "" : "text-center", labelColorClass].join(" ")}>
+        <span className={["font-mono text-[13px] font-medium", vertical ? "" : "text-center max-sm:text-[11px]", labelColorClass].join(" ")}>
           {label}
         </span>
         {vertical && (
@@ -136,9 +136,9 @@ function Connector({ filled, vertical }: ConnectorProps) {
       className={[
         vertical
           ? "w-0.5 h-6 ml-[21px]"
-          : "flex-1 h-0.5 min-w-6 mb-5 max-sm:w-0.5 max-sm:h-6 max-sm:min-w-0 max-sm:mb-0 max-sm:ml-[21px]",
+          : "flex-1 h-0.5 min-w-6 mb-5 max-sm:min-w-3",
         filled
-          ? vertical ? "bg-linear-to-b from-verified to-verified-strong" : "bg-linear-to-r from-verified to-verified-strong max-sm:bg-linear-to-b"
+          ? vertical ? "bg-linear-to-b from-verified to-verified-strong" : "bg-linear-to-r from-verified to-verified-strong"
           : "bg-border",
       ].join(" ")}
       aria-hidden="true"
@@ -156,7 +156,7 @@ export function MilestoneRail({ state, orientation = "horizontal", started = tru
 
   return (
     <nav
-      className={vertical ? "flex flex-col gap-0" : "flex flex-row items-center gap-0 py-4 max-sm:flex-col max-sm:items-start"}
+      className={vertical ? "flex flex-col gap-0" : "flex flex-row items-center gap-0 py-4 max-sm:py-2"}
       aria-label="Progress"
     >
       <Step label="Registered" status={registeredStatus} vertical={vertical} />

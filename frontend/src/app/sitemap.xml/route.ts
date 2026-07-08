@@ -1,5 +1,7 @@
 import { seoCanonicalUrl } from "@/lib/seo";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+import { guides } from "@/lib/content/guides";
+import { docsPages } from "@/lib/content/docs";
 
 type ChangeFrequency = "weekly" | "monthly" | "daily";
 
@@ -27,11 +29,34 @@ const routes: SitemapRoute[] = [
   // Public pages intentionally kept out of /status and /metrics: robots meta
   // explicitly marks those routes noindex.
   { path: "/slides", changeFrequency: "monthly", priority: 0.4 },
+  // Audience landing pages + content library
+  { path: "/verify-bootcamp-certificate", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/verify-candidate-credentials", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/instant-payouts", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/glossary", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/guides", changeFrequency: "weekly", priority: 0.7 },
+  ...guides.map((g) => ({
+    path: `/guides/${g.slug}`,
+    changeFrequency: "monthly" as ChangeFrequency,
+    priority: 0.6,
+  })),
+  // Developer documentation hub
+  ...docsPages.map((d) => ({
+    path: d.slug === "index" ? "/docs" : `/docs/${d.slug}`,
+    changeFrequency: "monthly" as ChangeFrequency,
+    priority: d.slug === "index" ? 0.7 : 0.6,
+  })),
 ];
 
 if (sampleProofRoute) {
   routes.push(sampleProofRoute);
 }
+
+// Statically generated at build time so <lastmod> is a stable, meaningful
+// per-deploy timestamp instead of "now" on every request (which is noise
+// search/AI crawlers learn to ignore).
+export const dynamic = "force-static";
+const LAST_MODIFIED = new Date().toISOString();
 
 function escapeXml(value: string) {
   return value
@@ -43,7 +68,7 @@ function escapeXml(value: string) {
 }
 
 export function GET() {
-  const lastModified = new Date().toISOString();
+  const lastModified = LAST_MODIFIED;
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',

@@ -3,14 +3,21 @@ import { AppShell } from "@/components/layout/app-shell";
 import { RpcStatusPill } from "@/components/layout/rpc-status-pill";
 import { WalletConnectButton } from "@/components/wallet/wallet-connect-button";
 import { EmployerOpportunityForm } from "@/components/employer/employer-opportunity-form";
+import { JsonLd } from "@/components/ui/json-ld";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { buildBreadcrumbJsonLd } from "@/lib/schema";
+
+const employerBreadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "/" },
+  { name: "Hire", path: "/employer" },
+]);
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/employer",
-  title: "Employer · Stellaroid Earn",
+  title: "Hire verified graduates",
   description:
-    "Create and fund escrowed paid trials for verified candidates on Stellar testnet.",
+    "Review a graduate's on-chain verified credential and fund an escrowed paid trial in XLM on Stellar testnet — no invoices, no platform fee, settlement in seconds.",
 });
 
 interface EmployerPageProps {
@@ -36,6 +43,7 @@ export default async function EmployerPage({ searchParams }: EmployerPageProps) 
         walletButton={<WalletConnectButton />}
       >
         <div className="flex flex-col gap-6">
+          <JsonLd data={employerBreadcrumbJsonLd} />
           <section className="rounded-2xl border border-border bg-surface p-6">
             <p className="text-xs uppercase tracking-[0.16em] text-text-muted">
               Employer console

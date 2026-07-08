@@ -112,7 +112,7 @@ export function ActivitySnackbar({
   return (
     <div
       className={cn(
-        "fixed right-4 bottom-6 z-50 w-80 max-sm:right-3 max-sm:left-3 max-sm:w-auto",
+        "fixed right-[max(1rem,env(safe-area-inset-right))] bottom-6 max-lg:bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] z-50 w-80 max-sm:right-3 max-sm:left-3 max-sm:w-auto",
         "rounded-2xl bg-surface-glass border border-border-glass backdrop-blur-md shadow-glow-accent",
         "overflow-hidden",
         "transition-all duration-300",

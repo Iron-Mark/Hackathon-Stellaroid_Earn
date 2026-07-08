@@ -66,7 +66,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "flex w-full min-h-[44px] px-3 py-2",
             "rounded-lg bg-surface-2 border",
             mono ? "font-mono" : "font-sans",
-            "text-[15px] text-text placeholder:text-text-muted/60",
+            /* ≥16px below lg so iOS Safari doesn't auto-zoom on focus */
+            "text-[15px] max-lg:text-base text-text placeholder:text-text-muted/60",
             "transition-colors duration-150",
             hasError
               ? "border-danger focus-visible:outline-danger"

@@ -54,7 +54,7 @@ export function Select({ id, value, onChange, options, placeholder, className }:
         aria-haspopup="listbox"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex items-center justify-between w-full min-h-[44px] rounded-lg border px-3 py-2 text-[15px] text-left cursor-pointer transition-colors duration-150",
+          "flex items-center justify-between w-full min-h-[44px] rounded-lg border px-3 py-2 text-[15px] max-lg:text-base text-left cursor-pointer transition-colors duration-150",
           "bg-surface-2 border-border hover:border-primary/40",
           "focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
           open && "border-primary"

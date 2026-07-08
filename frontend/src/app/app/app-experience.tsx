@@ -68,6 +68,9 @@ export function AppExperience({ sidebarActivity }: AppExperienceProps) {
       {sidebarActivity ? <ActivitySnackbar>{sidebarActivity}</ActivitySnackbar> : null}
       {!showWalletEmptyState ? <FreighterWelcome /> : null}
       <div className="flex flex-col gap-6">
+        <h1 className="sr-only">
+          Register, verify, and pay for credentials on Stellar testnet
+        </h1>
         <NetworkBanner wallet={wallet} />
         <div className="grid [grid-template-columns:minmax(0,1.5fr)_minmax(280px,0.95fr)] gap-6 items-start max-[920px]:grid-cols-1">
           <div className="flex flex-col gap-6 min-w-0">

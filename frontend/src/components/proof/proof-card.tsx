@@ -164,6 +164,8 @@ export function ProofCard({
   const explorerUrl = appConfig.explorerUrl;
   const shortContract = shortenAddress(contractId, 8);
   const shortHash = shortenAddress(hash, 8);
+  const credentialTitle =
+    proofMetadata?.title?.trim() || cert?.title?.trim() || "Credential proof";
   const status = statusMeta(cert, lookupFailed);
   const issuerState = issuerMeta(cert, issuer, issuerLookupFailed);
   const verificationBreakdown = cert
@@ -178,6 +180,13 @@ export function ProofCard({
   return (
     <div className="max-w-3xl mx-auto px-8 max-sm:px-3">
       <article className="relative overflow-hidden rounded-2xl bg-surface border border-border-glass flex flex-col gap-6 p-8 max-sm:p-5 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-[linear-gradient(to_right_in_oklch,var(--color-primary),var(--color-accent))]">
+
+        {/* Page H1 — keyworded, single per page. Visually hidden because the
+            credential title is presented in the metadata panel below; this
+            gives crawlers/answer-engines an explicit heading either way. */}
+        <h1 className="sr-only">
+          {credentialTitle} — on-chain credential proof on Stellar ({shortHash})
+        </h1>
 
         {/* Header row */}
         <header className="flex items-center gap-2 flex-wrap">

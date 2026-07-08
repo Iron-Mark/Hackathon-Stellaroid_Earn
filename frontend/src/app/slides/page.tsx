@@ -727,11 +727,11 @@ export default function SlidesPage() {
         {/* ============================================================ */}
         {/* Navigation controls                                          */}
         {/* ============================================================ */}
-        <div className="fixed bottom-5 left-5 z-[100] text-xs sm:text-sm text-border">
+        <div className="fixed bottom-[max(1.25rem,calc(env(safe-area-inset-bottom)+0.5rem))] left-[max(1.25rem,env(safe-area-inset-left))] z-[100] text-xs sm:text-sm text-border">
           {current + 1} / {TOTAL}
         </div>
 
-        <div className="fixed bottom-5 right-5 z-[100] flex gap-2">
+        <div className="fixed bottom-[max(1.25rem,calc(env(safe-area-inset-bottom)+0.5rem))] right-[max(1.25rem,env(safe-area-inset-right))] z-[100] flex gap-2">
           <button
             onClick={() => navigate(-1)}
             className="bg-surface/80 border border-border/60 text-text px-3 py-2 sm:px-4 rounded-md text-xs sm:text-sm font-sans cursor-pointer backdrop-blur-sm transition-colors hover:bg-primary/20 hover:border-primary/40"

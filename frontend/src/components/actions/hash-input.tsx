@@ -104,7 +104,7 @@ export function HashInput({ value, onChange, onBlur, error, helper, touched }: H
           autoComplete="off"
           spellCheck={false}
           aria-invalid={error ? "true" : undefined}
-          className="w-full px-3 py-2.5 font-mono text-[13px] text-text placeholder:text-text-muted/50 bg-transparent resize-none focus:outline-none leading-relaxed"
+          className="w-full px-3 py-2.5 font-mono text-[13px] max-lg:text-base text-text placeholder:text-text-muted/50 bg-transparent resize-none focus:outline-none leading-relaxed"
         />
         <div className="flex items-center gap-2 px-3 py-2 border-t border-border bg-surface">
           <button

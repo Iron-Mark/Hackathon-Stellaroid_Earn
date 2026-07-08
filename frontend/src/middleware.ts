@@ -19,6 +19,8 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob:",
+    "worker-src 'self'",
+    "manifest-src 'self'",
     `connect-src 'self' https://*.stellar.org${isVercelPreview ? " https://vercel.live https://*.vercel.live" : ""}`,
     "frame-src 'none'",
     "object-src 'none'",
