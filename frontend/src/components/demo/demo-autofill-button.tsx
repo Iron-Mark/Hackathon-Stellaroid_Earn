@@ -76,7 +76,7 @@ export function DemoAutofillButton({ registered = false }: DemoAutofillButtonPro
       disabled={filling}
       aria-label={filling ? "Filling fields…" : "Autofill form inputs"}
       title="Autofill form inputs"
-      className="fixed right-5 bottom-5 z-50 rounded-full shadow-[0_6px_20px_rgba(0,0,0,0.12)] border border-border bg-surface hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:-translate-y-px gap-2"
+      className="fixed right-[max(1.25rem,env(safe-area-inset-right))] bottom-5 max-lg:bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] z-50 rounded-full shadow-[0_6px_20px_rgba(0,0,0,0.12)] border border-border bg-surface hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:-translate-y-px gap-2"
     >
       {filling ? (
         <>
