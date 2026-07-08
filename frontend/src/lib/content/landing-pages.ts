@@ -410,7 +410,7 @@ export const instantPayouts: LandingContent = {
     {
       "heading": "Payment is gated on verification, by the contract",
       "paragraphs": [
-        "Binding proof to payment only matters if the payment cannot jump the queue. In Stellaroid Earn, it cannot. An employer cannot pay a credential that has not been verified — the contract's test_payment_requires_verification test proves the write is blocked until a credential reaches the Verified state.",
+        "Binding proof to payment only matters if the payment cannot jump the queue. In Stellaroid Earn, it cannot. An employer cannot pay a credential that has not been verified — the contract blocks the write until a credential reaches the Verified state, and a revoked credential is rejected with a typed CredentialRevoked error.",
         "The gate stays closed on bad credentials too. A revoked credential can no longer unlock payment (the contract returns CredentialRevoked), and suspended or expired credentials are not eligible for verification-based actions. The status that graduates and employers see on a proof page is the same status the contract enforces before it releases a single stroop."
       ],
       "bullets": [
@@ -474,7 +474,7 @@ export const instantPayouts: LandingContent = {
     },
     {
       "question": "Can an employer pay before a credential is verified?",
-      "answer": "No. The contract blocks payment to any credential that has not reached the Verified status — this is enforced on-chain and covered by the test_payment_requires_verification test. A revoked credential also cannot unlock payment; the contract returns a CredentialRevoked error."
+      "answer": "No. The contract blocks payment to any credential that has not reached the Verified status — this is enforced on-chain by the contract itself. A revoked credential also cannot unlock payment; the contract returns a CredentialRevoked error."
     },
     {
       "question": "How fast does the payout settle and what does it cost?",

@@ -194,7 +194,7 @@ export const docsPages: DocPage[] = [
     "slug": "contract",
     "title": "Contract reference",
     "metaTitle": "Soroban contract reference — functions, errors, events",
-    "metaDescription": "Reference for the Stellaroid Earn Soroban contract on Stellar testnet: 12 public functions, 12 error codes, events, credential lifecycle, and CLI examples.",
+    "metaDescription": "Reference for the Stellaroid Earn Soroban contract on Stellar testnet: all 19 public functions, 17 error codes, events, the credential lifecycle, and CLI examples.",
     "keywords": [
       "soroban contract reference",
       "stellar testnet",
@@ -545,7 +545,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The contract ships with six tests. Together they cover the happy path, the trust layer, duplicate protection, payment gating, and every status transition."
+        "text": "The contract ships with twelve tests in `contract/src/test.rs` (`t1`–`t12`). Together they cover the happy path, the issuer trust layer, revocation gating, event emission, and the escrow lifecycle."
       },
       {
         "type": "table",
@@ -555,28 +555,52 @@ export const docsPages: DocPage[] = [
         ],
         "rows": [
           [
-            "`test_full_flow`",
+            "`t1_happy_path_with_approved_issuer`",
             "The complete journey: init, register issuer, approve, register certificate, verify, pay."
           ],
           [
-            "`test_duplicate_certificate`",
-            "Registering the same hash twice is rejected — a credential cannot be overwritten."
+            "`t2_unapproved_issuer_cannot_issue`",
+            "A pending issuer cannot register certificates before admin approval."
           ],
           [
-            "`test_unauthorized_verify`",
-            "A random wallet cannot verify; only approved issuers or the admin can. Proves the trust layer works."
+            "`t3_suspended_issuer_cannot_issue`",
+            "A suspended issuer is blocked from issuing at the contract level."
           ],
           [
-            "`test_payment_requires_verification`",
-            "Payment to an unverified certificate is blocked — employers cannot pay until the credential is confirmed on-chain."
+            "`t4_wrong_approved_issuer_cannot_verify`",
+            "An approved issuer cannot verify a credential it did not issue — only the issuing organization or the admin can."
           ],
           [
-            "`test_issuer_registration`",
-            "Issuer self-registers into the pending queue and the admin approves — the two-step trust handshake."
+            "`t5_revoked_credential_blocks_payment`",
+            "A revoked credential can no longer unlock payment."
           ],
           [
-            "`test_certificate_lifecycle`",
-            "Register → verify → suspend → revoke: exercises the credential status lifecycle end to end."
+            "`t6_issuer_events_emit`",
+            "Issuer registration and approval emit auditable events."
+          ],
+          [
+            "`t7_opportunity_happy_path`",
+            "The escrow journey: create, fund, submit, approve, release."
+          ],
+          [
+            "`t8_revoked_credential_blocks_opportunity`",
+            "A revoked credential cannot anchor a new paid-trial opportunity."
+          ],
+          [
+            "`t9_refund_funded_opportunity`",
+            "An employer can recover escrowed funds from a funded trial that never progressed."
+          ],
+          [
+            "`t10_invalid_status_transitions_fail`",
+            "Out-of-order escrow moves (release before approval, refund after approval) fail with typed errors."
+          ],
+          [
+            "`t11_rejects_too_many_opportunity_milestones`",
+            "Milestone counts are bounded at opportunity creation."
+          ],
+          [
+            "`t12_employer_can_refund_submitted_opportunity`",
+            "The employer can still exit and recover escrow after a milestone is submitted but before approval."
           ]
         ]
       },
@@ -688,7 +712,7 @@ export const docsPages: DocPage[] = [
     "faq": [
       {
         "question": "Who can verify a credential on-chain?",
-        "answer": "Only an approved issuer or the admin wallet can call verify_certificate. Any other caller is rejected with error 3 (Unauthorized), and this boundary is covered by the test_unauthorized_verify contract test."
+        "answer": "Only an approved issuer or the admin wallet can call verify_certificate. Unauthorized callers are rejected with typed errors (Unauthorized #3, IssuerNotApproved #8, IssuerSuspended #9), and the boundary is exercised by contract tests t2 through t4 — unapproved, suspended, and wrong-issuer callers all fail."
       },
       {
         "question": "Do read functions cost anything?",
@@ -696,7 +720,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "What happens if the same certificate hash is registered twice?",
-        "answer": "The contract rejects duplicate hashes with error 4 (AlreadyExists), so an existing credential can never be overwritten. This is verified by the test_duplicate_certificate contract test."
+        "answer": "The contract rejects duplicate hashes with error 4 (AlreadyExists) before writing anything, so an existing credential can never be overwritten or re-minted — the guard is enforced in register_certificate itself."
       },
       {
         "question": "Is the contract deployed to mainnet?",
@@ -704,7 +728,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "How is payment gated by verification?",
-        "answer": "link_payment pays a verified student directly, and payment to an unverified certificate is blocked (covered by test_payment_requires_verification). A revoked credential can no longer unlock payment — the contract returns error 11 (CredentialRevoked)."
+        "answer": "link_payment pays a verified student directly, and a revoked credential can no longer unlock payment — the contract returns error 11 (CredentialRevoked), a boundary exercised by the t5_revoked_credential_blocks_payment contract test."
       }
     ]
   },
