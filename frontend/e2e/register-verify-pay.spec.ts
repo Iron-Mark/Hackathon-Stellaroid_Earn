@@ -52,8 +52,10 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await proofLink.click();
 
   await expect(page).toHaveURL(`/proof/${certHash}`);
+  // exact: true — the page also has an sr-only SEO h1 that extends this title,
+  // which the default substring matcher would ambiguously match.
   await expect(
-    page.getByRole("heading", { name: "Stellar Smart Contract Bootcamp Completion" }),
+    page.getByRole("heading", { name: "Stellar Smart Contract Bootcamp Completion", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByText("This credential is verified on-chain.", { exact: true }),
