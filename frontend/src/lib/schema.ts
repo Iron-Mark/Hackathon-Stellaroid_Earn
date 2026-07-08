@@ -142,6 +142,63 @@ export function buildFaqJsonLd(faqs: Array<{ question: string; answer: string }>
   };
 }
 
+/** DefinedTermSet for a glossary — feeds AI Overviews / definition answers. */
+export function buildDefinedTermSetJsonLd({
+  name,
+  path,
+  terms,
+}: {
+  name: string;
+  path: string;
+  terms: Array<{ term: string; definition: string }>;
+}) {
+  const url = seoCanonicalUrl(path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    name,
+    url,
+    hasDefinedTerm: terms.map((t) => ({
+      "@type": "DefinedTerm",
+      name: t.term,
+      description: t.definition,
+      inDefinedTermSet: url,
+    })),
+  };
+}
+
+/** Article / TechArticle schema for a guide, with author + publisher entities. */
+export function buildGuideArticleJsonLd({
+  title,
+  description,
+  path,
+  datePublished,
+  dateModified,
+  technical = false,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  datePublished: string;
+  dateModified?: string;
+  technical?: boolean;
+}) {
+  const url = seoCanonicalUrl(path);
+  return {
+    "@context": "https://schema.org",
+    "@type": technical ? "TechArticle" : "Article",
+    headline: title,
+    description,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    image: seoCanonicalUrl("/opengraph-image"),
+    author: AUTHOR_SCHEMA,
+    publisher: PUBLISHER_SCHEMA,
+    datePublished,
+    dateModified: dateModified ?? datePublished,
+  };
+}
+
 /** HowTo schema for a step-by-step process (e.g. the homepage flow). */
 export function buildHowToJsonLd({
   name,

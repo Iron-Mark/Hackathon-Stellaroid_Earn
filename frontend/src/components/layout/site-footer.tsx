@@ -71,6 +71,16 @@ export function SiteFooter() {
               <Link href="/status" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Status</Link>
             </nav>
 
+            {/* Learn */}
+            <nav aria-label="Learn links" className="flex flex-col text-[13px]">
+              <h2 className="font-pixel text-[11px] font-medium text-primary uppercase tracking-widest mb-3">Learn</h2>
+              <Link href="/guides" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Guides</Link>
+              <Link href="/glossary" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Glossary</Link>
+              <Link href="/verify-bootcamp-certificate" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">For bootcamps</Link>
+              <Link href="/verify-candidate-credentials" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">For employers</Link>
+              <Link href="/instant-payouts" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Instant payouts</Link>
+            </nav>
+
             {/* On-chain */}
             <nav aria-label="On-chain links" className="flex flex-col text-[13px]">
               <h2 className="font-pixel text-[11px] font-medium text-primary uppercase tracking-widest mb-3">On-chain</h2>

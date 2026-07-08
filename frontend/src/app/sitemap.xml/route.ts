@@ -1,5 +1,6 @@
 import { seoCanonicalUrl } from "@/lib/seo";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+import { guides } from "@/lib/content/guides";
 
 type ChangeFrequency = "weekly" | "monthly" | "daily";
 
@@ -27,6 +28,17 @@ const routes: SitemapRoute[] = [
   // Public pages intentionally kept out of /status and /metrics: robots meta
   // explicitly marks those routes noindex.
   { path: "/slides", changeFrequency: "monthly", priority: 0.4 },
+  // Audience landing pages + content library
+  { path: "/verify-bootcamp-certificate", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/verify-candidate-credentials", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/instant-payouts", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/glossary", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/guides", changeFrequency: "weekly", priority: 0.7 },
+  ...guides.map((g) => ({
+    path: `/guides/${g.slug}`,
+    changeFrequency: "monthly" as ChangeFrequency,
+    priority: 0.6,
+  })),
 ];
 
 if (sampleProofRoute) {
