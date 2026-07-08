@@ -12,12 +12,18 @@ import {
   buildPageMetadata,
   seoCanonicalUrl,
 } from "@/lib/seo";
+import { buildBreadcrumbJsonLd } from "@/lib/schema";
+
+const pilotBreadcrumbJsonLd = buildBreadcrumbJsonLd([
+  { name: "Home", path: "/" },
+  { name: "Pilot", path: "/pilot" },
+]);
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/pilot",
-  title: "Pilot Stellaroid Earn",
+  title: "Run a credential pilot",
   description:
-    "Request an issuer pilot or employer verification integration for Stellaroid Earn on Stellar testnet.",
+    "Request an issuer pilot or employer verification integration for Stellaroid Earn: 5–10 testnet credentials, one approval contact, a success metric, and a rollback plan.",
   keywords:
     "stellar credential pilot, issuer pilot, employer verification integration, on-chain certificate verification",
 });
@@ -57,6 +63,7 @@ export default function PilotPage() {
   return (
     <>
       <JsonLd data={pilotJsonLd} />
+      <JsonLd data={pilotBreadcrumbJsonLd} />
       <SiteNav />
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-16">
         <section className="grid gap-5">

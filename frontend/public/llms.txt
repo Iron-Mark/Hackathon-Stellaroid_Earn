@@ -1,0 +1,35 @@
+# Stellaroid Earn
+
+> Stellaroid Earn is a Stellar testnet dApp for on-chain credential
+> verification and instant payment. A school or bootcamp anchors a
+> certificate's SHA-256 hash on-chain; an approved issuer verifies it;
+> an employer then pays the graduate directly in XLM in the same flow.
+> Free public testnet demo — no purchase, subscription, or mainnet funds.
+
+## What it does (facts)
+- Binds a certificate's SHA-256 hash to a student's Stellar wallet via the
+  `register_certificate` contract function. Duplicate hashes are rejected on-chain.
+- An approved issuer or admin calls `verify_certificate`, setting status to
+  Verified and emitting a `cert_ver` event auditable on stellar.expert.
+- `link_payment` transfers XLM via the native Stellar Asset Contract directly
+  to the verified student. Testnet settlement is typically under five seconds.
+- Verification is public and read-only: anyone can open a proof page and confirm
+  a credential without a wallet or login. A wallet is only needed to issue,
+  verify, or pay on-chain.
+- Contract: Rust + soroban-sdk, deployed on Stellar testnet.
+- Frontend: Next.js 15 + React 19, @stellar/stellar-sdk, Freighter + Albedo wallets.
+
+## Key pages
+- Home / how it works: https://stellaroid.tech/
+- About (problem, approach, contract surface): https://stellaroid.tech/about
+- Verify a proof: https://stellaroid.tech/proof
+- Try the app: https://stellaroid.tech/app
+
+## Source
+- Repository: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn
+- Contract source: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/tree/main/contract
+- Author: Mark Siazon — https://marksiazon.dev
+
+## Notes
+- All flows are Stellar TESTNET only. Do not represent this as a mainnet or
+  production financial product.

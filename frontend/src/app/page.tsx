@@ -20,6 +20,33 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { LocalizedHero } from "@/components/landing/localized-hero";
 import { HeroBg } from "@/components/landing/hero-bg";
 import { HeroOrbs } from "@/components/landing/hero-orbs";
+import { JsonLd } from "@/components/ui/json-ld";
+import { buildHowToJsonLd } from "@/lib/schema";
+import { seoCanonicalUrl } from "@/lib/seo";
+
+// Mirrors the visible "How it works" steps below — answer-engine / rich-result
+// markup for "how to verify a credential and pay a graduate on Stellar".
+const howToJsonLd = buildHowToJsonLd({
+  name: "How to verify a credential and pay a graduate on Stellar",
+  description:
+    "Three on-chain actions bind proof and payment on Stellar: an issuer registers a certificate, an approved issuer verifies it, and the employer pays the graduate.",
+  totalTime: "PT5S",
+  url: `${seoCanonicalUrl("/")}#how-it-works`,
+  steps: [
+    {
+      name: "Issuer registers a certificate",
+      text: "A school or bootcamp drops a PDF, the browser computes its SHA-256 hash, and the issuer signs register_certificate binding the hash to the student's wallet. Duplicate hashes are rejected on-chain.",
+    },
+    {
+      name: "Approved issuer verifies",
+      text: "An approved issuer or the admin calls verify_certificate with the hash. The contract updates the credential status to Verified and emits cert_ver, proof anyone can audit on stellar.expert.",
+    },
+    {
+      name: "Employer pays the graduate",
+      text: "link_payment transfers XLM via the native Stellar Asset Contract directly to the student's verified wallet. Settlement is typically under five seconds and costs a fraction of a centavo.",
+    },
+  ],
+});
 
 export default function Landing() {
   const contractShort = appConfig.contractId
@@ -33,6 +60,7 @@ export default function Landing() {
     <div className="relative min-h-dvh">
       <HeroBg />
       <HeroOrbs />
+      <JsonLd data={howToJsonLd} />
       <SiteNav />
       <ActivitySnackbar>
         <RecentActivity compact sidebar bare />
@@ -44,7 +72,7 @@ export default function Landing() {
           <RecentActivity compact />
         </section>
 
-        <section className="max-w-[1040px] mx-auto my-16 px-6">
+        <section id="how-it-works" className="max-w-[1040px] mx-auto my-16 px-6 scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-[2rem] tracking-tight mb-2">How it works</h2>
             <p className="text-text-muted max-w-[580px] mx-auto">

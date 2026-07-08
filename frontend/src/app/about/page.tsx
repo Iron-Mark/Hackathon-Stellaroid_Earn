@@ -18,13 +18,13 @@ import {
   SITE_NAME,
   SITE_REPOSITORY_URL,
 } from "@/lib/seo";
-import { buildAboutSoftwareProductSchema } from "@/lib/schema";
+import { buildAboutSoftwareProductSchema, buildFaqJsonLd } from "@/lib/schema";
 import { LocalizedAboutCopy } from "@/components/about/localized-about-copy";
 import { StatCard } from "@/components/about/stat-dialog";
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/about",
-  title: "About Stellaroid Earn",
+  title: "About",
   description:
     "Why Stellaroid Earn exists: certificates should be verifiable in seconds, not emails, and trusted verification should unlock payment in the same flow.",
 });
@@ -514,6 +514,45 @@ const errCategoryClasses: Record<string, string> = {
     "text-primary bg-[rgba(245,158,11,0.12)] border-[rgba(245,158,11,0.3)]",
 };
 
+// Single source of truth: the visible FAQ below and the FAQPage schema render
+// from this array, so the on-page text always matches the structured data
+// (Google's requirement for FAQ rich results). Answers are grounded in the
+// product copy on this page and the homepage "How it works" flow.
+const faqItems: Array<{ question: string; answer: string }> = [
+  {
+    question: "Do I need a wallet to verify a certificate?",
+    answer:
+      "No. Verification is public and read-only — anyone can open a proof page and confirm a credential without connecting a wallet or logging in. A wallet is only needed to issue, verify, or pay on-chain.",
+  },
+  {
+    question: "How do I verify a credential on Stellar?",
+    answer:
+      "Paste the 64-character SHA-256 hash on the public proof page to view its on-chain record, the issuer's trust status, and any attached credential evidence.",
+  },
+  {
+    question: "What is an on-chain certificate?",
+    answer:
+      "An on-chain certificate is a credential whose SHA-256 hash is bound to a student's Stellar wallet by an issuer. The proof lives on Stellar testnet and is verifiable in seconds instead of by email, and duplicate hashes are rejected on-chain.",
+  },
+  {
+    question: "How does the employer pay the graduate?",
+    answer:
+      "Once a credential is verified, the employer calls link_payment, which transfers XLM through the native Stellar Asset Contract straight to the student's verified wallet. Settlement is typically under five seconds and costs a fraction of a centavo — no invoice and no platform fee.",
+  },
+  {
+    question: "Who can verify a credential?",
+    answer:
+      "Only an approved issuer or the admin wallet can submit the verify_certificate transaction. When they do, the contract updates the credential status to Verified and emits a cert_ver event that anyone can audit on stellar.expert.",
+  },
+  {
+    question: "What does it cost to use Stellaroid Earn?",
+    answer:
+      "It is a free public Stellar testnet demo — no purchase, subscription, or mainnet funds required. On-chain payments settle in under five seconds for a fraction of a centavo in network fees.",
+  },
+];
+
+const aboutFaqJsonLd = buildFaqJsonLd(faqItems);
+
 const problemBeatIconClass =
   "text-[#f87171] bg-[rgba(220,38,38,0.08)] border-[rgba(220,38,38,0.25)]";
 const approachBeatIconClass =
@@ -529,6 +568,7 @@ export default function About() {
       <JsonLd data={aboutJsonLd} />
       <JsonLd data={aboutSoftwareProductJsonLd} />
       <JsonLd data={aboutBreadcrumbJsonLd} />
+      <JsonLd data={aboutFaqJsonLd} />
       <div className="min-h-dvh">
         <SiteNav />
         <main id="main">
@@ -1025,6 +1065,33 @@ export default function About() {
                 </div>
               </dl>
             </aside>
+
+            <section aria-labelledby="faq-heading" className="mb-16">
+              <h2
+                id="faq-heading"
+                className="text-[1.375rem] font-bold tracking-tight text-text mb-1"
+              >
+                Frequently asked questions
+              </h2>
+              <p className="text-text-muted text-sm mb-6">
+                Common questions from issuers, employers, and graduates.
+              </p>
+              <dl className="grid gap-3">
+                {faqItems.map((item) => (
+                  <div
+                    key={item.question}
+                    className="bg-surface border border-border rounded-lg px-5 py-4"
+                  >
+                    <dt className="text-[0.9375rem] font-semibold text-text mb-1.5 [&_code]:font-mono">
+                      {item.question}
+                    </dt>
+                    <dd className="m-0 text-sm text-text-muted leading-[1.6]">
+                      {item.answer}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
 
             <div className="flex gap-3 justify-center my-8 mb-16 flex-wrap">
               <Link

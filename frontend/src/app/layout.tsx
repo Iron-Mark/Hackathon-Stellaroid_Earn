@@ -14,7 +14,9 @@ import {
   SITE_CANONICAL_URL,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
+  SITE_LOGO_URL,
   SITE_NAME,
+  SITE_ORG_SAME_AS,
 } from "@/lib/seo";
 
 const BASE_URL = SITE_CANONICAL_URL;
@@ -83,6 +85,26 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Stellaroid Earn",
+  url: BASE_URL,
+  logo: {
+    "@type": "ImageObject",
+    url: SITE_LOGO_URL,
+    width: 512,
+    height: 512,
+  },
+  description: SITE_DESCRIPTION,
+  sameAs: SITE_ORG_SAME_AS,
+  founder: {
+    "@type": "Person",
+    name: SITE_AUTHOR_NAME,
+    url: SITE_AUTHOR_URL,
+  },
+};
+
 const webAppJsonLd = [
   {
     "@context": "https://schema.org",
@@ -99,18 +121,22 @@ const webAppJsonLd = [
       "Stellaroid Earn links proof and payment on Stellar for certificates, completed work, and milestone approvals.",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Stellaroid Earn",
-    url: BASE_URL,
-    founder: {
-      "@type": "Person",
-      name: SITE_AUTHOR_NAME,
-      url: SITE_AUTHOR_URL,
+    // Free public testnet demo — feeds "what does it cost / do" generative answers.
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      url: `${BASE_URL}/app`,
     },
+    featureList: [
+      "Anchor a certificate's SHA-256 hash on Stellar",
+      "Verify credentials on-chain with an approved issuer",
+      "Pay verified graduates instantly in XLM",
+      "Public, wallet-free proof pages",
+    ],
   },
+  organizationJsonLd,
 ];
 
 const authorProfileJsonLd = {
@@ -126,6 +152,17 @@ const webSiteJsonLd = {
   "@type": "WebSite",
   name: SITE_NAME,
   url: BASE_URL,
+  description: SITE_DESCRIPTION,
+  publisher: { "@type": "Organization", name: SITE_NAME, url: BASE_URL },
+  // Proof lookup by hash — enables the sitelinks search box.
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${BASE_URL}/proof/{hash}`,
+    },
+    "query-input": "required name=hash",
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

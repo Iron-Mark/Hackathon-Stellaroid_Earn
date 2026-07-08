@@ -33,6 +33,12 @@ if (sampleProofRoute) {
   routes.push(sampleProofRoute);
 }
 
+// Statically generated at build time so <lastmod> is a stable, meaningful
+// per-deploy timestamp instead of "now" on every request (which is noise
+// search/AI crawlers learn to ignore).
+export const dynamic = "force-static";
+const LAST_MODIFIED = new Date().toISOString();
+
 function escapeXml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -43,7 +49,7 @@ function escapeXml(value: string) {
 }
 
 export function GET() {
-  const lastModified = new Date().toISOString();
+  const lastModified = LAST_MODIFIED;
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
