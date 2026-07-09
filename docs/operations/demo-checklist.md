@@ -4,7 +4,7 @@ Canonical live URL: https://stellaroid.tech
 
 Use this short checklist before a submission, demo, or public share.
 
-Last live smoke pass: 2026-07-04. `stellaroid.tech`, `beta.stellaroid.tech`, and `v3.stellaroid.tech` returned `200 OK` on `/` and `/status` with Stellaroid page titles/content.
+Last live smoke pass: 2026-07-09 (new source-verified contract CAD6C24P…ISZCV; verified + issued demo proofs, /status events, and /docs confirmed live). `stellaroid.tech`, `beta.stellaroid.tech`, and `v3.stellaroid.tech` returned `200 OK` on `/` and `/status` with Stellaroid page titles/content.
 
 ## Public Demo Path
 
