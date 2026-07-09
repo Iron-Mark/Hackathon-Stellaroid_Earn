@@ -11,8 +11,8 @@ This runbook separates three different claims:
 | Field | Value |
 | --- | --- |
 | Network | Stellar testnet |
-| Contract ID | `CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3` |
-| Expected deployed WASM hash | `59ca403e347f4c24b1dd16fbcb65662c2837cc852946e3ae88374eed509d6f7f` |
+| Contract ID | `CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV` |
+| Expected deployed WASM hash | `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f` |
 | Source repo | `github:Iron-Mark/Hackathon-Stellaroid_Earn` |
 | Home domain | `stellaroid.tech` |
 
@@ -36,21 +36,16 @@ Strict mode for a newly redeployed source-verified contract:
 powershell -ExecutionPolicy Bypass -File .\scripts\verify-contract-source.ps1 -RequireSourceMatch
 ```
 
-## Current Finding
+## Current Finding (2026-07-09 redeploy)
 
-As of the latest local audit, the deployed testnet bytecode hash is `59ca403e347f4c24b1dd16fbcb65662c2837cc852946e3ae88374eed509d6f7f`.
+The contract was redeployed on 2026-07-09 from committed source on `july-monthly-builder` with verification metadata embedded. The deployed testnet bytecode hash is `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`.
 
-That hash matches the ignored local artifact at:
+- Built with `stellar contract build --meta source_repo=github:Iron-Mark/Hackathon-Stellaroid_Earn --meta home_domain=stellaroid.tech` (Stellar CLI 27.0.0, soroban-sdk 26.1.0, Rust 1.95.0). The workspace artifact lives at `target/wasm32v1-none/release/stellaroid_earn.wasm` and its SHA-256 matches the deployed hash.
+- `stellar contract info meta` on the deployed WASM resolves `source_repo` and `home_domain`, so build-attestation evidence can be linked once the matching GitHub release exists.
+- Deploy tx: `cf917d1615cedc0a2b84edd15daf52b7e43ade2df01ce057157ca1e82a6052ae`. Seed txs — init `faf278d7…85e6`, register_issuer `a7f38f78…7a28`, approve_issuer `6d090d9b…f695`, register_certificate `8c20a944…a0e8`, verify_certificate `67137aa8…2cb9`.
+- Remaining step for full source verification: publish the GitHub release/tag from the deploying commit so the release workflow generates the build attestation, then re-run this runbook with `-RequireSourceMatch`.
 
-```text
-contract/target/wasm32v1-none/release/stellaroid_earn.wasm
-```
-
-Current committed source on `june-monthly-builder` builds successfully and passes contract tests, but it does not reproduce the deployed hash. A fresh metadata build from current source produces a different WASM hash.
-
-Stellar CLI also reports that the deployed WASM does not contain a `source_repo` metadata entry, so `stellar contract info build` cannot resolve GitHub build-attestation evidence for this deployed bytecode.
-
-The local reproducibility sweep tested the contract-changing commits from the initial April contract through the June contract CI merge, including `464986e`, `71d2b03`, `34c0bd0`, `ccaa3fc`, `18749df`, `01ee94d`, `358abcc`, and current `june-monthly-builder`. None reproduced the deployed `59ca...` hash from committed source.
+The previous contract (`CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`, WASM `59ca403e…6f7f`) remains on testnet as historical evidence; its bytecode was never reproducible from committed source, which motivated this redeploy.
 
 ## Source Verification Path
 

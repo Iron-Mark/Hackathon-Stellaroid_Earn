@@ -434,7 +434,7 @@ export default function SlidesPage() {
                 variant: "amber" as const,
                 stroke: "#f59e0b",
                 title: "Smart Contract",
-                desc: "Soroban SDK 22, Rust, trust and escrow tests, current testnet deploy",
+                desc: "Rust + Soroban, 19 public functions, credential trust layer + milestone escrow, 12 tests",
                 icon: (
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 ),
@@ -443,7 +443,7 @@ export default function SlidesPage() {
                 variant: "purple" as const,
                 stroke: "#a78bfa",
                 title: "Frontend",
-                desc: "Next.js 15, React 19, Tailwind v4, Freighter, bilingual",
+                desc: "Next.js 15, React 19, installable PWA, Freighter + Albedo wallets, bilingual",
                 icon: (
                   <>
                     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -482,7 +482,7 @@ export default function SlidesPage() {
                 variant: "green" as const,
                 stroke: "#34d399",
                 title: "Deployment",
-                desc: "Vercel edge, Stellar testnet, auto HTTPS",
+                desc: "Vercel edge, Stellar testnet, developer docs at /docs, auto HTTPS",
                 icon: (
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                 ),
