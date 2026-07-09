@@ -158,13 +158,13 @@ export const docsPages: DocPage[] = [
         "items": [
           "GitHub repository (MIT license): https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn",
           "Contract source: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/tree/main/contract",
-          "Deployed contract (testnet): CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3 — inspect it at https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3",
+          "Deployed contract (testnet): CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV — inspect it at https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV",
           "Live app: https://stellaroid.tech · operational status: https://stellaroid.tech/status"
         ]
       },
       {
         "type": "p",
-        "text": "The deployed testnet contract's WASM hash is `59ca403e347f4c24b1dd16fbcb65662c2837cc852946e3ae88374eed509d6f7f`. Build/source verification (contract metadata plus GitHub attestation) is tracked in the repo's verification runbook and is not yet complete, so the deployment should not be described as source-verified."
+        "text": "The deployed testnet contract's WASM hash is `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`, built from committed source with `source_repo` and `home_domain` verification metadata embedded. The matching GitHub release attestation is tracked in the repo's verification runbook."
       }
     ],
     "faq": [
@@ -182,7 +182,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "Where can I inspect the deployed contract?",
-        "answer": "The contract is deployed on Stellar testnet at CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3 and can be inspected on Stellar Expert. The Rust source lives in the contract/ directory of the GitHub repository under an MIT license."
+        "answer": "The contract is deployed on Stellar testnet at CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV and can be inspected on Stellar Expert. The Rust source lives in the contract/ directory of the GitHub repository under an MIT license."
       },
       {
         "question": "Can anyone register credentials on the contract?",
@@ -1257,7 +1257,7 @@ export const docsPages: DocPage[] = [
           [
             "Contract",
             "Stellar testnet",
-            "`CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`"
+            "`CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`"
           ],
           [
             "Source verification",
@@ -1446,7 +1446,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "Is anything deployed to mainnet?",
-        "answer": "No. This is an early-access pilot on Stellar testnet only. The contract (CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3) is deployed to testnet, the default RPC endpoint is soroban-testnet.stellar.org, and all payment flows use testnet XLM."
+        "answer": "No. This is an early-access pilot on Stellar testnet only. The contract (CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV) is deployed to testnet, the default RPC endpoint is soroban-testnet.stellar.org, and all payment flows use testnet XLM."
       },
       {
         "question": "Why doesn't the service worker cache proof pages?",

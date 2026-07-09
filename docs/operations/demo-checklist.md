@@ -4,7 +4,7 @@ Canonical live URL: https://stellaroid.tech
 
 Use this short checklist before a submission, demo, or public share.
 
-Last live smoke pass: 2026-07-04. `stellaroid.tech`, `beta.stellaroid.tech`, and `v3.stellaroid.tech` returned `200 OK` on `/` and `/status` with Stellaroid page titles/content.
+Last live smoke pass: 2026-07-09 (new source-verified contract CAD6C24P…ISZCV; verified + issued demo proofs, /status events, and /docs confirmed live). `stellaroid.tech`, `beta.stellaroid.tech`, and `v3.stellaroid.tech` returned `200 OK` on `/` and `/status` with Stellaroid page titles/content.
 
 ## Public Demo Path
 
@@ -37,7 +37,7 @@ Last live smoke pass: 2026-07-04. `stellaroid.tech`, `beta.stellaroid.tech`, and
 - Contract CI: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml
 - Verified proof: https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
 - Stellar testnet contract:
-  https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3
+  https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV
 
 ## Demo Talk Track
 

@@ -28,7 +28,7 @@ This folder is the demo hub for judges, sponsors, employers, and early design pa
 - **Canonical app:** https://stellaroid.tech/
 - **Status/runbook:** https://stellaroid.tech/status
 - **Network:** Stellar testnet
-- **Contract ID:** `CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`
+- **Contract ID:** `CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`
 - **Wallet:** Freighter in testnet mode, only needed for write flows.
 - **No-wallet proof flow:** `/proof` and `/proof/[hash]`
 
