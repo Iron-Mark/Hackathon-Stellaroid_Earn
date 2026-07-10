@@ -283,7 +283,7 @@ export const docsPages: DocPage[] = [
           [
             "reward_student",
             "`reward_student(student, cert_hash, amount)`",
-            "Admin-triggered XLM reward via the configured Stellar Asset Contract.",
+            "Admin-triggered XLM reward via the configured Stellar Asset Contract. Like `init`, this is an admin/CLI surface — the dApp UI does not expose it.",
             "Admin only"
           ],
           [
