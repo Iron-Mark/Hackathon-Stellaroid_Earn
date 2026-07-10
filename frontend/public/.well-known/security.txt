@@ -1,0 +1,6 @@
+Contact: mailto:kinsreyes0930@gmail.com
+Contact: https://stellaroid.tech/contact
+Expires: 2027-07-01T00:00:00.000Z
+Canonical: https://stellaroid.tech/.well-known/security.txt
+Preferred-Languages: en
+Policy: https://stellaroid.tech/privacy
