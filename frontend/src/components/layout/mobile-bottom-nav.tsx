@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITE_REPOSITORY_URL } from "@/lib/seo";
-import { LocaleToggle } from "./locale-toggle";
+import { LocaleToggle, isLocalizedRoute } from "./locale-toggle";
 
 const tabs = [
   { href: "/", label: "Home", match: (p: string) => p === "/", Icon: Home },
@@ -289,10 +289,12 @@ export function MobileBottomNav() {
                 </span>
               </a>
 
-              <div className="mt-2 flex items-center justify-between border-t border-border px-3 pt-3">
-                <span className="text-[13px] font-medium text-text-muted">Language</span>
-                <LocaleToggle />
-              </div>
+              {isLocalizedRoute(path) ? (
+                <div className="mt-2 flex items-center justify-between border-t border-border px-3 pt-3">
+                  <span className="text-[13px] font-medium text-text-muted">Language</span>
+                  <LocaleToggle />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
