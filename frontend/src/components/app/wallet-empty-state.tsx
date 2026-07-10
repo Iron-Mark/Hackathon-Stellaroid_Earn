@@ -39,12 +39,18 @@ export function WalletEmptyState({ mode }: WalletEmptyStateProps) {
       <h2 className="m-0 text-2xl leading-[1.15] tracking-tight">{copy.title}</h2>
       <p className="m-0 text-muted-foreground leading-relaxed">{copy.body}</p>
       <div className="flex flex-wrap gap-2.5">
+        <Link
+          href="/demo"
+          className="inline-flex items-center justify-center min-h-[42px] px-4 rounded-md font-semibold no-underline bg-primary text-on-primary border border-primary hover:bg-primary-hover hover:text-on-primary"
+        >
+          Take the guided demo
+        </Link>
         {!isDesktopOnly && (
           <a
             href="https://www.freighter.app/"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center min-h-[42px] px-4 rounded-md font-semibold no-underline bg-primary text-on-primary border border-primary hover:bg-primary-hover hover:text-on-primary"
+            className="inline-flex items-center justify-center min-h-[42px] px-4 rounded-md font-semibold no-underline text-foreground border border-border bg-transparent hover:bg-surface-2 hover:text-foreground"
           >
             Get Freighter <ExternalLink className="inline w-3 h-3 ml-1" />
           </a>

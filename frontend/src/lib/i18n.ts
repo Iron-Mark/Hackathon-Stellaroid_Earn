@@ -55,7 +55,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "Settle payment in one flow.",
       lede: "Stellaroid Earn anchors certificate hashes on Stellar so employers can inspect the record and pay the graduate without leaving the workflow once an approved issuer or admin verifies it. No email thread, no invoice delay, no platform fee.",
       ctaPrimary: "Try the app →",
-      ctaGhost: "See a sample proof →",
+      ctaGhost: "Take the 2-min demo — no wallet needed →",
       personas: [
         {
           label: "Issue",
@@ -121,7 +121,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "I-settle ang bayad sa iisang flow.",
       lede: "I-anchor ang certificate hash sa Stellar. Kapag verified na ng approved issuer o admin, puwedeng i-check ng employer at magbayad agad — walang email thread, walang invoice delay, walang platform fee.",
       ctaPrimary: "Subukan ang app →",
-      ctaGhost: "Tingnan ang sample proof →",
+      ctaGhost: "Subukan ang 2-min demo — walang wallet →",
       personas: [
         {
           label: "Issue",

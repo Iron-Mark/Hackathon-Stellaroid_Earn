@@ -33,6 +33,13 @@ export const appConfig = {
   readAddress: process.env.NEXT_PUBLIC_STELLAR_READ_ADDRESS ?? "",
   adminAddress: process.env.NEXT_PUBLIC_STELLAR_ADMIN_ADDRESS ?? "",
   sponsorAddress: process.env.NEXT_PUBLIC_FEE_SPONSOR_ADDRESS ?? "",
+  // Seeded demo-exhibit escrows for the wallet-less guided tour (/demo).
+  // Defaults match the exhibits seeded on the current contract; override on
+  // a reseed. See docs/operations/demo-exhibits.md.
+  demoOpportunityReleasedId:
+    process.env.NEXT_PUBLIC_DEMO_OPPORTUNITY_RELEASED_ID ?? "0",
+  demoOpportunityLiveId:
+    process.env.NEXT_PUBLIC_DEMO_OPPORTUNITY_LIVE_ID ?? "1",
 };
 
 const networkPassphraseByName: Record<string, string> = {
