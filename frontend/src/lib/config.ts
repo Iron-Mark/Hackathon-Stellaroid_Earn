@@ -1,7 +1,11 @@
-import { Networks } from "@stellar/stellar-sdk";
 import { isE2EModeAllowed } from "./security.ts";
 
+// Network-defining protocol constants (Stellar SEP-defined; identical to
+// Networks.TESTNET / Networks.PUBLIC from @stellar/stellar-sdk). Hardcoded so
+// this module — imported by many client components — never pulls the SDK
+// barrel into the client bundle.
 const TESTNET_PASSPHRASE = "Test SDF Network ; September 2015";
+const PUBLIC_PASSPHRASE = "Public Global Stellar Network ; September 2015";
 
 const configuredPassphrase =
   process.env.NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE ?? TESTNET_PASSPHRASE;
@@ -32,9 +36,9 @@ export const appConfig = {
 };
 
 const networkPassphraseByName: Record<string, string> = {
-  TESTNET: Networks.TESTNET,
-  PUBLIC: Networks.PUBLIC,
-  PUBNET: Networks.PUBLIC,
+  TESTNET: TESTNET_PASSPHRASE,
+  PUBLIC: PUBLIC_PASSPHRASE,
+  PUBNET: PUBLIC_PASSPHRASE,
 };
 
 const networkLabelByName: Record<string, string> = {
