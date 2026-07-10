@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FreighterWalletProvider } from "@/hooks/use-freighter-wallet";
 import { AppShell } from "@/components/layout/app-shell";
 import { RpcStatusPill } from "@/components/layout/rpc-status-pill";
@@ -55,6 +56,12 @@ export default async function EmployerPage({ searchParams }: EmployerPageProps) 
               Look up a verified credential, then create an escrowed opportunity.
               Funds are locked until you approve the candidate&apos;s milestones and release payment.
             </p>
+            <Link
+              href="/opportunity"
+              className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary no-underline hover:opacity-80 focus-visible:outline-2 focus-visible:outline-primary"
+            >
+              View all opportunities →
+            </Link>
           </section>
           <EmployerOpportunityForm
             initialHash={initialHash}

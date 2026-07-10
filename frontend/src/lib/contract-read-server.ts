@@ -377,7 +377,25 @@ function normalizeOpportunity(value: unknown): OpportunityRecord | null {
   };
 }
 
+function buildE2EOpportunity() {
+  return normalizeOpportunity({
+    id: 1,
+    employer: E2E_WALLET_ADDRESS,
+    candidate: E2E_WALLET_ADDRESS,
+    cert_hash: DEFAULT_SAMPLE_PROOF_HASH,
+    title: "Escrowed paid trial",
+    amount: 250000000,
+    status: "Funded",
+    milestone_count: 2,
+    current_milestone: 0,
+  });
+}
+
 export async function getOpportunityServer(oppId: OpportunityIdInput) {
+  if (appConfig.e2eMode) {
+    return normalizeOpportunityId(oppId) === "1" ? buildE2EOpportunity() : null;
+  }
+
   ensureConfigured();
   const server = getServer();
   const sourceAccount = new Account(getSimulationSourceAddress(), "0");
@@ -427,4 +445,60 @@ export async function getOpportunityServer(oppId: OpportunityIdInput) {
     const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
     return normalizeOpportunity(scValToNative(rawScVal));
   }
+}
+
+const OPPORTUNITY_SCAN_CHUNK = 8;
+// Hard ceiling on probed IDs — well above anything the pilot-stage registry
+// holds, but bounds RPC load if the contract ever accumulates thousands.
+const OPPORTUNITY_SCAN_LIMIT = 240;
+
+/**
+ * Enumerate opportunities by scanning IDs from 0. The contract assigns dense
+ * sequential IDs (next_opportunity_id counter, no deletes), so a scan that
+ * stops on the first all-empty chunk sees every live record while tolerating
+ * single TTL-expired holes inside a chunk. Returns newest-first.
+ */
+export async function listOpportunitiesServer(
+  max = 60,
+): Promise<OpportunityRecord[]> {
+  if (appConfig.e2eMode) {
+    const fixture = buildE2EOpportunity();
+    return fixture ? [fixture] : [];
+  }
+
+  ensureConfigured();
+  const found: OpportunityRecord[] = [];
+
+  for (let base = 0; base < OPPORTUNITY_SCAN_LIMIT; base += OPPORTUNITY_SCAN_CHUNK) {
+    const ids = Array.from(
+      { length: OPPORTUNITY_SCAN_CHUNK },
+      (_, offset) => base + offset,
+    );
+    const settled = await Promise.allSettled(
+      ids.map((id) => getOpportunityServer(id)),
+    );
+
+    // Distinguish an unreachable RPC from an empty registry: if the very
+    // first chunk yields only rejections, surface the failure so the page
+    // can render an error state instead of a false "no opportunities yet".
+    if (base === 0 && settled.every((entry) => entry.status === "rejected")) {
+      const first = settled[0] as PromiseRejectedResult;
+      throw first.reason instanceof Error
+        ? first.reason
+        : new Error(String(first.reason));
+    }
+
+    const records = settled
+      .filter(
+        (entry): entry is PromiseFulfilledResult<OpportunityRecord | null> =>
+          entry.status === "fulfilled",
+      )
+      .map((entry) => entry.value)
+      .filter((record): record is OpportunityRecord => record != null);
+
+    if (records.length === 0) break;
+    found.push(...records);
+  }
+
+  return found.slice(-max).reverse();
 }

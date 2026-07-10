@@ -37,6 +37,7 @@ const tabs = [
 
 const moreLinks = [
   { href: "/app", label: "Launch App", detail: "Register, endorse, and pay on-chain", Icon: Rocket },
+  { href: "/opportunity", label: "Opportunities", detail: "Every live escrowed paid trial", Icon: BriefcaseBusiness },
   { href: "/docs", label: "Docs", detail: "Contract, integration, and security reference", Icon: BookOpen },
   { href: "/pilot", label: "Pilot", detail: "Run a cohort pilot with us", Icon: FlaskConical },
   { href: "/status", label: "Status", detail: "Network health and live events", Icon: Activity },

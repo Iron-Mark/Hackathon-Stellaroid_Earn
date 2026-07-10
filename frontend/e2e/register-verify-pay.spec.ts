@@ -116,4 +116,13 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Fund escrow" })).toBeEnabled();
   await page.getByRole("button", { name: "Fund escrow" }).click();
   await expect(page.getByRole("button", { name: "Escrow funded" })).toBeVisible();
+
+  // Close the loop: the created opportunity is reachable and renders the
+  // escrow console (submit/approve/release actions live here).
+  await page.getByRole("link", { name: "Open opportunity" }).click();
+  await expect(page).toHaveURL("/opportunity/1");
+  await expect(page.getByText("Opportunity #1", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Escrowed paid trial" }),
+  ).toBeVisible();
 });
