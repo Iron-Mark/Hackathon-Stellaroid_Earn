@@ -20,12 +20,16 @@ const sampleProofRoute: SitemapRoute | null = HASH_RE.test(DEFAULT_SAMPLE_PROOF_
 const routes: SitemapRoute[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/app", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/demo", changeFrequency: "monthly", priority: 0.8 },
   { path: "/proof", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/opportunity", changeFrequency: "weekly", priority: 0.6 },
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },
   { path: "/issuer", changeFrequency: "monthly", priority: 0.7 },
   { path: "/issuer/register", changeFrequency: "monthly", priority: 0.5 },
   { path: "/employer", changeFrequency: "monthly", priority: 0.6 },
   { path: "/pilot", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/contact", changeFrequency: "monthly", priority: 0.4 },
+  { path: "/privacy", changeFrequency: "monthly", priority: 0.3 },
   // Public pages intentionally kept out of /status and /metrics: robots meta
   // explicitly marks those routes noindex.
   { path: "/slides", changeFrequency: "monthly", priority: 0.4 },

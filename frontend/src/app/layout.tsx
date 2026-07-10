@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Exo_2, Orbitron } from "next/font/google";
 import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DeferredToastProvider } from "@/components/layout/deferred-toast-provider";
 import { JsonLd } from "@/components/ui/json-ld";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
@@ -18,6 +20,20 @@ import {
   SITE_NAME,
   SITE_ORG_SAME_AS,
 } from "@/lib/seo";
+
+// Self-hosted brand faces (globals.css declared these families for months but
+// nothing ever loaded them — the site silently rendered in system fonts).
+// display:swap + next/font's size-adjusted fallback keep CLS at ~0.
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-orbitron",
+});
+const exo2 = Exo_2({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-exo2",
+});
 
 const BASE_URL = SITE_CANONICAL_URL;
 const ENABLE_VERCEL_ANALYTICS =
@@ -170,7 +186,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const lang = cookieStore.get("stellaroid:locale")?.value === "tl" ? "tl" : "en";
 
   return (
-    <html lang={lang} className="font-sans">
+    <html lang={lang} className={`${orbitron.variable} ${exo2.variable} font-sans`}>
       <body suppressHydrationWarning>
         {webAppJsonLd.map((schema, i) => (
           <JsonLd key={i} data={schema} />
@@ -179,7 +195,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={authorProfileJsonLd} />
         {children}
         <ScrollToTop />
-        {ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null}
+        {ENABLE_VERCEL_ANALYTICS ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
         <DeferredToastProvider />
         <ServiceWorkerRegistration />
       </body>

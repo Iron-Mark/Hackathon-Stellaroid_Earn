@@ -24,6 +24,8 @@
 - About (problem, approach, contract surface): https://stellaroid.tech/about
 - Verify a proof: https://stellaroid.tech/proof
 - Try the app: https://stellaroid.tech/app
+- Guided demo (no wallet needed, real testnet data): https://stellaroid.tech/demo
+- Opportunity directory (live escrowed paid trials): https://stellaroid.tech/opportunity
 - For bootcamps & issuers: https://stellaroid.tech/verify-bootcamp-certificate
 - For employers & recruiters: https://stellaroid.tech/verify-candidate-credentials
 - Instant payouts in XLM: https://stellaroid.tech/instant-payouts
@@ -34,6 +36,9 @@
 - Wallet & frontend integration: https://stellaroid.tech/docs/integration
 - Architecture: https://stellaroid.tech/docs/architecture
 - Security posture: https://stellaroid.tech/docs/security
+- Run a pilot (request form): https://stellaroid.tech/pilot
+- Contact: https://stellaroid.tech/contact
+- Privacy & terms: https://stellaroid.tech/privacy
 
 ## Source
 - Repository: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn
@@ -43,3 +48,4 @@
 ## Notes
 - All flows are Stellar TESTNET only. Do not represent this as a mainnet or
   production financial product.
+- Security contact: https://stellaroid.tech/.well-known/security.txt

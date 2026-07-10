@@ -2,28 +2,36 @@
 
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui";
-import { getCertificate } from "@/lib/contract-client";
-import { hasRequiredConfig } from "@/lib/config";
+import { appConfig, hasRequiredConfig } from "@/lib/config";
 
 type RpcState = "checking" | "healthy" | "slow";
 
 const PROBE_INTERVAL_MS = 60_000;
 const SLOW_THRESHOLD_MS = 4_000;
-const DUMMY_HASH = "0".repeat(64);
 
+// Raw JSON-RPC getHealth instead of a contract read: the pill runs on mount,
+// and a contract-client probe would pull the lazy stellar-sdk chunk into the
+// page's hydration window just to answer "is the RPC up".
 async function probeRpc(): Promise<RpcState> {
+  if (appConfig.e2eMode) return "healthy";
   const start = Date.now();
   try {
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("TIMEOUT")), SLOW_THRESHOLD_MS)
-    );
-    await Promise.race([getCertificate(DUMMY_HASH), timeoutPromise]);
+    const response = await fetch(appConfig.rpcUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: "health",
+        method: "getHealth",
+        params: {},
+      }),
+      signal: AbortSignal.timeout(SLOW_THRESHOLD_MS),
+    });
+    if (!response.ok) return "slow";
     return Date.now() - start < SLOW_THRESHOLD_MS ? "healthy" : "slow";
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    if (message.startsWith("TIMEOUT")) return "slow";
-    // A contract error (e.g. NotFound) still means the RPC is reachable
-    return Date.now() - start < SLOW_THRESHOLD_MS ? "healthy" : "slow";
+  } catch {
+    // Timeout or network failure — the RPC is unreachable or degraded.
+    return "slow";
   }
 }
 

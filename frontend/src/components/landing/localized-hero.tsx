@@ -67,7 +67,7 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
           {t.ctaPrimary}
         </Link>
         <Link
-          href={`/proof/${DEFAULT_SAMPLE_PROOF_HASH}`}
+          href="/demo"
           className={cn(
             "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
             "text-text border border-border bg-transparent",

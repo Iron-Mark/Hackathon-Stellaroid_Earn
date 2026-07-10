@@ -15,6 +15,7 @@ import {
   Home,
   Info,
   MoreHorizontal,
+  PlayCircle,
   Rocket,
   SearchCheck,
   X,
@@ -37,6 +38,8 @@ const tabs = [
 
 const moreLinks = [
   { href: "/app", label: "Launch App", detail: "Register, endorse, and pay on-chain", Icon: Rocket },
+  { href: "/demo", label: "Guided demo", detail: "The full story on live data — no wallet", Icon: PlayCircle },
+  { href: "/opportunity", label: "Opportunities", detail: "Every live escrowed paid trial", Icon: BriefcaseBusiness },
   { href: "/docs", label: "Docs", detail: "Contract, integration, and security reference", Icon: BookOpen },
   { href: "/pilot", label: "Pilot", detail: "Run a cohort pilot with us", Icon: FlaskConical },
   { href: "/status", label: "Status", detail: "Network health and live events", Icon: Activity },
@@ -44,7 +47,7 @@ const moreLinks = [
 ];
 
 const moreMatch = (p: string) =>
-  ["/app", "/docs", "/pilot", "/status", "/about", "/metrics", "/talent"].some(prefix => p.startsWith(prefix));
+  ["/app", "/demo", "/docs", "/pilot", "/status", "/about", "/metrics", "/talent"].some(prefix => p.startsWith(prefix));
 
 export function MobileBottomNav() {
   const [open, setOpen] = useState(false);

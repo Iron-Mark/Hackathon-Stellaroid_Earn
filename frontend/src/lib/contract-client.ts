@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  Account,
-  Address,
-  BASE_FEE,
-  Operation,
-  SorobanDataBuilder,
-  TransactionBuilder,
-  nativeToScVal,
-  rpc,
-  scValToNative,
-  xdr,
-} from "@stellar/stellar-sdk";
+import type * as StellarSdk from "@stellar/stellar-sdk";
 import {
   appConfig,
   getExpectedNetworkPassphrase,
@@ -31,6 +20,21 @@ import type {
   OpportunityStatus,
 } from "@/lib/types";
 import { MAX_OPPORTUNITY_MILESTONES as MAX_MILESTONES } from "@/lib/types";
+
+// The stellar-sdk browser build is a ~900 KB pre-bundled UMD that webpack
+// cannot tree-shake. Loading it lazily keeps it out of every route's First
+// Load JS; the chunk is fetched once, on the first contract read or wallet
+// action, and cached for the rest of the session.
+let sdkPromise: Promise<typeof StellarSdk> | null = null;
+let loadedSdk: typeof StellarSdk | null = null;
+
+function getSdk(): Promise<typeof StellarSdk> {
+  sdkPromise ??= import("@stellar/stellar-sdk").then((mod) => {
+    loadedSdk = mod;
+    return mod;
+  });
+  return sdkPromise;
+}
 
 const FALLBACK_SIMULATION_SOURCE =
   "GBAKLRUJEOZGWKSHJFFWJ4DINXQZEJBT7JQTR5T4GATQU2SNO4ZFHZQ4";
@@ -129,8 +133,8 @@ function buildE2ECertificate(
   };
 }
 
-function getServer() {
-  return new rpc.Server(appConfig.rpcUrl, {
+function getServer(sdk: typeof StellarSdk) {
+  return new sdk.rpc.Server(appConfig.rpcUrl, {
     allowHttp: appConfig.rpcUrl.startsWith("http://"),
   });
 }
@@ -167,13 +171,16 @@ function hexToBytes32(hex: string): Uint8Array {
   return bytes;
 }
 
-function buildArgs(values: ContractArg[]): xdr.ScVal[] {
+function buildArgs(
+  sdk: typeof StellarSdk,
+  values: ContractArg[],
+): StellarSdk.xdr.ScVal[] {
   return values.map((entry) => {
     if (entry.type === "bytes32") {
       // Keep cert hash as ScVal bytes to match contract BytesN<32> params.
-      return nativeToScVal(entry.value, { type: "bytes" });
+      return sdk.nativeToScVal(entry.value, { type: "bytes" });
     }
-    return nativeToScVal(entry.value, { type: entry.type });
+    return sdk.nativeToScVal(entry.value, { type: entry.type });
   });
 }
 
@@ -283,19 +290,20 @@ async function pollTransactionRaw(
 }
 
 async function buildTransaction(
+  sdk: typeof StellarSdk,
   sourceAddress: string,
   method: string,
-  args: xdr.ScVal[],
+  args: StellarSdk.xdr.ScVal[],
 ) {
-  const server = getServer();
+  const server = getServer(sdk);
   const sourceAccount = await server.getAccount(sourceAddress);
 
-  return new TransactionBuilder(sourceAccount, {
-    fee: BASE_FEE,
+  return new sdk.TransactionBuilder(sourceAccount, {
+    fee: sdk.BASE_FEE,
     networkPassphrase: getExpectedNetworkPassphrase(),
   })
     .addOperation(
-      Operation.invokeContractFunction({
+      sdk.Operation.invokeContractFunction({
         contract: appConfig.contractId,
         function: method,
         args,
@@ -306,19 +314,20 @@ async function buildTransaction(
 }
 
 function buildSimulationTransaction(
+  sdk: typeof StellarSdk,
   sourceAddress: string,
   method: string,
-  args: xdr.ScVal[],
+  args: StellarSdk.xdr.ScVal[],
 ) {
   const simulationSource = sourceAddress.trim() || FALLBACK_SIMULATION_SOURCE;
-  const sourceAccount = new Account(simulationSource, "0");
+  const sourceAccount = new sdk.Account(simulationSource, "0");
 
-  return new TransactionBuilder(sourceAccount, {
-    fee: BASE_FEE,
+  return new sdk.TransactionBuilder(sourceAccount, {
+    fee: sdk.BASE_FEE,
     networkPassphrase: getExpectedNetworkPassphrase(),
   })
     .addOperation(
-      Operation.invokeContractFunction({
+      sdk.Operation.invokeContractFunction({
         contract: appConfig.contractId,
         function: method,
         args,
@@ -329,9 +338,10 @@ function buildSimulationTransaction(
 }
 
 async function prepareTransactionWithFallback(
+  sdk: typeof StellarSdk,
   transaction: Awaited<ReturnType<typeof buildTransaction>>,
 ) {
-  const server = getServer();
+  const server = getServer(sdk);
 
   try {
     return await server.prepareTransaction(transaction);
@@ -353,9 +363,9 @@ async function prepareTransactionWithFallback(
 
     const classicFee = parseInt(transaction.fee, 10) || 0;
     const minResourceFee = parseInt(rawSimulation.minResourceFee, 10) || 0;
-    const builder = TransactionBuilder.cloneFrom(transaction, {
+    const builder = sdk.TransactionBuilder.cloneFrom(transaction, {
       fee: String(classicFee + minResourceFee),
-      sorobanData: new SorobanDataBuilder(
+      sorobanData: new sdk.SorobanDataBuilder(
         rawSimulation.transactionData,
       ).build(),
       networkPassphrase: transaction.networkPassphrase,
@@ -375,11 +385,11 @@ async function prepareTransactionWithFallback(
     ) {
       builder.clearOperations();
       builder.addOperation(
-        Operation.invokeHostFunction({
+        sdk.Operation.invokeHostFunction({
           source: invokeOp.source,
           func: invokeOp.func,
           auth: rawAuth.map((entry) =>
-            xdr.SorobanAuthorizationEntry.fromXDR(entry, "base64"),
+            sdk.xdr.SorobanAuthorizationEntry.fromXDR(entry, "base64"),
           ),
         }),
       );
@@ -392,13 +402,17 @@ async function prepareTransactionWithFallback(
 async function simulateRead<T>(
   sourceAddress: string,
   method: string,
-  args: xdr.ScVal[],
+  argDefs: ContractArg[],
   transform: (value: unknown) => T,
 ) {
   ensureConfigured();
-  const server = getServer();
-  const transaction = buildSimulationTransaction(sourceAddress, method, args);
-  let simulation: Awaited<ReturnType<rpc.Server["simulateTransaction"]>>;
+  const sdk = await getSdk();
+  const args = buildArgs(sdk, argDefs);
+  const server = getServer(sdk);
+  const transaction = buildSimulationTransaction(sdk, sourceAddress, method, args);
+  let simulation: Awaited<
+    ReturnType<StellarSdk.rpc.Server["simulateTransaction"]>
+  >;
 
   try {
     simulation = await server.simulateTransaction(transaction);
@@ -418,11 +432,11 @@ async function simulateRead<T>(
       throw new Error(`Simulation for ${method} returned no value.`);
     }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
-    return transform(scValToNative(rawScVal));
+    const rawScVal = sdk.xdr.ScVal.fromXDR(rawResultXdr, "base64");
+    return transform(sdk.scValToNative(rawScVal));
   }
 
-  if (rpc.Api.isSimulationError(simulation)) {
+  if (sdk.rpc.Api.isSimulationError(simulation)) {
     throw new Error(normalizeError(simulation.error));
   }
 
@@ -430,13 +444,13 @@ async function simulateRead<T>(
     throw new Error(`Simulation for ${method} returned no value.`);
   }
 
-  return transform(scValToNative(simulation.result.retval));
+  return transform(sdk.scValToNative(simulation.result.retval));
 }
 
 async function signAndSubmit<T>(
   sourceAddress: string,
   method: string,
-  args: xdr.ScVal[],
+  argDefs: ContractArg[],
   transformReturn?: (value: unknown) => T,
 ) {
   if (appConfig.e2eMode) {
@@ -447,10 +461,13 @@ async function signAndSubmit<T>(
   }
 
   ensureConfigured();
-  const server = getServer();
+  const sdk = await getSdk();
+  const args = buildArgs(sdk, argDefs);
+  const server = getServer(sdk);
 
-  const transaction = await buildTransaction(sourceAddress, method, args);
+  const transaction = await buildTransaction(sdk, sourceAddress, method, args);
   const preparedTransaction = await prepareTransactionWithFallback(
+    sdk,
     transaction,
   );
 
@@ -459,7 +476,7 @@ async function signAndSubmit<T>(
     sourceAddress,
   );
 
-  const signedTransaction = TransactionBuilder.fromXDR(
+  const signedTransaction = sdk.TransactionBuilder.fromXDR(
     signedXdr,
     getExpectedNetworkPassphrase(),
   );
@@ -499,7 +516,7 @@ async function signAndSubmit<T>(
   }
 
   let finalResponse:
-    | Awaited<ReturnType<rpc.Server["pollTransaction"]>>
+    | Awaited<ReturnType<StellarSdk.rpc.Server["pollTransaction"]>>
     | undefined;
 
   try {
@@ -531,11 +548,11 @@ async function signAndSubmit<T>(
     };
   }
 
-  if (finalResponse.status === rpc.Api.GetTransactionStatus.NOT_FOUND) {
+  if (finalResponse.status === sdk.rpc.Api.GetTransactionStatus.NOT_FOUND) {
     throw new Error("Transaction submitted but not found on the RPC server.");
   }
 
-  if (finalResponse.status === rpc.Api.GetTransactionStatus.FAILED) {
+  if (finalResponse.status === sdk.rpc.Api.GetTransactionStatus.FAILED) {
     throw new Error(normalizeError(finalResponse.resultXdr));
   }
 
@@ -543,14 +560,16 @@ async function signAndSubmit<T>(
     hash: sendHash,
     result:
       transformReturn && finalResponse.returnValue
-        ? transformReturn(scValToNative(finalResponse.returnValue))
+        ? transformReturn(sdk.scValToNative(finalResponse.returnValue))
         : undefined,
   };
 }
 
 function normalizeAddress(value: unknown): string {
   if (typeof value === "string") return value;
-  if (value instanceof Address) return value.toString();
+  // Only meaningful once the SDK chunk has loaded; the generic toString
+  // fallback below handles Address instances either way.
+  if (loadedSdk && value instanceof loadedSdk.Address) return value.toString();
   if (value && typeof value === "object" && "toString" in value)
     return value.toString();
   throw new Error("Unable to parse Stellar address returned by the contract.");
@@ -782,12 +801,12 @@ export async function registerIssuer(
   return signAndSubmit(
     issuer,
     "register_issuer",
-    buildArgs([
+    [
       { value: issuer, type: "address" },
       { value: name, type: "string" },
       { value: website, type: "string" },
       { value: category, type: "string" },
-    ]),
+    ],
   );
 }
 
@@ -795,10 +814,10 @@ export async function approveIssuer(admin: string, issuer: string) {
   return signAndSubmit(
     admin,
     "approve_issuer",
-    buildArgs([
+    [
       { value: admin, type: "address" },
       { value: issuer, type: "address" },
-    ]),
+    ],
   );
 }
 
@@ -806,10 +825,10 @@ export async function suspendIssuer(admin: string, issuer: string) {
   return signAndSubmit(
     admin,
     "suspend_issuer",
-    buildArgs([
+    [
       { value: admin, type: "address" },
       { value: issuer, type: "address" },
-    ]),
+    ],
   );
 }
 
@@ -827,7 +846,7 @@ export async function getIssuer(issuer: string) {
   return simulateRead(
     getReadAddress(),
     "get_issuer",
-    buildArgs([{ value: issuer, type: "address" }]),
+    [{ value: issuer, type: "address" }],
     normalizeIssuer,
   );
 }
@@ -856,14 +875,14 @@ export async function registerCertificate(
   return signAndSubmit(
     issuer,
     "register_certificate",
-    buildArgs([
+    [
       { value: issuer, type: "address" },
       { value: student, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
       { value: metadata?.title ?? "", type: "string" },
       { value: metadata?.cohort ?? "", type: "string" },
       { value: metadata?.metadataUri ?? "", type: "string" },
-    ]),
+    ],
   );
 }
 
@@ -894,10 +913,10 @@ export async function verifyCertificate(caller: string, certHashHex: string) {
   return signAndSubmit(
     caller,
     "verify_certificate",
-    buildArgs([
+    [
       { value: caller, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
-    ]),
+    ],
   );
 }
 
@@ -909,7 +928,7 @@ export async function getCertificate(certHashHex: string) {
   return simulateRead(
     getReadAddress(),
     "get_certificate",
-    buildArgs([{ value: hexToBytes32(certHashHex), type: "bytes32" }]),
+    [{ value: hexToBytes32(certHashHex), type: "bytes32" }],
     normalizeCertificate,
   );
 }
@@ -918,10 +937,10 @@ export async function revokeCertificate(actor: string, certHashHex: string) {
   return signAndSubmit(
     actor,
     "revoke_certificate",
-    buildArgs([
+    [
       { value: actor, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
-    ]),
+    ],
   );
 }
 
@@ -929,10 +948,10 @@ export async function suspendCertificate(actor: string, certHashHex: string) {
   return signAndSubmit(
     actor,
     "suspend_certificate",
-    buildArgs([
+    [
       { value: actor, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
-    ]),
+    ],
   );
 }
 
@@ -945,11 +964,11 @@ export async function rewardStudent(
   return signAndSubmit(
     admin,
     "reward_student",
-    buildArgs([
+    [
       { value: student, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
       { value: amount, type: "i128" },
-    ]),
+    ],
   );
 }
 
@@ -962,12 +981,12 @@ export async function linkPayment(
   return signAndSubmit(
     employer,
     "link_payment",
-    buildArgs([
+    [
       { value: employer, type: "address" },
       { value: student, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
       { value: amount, type: "i128" },
-    ]),
+    ],
   );
 }
 
@@ -991,14 +1010,14 @@ export async function createOpportunity(
   return signAndSubmit(
     employer,
     "create_opportunity",
-    buildArgs([
+    [
       { value: employer, type: "address" },
       { value: candidate, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
       { value: title, type: "string" },
       { value: amount, type: "i128" },
       { value: milestoneCount, type: "u32" },
-    ]),
+    ],
     (v) => normalizeBigInt(v).toString(),
   );
 }
@@ -1007,10 +1026,10 @@ export async function fundOpportunity(employer: string, oppId: OpportunityIdInpu
   return signAndSubmit(
     employer,
     "fund_opportunity",
-    buildArgs([
+    [
       { value: employer, type: "address" },
       { value: opportunityIdToBigInt(oppId), type: "u64" },
-    ]),
+    ],
   );
 }
 
@@ -1018,10 +1037,10 @@ export async function submitMilestone(candidate: string, oppId: OpportunityIdInp
   return signAndSubmit(
     candidate,
     "submit_milestone",
-    buildArgs([
+    [
       { value: candidate, type: "address" },
       { value: opportunityIdToBigInt(oppId), type: "u64" },
-    ]),
+    ],
   );
 }
 
@@ -1029,10 +1048,10 @@ export async function approveMilestone(employer: string, oppId: OpportunityIdInp
   return signAndSubmit(
     employer,
     "approve_milestone",
-    buildArgs([
+    [
       { value: employer, type: "address" },
       { value: opportunityIdToBigInt(oppId), type: "u64" },
-    ]),
+    ],
   );
 }
 
@@ -1040,10 +1059,10 @@ export async function releasePayment(employer: string, oppId: OpportunityIdInput
   return signAndSubmit(
     employer,
     "release_payment",
-    buildArgs([
+    [
       { value: employer, type: "address" },
       { value: opportunityIdToBigInt(oppId), type: "u64" },
-    ]),
+    ],
   );
 }
 
@@ -1051,10 +1070,10 @@ export async function refundOpportunity(employer: string, oppId: OpportunityIdIn
   return signAndSubmit(
     employer,
     "refund_opportunity",
-    buildArgs([
+    [
       { value: employer, type: "address" },
       { value: opportunityIdToBigInt(oppId), type: "u64" },
-    ]),
+    ],
   );
 }
 
@@ -1062,7 +1081,7 @@ export async function getOpportunity(oppId: OpportunityIdInput) {
   return simulateRead(
     getReadAddress(),
     "get_opportunity",
-    buildArgs([{ value: opportunityIdToBigInt(oppId), type: "u64" }]),
+    [{ value: opportunityIdToBigInt(oppId), type: "u64" }],
     normalizeOpportunity,
   );
 }

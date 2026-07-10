@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/proof", label: "Verify" },
   { href: "/issuer/register", label: "Issue" },
   { href: "/employer", label: "Hire" },
+  { href: "/opportunity", label: "Opportunities" },
   { href: "/pilot", label: "Pilot" },
   { href: "/docs", label: "Docs" },
   { href: "/status", label: "Status" },
