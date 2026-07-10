@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DeferredToastProvider } from "@/components/layout/deferred-toast-provider";
 import { JsonLd } from "@/components/ui/json-ld";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
@@ -179,7 +180,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={authorProfileJsonLd} />
         {children}
         <ScrollToTop />
-        {ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null}
+        {ENABLE_VERCEL_ANALYTICS ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
         <DeferredToastProvider />
         <ServiceWorkerRegistration />
       </body>
