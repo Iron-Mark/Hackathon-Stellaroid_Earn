@@ -15,8 +15,24 @@ const ALLOWED_SOURCES = new Set([
   "unhandled-rejection",
 ]);
 
+// Strip CR/LF and ANSI escapes so a crafted report cannot forge extra log
+// lines or restyle the terminal. The stack keeps real newlines (multi-line by
+// nature) but loses ANSI, and each of its lines is visibly indented below.
+const ANSI_RE = /\x1b\[[0-9;]*[A-Za-z]/g;
+
 function field(value: unknown, max = 600) {
-  return typeof value === "string" ? value.slice(0, max) : "";
+  if (typeof value !== "string") return "";
+  return value.slice(0, max).replace(ANSI_RE, "").replace(/[\r\n]+/g, " ");
+}
+
+function stackField(value: unknown, max = 600) {
+  if (typeof value !== "string") return "";
+  return value
+    .slice(0, max)
+    .replace(ANSI_RE, "")
+    .split(/\r?\n/)
+    .map((line) => `    ${line}`)
+    .join("\n");
 }
 
 export async function POST(request: Request) {
@@ -57,7 +73,7 @@ export async function POST(request: Request) {
 
   const digest = field(body.digest, 80);
   const url = field(body.url, 200);
-  const stack = field(body.stack);
+  const stack = stackField(body.stack);
 
   console.error(
     `[client-error] source=${source} url=${url}${digest ? ` digest=${digest}` : ""} message=${message}${stack ? `\n${stack}` : ""}`,
