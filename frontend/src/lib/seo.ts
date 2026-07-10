@@ -7,6 +7,10 @@ export const SITE_AUTHOR_URL = "https://marksiazon.dev";
 export const SITE_AUTHOR_LINKEDIN = "https://www.linkedin.com/in/mark-siazon/";
 export const SITE_AUTHOR_GITHUB = "https://github.com/Iron-Mark";
 export const SITE_REPOSITORY_URL = "https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn";
+// Public product contact inbox (pilot requests, privacy questions, security
+// reports). Override via env if a dedicated product address is set up later.
+export const SITE_CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "kinsreyes0930@gmail.com";
 export const SITE_CONTRACT_SOURCE_URL = `${SITE_REPOSITORY_URL}/tree/main/contract`;
 export const SITE_RISE_EVENT_URL =
   "https://www.risein.com/programs/build-on-stellar-philippine-blockchain-week-2026";
