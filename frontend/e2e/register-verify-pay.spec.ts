@@ -120,7 +120,7 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   // Close the loop: the created opportunity is reachable and renders the
   // escrow console (submit/approve/release actions live here).
   await page.getByRole("link", { name: "Open opportunity" }).click();
-  await expect(page).toHaveURL("/opportunity/1");
+  await expect(page).toHaveURL("/opportunity/1", { timeout: 20_000 });
   await expect(page.getByText("Opportunity #1", { exact: true })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Escrowed paid trial" }),

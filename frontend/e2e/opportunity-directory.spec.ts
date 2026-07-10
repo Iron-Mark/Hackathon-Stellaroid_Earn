@@ -21,8 +21,10 @@ test("opportunity directory lists escrows and links to the console", async ({
   await expect(row).toBeVisible();
   await expect(row.getByText("funded")).toBeVisible();
 
+  // Generous timeout: the shared dev server compiles /opportunity/[id] on
+  // demand while parallel workers compile other routes.
   await row.click();
-  await expect(page).toHaveURL("/opportunity/1");
+  await expect(page).toHaveURL("/opportunity/1", { timeout: 20_000 });
   await expect(
     page.getByRole("heading", { name: "Escrowed paid trial" }),
   ).toBeVisible();

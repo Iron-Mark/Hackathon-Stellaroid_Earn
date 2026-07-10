@@ -39,9 +39,11 @@ test("guided demo renders all steps with honest labeling", async ({ page }) => {
     page.getByRole("link", { name: /Verify on stellar.expert/ }),
   ).toHaveCount(4);
 
-  // The live proof page is one click away.
+  // The live proof page is one click away. Generous timeout: the shared dev
+  // server compiles /proof/[hash] on demand while parallel workers compile
+  // other routes.
   await page
     .getByRole("link", { name: "Open the live proof page" })
     .click();
-  await expect(page).toHaveURL(/\/proof\/[0-9a-f]{64}/);
+  await expect(page).toHaveURL(/\/proof\/[0-9a-f]{64}/, { timeout: 20_000 });
 });
