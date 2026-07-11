@@ -1,10 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export type Locale = "en" | "tl";
 export const LOCALE_STORAGE_KEY = "stellaroid:locale";
 export const LOCALE_CHANGE_EVENT = "stellaroid:locale-change";
+
+/**
+ * Routes whose page body actually localizes (hero, /about copy, /app
+ * dashboard strings). The toggle only renders here — showing it on
+ * English-only content pages advertised a switch that silently did nothing.
+ */
+export function isLocalizedRoute(path: string | null) {
+  if (!path) return false;
+  if (path === "/") return true;
+  return ["/about", "/app"].some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+  );
+}
 
 function PhFlag() {
   return (
@@ -30,6 +44,7 @@ function GbFlag() {
 }
 
 export function LocaleToggle() {
+  const pathname = usePathname();
   const [locale, setLocale] = useState<Locale>("en");
 
   useEffect(() => {
@@ -55,6 +70,8 @@ export function LocaleToggle() {
     document.cookie = `${LOCALE_STORAGE_KEY}=${next}; path=/; max-age=31536000; SameSite=Lax`;
     window.dispatchEvent(new CustomEvent<Locale>(LOCALE_CHANGE_EVENT, { detail: next }));
   }
+
+  if (!isLocalizedRoute(pathname)) return null;
 
   const nextLabel = locale === "en" ? "Tagalog" : "English";
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { reportClientError } from "@/lib/error-report";
 
 export default function GlobalError({
   error,
@@ -12,6 +13,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("[stellaroid] unhandled error:", error);
+    reportClientError({ error, source: "error-boundary", digest: error.digest });
   }, [error]);
 
   return (

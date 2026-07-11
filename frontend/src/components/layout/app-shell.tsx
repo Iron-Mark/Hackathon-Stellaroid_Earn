@@ -27,6 +27,10 @@ export function AppShell({ children, rpcPill, walletButton, sidebarMode }: AppSh
 
   return (
     <div className="min-h-dvh flex flex-col bg-bg">
+      {/* App pages hit the Soroban RPC from the client right after mount
+          (status pill, contract reads); preconnecting saves a DNS+TLS
+          round-trip. React 19 hoists this into <head>. */}
+      <link rel="preconnect" href={appConfig.rpcUrl} crossOrigin="anonymous" />
       <SiteNav />
 
       {/* Contract subheader — hidden on desktop when sidebar carries this info */}

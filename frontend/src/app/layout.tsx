@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DeferredToastProvider } from "@/components/layout/deferred-toast-provider";
+import { ErrorReporter } from "@/components/telemetry/error-reporter";
 import { JsonLd } from "@/components/ui/json-ld";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
@@ -203,6 +204,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         ) : null}
         <DeferredToastProvider />
         <ServiceWorkerRegistration />
+        <ErrorReporter />
       </body>
     </html>
   );

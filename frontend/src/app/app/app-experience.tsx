@@ -13,6 +13,7 @@ import { VerifyForm } from "@/components/actions/verify-form";
 import { PayForm } from "@/components/actions/pay-form";
 import { ProofBlockPreview } from "@/components/proof/proof-block-preview";
 import { ActivitySnackbar } from "@/components/activity/activity-snackbar";
+import { WalletActivity } from "@/components/activity/wallet-activity";
 import { CopyButton } from "@/components/ui";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { FreighterWelcome } from "@/components/onboarding/freighter-welcome";
@@ -254,6 +255,7 @@ export function AppExperience({ sidebarActivity }: AppExperienceProps) {
               certStatus={milestones.credentialStatus}
               credentialTitle={milestones.credentialTitle}
             />
+            <WalletActivity />
           </aside>
         </div>
         {!showWalletEmptyState ? <DemoAutofillButton registered={milestones.registered} /> : null}
