@@ -187,7 +187,9 @@ const webSiteJsonLd = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const lang = cookieStore.get("stellaroid:locale")?.value === "tl" ? "tl" : "en";
+  const localeCookie = cookieStore.get("stellaroid:locale")?.value;
+  const lang =
+    localeCookie === "tl" ? "tl" : localeCookie === "es" ? "es" : "en";
 
   return (
     <html lang={lang} className={`${orbitron.variable} ${exo2.variable} font-sans`}>

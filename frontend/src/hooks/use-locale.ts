@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   LOCALE_CHANGE_EVENT,
   LOCALE_STORAGE_KEY,
+  isLocale,
   type Locale,
 } from "@/components/layout/locale-toggle";
 
@@ -12,15 +13,15 @@ export function useLocale(): Locale {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
-      if (saved === "en" || saved === "tl") setLocale(saved);
+      const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
+      if (isLocale(saved)) setLocale(saved);
     } catch {
       // SSR or storage denied — stay on default
     }
 
     function onChange(e: Event) {
       const next = (e as CustomEvent<Locale>).detail;
-      if (next === "en" || next === "tl") setLocale(next);
+      if (isLocale(next)) setLocale(next);
     }
 
     window.addEventListener(LOCALE_CHANGE_EVENT, onChange);
