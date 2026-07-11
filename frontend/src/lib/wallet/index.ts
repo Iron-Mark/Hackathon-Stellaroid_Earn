@@ -4,6 +4,7 @@ import { appConfig, getExpectedNetworkPassphrase } from "@/lib/config";
 import type { WalletSnapshot } from "@/lib/types";
 import { albedoProvider, forgetAlbedoSession } from "./albedo-provider";
 import { freighterProvider } from "./freighter-provider";
+import { swkProvider, forgetSwkSession } from "./swk-provider";
 import type {
   WalletProviderId,
   WalletProviderMeta,
@@ -11,7 +12,12 @@ import type {
 } from "./types";
 
 // Registry of supported wallets. Order = display priority in the picker.
-const PROVIDERS: WalletProviderModule[] = [freighterProvider, albedoProvider];
+// "swk" is the Stellar Wallets Kit aggregator (xBull, Rabet, LOBSTR, Hana…).
+const PROVIDERS: WalletProviderModule[] = [
+  freighterProvider,
+  albedoProvider,
+  swkProvider,
+];
 
 const ACTIVE_PROVIDER_KEY = "stellaroid:wallet-provider";
 
@@ -72,7 +78,9 @@ function getProvider(id: WalletProviderId): WalletProviderModule | undefined {
 
 function getActiveProviderId(): WalletProviderId | null {
   const value = localStore()?.getItem(ACTIVE_PROVIDER_KEY);
-  return value === "freighter" || value === "albedo" ? value : null;
+  return value === "freighter" || value === "albedo" || value === "swk"
+    ? value
+    : null;
 }
 
 function setActiveProviderId(id: WalletProviderId) {
@@ -137,6 +145,7 @@ export function disconnectWallet() {
   }
   clearActiveProviderId();
   forgetAlbedoSession();
+  forgetSwkSession();
 }
 
 export async function signTransaction(
