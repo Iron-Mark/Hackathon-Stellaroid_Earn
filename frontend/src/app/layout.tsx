@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Exo_2, Orbitron } from "next/font/google";
 import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DeferredToastProvider } from "@/components/layout/deferred-toast-provider";
 import { ErrorReporter } from "@/components/telemetry/error-reporter";
 import { JsonLd } from "@/components/ui/json-ld";
@@ -29,6 +28,10 @@ const orbitron = Orbitron({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-orbitron",
+  // Not preloaded: the LCP hero text renders in Exo 2 — keeping this 41 KB
+  // display face out of the pre-FCP critical window buys first paint time;
+  // the size-adjusted fallback bounds the later swap shift.
+  preload: false,
 });
 const exo2 = Exo_2({
   subsets: ["latin"],
@@ -196,12 +199,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={authorProfileJsonLd} />
         {children}
         <ScrollToTop />
-        {ENABLE_VERCEL_ANALYTICS ? (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        ) : null}
+        {ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null}
         <DeferredToastProvider />
         <ServiceWorkerRegistration />
         <ErrorReporter />

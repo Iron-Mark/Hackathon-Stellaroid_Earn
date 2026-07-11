@@ -29,7 +29,7 @@ const blocks: Block[] = [
   { type: "h2", text: "Analytics" },
   {
     type: "p",
-    text: "Production deploys run Vercel Web Analytics and Vercel Speed Insights. Both are cookieless and anonymous: they report aggregate page views and Core Web Vitals, not identities. We run no advertising trackers, no fingerprinting, and no third-party analytics beyond Vercel.",
+    text: "Production deploys run Vercel Web Analytics. It is cookieless and anonymous: it reports aggregate page views, not identities. We run no advertising trackers, no fingerprinting, and no third-party analytics beyond Vercel.",
   },
   { type: "h2", text: "Error reports" },
   {
