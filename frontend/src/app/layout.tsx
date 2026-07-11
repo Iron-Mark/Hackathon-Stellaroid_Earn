@@ -189,7 +189,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cookieStore = await cookies();
   const localeCookie = cookieStore.get("stellaroid:locale")?.value;
   const lang =
-    localeCookie === "tl" ? "tl" : localeCookie === "es" ? "es" : "en";
+    localeCookie === "tl"
+      ? "tl"
+      : localeCookie === "es"
+        ? "es"
+        : localeCookie === "pt"
+          ? "pt-BR"
+          : "en";
 
   return (
     <html lang={lang} className={`${orbitron.variable} ${exo2.variable} font-sans`}>
