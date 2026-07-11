@@ -42,8 +42,13 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 
-### July v3.1 product surface
+### July v3.2 product surface
 
+- **Wallet-less guided demo** - [`/demo`](https://stellaroid.tech/demo): the full register → verify → escrow → payout story on **real seeded testnet data** (a released 25 XLM escrow and a live funded one), with per-step stellar.expert audit links. No wallet, no extension, works on a phone.
+- **Opportunity directory** - [`/opportunity`](https://stellaroid.tech/opportunity): every live escrowed paid trial on the contract, with wallet-scoped filters (for you / created by you) and deep links into the milestone console.
+- **Live escrow evidence** - the [status page](https://stellaroid.tech/status) and activity feeds now decode all escrow events (create/fund/submit/approve/release/refund) alongside credential events, deduplicated across the RPC and the Stellar Expert indexer; `/app` shows the events involving your connected wallet.
+- **On-site pilot intake** - [`/pilot`](https://stellaroid.tech/pilot#request) has a real lead-capture form (rate-limited, honeypot-guarded, delivered by email) instead of a link-out, plus [`/contact`](https://stellaroid.tech/contact), an honest [privacy & terms page](https://stellaroid.tech/privacy), and an RFC 9116 [`security.txt`](https://stellaroid.tech/.well-known/security.txt).
+- **Performance pass** - the multi-megabyte stellar-sdk is lazy-loaded out of every route's First Load JS (`/app` dropped 483 → ~260 KB gzipped), the brand typefaces (Orbitron/Exo 2) are self-hosted via `next/font`, and first-party client-error telemetry reports runtime failures to server logs with no third-party service.
 - **Installable PWA** - manifest with maskable icons, service worker (network-first pages, offline fallback, per-deploy cache versioning; verification pages are never served from cache), iOS splash screens. Add it to a phone home screen from the live site.
 - **Mobile-first redesign** - app-style bottom navigation with a More sheet, auto-hiding header, bottom-sheet dialogs, full safe-area/notch handling.
 - **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (all 19 functions, 17 error codes, 16 events), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
@@ -110,7 +115,7 @@ Every credential produces a public **Verified Badge** URL  - no wallet, no login
 </tr>
 </table>
 
-Contract on Stellar Expert: [`CDMUOHMA…IKTTW3`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
+Contract on Stellar Expert: [`CAD6C24P…ISZCV`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
 
 ![Contract history on Stellar Expert](images/stellar-expert.png)
 
@@ -222,7 +227,7 @@ Every action in the demo flow is a real transaction on Stellar testnet. Click an
 | `register_certificate` | [`8c20a944…a0e8`](https://stellar.expert/explorer/testnet/tx/8c20a9443af1e7ea16d65b6292829a15d614858cadc6d11bef46ab246bb4a0e8) | Demo credential hash registered for student |
 | `verify_certificate` | [`67137aa8…2cb9`](https://stellar.expert/explorer/testnet/tx/67137aa8b3b887443be9bc2e0806a438a5c6a23beb8834cc32493a1341c82cb9) | Status changed to Verified |
 
-**Live certificates** (testnet, contract [`CDMUOHMA…`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)):
+**Live certificates** (testnet, contract [`CAD6C24P…`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)):
 
 | Hash | Cohort | Status |
 |---|---|---|

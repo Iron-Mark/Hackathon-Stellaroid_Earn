@@ -443,7 +443,7 @@ export default function SlidesPage() {
                 variant: "purple" as const,
                 stroke: "#a78bfa",
                 title: "Frontend",
-                desc: "Next.js 15, React 19, installable PWA, Freighter + Albedo wallets, bilingual",
+                desc: "Next.js 15, React 19, installable PWA, lazy-loaded SDK (~260 KB first load), Freighter + Albedo",
                 icon: (
                   <>
                     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -473,7 +473,7 @@ export default function SlidesPage() {
                 variant: "purple" as const,
                 stroke: "#a78bfa",
                 title: "Monitoring",
-                desc: "/api/health, /status#metrics, /api/events indexing",
+                desc: "/status#metrics, credential + escrow event feeds, first-party error telemetry",
                 icon: (
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 ),
@@ -652,7 +652,7 @@ export default function SlidesPage() {
                 variant: "amber" as const,
                 stroke: "#f59e0b",
                 title: "Live Demo",
-                desc: "stellaroid.tech",
+                desc: "stellaroid.tech/demo — guided tour, no wallet needed",
                 icon: (
                   <>
                     <circle cx="12" cy="12" r="10" />
@@ -674,7 +674,7 @@ export default function SlidesPage() {
                 variant: "green" as const,
                 stroke: "#34d399",
                 title: "Contract",
-                desc: "CDMUOHMA...IKTTW3",
+                desc: "CAD6C24P...ISZCV — source-verified build",
                 icon: (
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                 ),
@@ -682,8 +682,8 @@ export default function SlidesPage() {
               {
                 variant: "amber" as const,
                 stroke: "#f59e0b",
-                title: "Feedback",
-                desc: "Redacted feedback responses",
+                title: "Run a pilot",
+                desc: "stellaroid.tech/pilot — on-site intake form",
                 icon: (
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 ),
