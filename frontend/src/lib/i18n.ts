@@ -319,4 +319,142 @@ export const i18n: Record<Locale, I18nDict> = {
         "Você é uma empresa que quer verificar a credencial de um graduado e pagá-lo.",
     },
   },
+  id: {
+    hero: {
+      eyebrow: "Stellar Testnet / Soroban / Freighter",
+      h1a: "Verifikasi kredensial.",
+      h1b: "Selesaikan pembayaran dalam satu alur.",
+      lede: "Stellaroid Earn menambatkan hash sertifikat di Stellar sehingga perusahaan dapat memeriksa catatannya dan membayar lulusan tanpa keluar dari alur kerja begitu penerbit yang disetujui atau admin memverifikasinya. Tanpa utas email, tanpa penundaan faktur, tanpa biaya platform.",
+      ctaPrimary: "Coba aplikasinya →",
+      ctaGhost: "Ikuti demo 2 menit — tanpa wallet →",
+      personas: [
+        {
+          label: "Terbitkan",
+          title: "Untuk bootcamp dan penerbit",
+          body: "Daftarkan hash sertifikat, verifikasi dengan wallet yang disetujui, dan jaga buktinya tetap siap diaudit.",
+          cta: "Mulai menerbitkan",
+        },
+        {
+          label: "Verifikasi",
+          title: "Untuk perekrut dan peninjau",
+          body: "Tempel hash, periksa halaman bukti publik, dan unduh ringkasan yang aman untuk perekrut.",
+          cta: "Cari bukti",
+        },
+        {
+          label: "Rekrut",
+          title: "Untuk perusahaan",
+          body: "Tinjau lulusan terverifikasi dan danai uji coba berbayar yang terkait dengan catatan kredensial.",
+          cta: "Danai uji coba",
+        },
+      ],
+    },
+    footer: {
+      tagline:
+        "Registri kredensial on-chain di Stellar testnet. Dibuat untuk Stellar PH Bootcamp.",
+    },
+    about: {
+      lede: "Perangkat lunak ringan dengan satu ide inti: sertifikat seharusnya bisa diverifikasi dalam hitungan detik, bukan email. Dan jika bisa diverifikasi, lulusan seharusnya dibayar dengan ketukan yang sama.",
+      problemKicker:
+        "Sertifikatnya asli. Masalahnya, membuktikannya lebih mahal daripada merekrut dengan cara lain.",
+      approachKicker:
+        "Keluaran kanoniknya bukanlah UI; melainkan aliran event di stellar.expert. Buktinya bersifat publik secara bawaan.",
+    },
+    app: {
+      connectTitle: "Hubungkan wallet Anda untuk memulai",
+      connectSubtitle: "Anda akan menandatangani transaksi dengan Freighter.",
+      issuerLabel: "Penerbit",
+      issuerDesc: "Terbitkan & kelola",
+      employerLabel: "Perusahaan",
+      employerDesc: "Periksa & bayar",
+      issuerRegisterTitle: "Daftarkan sertifikat",
+      issuerRegisterSubtitle:
+        "Unggah PDF atau tempel hash heksadesimal 64 karakter. Anda akan menandatangani sebagai penerbit.",
+      issuerDoneTitle: "Sertifikat terdaftar",
+      issuerDoneSubtitle:
+        "Verifikasi tepercaya selesai. Perusahaan kini dapat memeriksa bukti dan membayar mahasiswa.",
+      verifyTitle: "Verifikasi kredensial",
+      verifySubtitle:
+        "Cari dulu, lalu gunakan wallet penerbit yang disetujui atau wallet admin untuk memverifikasi, menangguhkan, atau mencabutnya.",
+      employerWaitTitle: "Tunggu verifikasi tepercaya",
+      employerWaitSubtitle:
+        "Perusahaan dapat memeriksa kredensial di sini, tetapi pembayaran hanya terbuka setelah penerbit yang disetujui atau admin memverifikasinya.",
+      payTitle: "Bayar mahasiswa terverifikasi",
+      paySubtitle: "Kirim jumlah pembayaran yang terkait dengan sertifikat ini.",
+      doneTitle: "Semua selesai",
+      doneSubtitle: "Lencana terverifikasi siap dibagikan.",
+      roleHintIssuer:
+        "Anda adalah pendidik atau institusi yang menerbitkan dan memverifikasi sertifikat.",
+      roleHintEmployer:
+        "Anda adalah perusahaan yang ingin memverifikasi kredensial lulusan dan membayarnya.",
+    },
+  },
+  vi: {
+    hero: {
+      eyebrow: "Stellar Testnet / Soroban / Freighter",
+      h1a: "Xác minh chứng chỉ.",
+      h1b: "Thanh toán trong cùng một luồng.",
+      lede: "Stellaroid Earn neo hash của chứng chỉ lên Stellar để nhà tuyển dụng có thể kiểm tra hồ sơ và thanh toán cho học viên mà không cần rời khỏi quy trình, ngay khi một tổ chức cấp phát được phê duyệt hoặc quản trị viên xác minh nó. Không có chuỗi email, không có chậm trễ hóa đơn, không có phí nền tảng.",
+      ctaPrimary: "Dùng thử ứng dụng →",
+      ctaGhost: "Xem demo 2 phút — không cần ví →",
+      personas: [
+        {
+          label: "Cấp phát",
+          title: "Dành cho bootcamp và tổ chức cấp phát",
+          body: "Đăng ký hash của chứng chỉ, xác minh bằng ví được phê duyệt, và giữ bằng chứng luôn sẵn sàng cho việc kiểm toán.",
+          cta: "Bắt đầu cấp phát",
+        },
+        {
+          label: "Xác minh",
+          title: "Dành cho chuyên viên tuyển dụng và người thẩm định",
+          body: "Dán một hash, kiểm tra trang bằng chứng công khai, và tải về bản tóm tắt an toàn cho chuyên viên tuyển dụng.",
+          cta: "Tra cứu bằng chứng",
+        },
+        {
+          label: "Tuyển dụng",
+          title: "Dành cho nhà tuyển dụng",
+          body: "Xem lại một học viên đã được xác minh và cấp vốn cho một đợt làm thử có trả phí gắn với hồ sơ chứng chỉ.",
+          cta: "Cấp vốn làm thử",
+        },
+      ],
+    },
+    footer: {
+      tagline:
+        "Sổ đăng ký chứng chỉ on-chain trên Stellar testnet. Được xây dựng cho Stellar PH Bootcamp.",
+    },
+    about: {
+      lede: "Một phần mềm gọn nhẹ xoay quanh một ý tưởng: chứng chỉ nên có thể được xác minh trong vài giây, chứ không phải qua email. Và nếu đã xác minh được, học viên nên được thanh toán ngay trong cùng một thao tác.",
+      problemKicker:
+        "Chứng chỉ là thật. Vấn đề là chi phí chứng minh nó còn cao hơn cả việc tuyển dụng theo cách khác để né nó.",
+      approachKicker:
+        "Đầu ra chuẩn tắc không phải là giao diện; đó là luồng sự kiện trên stellar.expert. Bằng chứng mặc định là công khai.",
+    },
+    app: {
+      connectTitle: "Kết nối ví của bạn để bắt đầu",
+      connectSubtitle: "Bạn sẽ ký các giao dịch bằng Freighter.",
+      issuerLabel: "Tổ chức cấp phát",
+      issuerDesc: "Cấp phát và quản lý",
+      employerLabel: "Nhà tuyển dụng",
+      employerDesc: "Kiểm tra và thanh toán",
+      issuerRegisterTitle: "Đăng ký một chứng chỉ",
+      issuerRegisterSubtitle:
+        "Tải lên tệp PDF hoặc dán một hash hex 64 ký tự. Bạn sẽ ký với tư cách tổ chức cấp phát.",
+      issuerDoneTitle: "Đã đăng ký chứng chỉ",
+      issuerDoneSubtitle:
+        "Việc xác minh tin cậy đã hoàn tất. Nhà tuyển dụng giờ có thể kiểm tra bằng chứng và thanh toán cho học viên.",
+      verifyTitle: "Xác minh chứng chỉ",
+      verifySubtitle:
+        "Tra cứu trước, sau đó dùng ví của tổ chức cấp phát được phê duyệt hoặc ví quản trị viên để xác minh, tạm ngưng, hoặc thu hồi nó.",
+      employerWaitTitle: "Chờ xác minh tin cậy",
+      employerWaitSubtitle:
+        "Nhà tuyển dụng có thể kiểm tra chứng chỉ tại đây, nhưng việc thanh toán chỉ mở khóa sau khi một tổ chức cấp phát được phê duyệt hoặc quản trị viên xác minh chứng chỉ.",
+      payTitle: "Thanh toán cho học viên đã xác minh",
+      paySubtitle: "Gửi số tiền thanh toán gắn với chứng chỉ này.",
+      doneTitle: "Hoàn tất",
+      doneSubtitle: "Huy hiệu đã xác minh đã sẵn sàng để chia sẻ.",
+      roleHintIssuer:
+        "Bạn là một nhà giáo dục hoặc tổ chức cấp phát và xác minh chứng chỉ.",
+      roleHintEmployer:
+        "Bạn là một công ty muốn xác minh chứng chỉ của học viên và thanh toán cho họ.",
+    },
+  },
 };
