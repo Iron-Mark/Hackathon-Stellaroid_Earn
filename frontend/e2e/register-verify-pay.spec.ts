@@ -61,9 +61,11 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await expect(page).toHaveURL(`/proof/${certHash}`);
   // exact: true — the page also has an sr-only SEO h1 that extends this title,
   // which the default substring matcher would ambiguously match.
+  // First hit to /proof/[hash] cold-compiles in the dev server; give the first
+  // content assertion on this route room to absorb that compile so CI is stable.
   await expect(
     page.getByRole("heading", { name: "Stellar Smart Contract Bootcamp Completion", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 30_000 });
   await expect(
     page.getByText("This credential is verified on-chain.", { exact: true }),
   ).toBeVisible();
@@ -79,7 +81,8 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
 
   await page.goto(candidatePassportHref);
   await expect(page).toHaveURL(candidatePassportHref);
-  await expect(page.getByRole("heading", { name: "Candidate passport" })).toBeVisible();
+  // First hit to /talent/[address] cold-compiles too.
+  await expect(page.getByRole("heading", { name: "Candidate passport" })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText("Known proofs")).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Stellar Smart Contract Bootcamp Completion" }),
@@ -101,7 +104,8 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await expect(page).toHaveURL(
     new RegExp(`/employer\\?hash=${certHash}&candidate=${studentWallet}`),
   );
-  await expect(page.getByRole("heading", { name: "Review before funding" })).toBeVisible();
+  // First hit to /employer cold-compiles too.
+  await expect(page.getByRole("heading", { name: "Review before funding" })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText("Hash anchor", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Issuer registry", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("The proof-link candidate matches the credential owner.")).toBeVisible();

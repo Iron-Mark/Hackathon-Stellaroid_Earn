@@ -110,7 +110,7 @@ https://stellar.expert/explorer/testnet/contract/<CONTRACT_ID>
 ## Proof Block
 
 - **Pitch:** Trusted issuers verify a Philippine bootcamp credential and employers can pay the grad in one flow — on Stellar testnet.
-- **Live demo:** https://stellaroid-earn-demo.vercel.app/
+- **Live demo:** https://stellaroid.tech
 - **Contract ID (current security-hardened baseline):** `CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`
   → https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV
 - **Contract ID (stable v1):** `CDWCARXLJUJ5ISC3GPXRLR5HC6QPLMGULCVRIACYKQM4U5AG7TFWXHVZ`
