@@ -181,4 +181,73 @@ export const i18n: Record<Locale, I18nDict> = {
         "Ikaw ay company na gustong i-verify ang credential ng graduate at bayaran sila.",
     },
   },
+  es: {
+    hero: {
+      eyebrow: "Stellar Testnet / Soroban / Freighter",
+      h1a: "Verifica credenciales.",
+      h1b: "Liquida el pago en un solo flujo.",
+      lede: "Stellaroid Earn ancla los hashes de los certificados en Stellar para que las empresas puedan revisar el registro y pagarle al graduado sin salir del flujo, una vez que un emisor aprobado o un administrador lo verifica. Sin cadenas de correos, sin demoras de facturación, sin comisiones de plataforma.",
+      ctaPrimary: "Prueba la app →",
+      ctaGhost: "Mira la demo de 2 min — no necesitas billetera →",
+      personas: [
+        {
+          label: "Emitir",
+          title: "Para bootcamps y emisores",
+          body: "Registra el hash de un certificado, verifícalo con una billetera aprobada y mantén la prueba lista para auditoría.",
+          cta: "Empezar a emitir",
+        },
+        {
+          label: "Verificar",
+          title: "Para reclutadores y revisores",
+          body: "Pega un hash, revisa la página de prueba pública y descarga un resumen apto para reclutadores.",
+          cta: "Buscar una prueba",
+        },
+        {
+          label: "Contratar",
+          title: "Para empresas",
+          body: "Revisa a un graduado verificado y financia un trabajo de prueba remunerado vinculado al registro de la credencial.",
+          cta: "Financiar un trabajo de prueba",
+        },
+      ],
+    },
+    footer: {
+      tagline:
+        "Registro de credenciales on-chain en la testnet de Stellar. Creado para el Stellar PH Bootcamp.",
+    },
+    about: {
+      lede: "Un software mínimo alrededor de una sola idea: los certificados deberían poder verificarse en segundos, no por correo. Y si son verificables, el graduado debería cobrar con el mismo toque.",
+      problemKicker:
+        "El certificado es real. El problema es que demostrarlo cuesta más que contratar como si no existiera.",
+      approachKicker:
+        "El resultado canónico no es la interfaz, sino el flujo de eventos en stellar.expert. La prueba es pública por defecto.",
+    },
+    app: {
+      connectTitle: "Conecta tu billetera para empezar",
+      connectSubtitle: "Firmarás las transacciones con Freighter.",
+      issuerLabel: "Emisor",
+      issuerDesc: "Emitir y gestionar",
+      employerLabel: "Empresa",
+      employerDesc: "Revisar y pagar",
+      issuerRegisterTitle: "Registra un certificado",
+      issuerRegisterSubtitle:
+        "Sube el PDF o pega un hash hexadecimal de 64 caracteres. Firmarás como emisor.",
+      issuerDoneTitle: "Certificado registrado",
+      issuerDoneSubtitle:
+        "La verificación de confianza está lista. Ahora las empresas pueden revisar la prueba y pagarle al estudiante.",
+      verifyTitle: "Verifica la credencial",
+      verifySubtitle:
+        "Búscala primero y luego usa una billetera de emisor aprobado o de administrador para verificarla, suspenderla o revocarla.",
+      employerWaitTitle: "Espera la verificación de confianza",
+      employerWaitSubtitle:
+        "Las empresas pueden revisar la credencial aquí, pero el pago solo se habilita después de que un emisor aprobado o un administrador la verifique.",
+      payTitle: "Paga al estudiante verificado",
+      paySubtitle: "Envía el monto del pago vinculado a este certificado.",
+      doneTitle: "Listo",
+      doneSubtitle: "La insignia verificada está lista para compartir.",
+      roleHintIssuer:
+        "Eres un educador o una institución que emite y verifica certificados.",
+      roleHintEmployer:
+        "Eres una empresa que quiere verificar la credencial de un graduado y pagarle.",
+    },
+  },
 };

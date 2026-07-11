@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { usePathname } from "next/navigation";
 
-export type Locale = "en" | "tl";
+export type Locale = "en" | "tl" | "es";
+export const LOCALES: Locale[] = ["en", "tl", "es"];
+export function isLocale(value: unknown): value is Locale {
+  return value === "en" || value === "tl" || value === "es";
+}
 export const LOCALE_STORAGE_KEY = "stellaroid:locale";
 export const LOCALE_CHANGE_EVENT = "stellaroid:locale-change";
 
@@ -43,26 +47,41 @@ function GbFlag() {
   );
 }
 
+function EsFlag() {
+  return (
+    <svg viewBox="0 0 24 16" width="20" height="14" aria-hidden="true">
+      <rect width="24" height="16" fill="#AA151B" />
+      <rect y="4" width="24" height="8" fill="#F1BF00" />
+    </svg>
+  );
+}
+
+const LOCALE_META: Record<Locale, { label: string; Flag: () => ReactElement }> = {
+  en: { label: "English", Flag: GbFlag },
+  tl: { label: "Tagalog", Flag: PhFlag },
+  es: { label: "Español", Flag: EsFlag },
+};
+
 export function LocaleToggle() {
   const pathname = usePathname();
   const [locale, setLocale] = useState<Locale>("en");
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
-      if (saved === "en" || saved === "tl") setLocale(saved);
+      const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
+      if (isLocale(saved)) setLocale(saved);
     } catch { /* ignore */ }
 
     function onChange(e: Event) {
       const next = (e as CustomEvent<Locale>).detail;
-      if (next === "en" || next === "tl") setLocale(next);
+      if (isLocale(next)) setLocale(next);
     }
     window.addEventListener(LOCALE_CHANGE_EVENT, onChange);
     return () => window.removeEventListener(LOCALE_CHANGE_EVENT, onChange);
   }, []);
 
   function toggle() {
-    const next: Locale = locale === "en" ? "tl" : "en";
+    const next = LOCALES[(LOCALES.indexOf(locale) + 1) % LOCALES.length];
     setLocale(next);
     try {
       localStorage.setItem(LOCALE_STORAGE_KEY, next);
@@ -73,7 +92,8 @@ export function LocaleToggle() {
 
   if (!isLocalizedRoute(pathname)) return null;
 
-  const nextLabel = locale === "en" ? "Tagalog" : "English";
+  const nextLocale = LOCALES[(LOCALES.indexOf(locale) + 1) % LOCALES.length];
+  const { label: nextLabel, Flag: NextFlag } = LOCALE_META[nextLocale];
 
   return (
     <button
@@ -82,8 +102,8 @@ export function LocaleToggle() {
       aria-label={`Switch language to ${nextLabel}`}
       className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[13px] text-text-muted hover:text-text hover:bg-surface-2 transition-colors cursor-pointer border border-transparent hover:border-border"
     >
-      {locale === "en" ? <PhFlag /> : <GbFlag />}
-      <span>{locale === "en" ? "Tagalog" : "English"}</span>
+      <NextFlag />
+      <span>{nextLabel}</span>
     </button>
   );
 }
