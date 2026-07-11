@@ -1,6 +1,7 @@
 import { formatAmount } from "./format";
 import { appConfig } from "./config";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "./demo-data";
+import { mergeRecentEvents } from "./event-merge";
 import { xdr, scValToNative } from "@stellar/stellar-sdk";
 
 type RpcEvent = {
@@ -46,7 +47,13 @@ export type RecentActivityItem = {
   hashHex: string | null;
   /** Escrow events carry the opportunity ID so UIs can deep-link /opportunity/{id}. */
   opportunityId: string | null;
-  /** The signing address from the event's second topic (issuer/employer/candidate). */
+  /**
+   * The address in the event's second topic. NOT always the signer: escrow
+   * and payment events publish the signing employer/candidate, but cert_reg,
+   * cert_ver, and reward publish the STUDENT/owner (the subject), and the
+   * issuer-registry events carry no address topic at all. Treat this as
+   * "wallet involved in the event", never "wallet that signed it".
+   */
   actor: string | null;
   ledgerClosedAt: string;
   txHash: string | null;
@@ -236,7 +243,9 @@ function buildRecentActivityItem({
     opp_crt: "Escrow",
     opp_fund: "Funded",
     mile_sub: "Submitted",
-    mile_apr: "Approved",
+    // Not "Approved" — that chip already means issuer approval (iss_appr)
+    // in the same feed, with a different tone.
+    mile_apr: "Milestone OK",
     pay_rel: "Released",
     pay_ref: "Refunded",
   };
@@ -426,33 +435,6 @@ async function getStellarExpertRecentEvents(contractId: string, limit: number) {
     .filter((event): event is RecentActivityItem => Boolean(event));
 }
 
-function eventIdentity(event: RecentActivityItem) {
-  if (event.hashHex && (event.kind === "cert_reg" || event.kind === "cert_ver")) {
-    return `${event.kind}:${event.hashHex}`;
-  }
-
-  return `${event.kind}:${event.detail}:${event.ledgerClosedAt}`;
-}
-
-function mergeRecentEvents(events: RecentActivityItem[], limit: number) {
-  const merged = new Map<string, RecentActivityItem>();
-
-  for (const event of events) {
-    const key = eventIdentity(event);
-    const existing = merged.get(key);
-
-    if (!existing || (existing.source === "stellar_expert" && event.source === "rpc")) {
-      merged.set(key, event);
-    }
-  }
-
-  return Array.from(merged.values())
-    .sort(
-      (left, right) =>
-        new Date(right.ledgerClosedAt).getTime() - new Date(left.ledgerClosedAt).getTime(),
-    )
-    .slice(0, limit);
-}
 
 export async function getContractIndexedEventCount(contractId: string) {
   if (!contractId) return null;

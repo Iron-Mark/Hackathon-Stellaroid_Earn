@@ -34,7 +34,7 @@ const blocks: Block[] = [
   { type: "h2", text: "Error reports" },
   {
     type: "p",
-    text: "If the app hits a runtime error in your browser, it sends a short first-party report (error message, page path, stack trace — no identity, no wallet keys) to our own server logs so we can fix it. Nothing goes to a third-party error service, and reports are capped per page.",
+    text: "If the app hits a runtime error in your browser, it sends a short first-party report (error message, page path, stack trace — no identity, no wallet keys) to our own server logs so we can fix it. Nothing goes to a third-party error service, and reports are capped and deduplicated per browsing session.",
   },
   { type: "h2", text: "Cookies and local storage" },
   {

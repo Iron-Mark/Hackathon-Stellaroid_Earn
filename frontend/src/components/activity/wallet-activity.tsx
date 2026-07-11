@@ -4,11 +4,17 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
+import { appConfig } from "@/lib/config";
 import { formatRelativeTime } from "@/lib/format";
 // type-only import — erased at build time, so the stellar-sdk-backed events
 // module never enters this client bundle.
 import type { RecentActivityItem } from "@/lib/events";
 import { kindTag } from "./kind-tag";
+
+// The event feed is a shared, windowed view (latest ~40 contract events), so
+// this panel refreshes on a timer instead of per user action; the server
+// caches upstream fetches, making the poll cheap.
+const REFRESH_INTERVAL_MS = 60_000;
 
 type PanelState =
   | { phase: "loading" }
@@ -26,9 +32,10 @@ function itemHref(item: RecentActivityItem): { href: string; internal: boolean }
 }
 
 /**
- * "Your recent activity" — the connected wallet's own on-chain actions,
- * derived from the same public event feed as /status and filtered by the
- * event's signing address. Pilot feedback asked for exactly this.
+ * Recent contract events INVOLVING the connected wallet — as signer for
+ * escrow/payment events, or as the credential's student/owner for cert
+ * events (the contract publishes the subject, not the signer, on those; see
+ * the `actor` note in lib/events.ts). Deliberately not titled "your actions".
  */
 export function WalletActivity() {
   const { wallet } = useFreighterWallet();
@@ -41,8 +48,9 @@ export function WalletActivity() {
     let cancelled = false;
     setState({ phase: "loading" });
 
-    fetch("/api/events?limit=40")
-      .then(async (response) => {
+    async function load(isRefresh: boolean) {
+      try {
+        const response = await fetch("/api/events?limit=40");
         if (!response.ok) throw new Error(String(response.status));
         const payload = (await response.json()) as { events?: RecentActivityItem[] };
         if (cancelled) return;
@@ -50,13 +58,18 @@ export function WalletActivity() {
           .filter((event) => event.actor === address)
           .slice(0, 6);
         setState({ phase: "ready", items });
-      })
-      .catch(() => {
-        if (!cancelled) setState({ phase: "error" });
-      });
+      } catch {
+        // Keep showing the last good list on a failed background refresh.
+        if (!cancelled && !isRefresh) setState({ phase: "error" });
+      }
+    }
+
+    void load(false);
+    const interval = setInterval(() => void load(true), REFRESH_INTERVAL_MS);
 
     return () => {
       cancelled = true;
+      clearInterval(interval);
     };
   }, [address]);
 
@@ -65,10 +78,10 @@ export function WalletActivity() {
   return (
     <section
       className="bg-surface border border-border rounded-lg px-5 py-4"
-      aria-label="Your recent on-chain activity"
+      aria-label="Recent on-chain activity involving your wallet"
     >
       <p className="font-pixel text-[10.5px] font-semibold tracking-[0.1em] uppercase text-text-muted mb-3">
-        Your recent activity
+        Activity involving your wallet
       </p>
 
       {state.phase === "loading" ? (
@@ -79,7 +92,9 @@ export function WalletActivity() {
         </p>
       ) : state.items.length === 0 ? (
         <p className="m-0 text-[13px] text-text-muted">
-          No on-chain actions from this wallet in the recent event window yet.
+          Nothing involving this wallet in the latest contract events. Recent
+          actions can take a minute to index, and older ones scroll out of the
+          shared window.
         </p>
       ) : (
         <ul className="m-0 flex list-none flex-col p-0">
@@ -120,6 +135,17 @@ export function WalletActivity() {
           })}
         </ul>
       )}
+
+      <a
+        href={`${appConfig.explorerUrl}/account/${address}`}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-primary no-underline hover:opacity-80"
+      >
+        Full account history on stellar.expert
+        <ExternalLink className="h-3 w-3" aria-hidden="true" />
+        <span className="visually-hidden">(opens in new tab)</span>
+      </a>
     </section>
   );
 }

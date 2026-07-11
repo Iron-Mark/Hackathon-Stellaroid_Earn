@@ -3,7 +3,9 @@
 // third-party service, no new CSP surface, active in every production deploy.
 
 const MAX_FIELD = 600;
-const MAX_REPORTS_PER_PAGE = 5;
+// Both the cap and the dedup set live for the whole SPA session (module
+// scope survives client-side navigation) — volume control, not per-page.
+const MAX_REPORTS_PER_SESSION = 5;
 
 let reportsSent = 0;
 const seen = new Set<string>();
@@ -27,7 +29,7 @@ export function reportClientError(input: {
   digest?: string;
 }) {
   if (typeof window === "undefined") return;
-  if (reportsSent >= MAX_REPORTS_PER_PAGE) return;
+  if (reportsSent >= MAX_REPORTS_PER_SESSION) return;
 
   const error = input.error;
   const message =

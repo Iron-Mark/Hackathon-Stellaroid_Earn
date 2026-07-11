@@ -20,9 +20,9 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Copy wallet address" })).toBeVisible();
   await expect(page.getByText("GAWI •••• •••• R34D")).toBeVisible();
 
-  // Wallet-scoped transaction history: the connected wallet's own on-chain
-  // actions surface in the sidebar, including escrow events.
-  await expect(page.getByText("Your recent activity")).toBeVisible();
+  // Wallet-scoped history: contract events involving the connected wallet
+  // surface in the sidebar, including escrow events.
+  await expect(page.getByText("Activity involving your wallet")).toBeVisible();
   await expect(
     page.getByText("Opportunity #1 funded — escrow locked"),
   ).toBeVisible();

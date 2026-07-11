@@ -15,23 +15,25 @@ const ALLOWED_SOURCES = new Set([
   "unhandled-rejection",
 ]);
 
-// Strip CR/LF and ANSI escapes so a crafted report cannot forge extra log
-// lines or restyle the terminal. The stack keeps real newlines (multi-line by
-// nature) but loses ANSI, and each of its lines is visibly indented below.
-const ANSI_RE = /\x1b\[[0-9;]*[A-Za-z]/g;
+// Strip every line-break form (CR/LF, NEL, U+2028/2029) plus all C0/C1
+// control characters so a crafted report can neither forge extra log lines
+// nor smuggle terminal escapes — CSI, OSC, and RIS sequences all start with
+// ESC (U+001B), which dies here. The stack keeps real newlines (multi-line
+// by nature) but each line is control-stripped and visibly indented.
+const LINE_BREAKS_RE = /[\r\n\u0085\u2028\u2029]+/g;
+const CONTROL_RE = /[\u0000-\u001f\u007f-\u009f]/g;
 
 function field(value: unknown, max = 600) {
   if (typeof value !== "string") return "";
-  return value.slice(0, max).replace(ANSI_RE, "").replace(/[\r\n]+/g, " ");
+  return value.slice(0, max).replace(LINE_BREAKS_RE, " ").replace(CONTROL_RE, "");
 }
 
 function stackField(value: unknown, max = 600) {
   if (typeof value !== "string") return "";
   return value
     .slice(0, max)
-    .replace(ANSI_RE, "")
-    .split(/\r?\n/)
-    .map((line) => `    ${line}`)
+    .split(LINE_BREAKS_RE)
+    .map((line) => `    ${line.replace(CONTROL_RE, "")}`)
     .join("\n");
 }
 
