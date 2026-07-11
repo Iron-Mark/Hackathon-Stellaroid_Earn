@@ -3,10 +3,12 @@
 import { useEffect, useState, type ReactElement } from "react";
 import { usePathname } from "next/navigation";
 
-export type Locale = "en" | "tl" | "es";
-export const LOCALES: Locale[] = ["en", "tl", "es"];
+export type Locale = "en" | "tl" | "es" | "pt";
+export const LOCALES: Locale[] = ["en", "tl", "es", "pt"];
 export function isLocale(value: unknown): value is Locale {
-  return value === "en" || value === "tl" || value === "es";
+  return (
+    value === "en" || value === "tl" || value === "es" || value === "pt"
+  );
 }
 export const LOCALE_STORAGE_KEY = "stellaroid:locale";
 export const LOCALE_CHANGE_EVENT = "stellaroid:locale-change";
@@ -56,10 +58,21 @@ function EsFlag() {
   );
 }
 
+function BrFlag() {
+  return (
+    <svg viewBox="0 0 24 16" width="20" height="14" aria-hidden="true">
+      <rect width="24" height="16" fill="#009B3A" />
+      <polygon points="12,2 22,8 12,14 2,8" fill="#FEDF00" />
+      <circle cx="12" cy="8" r="3.2" fill="#002776" />
+    </svg>
+  );
+}
+
 const LOCALE_META: Record<Locale, { label: string; Flag: () => ReactElement }> = {
   en: { label: "English", Flag: GbFlag },
   tl: { label: "Tagalog", Flag: PhFlag },
   es: { label: "Español", Flag: EsFlag },
+  pt: { label: "Português", Flag: BrFlag },
 };
 
 export function LocaleToggle() {
