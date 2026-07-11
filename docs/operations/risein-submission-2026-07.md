@@ -43,7 +43,8 @@ Stellar testnet, all publicly auditable.
   disclosure), RFC 9116 security.txt, first-party client-error telemetry.
 - **Performance**: the multi-MB stellar-sdk is lazy-loaded out of First Load
   JS (/app 483 → ~260 KB gzipped), brand fonts self-hosted via next/font,
-  installable PWA. Lighthouse mobile: / 72+, /app 60+, /demo 82+.
+  installable PWA. Lighthouse performance (mobile, PageSpeed methodology):
+  **/ = 97, /demo = 96, /app = 85**.
 
 ## Judge quick path (2 minutes, no wallet)
 

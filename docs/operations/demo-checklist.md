@@ -6,7 +6,7 @@ Use this short checklist before a submission, demo, or public share.
 
 Last live smoke pass: 2026-07-10 (guided demo, opportunity directory, pilot lead form with Resend delivery, trust pages, escrow events in feeds all confirmed live on `stellaroid.tech`).
 
-Lighthouse (mobile, throttled, 2026-07-10 — after the stellar-sdk lazy-load): `/` = 72, `/app` = 60, `/demo` = 82; TBT 50–260 ms everywhere; CLS ≈ 0 on `/` and `/demo`. Known watch item: `/app` CLS 0.139 under throttling (font swap suspected; not reproducible on warm loads). Speed Insights is intentionally NOT enabled (billable) — re-run Lighthouse for fresh numbers instead.
+Lighthouse performance (mobile, simulated throttling — same methodology as PageSpeed Insights; 2026-07-11 on prod): **`/` = 97, `/demo` = 96, `/app` = 85** (FCP 1.1 s everywhere; TBT 80–150 ms; CLS 0 on `/` and `/demo`). Known watch item: `/app` CLS 0.139 (font-swap reflow of the dense console layout; unchanged before/after the font-preload tuning). Speed Insights is intentionally NOT enabled (billable) — re-run Lighthouse for fresh numbers instead.
 
 ## Public Demo Path
 
