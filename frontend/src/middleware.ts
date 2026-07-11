@@ -18,7 +18,9 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
     `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com${isVercelPreview ? " https://vercel.live" : ""}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: blob:",
+    // stellar.creit.tech serves the wallet icons in the Stellar Wallets Kit
+    // picker modal (images only; the kit itself is bundled locally).
+    "img-src 'self' data: blob: https://stellar.creit.tech",
     "worker-src 'self'",
     "manifest-src 'self'",
     `connect-src 'self' https://*.stellar.org${isVercelPreview ? " https://vercel.live https://*.vercel.live" : ""}`,

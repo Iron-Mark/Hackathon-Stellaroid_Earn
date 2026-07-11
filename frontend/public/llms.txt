@@ -17,7 +17,7 @@
   a credential without a wallet or login. A wallet is only needed to issue,
   verify, or pay on-chain.
 - Contract: Rust + soroban-sdk, deployed on Stellar testnet.
-- Frontend: Next.js 15 + React 19, @stellar/stellar-sdk, Freighter + Albedo wallets.
+- Frontend: Next.js 15 + React 19, @stellar/stellar-sdk; wallets: Freighter, Albedo, xBull, Rabet, LOBSTR, Hana, Klever, Bitget (via Stellar Wallets Kit).
 
 ## Key pages
 - Home / how it works: https://stellaroid.tech/

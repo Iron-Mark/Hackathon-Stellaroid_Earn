@@ -115,11 +115,12 @@ function useFreighterWalletState(): FreighterWalletState {
   }, []);
 
   const activeProvider =
-    wallet.status === "connected" && wallet.provider === "albedo"
-      ? "albedo"
-      : wallet.status === "connected" && wallet.provider === "freighter"
-        ? "freighter"
-        : null;
+    wallet.status === "connected" &&
+    (wallet.provider === "albedo" ||
+      wallet.provider === "freighter" ||
+      wallet.provider === "swk")
+      ? wallet.provider
+      : null;
 
   return {
     wallet,

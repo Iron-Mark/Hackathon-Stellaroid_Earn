@@ -19,8 +19,10 @@ export type WalletSnapshot = {
   networkPassphrase: string | null;
   isExpectedNetwork: boolean;
   error?: string;
-  /** Which wallet provider produced this snapshot (e.g. "freighter", "albedo"). */
+  /** Which wallet provider produced this snapshot (e.g. "freighter", "albedo", "swk"). */
   provider?: string;
+  /** Display name of the concrete wallet when the provider is an aggregator (e.g. "xBull" via swk). */
+  providerLabel?: string;
 };
 
 export type TxFeedback = {
