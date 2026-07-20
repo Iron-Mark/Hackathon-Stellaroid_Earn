@@ -55,7 +55,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "Settle payment in one flow.",
       lede: "Stellaroid Earn anchors certificate hashes on Stellar so employers can inspect the record and pay the graduate without leaving the workflow once an approved issuer or admin verifies it. No email thread, no invoice delay, no platform fee.",
       ctaPrimary: "Try the app →",
-      ctaGhost: "Take the 2-min demo — no wallet needed →",
+      ctaGhost: "Take the 2-min demo, no wallet needed →",
       personas: [
         {
           label: "Issue",
@@ -79,7 +79,7 @@ export const i18n: Record<Locale, I18nDict> = {
     },
     footer: {
       tagline:
-        "On-chain credential registry on Stellar testnet. Built for the Stellar PH Bootcamp bootcamp.",
+        "On-chain credential registry on Stellar testnet. Built for the Stellar PH Bootcamp 2026.",
     },
     about: {
       lede: "A thin piece of software around one idea: certificates should be verifiable in seconds, not emails. And if they're verifiable, the grad should get paid on the same tap.",
@@ -99,12 +99,12 @@ export const i18n: Record<Locale, I18nDict> = {
       issuerRegisterSubtitle:
         "Upload the PDF or paste a 64-char hex hash. You'll sign as the issuer.",
       issuerDoneTitle: "Certificate registered",
-      issuerDoneSubtitle: "Trusted verification is done. Employers can now inspect the proof and pay the student.",
+      issuerDoneSubtitle: "Trusted verification is done. Employers can now inspect the proof and pay the graduate.",
       verifyTitle: "Verify the credential",
       verifySubtitle: "Look it up first, then use an approved issuer or admin wallet to verify, suspend, or revoke it.",
       employerWaitTitle: "Wait for trusted verification",
       employerWaitSubtitle: "Employers can inspect the credential here, but payment only unlocks after an approved issuer or admin verifies it.",
-      payTitle: "Pay the verified student",
+      payTitle: "Pay the verified graduate",
       paySubtitle: "Send the payment amount linked to this certificate.",
       doneTitle: "All done",
       doneSubtitle: "The verified badge is ready to share.",
@@ -119,9 +119,9 @@ export const i18n: Record<Locale, I18nDict> = {
       eyebrow: "Stellar Testnet / Soroban / Freighter",
       h1a: "I-verify ang credentials.",
       h1b: "I-settle ang bayad sa iisang flow.",
-      lede: "I-anchor ang certificate hash sa Stellar. Kapag verified na ng approved issuer o admin, puwedeng i-check ng employer at magbayad agad — walang email thread, walang invoice delay, walang platform fee.",
+      lede: "I-anchor ang certificate hash sa Stellar. Kapag verified na ng approved issuer o admin, puwedeng i-check ng employer at magbayad agad, walang email thread, walang invoice delay, walang platform fee.",
       ctaPrimary: "Subukan ang app →",
-      ctaGhost: "Subukan ang 2-min demo — walang wallet →",
+      ctaGhost: "Subukan ang 2-min demo, walang wallet →",
       personas: [
         {
           label: "Issue",
@@ -145,14 +145,14 @@ export const i18n: Record<Locale, I18nDict> = {
     },
     footer: {
       tagline:
-        "On-chain credential registry sa Stellar testnet. Ginawa para sa Stellar PH Bootcamp bootcamp.",
+        "On-chain credential registry sa Stellar testnet. Ginawa para sa Stellar PH Bootcamp 2026.",
     },
     about: {
-      lede: "One idea lang: certificates should be verifiable in seconds — hindi sa pamamagitan ng email. Tapos mabayaran agad.",
+      lede: "One idea lang: certificates should be verifiable in seconds, hindi sa pamamagitan ng email. Tapos mabayaran agad.",
       problemKicker:
         "Real ang certificate niya. Pero proving it? Mas mahal pa kaysa mag-hire ng iba.",
       approachKicker:
-        "Hindi lang na-verify ang credential — na-pay na rin si Maria. Sa iisang session. Yun ang punto.",
+        "Hindi lang na-verify ang credential, na-pay na rin si Maria. Sa iisang session. Yun ang punto.",
     },
     app: {
       connectTitle: "I-connect ang wallet mo para magsimula",
@@ -165,12 +165,12 @@ export const i18n: Record<Locale, I18nDict> = {
       issuerRegisterSubtitle:
         "I-upload ang PDF o i-paste ang 64-char hex hash. Ikaw ang mag-sign bilang issuer.",
       issuerDoneTitle: "Certificate registered na",
-      issuerDoneSubtitle: "Tapos na ang trusted verification. Puwede nang i-check ng employer ang proof at bayaran ang student.",
+      issuerDoneSubtitle: "Tapos na ang trusted verification. Puwede nang i-check ng employer ang proof at bayaran ang graduate.",
       verifyTitle: "I-verify ang credential",
       verifySubtitle: "Hanapin muna, tapos gumamit ng approved issuer o admin wallet para mag-verify, suspend, o revoke.",
       employerWaitTitle: "Maghintay ng trusted verification",
       employerWaitSubtitle: "Puwedeng tingnan ng employer ang credential dito, pero payment lang kapag na-verify na ito ng approved issuer o admin.",
-      payTitle: "Bayaran ang verified student",
+      payTitle: "Bayaran ang verified graduate",
       paySubtitle:
         "I-send ang payment amount na naka-link sa certificate na ito.",
       doneTitle: "Tapos na",
@@ -188,7 +188,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "Liquida el pago en un solo flujo.",
       lede: "Stellaroid Earn ancla los hashes de los certificados en Stellar para que las empresas puedan revisar el registro y pagarle al graduado sin salir del flujo, una vez que un emisor aprobado o un administrador lo verifica. Sin cadenas de correos, sin demoras de facturación, sin comisiones de plataforma.",
       ctaPrimary: "Prueba la app →",
-      ctaGhost: "Mira la demo de 2 min — no necesitas billetera →",
+      ctaGhost: "Mira la demo de 2 min, no necesitas billetera →",
       personas: [
         {
           label: "Emitir",
@@ -257,7 +257,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "Liquide o pagamento em um só fluxo.",
       lede: "A Stellaroid Earn ancora os hashes dos certificados na Stellar para que as empresas possam revisar o registro e pagar o graduado sem sair do fluxo, assim que um emissor aprovado ou um administrador verificar a credencial. Sem trocas de e-mail, sem espera por fatura, sem taxas de plataforma.",
       ctaPrimary: "Experimente o app →",
-      ctaGhost: "Veja a demo de 2 min — não precisa de carteira →",
+      ctaGhost: "Veja a demo de 2 min, não precisa de carteira →",
       personas: [
         {
           label: "Emitir",
@@ -326,7 +326,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "Selesaikan pembayaran dalam satu alur.",
       lede: "Stellaroid Earn menambatkan hash sertifikat di Stellar sehingga perusahaan dapat memeriksa catatannya dan membayar lulusan tanpa keluar dari alur kerja begitu penerbit yang disetujui atau admin memverifikasinya. Tanpa utas email, tanpa penundaan faktur, tanpa biaya platform.",
       ctaPrimary: "Coba aplikasinya →",
-      ctaGhost: "Ikuti demo 2 menit — tanpa wallet →",
+      ctaGhost: "Ikuti demo 2 menit, tanpa wallet →",
       personas: [
         {
           label: "Terbitkan",
@@ -395,7 +395,7 @@ export const i18n: Record<Locale, I18nDict> = {
       h1b: "Thanh toán trong cùng một luồng.",
       lede: "Stellaroid Earn neo hash của chứng chỉ lên Stellar để nhà tuyển dụng có thể kiểm tra hồ sơ và thanh toán cho học viên mà không cần rời khỏi quy trình, ngay khi một tổ chức cấp phát được phê duyệt hoặc quản trị viên xác minh nó. Không có chuỗi email, không có chậm trễ hóa đơn, không có phí nền tảng.",
       ctaPrimary: "Dùng thử ứng dụng →",
-      ctaGhost: "Xem demo 2 phút — không cần ví →",
+      ctaGhost: "Xem demo 2 phút, không cần ví →",
       personas: [
         {
           label: "Cấp phát",
