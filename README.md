@@ -42,6 +42,18 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 
+### Version archive
+
+Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain, independent of the live site:
+
+| Version | Cycle | Snapshot |
+|---|---|---|
+| **v1** | April | [`v1.stellaroid.tech`](https://v1.stellaroid.tech) |
+| **v2** | June | [`v2.stellaroid.tech`](https://v2.stellaroid.tech) |
+| **v3** | July (current) | [`v3.stellaroid.tech`](https://v3.stellaroid.tech) |
+
+`stellaroid.tech` always serves the latest production build (`main`). The April source lives on the `april-bootcamp-and-monthly-builder` branch; June and July on `june-monthly-builder` and `july-monthly-builder`.
+
 ### July v3.2 product surface
 
 - **Wallet-less guided demo** - [`/demo`](https://stellaroid.tech/demo): the full register → verify → escrow → payout story on **real seeded testnet data** (a released 25 XLM escrow and a live funded one), with per-step stellar.expert audit links. No wallet, no extension, works on a phone.
