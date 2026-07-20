@@ -45,6 +45,13 @@ Stellar testnet, all publicly auditable.
   JS (/app 483 → ~260 KB gzipped), brand fonts self-hosted via next/font,
   installable PWA. Lighthouse performance (mobile, PageSpeed methodology):
   **/ = 97, /demo = 96, /app = 85**.
+- **MCP server for AI agents** (stellaroid.tech/api/mcp): a public, read-only
+  remote Model Context Protocol endpoint. Any MCP client (Claude, Cursor)
+  can verify a credential, inspect issuer trust, and browse live escrows
+  straight from the contract, with no wallet, login, or API key. Built on
+  first-party tooling only (Vercel mcp-handler + the official MCP SDK),
+  rate-limited at the edge, adversarially security-reviewed, and covered by
+  14 e2e tests.
 
 ## Live on the contract
 
@@ -85,6 +92,7 @@ stellaroid.tech/status.
 | Repository | https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn |
 | Contract CI / Frontend CI | green on main (cargo test 12/12 · build+lint+typecheck+54 unit+34 e2e) |
 | Developer docs | https://stellaroid.tech/docs |
+| MCP server (AI-agent access, read-only) | https://stellaroid.tech/api/mcp |
 | Pitch deck | https://stellaroid.tech/slides |
 
 ## Tech stack (one line)
