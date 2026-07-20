@@ -10,7 +10,7 @@ export const guideIndexContent: GuideIndexContent = {
     "stellar credential verification guides",
     "blockchain credential guides",
     "how to verify credentials",
-    "on-chain credential verification",
+    "on-chain credential verification guide",
     "verify credentials on stellar",
     "soroban credential guides"
   ],
@@ -78,7 +78,7 @@ export const guides: GuideArticle[] = [
       "is a bootcamp certificate legitimate",
       "verify certificate authenticity",
       "spot a fake certificate",
-      "on-chain credential verification",
+      "how to check a bootcamp certificate on-chain",
       "bootcamp certificate verification",
       "verify bootcamp certificate online",
       "check if a certificate is real"
@@ -242,8 +242,8 @@ export const guides: GuideArticle[] = [
       "employer credential verification process",
       "verify education background",
       "credential verification vs background check",
-      "bootcamp certificate verification",
-      "on-chain credential verification"
+      "on-chain vs traditional credential verification",
+      "ways employers check education credentials"
     ],
     "audience": "Employers and recruiters",
     "datePublished": "2026-07-09",
@@ -417,7 +417,7 @@ export const guides: GuideArticle[] = [
       "register_certificate",
       "verify_certificate",
       "link_payment",
-      "on-chain credential verification"
+      "soroban credential verification tutorial"
     ],
     "audience": "Developers and technical issuers",
     "datePublished": "2026-07-09",

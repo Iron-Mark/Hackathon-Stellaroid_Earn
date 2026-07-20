@@ -192,10 +192,10 @@ export const verifyCandidateCredentials: LandingContent = {
   "metaDescription": "Verify candidate credentials instantly from a public, wallet-free proof URL, no login or background-check delay, then fund a paid trial in XLM on Stellar.",
   "keywords": [
     "verify candidate credentials instantly",
-    "how do employers verify bootcamp credentials",
+    "verify a job candidate's certificate",
     "background check alternative for education",
     "instant credential verification",
-    "on-chain credential verification",
+    "pre-hire credential verification tool",
     "verify bootcamp graduate credentials",
     "credential verification for recruiters"
   ],
