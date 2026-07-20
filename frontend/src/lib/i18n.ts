@@ -212,7 +212,7 @@ export const i18n: Record<Locale, I18nDict> = {
     },
     footer: {
       tagline:
-        "Registro de credenciales on-chain en la testnet de Stellar. Creado para el Stellar PH Bootcamp.",
+        "Registro de credenciales on-chain en la testnet de Stellar. Creado para el Stellar PH Bootcamp 2026.",
     },
     about: {
       lede: "Un software mínimo alrededor de una sola idea: los certificados deberían poder verificarse en segundos, no por correo. Y si son verificables, el graduado debería cobrar con el mismo toque.",
@@ -233,14 +233,14 @@ export const i18n: Record<Locale, I18nDict> = {
         "Sube el PDF o pega un hash hexadecimal de 64 caracteres. Firmarás como emisor.",
       issuerDoneTitle: "Certificado registrado",
       issuerDoneSubtitle:
-        "La verificación de confianza está lista. Ahora las empresas pueden revisar la prueba y pagarle al estudiante.",
+        "La verificación de confianza está lista. Ahora las empresas pueden revisar la prueba y pagarle al graduado.",
       verifyTitle: "Verifica la credencial",
       verifySubtitle:
         "Búscala primero y luego usa una billetera de emisor aprobado o de administrador para verificarla, suspenderla o revocarla.",
       employerWaitTitle: "Espera la verificación de confianza",
       employerWaitSubtitle:
         "Las empresas pueden revisar la credencial aquí, pero el pago solo se habilita después de que un emisor aprobado o un administrador la verifique.",
-      payTitle: "Paga al estudiante verificado",
+      payTitle: "Paga al graduado verificado",
       paySubtitle: "Envía el monto del pago vinculado a este certificado.",
       doneTitle: "Listo",
       doneSubtitle: "La insignia verificada está lista para compartir.",
@@ -281,7 +281,7 @@ export const i18n: Record<Locale, I18nDict> = {
     },
     footer: {
       tagline:
-        "Registro de credenciais on-chain na testnet da Stellar. Criado para o Stellar PH Bootcamp.",
+        "Registro de credenciais on-chain na testnet da Stellar. Criado para o Stellar PH Bootcamp 2026.",
     },
     about: {
       lede: "Um software enxuto em torno de uma única ideia: certificados deveriam ser verificáveis em segundos, não por e-mail. E se são verificáveis, o graduado deveria receber no mesmo toque.",
@@ -302,14 +302,14 @@ export const i18n: Record<Locale, I18nDict> = {
         "Envie o PDF ou cole um hash hexadecimal de 64 caracteres. Você vai assinar como emissor.",
       issuerDoneTitle: "Certificado registrado",
       issuerDoneSubtitle:
-        "A verificação confiável está concluída. Agora as empresas podem revisar o comprovante e pagar o estudante.",
+        "A verificação confiável está concluída. Agora as empresas podem revisar o comprovante e pagar o graduado.",
       verifyTitle: "Verifique a credencial",
       verifySubtitle:
         "Busque primeiro e depois use uma carteira de emissor aprovado ou de administrador para verificá-la, suspendê-la ou revogá-la.",
       employerWaitTitle: "Aguarde a verificação confiável",
       employerWaitSubtitle:
         "As empresas podem revisar a credencial aqui, mas o pagamento só é liberado depois que um emissor aprovado ou um administrador verificar a credencial.",
-      payTitle: "Pague o estudante verificado",
+      payTitle: "Pague o graduado verificado",
       paySubtitle: "Envie o valor do pagamento vinculado a este certificado.",
       doneTitle: "Tudo pronto",
       doneSubtitle: "O selo verificado está pronto para compartilhar.",
@@ -350,7 +350,7 @@ export const i18n: Record<Locale, I18nDict> = {
     },
     footer: {
       tagline:
-        "Registri kredensial on-chain di Stellar testnet. Dibuat untuk Stellar PH Bootcamp.",
+        "Registri kredensial on-chain di Stellar testnet. Dibuat untuk Stellar PH Bootcamp 2026.",
     },
     about: {
       lede: "Perangkat lunak ringan dengan satu ide inti: sertifikat seharusnya bisa diverifikasi dalam hitungan detik, bukan email. Dan jika bisa diverifikasi, lulusan seharusnya dibayar dengan ketukan yang sama.",
@@ -371,14 +371,14 @@ export const i18n: Record<Locale, I18nDict> = {
         "Unggah PDF atau tempel hash heksadesimal 64 karakter. Anda akan menandatangani sebagai penerbit.",
       issuerDoneTitle: "Sertifikat terdaftar",
       issuerDoneSubtitle:
-        "Verifikasi tepercaya selesai. Perusahaan kini dapat memeriksa bukti dan membayar mahasiswa.",
+        "Verifikasi tepercaya selesai. Perusahaan kini dapat memeriksa bukti dan membayar lulusan.",
       verifyTitle: "Verifikasi kredensial",
       verifySubtitle:
         "Cari dulu, lalu gunakan wallet penerbit yang disetujui atau wallet admin untuk memverifikasi, menangguhkan, atau mencabutnya.",
       employerWaitTitle: "Tunggu verifikasi tepercaya",
       employerWaitSubtitle:
         "Perusahaan dapat memeriksa kredensial di sini, tetapi pembayaran hanya terbuka setelah penerbit yang disetujui atau admin memverifikasinya.",
-      payTitle: "Bayar mahasiswa terverifikasi",
+      payTitle: "Bayar lulusan terverifikasi",
       paySubtitle: "Kirim jumlah pembayaran yang terkait dengan sertifikat ini.",
       doneTitle: "Semua selesai",
       doneSubtitle: "Lencana terverifikasi siap dibagikan.",
@@ -393,7 +393,7 @@ export const i18n: Record<Locale, I18nDict> = {
       eyebrow: "Stellar Testnet / Soroban / Freighter",
       h1a: "Xác minh chứng chỉ.",
       h1b: "Thanh toán trong cùng một luồng.",
-      lede: "Stellaroid Earn neo hash của chứng chỉ lên Stellar để nhà tuyển dụng có thể kiểm tra hồ sơ và thanh toán cho học viên mà không cần rời khỏi quy trình, ngay khi một tổ chức cấp phát được phê duyệt hoặc quản trị viên xác minh nó. Không có chuỗi email, không có chậm trễ hóa đơn, không có phí nền tảng.",
+      lede: "Stellaroid Earn neo hash của chứng chỉ lên Stellar để nhà tuyển dụng có thể kiểm tra hồ sơ và thanh toán cho người tốt nghiệp mà không cần rời khỏi quy trình, ngay khi một tổ chức cấp phát được phê duyệt hoặc quản trị viên xác minh nó. Không có chuỗi email, không có chậm trễ hóa đơn, không có phí nền tảng.",
       ctaPrimary: "Dùng thử ứng dụng →",
       ctaGhost: "Xem demo 2 phút, không cần ví →",
       personas: [
@@ -412,17 +412,17 @@ export const i18n: Record<Locale, I18nDict> = {
         {
           label: "Tuyển dụng",
           title: "Dành cho nhà tuyển dụng",
-          body: "Xem lại một học viên đã được xác minh và cấp vốn cho một đợt làm thử có trả phí gắn với hồ sơ chứng chỉ.",
+          body: "Xem lại một người tốt nghiệp đã được xác minh và cấp vốn cho một đợt làm thử có trả phí gắn với hồ sơ chứng chỉ.",
           cta: "Cấp vốn làm thử",
         },
       ],
     },
     footer: {
       tagline:
-        "Sổ đăng ký chứng chỉ on-chain trên Stellar testnet. Được xây dựng cho Stellar PH Bootcamp.",
+        "Sổ đăng ký chứng chỉ on-chain trên Stellar testnet. Được xây dựng cho Stellar PH Bootcamp 2026.",
     },
     about: {
-      lede: "Một phần mềm gọn nhẹ xoay quanh một ý tưởng: chứng chỉ nên có thể được xác minh trong vài giây, chứ không phải qua email. Và nếu đã xác minh được, học viên nên được thanh toán ngay trong cùng một thao tác.",
+      lede: "Một phần mềm gọn nhẹ xoay quanh một ý tưởng: chứng chỉ nên có thể được xác minh trong vài giây, chứ không phải qua email. Và nếu đã xác minh được, người tốt nghiệp nên được thanh toán ngay trong cùng một thao tác.",
       problemKicker:
         "Chứng chỉ là thật. Vấn đề là chi phí chứng minh nó còn cao hơn cả việc tuyển dụng theo cách khác để né nó.",
       approachKicker:
@@ -440,21 +440,21 @@ export const i18n: Record<Locale, I18nDict> = {
         "Tải lên tệp PDF hoặc dán một hash hex 64 ký tự. Bạn sẽ ký với tư cách tổ chức cấp phát.",
       issuerDoneTitle: "Đã đăng ký chứng chỉ",
       issuerDoneSubtitle:
-        "Việc xác minh tin cậy đã hoàn tất. Nhà tuyển dụng giờ có thể kiểm tra bằng chứng và thanh toán cho học viên.",
+        "Việc xác minh tin cậy đã hoàn tất. Nhà tuyển dụng giờ có thể kiểm tra bằng chứng và thanh toán cho người tốt nghiệp.",
       verifyTitle: "Xác minh chứng chỉ",
       verifySubtitle:
         "Tra cứu trước, sau đó dùng ví của tổ chức cấp phát được phê duyệt hoặc ví quản trị viên để xác minh, tạm ngưng, hoặc thu hồi nó.",
       employerWaitTitle: "Chờ xác minh tin cậy",
       employerWaitSubtitle:
         "Nhà tuyển dụng có thể kiểm tra chứng chỉ tại đây, nhưng việc thanh toán chỉ mở khóa sau khi một tổ chức cấp phát được phê duyệt hoặc quản trị viên xác minh chứng chỉ.",
-      payTitle: "Thanh toán cho học viên đã xác minh",
+      payTitle: "Thanh toán cho người tốt nghiệp đã xác minh",
       paySubtitle: "Gửi số tiền thanh toán gắn với chứng chỉ này.",
       doneTitle: "Hoàn tất",
       doneSubtitle: "Huy hiệu đã xác minh đã sẵn sàng để chia sẻ.",
       roleHintIssuer:
         "Bạn là một nhà giáo dục hoặc tổ chức cấp phát và xác minh chứng chỉ.",
       roleHintEmployer:
-        "Bạn là một công ty muốn xác minh chứng chỉ của học viên và thanh toán cho họ.",
+        "Bạn là một công ty muốn xác minh chứng chỉ của người tốt nghiệp và thanh toán cho họ.",
     },
   },
 };
