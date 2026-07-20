@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     description: guide.metaDescription,
     keywords: guide.keywords.join(", "),
     openGraphType: "article",
+    images: null, // uses this route's own opengraph-image.tsx
   });
 }
 
