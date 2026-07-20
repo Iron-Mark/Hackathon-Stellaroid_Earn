@@ -5,6 +5,7 @@ import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
 import { useToast, Button } from "@/components/ui";
 import { appConfig } from "@/lib/config";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+import { bytesToHex } from "@/lib/hex";
 
 export const DEMO_AUTOFILL_EVENT = "demo:autofill";
 
@@ -17,9 +18,7 @@ export interface DemoAutofillDetail {
 function generateCertHash(): string {
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
-  return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+  return bytesToHex(bytes);
 }
 
 interface DemoAutofillButtonProps {
