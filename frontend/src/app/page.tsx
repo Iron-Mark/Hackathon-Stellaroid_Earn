@@ -7,11 +7,13 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/",
-  title: "Stellaroid Earn — Proof & Payment on Stellar",
+  title: "Stellaroid Earn: Proof & Payment on Stellar",
   description:
     "Bind certificate hashes on-chain, verify credentials, and pay graduates directly on Stellar testnet.",
   keywords:
     "stellar, soroban, credential verification, on-chain payroll, proof of work, bootcamp, talent hiring",
+  // Root segment already has its own opengraph-image.tsx.
+  images: null,
 });
 import { ActivitySnackbar } from "@/components/activity/activity-snackbar";
 import { RecentActivity } from "@/components/activity/recent-activity";

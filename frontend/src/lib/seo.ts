@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "Stellaroid Earn";
 
+// Default social-card image (the root dynamic opengraph-image route). Pages
+// without their own file-convention opengraph-image fall back to this.
+export const SITE_OG_IMAGE = "/opengraph-image";
+
 export const SITE_AUTHOR_NAME = "Mark Siazon";
 export const SITE_AUTHOR_URL = "https://marksiazon.dev";
 export const SITE_AUTHOR_LINKEDIN = "https://www.linkedin.com/in/mark-siazon/";
@@ -99,6 +103,11 @@ interface BuildPageMetadataOptions {
     | "video.tv_show"
     | "website";
   robots?: Metadata["robots"];
+  /**
+   * Social-card image(s). Omit to use the site default; pass `null` to opt out
+   * on routes that have their own file-convention opengraph-image.
+   */
+  images?: string[] | null;
 }
 
 export function buildPageMetadata({
@@ -108,9 +117,14 @@ export function buildPageMetadata({
   keywords = SITE_KEYWORDS,
   openGraphType = "website",
   robots,
+  images,
 }: BuildPageMetadataOptions): Metadata {
   const canonicalPath = normalizeSeoPath(path);
   const canonicalUrl = seoCanonicalUrl(canonicalPath);
+  // Give every page a social-card image by default so the summary_large_image
+  // card actually renders. Routes with their own opengraph-image opt out with
+  // `images: null`.
+  const socialImages = images === null ? undefined : images ?? [SITE_OG_IMAGE];
 
   return {
     title,
@@ -128,11 +142,13 @@ export function buildPageMetadata({
       description,
       locale: "en_US",
       alternateLocale: "tl_PH",
+      ...(socialImages ? { images: socialImages } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      ...(socialImages ? { images: socialImages } : {}),
     },
     robots,
   };
