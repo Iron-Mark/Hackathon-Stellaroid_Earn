@@ -4,7 +4,7 @@ import type { GlossaryContent } from "./types";
 
 export const glossaryContent: GlossaryContent = {
   "slug": "/glossary",
-  "metaTitle": "Verifiable Credentials Glossary + On-Chain Terms",
+  "metaTitle": "Verifiable Credentials Glossary",
   "metaDescription": "A verifiable credentials glossary with plain-English definitions of on-chain certificates, credential anchoring, SHA-256 hashes, issuers, and Stellar proof.",
   "keywords": [
     "verifiable credentials glossary",
