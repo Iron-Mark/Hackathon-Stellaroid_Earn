@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Iron-Mark/stellaroid-earn",
   "title": "Stellaroid Earn",
-  "description": "Read-only MCP server for Stellaroid Earn: verify bootcamp credentials, inspect on-chain issuer trust, and browse escrowed paid trials on the Stellar testnet contract. No wallet, login, or API key required.",
+  "description": "Read-only MCP server: verify credentials and browse escrows on the Stellar testnet contract.",
   "version": "1.1.0",
   "websiteUrl": "https://stellaroid.tech",
   "repository": {
