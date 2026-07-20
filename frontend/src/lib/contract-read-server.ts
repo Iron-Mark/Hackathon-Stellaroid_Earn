@@ -15,12 +15,15 @@ import {
 } from "@/lib/config";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
 import { bytesToHex, isHex64 } from "@/lib/hex";
+import {
+  normalizeCertificateStatus,
+  normalizeIssuerStatus,
+  normalizeOpportunityStatus,
+} from "@/lib/contract-status";
 import type {
   CertificateStatus,
   IssuerRecord,
-  IssuerStatus,
   OpportunityRecord,
-  OpportunityStatus,
 } from "@/lib/types";
 import { MAX_OPPORTUNITY_MILESTONES } from "@/lib/types";
 import {
@@ -47,60 +50,9 @@ export type CertificateRecord = {
   verified: boolean;
 };
 
-function normalizeStatusKey(value: unknown): string {
-  if (typeof value === "string") return value.toLowerCase();
-  if (typeof value === "number") return String(value);
-  // Soroban SDK encodes enum variants as ["VariantName"] or ["VariantName", ...values]
-  if (Array.isArray(value) && value.length > 0 && typeof value[0] === "string") {
-    return value[0].toLowerCase();
-  }
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    if (typeof record.tag === "string") return record.tag.toLowerCase();
-    if (typeof record.name === "string") return record.name.toLowerCase();
-    if (typeof record.value === "string") return record.value.toLowerCase();
-  }
-  return "";
-}
-
-function normalizeIssuerStatus(value: unknown): IssuerStatus {
-  const key = normalizeStatusKey(value);
-  switch (key) {
-    case "approved":
-    case "1":
-      return "approved";
-    case "suspended":
-    case "2":
-      return "suspended";
-    case "pending":
-    case "0":
-    default:
-      return "pending";
-  }
-}
-
-function normalizeCertificateStatus(value: unknown): CertificateStatus {
-  const key = normalizeStatusKey(value);
-  switch (key) {
-    case "verified":
-    case "1":
-      return "verified";
-    case "revoked":
-    case "2":
-      return "revoked";
-    case "suspended":
-    case "3":
-      return "suspended";
-    case "expired":
-    case "4":
-      return "expired";
-    case "issued":
-    case "0":
-      return "issued";
-    default:
-      return "unknown";
-  }
-}
+// Status normalizers live in @/lib/contract-status (shared with the client
+// read path) so the array/object/string wire-shape handling can never drift
+// between the two modules again.
 
 function normalizeString(value: unknown): string {
   if (typeof value === "string") return value;
@@ -352,20 +304,6 @@ export async function getIssuerServer(issuer: string) {
 
     const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
     return normalizeIssuer(scValToNative(rawScVal));
-  }
-}
-
-function normalizeOpportunityStatus(value: unknown): OpportunityStatus {
-  const key = normalizeStatusKey(value);
-  switch (key) {
-    case "funded": case "1": return "funded";
-    case "inprogress": case "in_progress": case "2": return "in_progress";
-    case "submitted": case "3": return "submitted";
-    case "approved": case "4": return "approved";
-    case "released": case "5": return "released";
-    case "refunded": case "6": return "refunded";
-    case "cancelled": case "7": return "cancelled";
-    case "draft": case "0": default: return "draft";
   }
 }
 
