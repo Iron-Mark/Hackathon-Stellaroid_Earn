@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Globe } from "lucide-react";
 import { appConfig } from "@/lib/config";
 import { FooterTagline } from "@/components/layout/footer-tagline";
 import { FooterProgramLink } from "@/components/layout/footer-program-link";
@@ -147,7 +147,6 @@ export function SiteFooter() {
         <div className="mt-8 grid gap-3 border-t border-border-glass pt-5 pr-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6 lg:pr-0">
           <FooterProgramLink year={new Date().getFullYear()} />
           <div className="grid min-w-0 justify-items-start gap-2 sm:grid-cols-[auto_auto] sm:items-center sm:gap-x-4 lg:flex lg:flex-wrap lg:justify-end lg:gap-y-2">
-            {/* Solo-developer attribution hidden for now. To restore: uncomment and re-add `Globe` to the lucide-react import above.
             <a
               href="https://marksiazon.dev"
               target="_blank"
@@ -158,7 +157,6 @@ export function SiteFooter() {
               Solo developed by Mark Siazon
               <span className="visually-hidden"> (opens in new tab)</span>
             </a>
-            */}
             <span className="whitespace-nowrap font-pixel text-[10px] text-text-muted/70 uppercase tracking-widest select-none" aria-hidden="true">
               Built on Stellar testnet
             </span>
