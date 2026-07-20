@@ -8,6 +8,7 @@ export const metadata: Metadata = buildPageMetadata({
   title: content.metaTitle,
   description: content.metaDescription,
   keywords: content.keywords.join(", "),
+  images: null, // uses this route's own opengraph-image.tsx
 });
 
 export default function VerifyBootcampCertificatePage() {

@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { DEMO_AUTOFILL_EVENT, DemoAutofillDetail } from "@/components/demo/demo-autofill-button";
 import { Button, Input, useToast } from "@/components/ui";
 import { humanizeError } from "@/lib/errors";
+import { bytesToHex } from "@/lib/hex";
 import { withTimeout } from "@/lib/with-timeout";
 import { registerCertificate } from "@/lib/contract-client";
 import { appConfig, hasRequiredConfig } from "@/lib/config";
@@ -135,9 +136,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         isPdf ? extractPdfTitle(file) : Promise.resolve(undefined),
       ]);
       const digest = await crypto.subtle.digest("SHA-256", buf);
-      const hex = Array.from(new Uint8Array(digest))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
+      const hex = bytesToHex(new Uint8Array(digest));
       setCertHash(hex);
       setHashTouched(false);
 

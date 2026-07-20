@@ -2,7 +2,7 @@
 
 **On-chain credential trust for Stellar PH Bootcamp 2026**
 
-Issue, verify, and pay graduates on Stellar testnet  - Soroban smart contract, 8 supported wallets (Freighter, Albedo, xBull, LOBSTR & more), installable PWA, end-to-end.
+Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 supported wallets (Freighter, Albedo, xBull, LOBSTR & more), installable PWA, end-to-end.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
@@ -42,6 +42,18 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 
+### Version archive
+
+Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain, independent of the live site:
+
+| Version | Cycle | Snapshot |
+|---|---|---|
+| **v1** | April | [`v1.stellaroid.tech`](https://v1.stellaroid.tech) |
+| **v2** | June | [`v2.stellaroid.tech`](https://v2.stellaroid.tech) |
+| **v3** | July (current) | [`v3.stellaroid.tech`](https://v3.stellaroid.tech) |
+
+`stellaroid.tech` always serves the latest production build (`main`). The April source lives on the `april-bootcamp-and-monthly-builder` branch; June and July on `june-monthly-builder` and `july-monthly-builder`.
+
 ### July v3.2 product surface
 
 - **Wallet-less guided demo** - [`/demo`](https://stellaroid.tech/demo): the full register → verify → escrow → payout story on **real seeded testnet data** (a released 25 XLM escrow and a live funded one), with per-step stellar.expert audit links. No wallet, no extension, works on a phone.
@@ -61,11 +73,11 @@ The public entry flow is organized around three personas: **Issue**, **Verify**,
 
 ## 30-Second Pitch
 
-**Problem**  - Bootcamp certificates are PDFs that anyone can fake and no one can independently verify. Employers skip verification or pay for a background check service.
+**Problem:** Bootcamp certificates are PDFs that anyone can fake and no one can independently verify. Employers skip verification or pay for a background check service.
 
-**Solution**  - Stellaroid Earn anchors credential hashes on a Soroban smart contract where approved issuers register and verify certificates, anyone checks proof at a public URL with no login, and employers pay graduates in XLM  - all on-chain.
+**Solution:** Stellaroid Earn anchors credential hashes on a Soroban smart contract where approved issuers register and verify certificates, anyone checks proof at a public URL with no login, and employers pay graduates in XLM on Stellar testnet, all on-chain.
 
-**Why Stellar**  - Sub-cent fees and 5-second finality make issuing credentials cheap enough to never skip. `simulateTransaction` lets anyone verify with zero wallet setup. Native XLM via SAC closes the loop from proof to payout on one chain.
+**Why Stellar:** Sub-cent fees and 5-second finality make issuing credentials cheap enough that skipping it makes no sense. `simulateTransaction` lets anyone verify with zero wallet setup. Native XLM via SAC closes the loop from proof to payout on one chain.
 
 ---
 
@@ -75,21 +87,21 @@ The public entry flow is organized around three personas: **Issue**, **Verify**,
 <tr>
 <td width="50%" align="center">
 <img src="images/landing-hero.png" alt="Landing page" width="100%"/><br/>
-<b>Discover</b>  - Landing page with 3-step how-it-works flow
+<b>Discover</b> - Landing page with 3-step how-it-works flow
 </td>
 <td width="50%" align="center">
 <img src="images/proof-verified.png" alt="Verified proof block" width="100%"/><br/>
-<b>Verify</b>  - On-chain credential with green Verified badge
+<b>Verify</b> - On-chain credential with green Verified badge
 </td>
 </tr>
 <tr>
 <td width="50%" align="center">
 <img src="images/app-dashboard.png" alt="App dashboard" width="100%"/><br/>
-<b>Issue &amp; Pay</b>  - Dual-role dashboard for issuers and employers
+<b>Issue &amp; Pay</b> - Dual-role dashboard for issuers and employers
 </td>
 <td width="50%" align="center">
 <img src="images/mobile-proof-card.png" alt="Mobile proof card" width="240"/><br/>
-<b>Share</b>  - QR-scannable proof card on any mobile browser
+<b>Share</b> - QR-scannable proof card on any mobile browser
 </td>
 </tr>
 </table>
@@ -98,7 +110,7 @@ The public entry flow is organized around three personas: **Issue**, **Verify**,
 
 ## Live Trust Artifact
 
-Every credential produces a public **Verified Badge** URL  - no wallet, no login, no API key. Green means verified on-chain. Amber means issued but not yet verified.
+Every credential produces a public **Verified Badge** URL - no wallet, no login, no API key. Green means verified on-chain. Amber means issued but not yet verified.
 
 <table>
 <tr>
@@ -159,7 +171,7 @@ sequenceDiagram
 - **Issuer trust layer**: self-register → admin approve → issue credentials. Suspended issuers are blocked on-chain
 - **Two read paths**: server-side RSC with `revalidate=60` (CDN-cached proof pages) + client-side `simulateTransaction` (dashboard state)
 - **One write path**: Freighter signs → `sendTransaction` → poll for result
-- **CSP** locks `connect-src` to `*.stellar.org`  - no third-party data leaks
+- **CSP** locks `connect-src` to `*.stellar.org` - no third-party data leaks
 
 ---
 
@@ -327,10 +339,11 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 
 ## Metrics & Monitoring
 
-- **Status metrics:** [`/status#metrics`](https://stellaroid.tech/status#metrics)  - public contract-event evidence, proof hashes, reward/payment events, and source labels on the operational status page
-- **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health)  - cached JSON health check (config, RPC latency, contract availability)
-- **Events API:** [`/api/events`](https://stellaroid.tech/api/events)  - structured contract event data for external consumers
-- **Events stream:** [`/api/events/stream`](https://stellaroid.tech/api/events/stream)  - short-lived Server-Sent Events stream for live demo refreshes without adding a database
+- **Status metrics:** [`/status#metrics`](https://stellaroid.tech/status#metrics) - public contract-event evidence, proof hashes, reward/payment events, and source labels on the operational status page
+- **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health) - cached JSON health check (config, RPC latency, contract availability)
+- **Events API:** [`/api/events`](https://stellaroid.tech/api/events) - structured contract event data for external consumers
+- **Events stream:** [`/api/events/stream`](https://stellaroid.tech/api/events/stream) - short-lived Server-Sent Events stream for live demo refreshes without adding a database
+- **MCP server:** [`/api/mcp`](https://stellaroid.tech/api/mcp) - read-only remote Model Context Protocol endpoint (Streamable HTTP, no auth) so AI agents can verify credentials, inspect issuers, and browse escrowed paid trials; built on Vercel's `mcp-handler` + the official MCP TypeScript SDK
 - **Vercel Analytics:** Page analytics plus privacy-safe custom events for proof sharing, proof-pack downloads, employer handoff, shortlist saves, and escrow-start actions
 
 ### Data Indexing
@@ -361,7 +374,7 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 
 ```
 stellaroid-earn/
-├── Cargo.toml                   # Rust workspace for learning + examples
+├── Cargo.toml                   # Rust workspace (Soroban contract)
 ├── contract/
 │   ├── src/
 │   │   ├── lib.rs              # Soroban credential + payment contract
@@ -380,8 +393,6 @@ stellaroid-earn/
 ├── docs/                       # Product docs, setup references, operations, and archives
 ├── demo/                       # Demo script, FAQ, press kit
 ├── images/                     # README screenshots
-├── learning/                   # Rust/Soroban workshop exercises
-├── soroban-examples/           # Standalone Soroban examples
 ├── scripts/                    # Screenshot capture and operations scripts
 ├── LICENSE
 └── README.md
@@ -473,7 +484,7 @@ After reviewing the anonymized pilot feedback snapshot, the following iteration 
 
 ## Built By
 
-**Mark Siazon**  - Hybrid Product Designer & Full-Stack Developer
+**Mark Siazon** - Hybrid Product Designer & Full-Stack Developer
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-marksiazon.dev-F59E0B?style=flat-square&logo=vercel&logoColor=white)](https://www.marksiazon.dev/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Mark_Siazon-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mark-siazon/)<br>
@@ -482,11 +493,11 @@ After reviewing the anonymized pilot feedback snapshot, the following iteration 
 
 ## Acknowledgments
 
-- [Rise In](https://www.risein.com/programs)  - Stellar Smart Contract Bootcamp
-- [Stellar Philippines](https://stellar.org/)  - Stellar PH Bootcamp 2026
-- [Workflow PH](https://www.facebook.com/WorkFlowPH/)  - Community partner
+- [Rise In](https://www.risein.com/programs) - Stellar Smart Contract Bootcamp
+- [Stellar Philippines](https://stellar.org/) - Stellar PH Bootcamp 2026
+- [Workflow PH](https://www.facebook.com/WorkFlowPH/) - Community partner
 - [Stellar Docs](https://developers.stellar.org) · [Soroban SDK](https://docs.rs/soroban-sdk) · [Freighter](https://www.freighter.app/) · [Stellar Expert](https://stellar.expert/explorer/testnet)
 
 ---
 
-MIT License  - see [LICENSE](LICENSE) for details.
+MIT License - see [LICENSE](LICENSE) for details.

@@ -14,6 +14,7 @@ import {
   hasRequiredConfig,
 } from "@/lib/config";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+import { bytesToHex, isHex64 } from "@/lib/hex";
 import type {
   CertificateStatus,
   IssuerRecord,
@@ -105,6 +106,19 @@ function normalizeString(value: unknown): string {
   if (typeof value === "string") return value;
   if (value && typeof value === "object" && "toString" in value) {
     return value.toString();
+  }
+  return "";
+}
+
+// cert_hash arrives from scValToNative as raw 32 bytes (Buffer/Uint8Array).
+// Coercing it through normalizeString would UTF-8-mangle bytes >0x7f into
+// replacement chars and destroy the hash, so hex-encode it explicitly.
+function normalizeHashHex(value: unknown): string {
+  if (value instanceof Uint8Array) {
+    return bytesToHex(value);
+  }
+  if (typeof value === "string" && isHex64(value)) {
+    return value.trim().toLowerCase();
   }
   return "";
 }
@@ -362,7 +376,7 @@ function normalizeOpportunity(value: unknown): OpportunityRecord | null {
     id: normalizeOpportunityId(normalizeBigInt(record.id)),
     employer: normalizeAddress(record.employer),
     candidate: normalizeAddress(record.candidate),
-    certHash: normalizeString(record.cert_hash),
+    certHash: normalizeHashHex(record.cert_hash),
     title: normalizeString(record.title),
     amount: normalizeBigInt(record.amount),
     status: normalizeOpportunityStatus(record.status),
@@ -382,7 +396,10 @@ function buildE2EOpportunity() {
     id: 1,
     employer: E2E_WALLET_ADDRESS,
     candidate: E2E_WALLET_ADDRESS,
-    cert_hash: DEFAULT_SAMPLE_PROOF_HASH,
+    // Raw bytes on purpose: the fixture must exercise normalizeHashHex's
+    // Uint8Array branch (the actual on-chain shape) so e2e catches a revert
+    // to string coercion.
+    cert_hash: hexToBytes32(DEFAULT_SAMPLE_PROOF_HASH),
     title: "Escrowed paid trial",
     amount: 250000000,
     status: "Funded",

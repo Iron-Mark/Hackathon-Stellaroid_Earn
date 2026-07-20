@@ -14,7 +14,7 @@ export const docsPages: DocPage[] = [
       "Stellaroid Earn",
       "Soroban smart contract",
       "Stellar testnet",
-      "on-chain credential verification",
+      "on-chain credential verification for developers",
       "XLM payments",
       "Freighter wallet",
       "developer documentation"

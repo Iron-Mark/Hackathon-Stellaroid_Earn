@@ -1,16 +1,16 @@
-// Guides library registry — /guides, /guides/[slug], the sitemap, and
+// Guides library registry, /guides, /guides/[slug], the sitemap, and
 // internal links all derive from this single typed source.
 import type { GuideArticle, GuideIndexContent } from "./types";
 
 export const guideIndexContent: GuideIndexContent = {
   "slug": "/guides",
   "metaTitle": "Stellar Credential Verification Guides",
-  "metaDescription": "Stellar credential verification guides for issuers, employers, and graduates — anchor a certificate hash, verify it on-chain, and pay in one flow on testnet.",
+  "metaDescription": "Stellar credential verification guides for issuers, employers, and graduates, anchor a certificate hash, verify it on-chain, and pay in one flow on testnet.",
   "keywords": [
     "stellar credential verification guides",
     "blockchain credential guides",
     "how to verify credentials",
-    "on-chain credential verification",
+    "on-chain credential verification guide",
     "verify credentials on stellar",
     "soroban credential guides"
   ],
@@ -21,14 +21,14 @@ export const guideIndexContent: GuideIndexContent = {
     {
       "heading": "What the guides cover",
       "paragraphs": [
-        "Every guide walks through one part of the Stellaroid Earn flow on Stellar testnet, grounded in the actual contract functions rather than marketing shorthand. You see how a certificate hash is anchored, verified, and paid — with each on-chain action named so you can reproduce it and audit the result on stellar.expert.",
-        "The guides are practical, not theoretical: they follow the same three-step path the pilot uses — register, verify, pay — and point to the exact page where you can run each step yourself."
+        "Every guide walks through one part of the Stellaroid Earn flow on Stellar testnet, grounded in the actual contract functions rather than marketing shorthand. You see how a certificate hash is anchored, verified, and paid, with each on-chain action named so you can reproduce it and audit the result on stellar.expert.",
+        "The guides are practical, not theoretical: they follow the same three-step path the pilot uses, register, verify, pay, and point to the exact page where you can run each step yourself."
       ],
       "bullets": [
-        "Anchoring a credential — how an issuer computes a certificate's SHA-256 hash and binds it to a student's Stellar wallet with register_certificate, and why duplicate hashes are rejected on-chain.",
-        "Verifying credentials — how an approved issuer or the admin calls verify_certificate, moving a credential to Verified and emitting a cert_ver event anyone can audit.",
-        "Instant payouts — how link_payment sends XLM through the native Stellar Asset Contract straight to a verified wallet, typically settling in under five seconds for a fraction of a cent.",
-        "Reading a proof — how to open a public proof page and confirm a credential's status (issued, verified, suspended, revoked, or expired) with no wallet and no login."
+        "Anchoring a credential, how an issuer computes a certificate's SHA-256 hash and binds it to a graduate's Stellar wallet with register_certificate, and why duplicate hashes are rejected on-chain.",
+        "Verifying credentials, how an approved issuer or the admin calls verify_certificate, moving a credential to Verified and emitting a cert_ver event anyone can audit.",
+        "Instant payouts, how link_payment sends XLM through the native Stellar Asset Contract straight to a verified wallet, typically settling in under five seconds for a fraction of a cent.",
+        "Reading a proof, how to open a public proof page and confirm a credential's status (issued, verified, suspended, revoked, or expired) with no wallet and no login."
       ]
     },
     {
@@ -37,20 +37,20 @@ export const guideIndexContent: GuideIndexContent = {
         "The library is written for the three people in the flow. Pick the track that matches what you are trying to do; each guide is self-contained and links into the live pilot so you can try the step for yourself."
       ],
       "bullets": [
-        "Issuers — bootcamps, schools, and training providers registering and verifying credentials on-chain.",
-        "Employers and recruiters — confirming a candidate's credential and paying them directly, without an email thread or invoice delay.",
-        "Graduates — sharing a wallet-free public proof link that anyone can open and verify in seconds."
+        "Issuers, bootcamps, schools, and training providers registering and verifying credentials on-chain.",
+        "Employers and recruiters, confirming a candidate's credential and paying them directly, without an email thread or invoice delay.",
+        "Graduates, sharing a wallet-free public proof link that anyone can open and verify in seconds."
       ]
     }
   ],
   "faq": [
     {
       "question": "What do the Stellar credential verification guides cover?",
-      "answer": "They cover the full on-chain flow: how an issuer anchors a certificate's SHA-256 hash to a student's wallet with register_certificate, how an approved issuer or the admin calls verify_certificate to set the status to Verified and emit a cert_ver event, and how link_payment pays the graduate in XLM. They also show how to read a public proof page without a wallet."
+      "answer": "They cover the full on-chain flow: how an issuer anchors a certificate's SHA-256 hash to a graduate's wallet with register_certificate, how an approved issuer or the admin calls verify_certificate to set the status to Verified and emit a cert_ver event, and how link_payment pays the graduate in XLM. They also show how to read a public proof page without a wallet."
     },
     {
       "question": "Do I need a wallet to follow these guides?",
-      "answer": "No wallet is needed to read the guides or to open a public proof page — verification is public and read-only. A Stellar wallet such as Freighter or Albedo is only required when you actually issue, verify, or pay on-chain."
+      "answer": "No wallet is needed to read the guides or to open a public proof page, verification is public and read-only. A Stellar wallet such as Freighter or Albedo is only required when you actually issue, verify, or pay on-chain."
     },
     {
       "question": "Are these guides for mainnet or testnet?",
@@ -78,7 +78,7 @@ export const guides: GuideArticle[] = [
       "is a bootcamp certificate legitimate",
       "verify certificate authenticity",
       "spot a fake certificate",
-      "on-chain credential verification",
+      "how to check a bootcamp certificate on-chain",
       "bootcamp certificate verification",
       "verify bootcamp certificate online",
       "check if a certificate is real"
@@ -86,15 +86,15 @@ export const guides: GuideArticle[] = [
     "audience": "Employers, recruiters, and graduates",
     "datePublished": "2026-07-09",
     "technical": false,
-    "lede": "Anyone can claim a bootcamp certificate; almost no one can check one in minutes. Here is how to tell whether a coding bootcamp certificate is real — the limits of PDFs and screenshots, and how a public, wallet-free on-chain proof page settles the question for good.",
+    "lede": "Anyone can claim a bootcamp certificate; almost no one can check one in minutes. Here is how to tell whether a coding bootcamp certificate is real, the limits of PDFs and screenshots, and how a public, wallet-free on-chain proof page settles the question for good.",
     "blocks": [
       {
         "type": "p",
-        "text": "A coding bootcamp certificate is easy to claim and, historically, hard to check. Employers email the school and wait days; recruiters take the PDF on faith; graduates get passed over while verification drags. This guide shows how to verify a coding bootcamp certificate is real in minutes — what a PDF can and cannot prove, and how an on-chain proof page removes the guesswork."
+        "text": "A coding bootcamp certificate is easy to claim and, historically, hard to check. Employers email the school and wait days; recruiters take the PDF on faith; graduates get passed over while verification drags. This guide shows how to verify a coding bootcamp certificate is real in minutes, what a PDF can and cannot prove, and how an on-chain proof page removes the guesswork."
       },
       {
         "type": "callout",
-        "text": "Where this runs: the proof pages in this guide are part of Stellaroid Earn, an early-access pilot live on Stellar testnet — free to try, no wallet needed to read a proof."
+        "text": "Where this runs: the proof pages in this guide are part of Stellaroid Earn, an early-access pilot live on Stellar testnet, free to try, no wallet needed to read a proof."
       },
       {
         "type": "h2",
@@ -107,7 +107,7 @@ export const guides: GuideArticle[] = [
       {
         "type": "ul",
         "items": [
-          "A PDF can be copied, edited in minutes, or generated from a template — the file itself carries no signature most people can meaningfully check.",
+          "A PDF can be copied, edited in minutes, or generated from a template, the file itself carries no signature most people can meaningfully check.",
           "A screenshot proves even less; it is trivial to fabricate and impossible to trace back to the issuer.",
           "There is usually no authoritative source to check against, so verification falls back on emailing the school and waiting for a reply.",
           "Third-party background checks add cost and days, and still depend on someone answering that email."
@@ -115,7 +115,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "callout",
-        "text": "The core problem is not that people lie often — it is that honest credentials are slow and expensive to confirm. That friction is exactly what an on-chain proof removes."
+        "text": "The core problem is not that people lie often, it is that honest credentials are slow and expensive to confirm. That friction is exactly what an on-chain proof removes."
       },
       {
         "type": "h2",
@@ -128,11 +128,11 @@ export const guides: GuideArticle[] = [
       {
         "type": "ul",
         "items": [
-          "Issued — registered on-chain, but not yet verified.",
-          "Verified — an approved issuer or the admin confirmed it with verify_certificate.",
-          "Suspended — temporarily paused by the issuer or admin.",
-          "Revoked — invalidated, but kept visible on-chain for auditability.",
-          "Expired — past its validity window and no longer eligible for verification-based actions."
+          "Issued, registered on-chain, but not yet verified.",
+          "Verified, an approved issuer or the admin confirmed it with verify_certificate.",
+          "Suspended, temporarily paused by the issuer or admin.",
+          "Revoked, invalidated, but kept visible on-chain for auditability.",
+          "Expired, past its validity window and no longer eligible for verification-based actions."
         ]
       },
       {
@@ -141,7 +141,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "Whether you are an employer screening a candidate, a recruiter confirming a claim, or a graduate checking your own proof, the five-step checklist at the end of this guide walks the whole verification in under a minute — get the hash or proof link, open the public proof page, read the status, check the issuer, and audit the record on stellar.expert."
+        "text": "Whether you are an employer screening a candidate, a recruiter confirming a claim, or a graduate checking your own proof, the five-step checklist at the end of this guide walks the whole verification in under a minute, get the hash or proof link, open the public proof page, read the status, check the issuer, and audit the record on stellar.expert."
       },
       {
         "type": "callout",
@@ -167,11 +167,11 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "Most credential tools stop at \"Is it real?\". Stellaroid Earn binds verification to payment in a single on-chain flow: once a credential is verified, an employer calls link_payment to send XLM through the native Stellar Asset Contract straight to the graduate's verified wallet, with testnet settlement typically under five seconds and fees a fraction of a cent. Verification is not just a badge here — it is the gate that unlocks getting paid."
+        "text": "Most credential tools stop at \"Is it real?\". Stellaroid Earn binds verification to payment in a single on-chain flow: once a credential is verified, an employer calls link_payment to send XLM through the native Stellar Asset Contract straight to the graduate's verified wallet, with testnet settlement typically under five seconds and fees a fraction of a cent. Verification is not just a badge here, it is the gate that unlocks getting paid."
       },
       {
         "type": "callout",
-        "text": "Honest status: Stellaroid Earn is an early-access pilot running live on Stellar testnet, not a mainnet or production financial product. The verification model and public proof pages work today, so employers and graduates can try the model now — join the pilot to put your own credentials through it."
+        "text": "Honest status: Stellaroid Earn is an early-access pilot running live on Stellar testnet, not a mainnet or production financial product. The verification model and public proof pages work today, so employers and graduates can try the model now, join the pilot to put your own credentials through it."
       }
     ],
     "howToSteps": [
@@ -181,7 +181,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "name": "Open the public proof page",
-        "text": "Open the proof link, or paste the 64-character hash at stellaroid.tech/proof. No wallet, login, or account is required to read a proof — verification is public and read-only."
+        "text": "Open the proof link, or paste the 64-character hash at stellaroid.tech/proof. No wallet, login, or account is required to read a proof, verification is public and read-only."
       },
       {
         "name": "Read the credential status",
@@ -204,7 +204,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "question": "Is a bootcamp certificate legitimate if it is only a PDF?",
-        "answer": "A PDF or screenshot proves nothing on its own — it can be copied, edited, or fabricated, and there is rarely an authoritative source to check it against. A credential is verifiable when its SHA-256 hash is anchored on-chain to the issuer and the graduate's wallet, so anyone can confirm it independently."
+        "answer": "A PDF or screenshot proves nothing on its own, it can be copied, edited, or fabricated, and there is rarely an authoritative source to check it against. A credential is verifiable when its SHA-256 hash is anchored on-chain to the issuer and the graduate's wallet, so anyone can confirm it independently."
       },
       {
         "question": "Do I need a wallet or account to check a certificate?",
@@ -220,7 +220,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "question": "Is Stellaroid Earn a production credential system?",
-        "answer": "Not yet — it is an early-access pilot running live on Stellar testnet, not a mainnet or production financial product. The verification flow and public proof pages are fully functional on testnet, so employers and graduates can try the model today."
+        "answer": "Not yet, it is an early-access pilot running live on Stellar testnet, not a mainnet or production financial product. The verification flow and public proof pages are fully functional on testnet, so employers and graduates can try the model today."
       }
     ],
     "primaryCta": {
@@ -242,17 +242,17 @@ export const guides: GuideArticle[] = [
       "employer credential verification process",
       "verify education background",
       "credential verification vs background check",
-      "bootcamp certificate verification",
-      "on-chain credential verification"
+      "on-chain vs traditional credential verification",
+      "ways employers check education credentials"
     ],
     "audience": "Employers and recruiters",
     "datePublished": "2026-07-09",
     "technical": false,
-    "lede": "Recruiters have four imperfect options for confirming a bootcamp grad's credential: call the school, pay a background-check vendor, query a verification network, or take the PDF on faith. On-chain verification adds a faster path — open a public proof page and read the record in seconds.",
+    "lede": "Recruiters have four imperfect options for confirming a bootcamp grad's credential: call the school, pay a background-check vendor, query a verification network, or take the PDF on faith. On-chain verification adds a faster path, open a public proof page and read the record in seconds.",
     "blocks": [
       {
         "type": "callout",
-        "text": "Short answer: employers verify bootcamp credentials by contacting the issuing school, paying a background-check vendor, or querying a verification network like the National Student Clearinghouse — reliable routes that typically cost days or per-candidate fees, and that often don't cover bootcamps at all. On-chain verification adds a faster option — open a public proof page and confirm the record in seconds, with no phone call, vendor, or login."
+        "text": "Short answer: employers verify bootcamp credentials by contacting the issuing school, paying a background-check vendor, or querying a verification network like the National Student Clearinghouse, reliable routes that typically cost days or per-candidate fees, and that often don't cover bootcamps at all. On-chain verification adds a faster option, open a public proof page and confirm the record in seconds, with no phone call, vendor, or login."
       },
       {
         "type": "p",
@@ -292,7 +292,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "The fastest traditional option is also the weakest: accept a PDF or screenshot at face value. A certificate file is easy to edit, and a convincing forgery is hard to catch by eye — which is exactly why the other three methods exist."
+        "text": "The fastest traditional option is also the weakest: accept a PDF or screenshot at face value. A certificate file is easy to edit, and a convincing forgery is hard to catch by eye, which is exactly why the other three methods exist."
       },
       {
         "type": "h2",
@@ -305,12 +305,12 @@ export const guides: GuideArticle[] = [
       {
         "type": "ul",
         "items": [
-          "Speed — Phone, email, and vendor checks take days to weeks; a public proof page resolves in seconds.",
-          "Cost — Background-check vendors charge a per-candidate fee; opening a Stellaroid Earn proof page is free and needs no account.",
-          "Coverage — Verification networks mainly cover degree-granting institutions, so many bootcamps aren't listed; any issuer approved on-chain can anchor a credential.",
-          "Trust source — Traditional checks trust a person replying to an email; on-chain checks trust a cryptographic hash plus an approved issuer's recorded signature.",
-          "Auditability — A vendor report is a private PDF; a cert_ver event is public, and anyone can re-check it on stellar.expert.",
-          "Tamper-resistance — An emailed certificate can be edited; a certificate's SHA-256 hash is bound on-chain and duplicate hashes are rejected by register_certificate."
+          "Speed, Phone, email, and vendor checks take days to weeks; a public proof page resolves in seconds.",
+          "Cost, Background-check vendors charge a per-candidate fee; opening a Stellaroid Earn proof page is free and needs no account.",
+          "Coverage, Verification networks mainly cover degree-granting institutions, so many bootcamps aren't listed; any issuer approved on-chain can anchor a credential.",
+          "Trust source, Traditional checks trust a person replying to an email; on-chain checks trust a cryptographic hash plus an approved issuer's recorded signature.",
+          "Auditability, A vendor report is a private PDF; a cert_ver event is public, and anyone can re-check it on stellar.expert.",
+          "Tamper-resistance, An emailed certificate can be edited; a certificate's SHA-256 hash is bound on-chain and duplicate hashes are rejected by register_certificate."
         ]
       },
       {
@@ -319,7 +319,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "Stellaroid Earn anchors a certificate's SHA-256 hash to the graduate's Stellar wallet. An approved issuer or admin calls verify_certificate, which sets the credential's status to Verified and emits a cert_ver event. For an employer, checking that proof is a read-only action — the five-step checklist at the end of this guide takes under a minute and needs no wallet."
+        "text": "Stellaroid Earn anchors a certificate's SHA-256 hash to the graduate's Stellar wallet. An approved issuer or admin calls verify_certificate, which sets the credential's status to Verified and emits a cert_ver event. For an employer, checking that proof is a read-only action, the five-step checklist at the end of this guide takes under a minute and needs no wallet."
       },
       {
         "type": "h2",
@@ -327,7 +327,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "These terms get used interchangeably, but they are not the same. Credential verification answers a narrow question: is this specific certificate authentic and issued by who it claims? A background check is broader — identity, employment history, and, depending on the role and jurisdiction, criminal records — and is usually performed by a licensed provider under strict compliance rules. On-chain verification is a fast, auditable way to settle the credential-authenticity question; it complements a background check rather than replacing it."
+        "text": "These terms get used interchangeably, but they are not the same. Credential verification answers a narrow question: is this specific certificate authentic and issued by who it claims? A background check is broader, identity, employment history, and, depending on the role and jurisdiction, criminal records, and is usually performed by a licensed provider under strict compliance rules. On-chain verification is a fast, auditable way to settle the credential-authenticity question; it complements a background check rather than replacing it."
       },
       {
         "type": "h2",
@@ -339,7 +339,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "callout",
-        "text": "Stellaroid Earn is an early-access pilot on Stellar testnet. The verification flow, proof pages, and contract functions described here are live and auditable, but this is a pilot demo — not a production or regulated background-check service."
+        "text": "Stellaroid Earn is an early-access pilot on Stellar testnet. The verification flow, proof pages, and contract functions described here are live and auditable, but this is a pilot demo, not a production or regulated background-check service."
       },
       {
         "type": "p",
@@ -353,7 +353,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "name": "Open the public proof page",
-        "text": "Paste the hash on the Stellaroid Earn proof page. No wallet, login, or account is required — verification is read-only and public."
+        "text": "Paste the hash on the Stellaroid Earn proof page. No wallet, login, or account is required, verification is read-only and public."
       },
       {
         "name": "Confirm status and issuer",
@@ -372,11 +372,11 @@ export const guides: GuideArticle[] = [
     "faq": [
       {
         "question": "How do employers verify bootcamp credentials?",
-        "answer": "Traditionally, employers confirm a bootcamp credential by contacting the issuing school, hiring a background-check vendor, or querying a verification network such as the National Student Clearinghouse — methods that are accurate but can take days. Stellaroid Earn adds an instant option: the credential's SHA-256 hash is anchored on Stellar by an approved issuer, so anyone can open its public proof page and confirm the record in seconds without a wallet or login."
+        "answer": "Traditionally, employers confirm a bootcamp credential by contacting the issuing school, hiring a background-check vendor, or querying a verification network such as the National Student Clearinghouse, methods that are accurate but can take days. Stellaroid Earn adds an instant option: the credential's SHA-256 hash is anchored on Stellar by an approved issuer, so anyone can open its public proof page and confirm the record in seconds without a wallet or login."
       },
       {
         "question": "What is the difference between credential verification and a background check?",
-        "answer": "Credential verification confirms that one specific credential — like a bootcamp certificate — is authentic and was issued by the stated institution. A background check is broader and usually run by a third party, covering identity, employment history, and, depending on the role, criminal records. On-chain verification on Stellaroid Earn addresses the credential-authenticity part; it is not a full background check and does not replace one."
+        "answer": "Credential verification confirms that one specific credential, like a bootcamp certificate, is authentic and was issued by the stated institution. A background check is broader and usually run by a third party, covering identity, employment history, and, depending on the role, criminal records. On-chain verification on Stellaroid Earn addresses the credential-authenticity part; it is not a full background check and does not replace one."
       },
       {
         "question": "Does an employer need an account or wallet to verify a credential?",
@@ -384,15 +384,15 @@ export const guides: GuideArticle[] = [
       },
       {
         "question": "How long does on-chain credential verification take?",
-        "answer": "Opening a proof page returns the credential's status immediately. The underlying trusted verification — an approved issuer or admin calling verify_certificate — settles on Stellar testnet in seconds, and the resulting cert_ver event is instantly auditable on stellar.expert."
+        "answer": "Opening a proof page returns the credential's status immediately. The underlying trusted verification, an approved issuer or admin calling verify_certificate, settles on Stellar testnet in seconds, and the resulting cert_ver event is instantly auditable on stellar.expert."
       },
       {
         "question": "Can a bootcamp certificate be forged or duplicated on-chain?",
-        "answer": "The certificate's SHA-256 hash is bound to a student's wallet by register_certificate, and duplicate hashes are rejected on-chain, so the same credential cannot be re-registered by someone else. Only an approved issuer or the admin wallet can move a credential to Verified status, which is what employers look for on the proof page."
+        "answer": "The certificate's SHA-256 hash is bound to a graduate's wallet by register_certificate, and duplicate hashes are rejected on-chain, so the same credential cannot be re-registered by someone else. Only an approved issuer or the admin wallet can move a credential to Verified status, which is what employers look for on the proof page."
       },
       {
         "question": "Is Stellaroid Earn a background-check service employers can rely on today?",
-        "answer": "Stellaroid Earn is an early-access pilot running on Stellar testnet. Its verification flow, public proof pages, and contract functions are live and auditable, but it is a pilot demo focused on credential authenticity — not a production or regulated background-check service."
+        "answer": "Stellaroid Earn is an early-access pilot running on Stellar testnet. Its verification flow, public proof pages, and contract functions are live and auditable, but it is a pilot demo focused on credential authenticity, not a production or regulated background-check service."
       }
     ],
     "primaryCta": {
@@ -417,12 +417,12 @@ export const guides: GuideArticle[] = [
       "register_certificate",
       "verify_certificate",
       "link_payment",
-      "on-chain credential verification"
+      "soroban credential verification tutorial"
     ],
     "audience": "Developers and technical issuers",
     "datePublished": "2026-07-09",
     "technical": true,
-    "lede": "A developer walkthrough of how Stellaroid Earn binds a certificate's SHA-256 hash to a Stellar wallet with a Soroban smart contract: register_certificate to anchor it, verify_certificate to trust it, and link_payment to pay the graduate — every step auditable on stellar.expert.",
+    "lede": "A developer walkthrough of how Stellaroid Earn binds a certificate's SHA-256 hash to a Stellar wallet with a Soroban smart contract: register_certificate to anchor it, verify_certificate to trust it, and link_payment to pay the graduate, every step auditable on stellar.expert.",
     "blocks": [
       {
         "type": "p",
@@ -438,7 +438,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "You never put the certificate PDF on-chain. Instead you store its SHA-256 hash — a 32-byte fingerprint written as 64 hexadecimal characters. That single digest is enough to prove a document is the exact one that was registered, without ever exposing the document itself."
+        "text": "You never put the certificate PDF on-chain. Instead you store its SHA-256 hash, a 32-byte fingerprint written as 64 hexadecimal characters. That single digest is enough to prove a document is the exact one that was registered, without ever exposing the document itself."
       },
       {
         "type": "ul",
@@ -451,7 +451,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "This is also how the contract enforces uniqueness. Because the hash is the credential's on-chain key, registering the same hash twice is rejected — a credential cannot be silently overwritten."
+        "text": "This is also how the contract enforces uniqueness. Because the hash is the credential's on-chain key, registering the same hash twice is rejected, a credential cannot be silently overwritten."
       },
       {
         "type": "h2",
@@ -459,7 +459,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "Stellaroid's contract exposes twelve public functions, but the credential lifecycle rests on three writes. register_certificate anchors the hash to a student's wallet. verify_certificate marks it trusted. link_payment pays the verified wallet. Along the way a credential moves through explicit statuses: issued, verified, suspended, revoked, and expired."
+        "text": "Stellaroid's contract exposes nineteen public functions, but the credential lifecycle rests on three writes. register_certificate anchors the hash to a student's wallet. verify_certificate marks it trusted. link_payment pays the verified wallet. Along the way a credential moves through explicit statuses: issued, verified, suspended, revoked, and expired."
       },
       {
         "type": "code",
@@ -468,11 +468,11 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "callout",
-        "text": "The signatures above are illustrative — they show the argument shape, not the exact source. Read the contract crate on GitHub for the authoritative definitions and the tests that cover the full flow."
+        "text": "The signatures above are illustrative, they show the argument shape, not the exact source. Read the contract crate on GitHub for the authoritative definitions and the tests that cover the full flow."
       },
       {
         "type": "h3",
-        "text": "Step 1 — Hash the certificate"
+        "text": "Step 1, Hash the certificate"
       },
       {
         "type": "p",
@@ -481,7 +481,7 @@ export const guides: GuideArticle[] = [
       {
         "type": "code",
         "lang": "bash",
-        "text": "# Hash the certificate locally — the file never leaves your machine.\n# Linux:\nsha256sum diploma.pdf\n# macOS:\nshasum -a 256 diploma.pdf\n# -> 9f2c8b...e41d   (64 hex characters = the 32-byte digest that goes on-chain)"
+        "text": "# Hash the certificate locally, the file never leaves your machine.\n# Linux:\nsha256sum diploma.pdf\n# macOS:\nshasum -a 256 diploma.pdf\n# -> 9f2c8b...e41d   (64 hex characters = the 32-byte digest that goes on-chain)"
       },
       {
         "type": "p",
@@ -490,11 +490,11 @@ export const guides: GuideArticle[] = [
       {
         "type": "code",
         "lang": "javascript",
-        "text": "// The browser computes the same digest with Web Crypto,\n// so only the 32-byte hash — never the document — is sent on-chain.\nconst bytes = new Uint8Array(await file.arrayBuffer());\nconst digest = await crypto.subtle.digest(\"SHA-256\", bytes);\nconst hash = [...new Uint8Array(digest)]\n  .map((b) => b.toString(16).padStart(2, \"0\"))\n  .join(\"\"); // 64 hex chars"
+        "text": "// The browser computes the same digest with Web Crypto,\n// so only the 32-byte hash, never the document, is sent on-chain.\nconst bytes = new Uint8Array(await file.arrayBuffer());\nconst digest = await crypto.subtle.digest(\"SHA-256\", bytes);\nconst hash = [...new Uint8Array(digest)]\n  .map((b) => b.toString(16).padStart(2, \"0\"))\n  .join(\"\"); // 64 hex chars"
       },
       {
         "type": "h3",
-        "text": "Step 2 — Anchor it with register_certificate"
+        "text": "Step 2, Anchor it with register_certificate"
       },
       {
         "type": "p",
@@ -511,16 +511,16 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "h3",
-        "text": "Step 3 — Verify, then pay"
+        "text": "Step 3, Verify, then pay"
       },
       {
         "type": "p",
-        "text": "verify_certificate can only be called by an approved issuer or the admin wallet — an arbitrary wallet is rejected with Unauthorized (error #3), while a registered-but-unapproved issuer fails with IssuerNotApproved (#8) and a suspended issuer with IssuerSuspended (#9). A successful call flips the credential's status to Verified and emits a cert_ver event. Only then does payment unlock — link_payment transfers XLM through the native Stellar Asset Contract straight to the student's verified wallet, emits a payment event, and on testnet settles in typically under five seconds for a fraction of a cent."
+        "text": "verify_certificate can only be called by an approved issuer or the admin wallet, an arbitrary wallet is rejected with Unauthorized (error #3), while a registered-but-unapproved issuer fails with IssuerNotApproved (#8) and a suspended issuer with IssuerSuspended (#9). A successful call flips the credential's status to Verified and emits a cert_ver event. Only then does payment unlock, link_payment transfers XLM through the native Stellar Asset Contract straight to the student's verified wallet, emits a payment event, and on testnet settles in typically under five seconds for a fraction of a cent."
       },
       {
         "type": "code",
         "lang": "bash",
-        "text": "# 2 — an approved issuer or the admin verifies the credential\nstellar contract invoke --id \"$CONTRACT_ID\" --source approved-issuer-key --network testnet \\\n  -- verify_certificate \\\n  --verifier \"$VERIFIER_ADDRESS\" \\\n  --cert_hash 9f2c8b...e41d\n\n# 3 — once Verified, the employer pays the wallet directly\nstellar contract invoke --id \"$CONTRACT_ID\" --source employer-key --network testnet \\\n  -- link_payment \\\n  --employer \"$EMPLOYER_ADDRESS\" \\\n  --student \"$STUDENT_ADDRESS\" \\\n  --cert_hash 9f2c8b...e41d \\\n  --amount 1000000000        # stroops (100 XLM); the native SAC uses 7-decimal i128 amounts"
+        "text": "# 2, an approved issuer or the admin verifies the credential\nstellar contract invoke --id \"$CONTRACT_ID\" --source approved-issuer-key --network testnet \\\n  -- verify_certificate \\\n  --verifier \"$VERIFIER_ADDRESS\" \\\n  --cert_hash 9f2c8b...e41d\n\n# 3, once Verified, the employer pays the wallet directly\nstellar contract invoke --id \"$CONTRACT_ID\" --source employer-key --network testnet \\\n  -- link_payment \\\n  --employer \"$EMPLOYER_ADDRESS\" \\\n  --student \"$STUDENT_ADDRESS\" \\\n  --cert_hash 9f2c8b...e41d \\\n  --amount 1000000000        # stroops (100 XLM); the native SAC uses 7-decimal i128 amounts"
       },
       {
         "type": "h2",
@@ -528,12 +528,12 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "Reads are public and require no signing. You can query the record directly, or simply open the contract's event stream in a browser — no wallet, no login."
+        "text": "Reads are public and require no signing. You can query the record directly, or simply open the contract's event stream in a browser, no wallet, no login."
       },
       {
         "type": "code",
         "lang": "bash",
-        "text": "# Public read (simulation only — no signing, no fee)\nstellar contract invoke --id \"$CONTRACT_ID\" --source any-key --network testnet \\\n  -- get_certificate --cert_hash 9f2c8b...e41d\n\n# Or open the contract's event stream in a browser:\n# https://stellar.expert/explorer/testnet/contract/$CONTRACT_ID"
+        "text": "# Public read (simulation only, no signing, no fee)\nstellar contract invoke --id \"$CONTRACT_ID\" --source any-key --network testnet \\\n  -- get_certificate --cert_hash 9f2c8b...e41d\n\n# Or open the contract's event stream in a browser:\n# https://stellar.expert/explorer/testnet/contract/$CONTRACT_ID"
       },
       {
         "type": "p",
@@ -545,7 +545,7 @@ export const guides: GuideArticle[] = [
           "The cert_reg event, emitted when register_certificate anchors the hash.",
           "The cert_ver event, emitted when an approved issuer or the admin verifies it.",
           "The payment event, emitted when link_payment sends XLM to the student's wallet.",
-          "The full transaction history — every write is a public Stellar transaction anyone can inspect."
+          "The full transaction history, every write is a public Stellar transaction anyone can inspect."
         ]
       },
       {
@@ -554,7 +554,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "In the browser, Stellaroid builds these calls with @stellar/stellar-sdk. Read-only calls like get_certificate run through simulateTransaction using a public read address — no signing needed — which is why proof pages resolve a hash without a wallet. Writes are signed with Freighter or Albedo and submitted over Soroban RPC. Wallet components are marked \"use client\" because the wallet APIs are browser-only."
+        "text": "In the browser, Stellaroid builds these calls with @stellar/stellar-sdk. Read-only calls like get_certificate run through simulateTransaction using a public read address, no signing needed, which is why proof pages resolve a hash without a wallet. Writes are signed with Freighter or Albedo and submitted over Soroban RPC. Wallet components are marked \"use client\" because the wallet APIs are browser-only."
       },
       {
         "type": "p",
@@ -599,7 +599,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "question": "How can anyone audit the anchored hash?",
-        "answer": "Every write is a public Stellar transaction. Open the contract on stellar.expert and inspect its events — cert_reg from registration, cert_ver from verification, and payment from payout — without a wallet or login."
+        "answer": "Every write is a public Stellar transaction. Open the contract on stellar.expert and inspect its events, cert_reg from registration, cert_ver from verification, and payment from payout, without a wallet or login."
       },
       {
         "question": "Do you need a wallet to read a credential?",
@@ -617,6 +617,117 @@ export const guides: GuideArticle[] = [
     "secondaryCta": {
       "label": "View the contract on GitHub",
       "href": "https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn"
+    }
+  },
+  {
+    "slug": "share-verifiable-credential-with-employer",
+    "title": "How to share a verifiable credential with an employer",
+    "metaTitle": "Share a Verifiable Credential With an Employer",
+    "metaDescription": "How to share a verifiable credential with an employer: send one public proof link they can check in seconds on Stellar, with no login, no wallet, and no PDF.",
+    "keywords": [
+      "how to share a verifiable credential",
+      "share proof of certificate with employer",
+      "verifiable credential link",
+      "prove your bootcamp certificate online",
+      "public credential proof page",
+      "share a credential without a wallet"
+    ],
+    "audience": "Graduates and job seekers",
+    "datePublished": "2026-07-20",
+    "technical": false,
+    "lede": "Your certificate is only as useful as your ability to prove it. This guide shows how to share a verifiable credential as a single public link an employer can check in seconds, with no PDF, no login, and no wallet on their end.",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "A certificate sitting in a PDF or a screenshot is hard for an employer to trust and easy to ignore. A verifiable credential fixes that: instead of sending a file, you send a link to a public proof page that reads the credential's status straight from the Stellar network. This guide covers how to share that link, what the employer sees, and how to keep your proof credible."
+      },
+      {
+        "type": "callout",
+        "text": "Where this runs: proof pages are part of Stellaroid Earn, an early-access pilot on Stellar testnet. It is free to try, and no wallet is needed to open or read a proof."
+      },
+      {
+        "type": "h2",
+        "text": "Why a link beats a PDF or a screenshot"
+      },
+      {
+        "type": "p",
+        "text": "A file proves nothing on its own. A public proof page does, because the status it shows is read live from the contract rather than from the file you sent."
+      },
+      {
+        "type": "ul",
+        "items": [
+          "It cannot be edited: the page reflects the on-chain record, not a document you could alter.",
+          "It checks in seconds: the employer opens the link and sees Verified or Issued right away, with no email thread.",
+          "It asks nothing of them: no login, no wallet, no account, so there is no reason to skip the check.",
+          "It is auditable: every status change is a public event anyone can trace on stellar.expert."
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "What the employer sees"
+      },
+      {
+        "type": "p",
+        "text": "The proof page is built to be read by someone who has never used Stellar. It shows the credential's status as a colored badge and links to the underlying record."
+      },
+      {
+        "type": "ul",
+        "items": [
+          "A green Verified badge means an approved issuer or the admin has confirmed the credential on-chain.",
+          "An amber Issued badge means the certificate is registered but not yet verified, so payment stays locked.",
+          "A link to stellar.expert, so a technical reviewer can inspect the raw contract events.",
+          "The issuer's identity and the credential's status history, so trust is explicit rather than assumed."
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "Keep your proof credible"
+      },
+      {
+        "type": "p",
+        "text": "A verifiable credential is only convincing while its status is clean. Share the proof link itself rather than a screenshot of it, so the employer always sees the live status. If a credential is ever suspended or revoked by its issuer, the page will say so, and that is the point: the record stays honest by default."
+      }
+    ],
+    "howToName": "How to share your verifiable credential with an employer",
+    "howToSteps": [
+      {
+        "name": "Confirm your credential is verified",
+        "text": "Open your proof page and check for the green Verified badge. If it still shows amber Issued, ask your issuer to verify it before you share."
+      },
+      {
+        "name": "Copy your proof link",
+        "text": "Copy the public proof URL for your credential. It works in any browser and needs no login or wallet to open."
+      },
+      {
+        "name": "Send it to the employer",
+        "text": "Paste the link into your application, email, or message. Send the link itself, not a screenshot, so they always see the live on-chain status."
+      },
+      {
+        "name": "Let them verify in seconds",
+        "text": "The employer opens the link, sees the Verified badge, and can follow it to stellar.expert to inspect the record. No account or wallet is required on their side."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does the employer need a wallet to check my credential?",
+        "answer": "No. Reading a proof page is public and read-only, so the employer needs no wallet, no login, and no account. A wallet is only needed to issue, verify, or pay on-chain, which is the issuer's and employer's side of the flow."
+      },
+      {
+        "question": "Is this on mainnet or testnet?",
+        "answer": "The proof pages run on the Stellar testnet pilot. It is a free public demo, so it is meant for showing how verification works rather than as a system of record yet."
+      },
+      {
+        "question": "What happens if my credential is suspended or revoked?",
+        "answer": "The proof page shows the current status, including suspended or revoked, straight from the contract. That transparency is the point: the record stays honest, so sharing the link is always accurate."
+      }
+    ],
+    "primaryCta": {
+      "label": "See a live proof",
+      "href": "/proof"
+    },
+    "secondaryCta": {
+      "label": "Browse the guides",
+      "href": "/guides"
     }
   }
 ];

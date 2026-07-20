@@ -7,11 +7,13 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/",
-  title: "Stellaroid Earn — Proof & Payment on Stellar",
+  title: "Stellaroid Earn: Proof & Payment on Stellar",
   description:
     "Bind certificate hashes on-chain, verify credentials, and pay graduates directly on Stellar testnet.",
   keywords:
     "stellar, soroban, credential verification, on-chain payroll, proof of work, bootcamp, talent hiring",
+  // Root segment already has its own opengraph-image.tsx.
+  images: null,
 });
 import { ActivitySnackbar } from "@/components/activity/activity-snackbar";
 import { RecentActivity } from "@/components/activity/recent-activity";
@@ -43,7 +45,7 @@ const howToJsonLd = buildHowToJsonLd({
     },
     {
       name: "Employer pays the graduate",
-      text: "link_payment transfers XLM via the native Stellar Asset Contract directly to the student's verified wallet. Settlement is typically under five seconds and costs a fraction of a centavo.",
+      text: "link_payment transfers XLM via the native Stellar Asset Contract directly to the graduate's verified wallet. Settlement is typically under five seconds and costs a fraction of a cent.",
     },
   ],
 });
@@ -111,7 +113,7 @@ export default function Landing() {
               <p className="m-0 text-text-muted leading-relaxed text-sm [&_code]:text-accent [&_code]:font-mono [&_code]:text-[13px]">
                 <code>link_payment</code> transfers XLM via the native SAC directly to the
                 student&rsquo;s verified wallet. Settlement is typically under five seconds and
-                costs a fraction of a centavo.
+                costs a fraction of a cent.
               </p>
             </div>
           </div>
