@@ -987,7 +987,7 @@ export default function About() {
                   Contract surface
                 </h2>
                 <p className="text-text-muted m-0 text-[0.9375rem]">
-                  Twelve public functions; issuer trust explicit; errors human.
+                  Nineteen public functions; issuer trust explicit; errors human.
                 </p>
               </div>
               <div className="flex flex-col gap-5">

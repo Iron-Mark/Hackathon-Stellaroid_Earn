@@ -459,7 +459,7 @@ export const guides: GuideArticle[] = [
       },
       {
         "type": "p",
-        "text": "Stellaroid's contract exposes twelve public functions, but the credential lifecycle rests on three writes. register_certificate anchors the hash to a student's wallet. verify_certificate marks it trusted. link_payment pays the verified wallet. Along the way a credential moves through explicit statuses: issued, verified, suspended, revoked, and expired."
+        "text": "Stellaroid's contract exposes nineteen public functions, but the credential lifecycle rests on three writes. register_certificate anchors the hash to a student's wallet. verify_certificate marks it trusted. link_payment pays the verified wallet. Along the way a credential moves through explicit statuses: issued, verified, suspended, revoked, and expired."
       },
       {
         "type": "code",
