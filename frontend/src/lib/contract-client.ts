@@ -16,10 +16,7 @@ import type {
   CertificateStatus,
   IssuerRecord,
   IssuerStatus,
-  OpportunityRecord,
-  OpportunityStatus,
 } from "@/lib/types";
-import { MAX_OPPORTUNITY_MILESTONES as MAX_MILESTONES } from "@/lib/types";
 
 // The stellar-sdk browser build is a ~900 KB pre-bundled UMD that webpack
 // cannot tree-shake. Loading it lazily keeps it out of every route's First
@@ -737,60 +734,10 @@ function normalizeCertificate(value: unknown): CertificateRecord | null {
   };
 }
 
-function normalizeOpportunityStatus(value: unknown): OpportunityStatus {
-  const key = normalizeStatusKey(value);
-  switch (key) {
-    case "draft":
-    case "0":
-      return "draft";
-    case "funded":
-    case "1":
-      return "funded";
-    case "inprogress":
-    case "in_progress":
-    case "2":
-      return "in_progress";
-    case "submitted":
-    case "3":
-      return "submitted";
-    case "approved":
-    case "4":
-      return "approved";
-    case "released":
-    case "5":
-      return "released";
-    case "refunded":
-    case "6":
-      return "refunded";
-    case "cancelled":
-    case "7":
-      return "cancelled";
-    default:
-      return "draft";
-  }
-}
-
-function normalizeOpportunity(value: unknown): OpportunityRecord | null {
-  if (value == null) return null;
-  const record = value as Record<string, unknown>;
-  return {
-    id: normalizeBigInt(record.id).toString(),
-    employer: normalizeAddress(record.employer),
-    candidate: normalizeAddress(record.candidate),
-    certHash: normalizeString(record.cert_hash),
-    title: normalizeString(record.title),
-    amount: normalizeBigInt(record.amount),
-    status: normalizeOpportunityStatus(record.status),
-    milestoneCount: Math.min(
-      Number(normalizeBigInt(record.milestone_count)),
-      MAX_MILESTONES,
-    ),
-    currentMilestone: Math.min(
-      Number(normalizeBigInt(record.current_milestone)),
-      MAX_MILESTONES,
-    ),
-  };
-}
+// NOTE: the client-side opportunity read path (getOpportunity +
+// normalizeOpportunity) was deleted 2026-07-21: it had no callers, and its
+// normalizeString coercion carried the exact cert_hash byte-mangling bug fixed
+// in contract-read-server's normalizeHashHex. Server reads own this shape now.
 
 export async function registerIssuer(
   issuer: string,
@@ -1074,15 +1021,6 @@ export async function refundOpportunity(employer: string, oppId: OpportunityIdIn
       { value: employer, type: "address" },
       { value: opportunityIdToBigInt(oppId), type: "u64" },
     ],
-  );
-}
-
-export async function getOpportunity(oppId: OpportunityIdInput) {
-  return simulateRead(
-    getReadAddress(),
-    "get_opportunity",
-    [{ value: opportunityIdToBigInt(oppId), type: "u64" }],
-    normalizeOpportunity,
   );
 }
 

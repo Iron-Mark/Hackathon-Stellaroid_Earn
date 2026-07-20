@@ -14,6 +14,7 @@ import {
   hasRequiredConfig,
 } from "@/lib/config";
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
+import { bytesToHex, isHex64 } from "@/lib/hex";
 import type {
   CertificateStatus,
   IssuerRecord,
@@ -114,9 +115,9 @@ function normalizeString(value: unknown): string {
 // replacement chars and destroy the hash, so hex-encode it explicitly.
 function normalizeHashHex(value: unknown): string {
   if (value instanceof Uint8Array) {
-    return Array.from(value, (b) => b.toString(16).padStart(2, "0")).join("");
+    return bytesToHex(value);
   }
-  if (typeof value === "string" && /^[0-9a-f]{64}$/i.test(value.trim())) {
+  if (typeof value === "string" && isHex64(value)) {
     return value.trim().toLowerCase();
   }
   return "";
@@ -395,7 +396,10 @@ function buildE2EOpportunity() {
     id: 1,
     employer: E2E_WALLET_ADDRESS,
     candidate: E2E_WALLET_ADDRESS,
-    cert_hash: DEFAULT_SAMPLE_PROOF_HASH,
+    // Raw bytes on purpose: the fixture must exercise normalizeHashHex's
+    // Uint8Array branch (the actual on-chain shape) so e2e catches a revert
+    // to string coercion.
+    cert_hash: hexToBytes32(DEFAULT_SAMPLE_PROOF_HASH),
     title: "Escrowed paid trial",
     amount: 250000000,
     status: "Funded",

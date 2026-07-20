@@ -83,7 +83,7 @@ stellaroid.tech/status.
 | Escrow release tx (25 XLM paid on-chain) | https://stellar.expert/explorer/testnet/tx/8b1b1f435f6c63b2e38102ae8a2cfa3ea72064245622c07fdb1258e0c55e5c4c |
 | Populated registry | 6 issuers · 106 credentials · 17 escrows · payments + rewards — all on the contract above |
 | Repository | https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn |
-| Contract CI / Frontend CI | green on main (cargo test 12/12 · build+lint+typecheck+50 unit+27 e2e) |
+| Contract CI / Frontend CI | green on main (cargo test 12/12 · build+lint+typecheck+54 unit+34 e2e) |
 | Developer docs | https://stellaroid.tech/docs |
 | Pitch deck | https://stellaroid.tech/slides |
 
