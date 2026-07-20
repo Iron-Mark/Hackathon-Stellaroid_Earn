@@ -1,0 +1,51 @@
+# Stellaroid Earn
+
+> Stellaroid Earn is a Stellar testnet dApp for on-chain credential
+> verification and instant payment. A school or bootcamp anchors a
+> certificate's SHA-256 hash on-chain; an approved issuer verifies it;
+> an employer then pays the graduate directly in XLM in the same flow.
+> Free public testnet demo — no purchase, subscription, or mainnet funds.
+
+## What it does (facts)
+- Binds a certificate's SHA-256 hash to a student's Stellar wallet via the
+  `register_certificate` contract function. Duplicate hashes are rejected on-chain.
+- An approved issuer or admin calls `verify_certificate`, setting status to
+  Verified and emitting a `cert_ver` event auditable on stellar.expert.
+- `link_payment` transfers XLM via the native Stellar Asset Contract directly
+  to the verified student. Testnet settlement is typically under five seconds.
+- Verification is public and read-only: anyone can open a proof page and confirm
+  a credential without a wallet or login. A wallet is only needed to issue,
+  verify, or pay on-chain.
+- Contract: Rust + soroban-sdk, deployed on Stellar testnet.
+- Frontend: Next.js 15 + React 19, @stellar/stellar-sdk; wallets: Freighter, Albedo, xBull, Rabet, LOBSTR, Hana, Klever, Bitget (via Stellar Wallets Kit).
+
+## Key pages
+- Home / how it works: https://stellaroid.tech/
+- About (problem, approach, contract surface): https://stellaroid.tech/about
+- Verify a proof: https://stellaroid.tech/proof
+- Try the app: https://stellaroid.tech/app
+- Guided demo (no wallet needed, real testnet data): https://stellaroid.tech/demo
+- Opportunity directory (live escrowed paid trials): https://stellaroid.tech/opportunity
+- For bootcamps & issuers: https://stellaroid.tech/verify-bootcamp-certificate
+- For employers & recruiters: https://stellaroid.tech/verify-candidate-credentials
+- Instant payouts in XLM: https://stellaroid.tech/instant-payouts
+- Glossary of verifiable-credential terms: https://stellaroid.tech/glossary
+- Guides library: https://stellaroid.tech/guides
+- Developer docs (overview + quickstart): https://stellaroid.tech/docs
+- Contract reference (functions, errors, events): https://stellaroid.tech/docs/contract
+- Wallet & frontend integration: https://stellaroid.tech/docs/integration
+- Architecture: https://stellaroid.tech/docs/architecture
+- Security posture: https://stellaroid.tech/docs/security
+- Run a pilot (request form): https://stellaroid.tech/pilot
+- Contact: https://stellaroid.tech/contact
+- Privacy & terms: https://stellaroid.tech/privacy
+
+## Source
+- Repository: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn
+- Contract source: https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/tree/main/contract
+- Author: Mark Siazon — https://marksiazon.dev
+
+## Notes
+- All flows are Stellar TESTNET only. Do not represent this as a mainnet or
+  production financial product.
+- Security contact: https://stellaroid.tech/.well-known/security.txt

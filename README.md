@@ -2,10 +2,10 @@
 
 **On-chain credential trust for Stellar PH Bootcamp 2026**
 
-Issue, verify, and pay graduates on Stellar testnet  - Soroban + Freighter, end-to-end.
+Issue, verify, and pay graduates on Stellar testnet  - Soroban smart contract, 8 supported wallets (Freighter, Albedo, xBull, LOBSTR & more), installable PWA, end-to-end.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
-[![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3)
+[![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
 [![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
 [![Contract CI](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
@@ -16,9 +16,9 @@ Issue, verify, and pay graduates on Stellar testnet  - Soroban + Freighter, end-
 | | |
 |---|---|
 | **Live demo** | [stellaroid.tech](https://stellaroid.tech/) |
-| **Contract (current)** | [`CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`](https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3) |
-| **Tx evidence** | [init](https://stellar.expert/explorer/testnet/tx/37afd2a5d3da2df250aabd2ce696bd22097ed7412bf3be381c446697e96996bb) · [register](https://stellar.expert/explorer/testnet/tx/f3d6c0f4e23777a68295cff1a59ef089f639d52d6fd005d7ba98bbf866c68c13) · [verify](https://stellar.expert/explorer/testnet/tx/cf734925b00ba51ad800e16f4ac94874a6b9c9a194d44a1a5b82a6f6040bba0b) |
-| **Source verification** | Fresh security-hardened testnet deploy. WASM hash `59ca403e347f4c24b1dd16fbcb65662c2837cc852946e3ae88374eed509d6f7f`; Stellar Expert source re-verification pending. |
+| **Contract (current)** | [`CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV) |
+| **Tx evidence** | [init](https://stellar.expert/explorer/testnet/tx/faf278d7c2e2c92faff965ee790e7a79b7188511671f175d3ed0ee7d0bf085e6) · [register](https://stellar.expert/explorer/testnet/tx/8c20a9443af1e7ea16d65b6292829a15d614858cadc6d11bef46ab246bb4a0e8) · [verify](https://stellar.expert/explorer/testnet/tx/67137aa8b3b887443be9bc2e0806a438a5c6a23beb8834cc32493a1341c82cb9) |
+| **Source verification** | Deployed WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`, built from committed source with `source_repo` + `home_domain` metadata embedded. Attestation runbook: [`docs/operations/contract-verification.md`](docs/operations/contract-verification.md). |
 | **Submission** | Rise In · Stellar Smart Contract Bootcamp · Stellar PH Bootcamp 2026 |
 | **Result** | **Top 5 / 105 participants** · Score: 75.00 |
 
@@ -41,6 +41,19 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 - **Pilot intake route:** [`/pilot`](https://stellaroid.tech/pilot)
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
+
+### July v3.2 product surface
+
+- **Wallet-less guided demo** - [`/demo`](https://stellaroid.tech/demo): the full register → verify → escrow → payout story on **real seeded testnet data** (a released 25 XLM escrow and a live funded one), with per-step stellar.expert audit links. No wallet, no extension, works on a phone.
+- **Opportunity directory** - [`/opportunity`](https://stellaroid.tech/opportunity): every live escrowed paid trial on the contract, with wallet-scoped filters (for you / created by you) and deep links into the milestone console.
+- **Live escrow evidence** - the [status page](https://stellaroid.tech/status) and activity feeds now decode all escrow events (create/fund/submit/approve/release/refund) alongside credential events, deduplicated across the RPC and the Stellar Expert indexer; `/app` shows the events involving your connected wallet.
+- **On-site pilot intake** - [`/pilot`](https://stellaroid.tech/pilot#request) has a real lead-capture form (rate-limited, honeypot-guarded, delivered by email) instead of a link-out, plus [`/contact`](https://stellaroid.tech/contact), an honest [privacy & terms page](https://stellaroid.tech/privacy), and an RFC 9116 [`security.txt`](https://stellaroid.tech/.well-known/security.txt).
+- **Performance pass** - the multi-megabyte stellar-sdk is lazy-loaded out of every route's First Load JS (`/app` dropped 483 → ~260 KB gzipped), the brand typefaces (Orbitron/Exo 2) are self-hosted via `next/font`, and first-party client-error telemetry reports runtime failures to server logs with no third-party service.
+- **Installable PWA** - manifest with maskable icons, service worker (network-first pages, offline fallback, per-deploy cache versioning; verification pages are never served from cache), iOS splash screens. Add it to a phone home screen from the live site.
+- **Mobile-first redesign** - app-style bottom navigation with a More sheet, auto-hiding header, bottom-sheet dialogs, full safe-area/notch handling.
+- **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (all 19 functions, 17 error codes, 16 events), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
+- **Content engine** - audience landing pages for [bootcamps](https://stellaroid.tech/verify-bootcamp-certificate), [employers](https://stellaroid.tech/verify-candidate-credentials), and [graduate payouts](https://stellaroid.tech/instant-payouts), plus a [guides library](https://stellaroid.tech/guides) and a [verifiable-credentials glossary](https://stellaroid.tech/glossary) - all with FAQPage/HowTo/DefinedTermSet structured data and an [`llms.txt`](https://stellaroid.tech/llms.txt).
+- **Multi-wallet signing** - Freighter and Albedo natively, plus xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use.
 
 The public entry flow is organized around three personas: **Issue**, **Verify**, and **Hire**. Verified proof pages now hand employers into `/employer` with the proof hash and candidate wallet preloaded, then require a review checklist before escrow creation. They also hand recruiters into `/talent/<address>?proof=<hash>` so the candidate passport can show a known proof without pretending wallet-wide credential discovery exists yet. Issuer registration now explains approval readiness before signing, and `/pilot` keeps the first rollout bounded to a small testnet issuer pilot. Employer proof packs include a recruiter-safe summary plus an unsigned standards-alignment preview for W3C VC 2.0 and Open Badges 3.0 mapping. That preview is not a signed standards credential yet.
 
@@ -102,7 +115,7 @@ Every credential produces a public **Verified Badge** URL  - no wallet, no login
 </tr>
 </table>
 
-Contract on Stellar Expert: [`CDMUOHMA…IKTTW3`](https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3)
+Contract on Stellar Expert: [`CAD6C24P…ISZCV`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
 
 ![Contract history on Stellar Expert](images/stellar-expert.png)
 
@@ -210,11 +223,11 @@ Every action in the demo flow is a real transaction on Stellar testnet. Click an
 
 | Action | Tx Hash | Result |
 |---|---|---|
-| `init` | [`37afd2a5…96bb`](https://stellar.expert/explorer/testnet/tx/37afd2a5d3da2df250aabd2ce696bd22097ed7412bf3be381c446697e96996bb) | Contract initialized with admin + XLM token |
-| `register_certificate` | [`f3d6c0f4…8c13`](https://stellar.expert/explorer/testnet/tx/f3d6c0f4e23777a68295cff1a59ef089f639d52d6fd005d7ba98bbf866c68c13) | Demo credential hash registered for student |
-| `verify_certificate` | [`cf734925…a0b`](https://stellar.expert/explorer/testnet/tx/cf734925b00ba51ad800e16f4ac94874a6b9c9a194d44a1a5b82a6f6040bba0b) | Status changed to Verified |
+| `init` | [`faf278d7…85e6`](https://stellar.expert/explorer/testnet/tx/faf278d7c2e2c92faff965ee790e7a79b7188511671f175d3ed0ee7d0bf085e6) | Contract initialized with admin + XLM token |
+| `register_certificate` | [`8c20a944…a0e8`](https://stellar.expert/explorer/testnet/tx/8c20a9443af1e7ea16d65b6292829a15d614858cadc6d11bef46ab246bb4a0e8) | Demo credential hash registered for student |
+| `verify_certificate` | [`67137aa8…2cb9`](https://stellar.expert/explorer/testnet/tx/67137aa8b3b887443be9bc2e0806a438a5c6a23beb8834cc32493a1341c82cb9) | Status changed to Verified |
 
-**Live certificates** (testnet, contract [`CDMUOHMA…`](https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3)):
+**Live certificates** (testnet, contract [`CAD6C24P…`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)):
 
 | Hash | Cohort | Status |
 |---|---|---|
@@ -236,6 +249,13 @@ Every action in the demo flow is a real transaction on Stellar testnet. Click an
 | `reward_student(student, cert_hash, amount)` | Admin | Admin-initiated XLM payment to a graduate |
 | `link_payment(employer, student, cert_hash, amount)` | Employer | Employer pays graduate in XLM, linked to credential |
 | `get_certificate(cert_hash)` | Anyone | Read full credential record and status |
+| `create_opportunity(employer, candidate, cert_hash, title, amount, milestone_count)` | Employer | Open a paid-trial escrow against a verified credential |
+| `fund_opportunity(employer, opp_id)` | Employer | Escrow the full trial amount into the contract |
+| `submit_milestone(candidate, opp_id)` | Candidate | Mark the next milestone as delivered |
+| `approve_milestone(employer, opp_id)` | Employer | Approve the submitted milestone |
+| `release_payment(employer, opp_id)` | Employer | Release the approved milestone share to the candidate |
+| `refund_opportunity(employer, opp_id)` | Employer | Return remaining escrowed funds to the employer |
+| `get_opportunity(opp_id)` | Anyone | Read a paid-trial opportunity record |
 
 ### Credential Status Lifecycle
 
@@ -331,7 +351,9 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 | React | 19 |
 | @stellar/stellar-sdk | latest |
 | @stellar/freighter-api | latest |
+| @albedo-link/intent | latest |
 | Tailwind CSS | v4 |
+| PWA | manifest + service worker + iOS splash set |
 
 ---
 

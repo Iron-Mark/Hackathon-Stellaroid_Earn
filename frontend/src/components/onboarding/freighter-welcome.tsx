@@ -107,6 +107,17 @@ export function FreighterWelcome() {
             Let&rsquo;s go
           </Button>
         </div>
+
+        <p className="mt-4 mb-0 text-center text-[13px] text-text-muted">
+          Just exploring?{" "}
+          <a
+            href="/demo"
+            className="font-semibold text-primary underline [text-underline-offset:2px]"
+          >
+            Take the guided demo
+          </a>{" "}
+          — no wallet needed.
+        </p>
       </div>
     </div>
   );

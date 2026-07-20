@@ -90,6 +90,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className={classes}
           initial="rest"
           whileHover={isDisabled ? "rest" : "hover"}
+          whileTap={isDisabled ? undefined : { scale: 0.97 }}
           variants={variant === "primary" ? ctaHover : undefined}
         >
           {inner}
@@ -104,6 +105,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         initial="rest"
         whileHover={isDisabled ? "rest" : "hover"}
+        whileTap={isDisabled ? undefined : { scale: 0.97 }}
         variants={variant === "primary" ? ctaHover : undefined}
         {...(props as React.ComponentProps<typeof motion.button>)}
       >

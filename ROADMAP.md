@@ -6,7 +6,7 @@ Stellaroid Earn is no longer just a bootcamp submission. The project should stay
 
 - Canonical live demo: https://stellaroid.tech/
 - Fallback demo: https://stellaroid-earn-demo.vercel.app/
-- Current verified contract: `CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`
+- Current verified contract: `CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`
 - Domain state: `stellaroid.tech` is the canonical host; `www` and `earn` should redirect to the apex.
 - Product wedge: public credential proof pages plus issuer trust and employer-to-graduate payment flow.
 - Pro-research intake: `docs/planning/research-intake-status.md`

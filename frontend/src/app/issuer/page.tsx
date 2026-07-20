@@ -8,9 +8,9 @@ import { buildPageMetadata, seoCanonicalUrl, SITE_CANONICAL_URL, SITE_NAME } fro
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/issuer",
-  title: "Issuer",
+  title: "Issuer trust registry",
   description:
-    "Inspect or register an issuer wallet in the new on-chain trust registry for Stellaroid Earn.",
+    "Inspect or register an issuer wallet in the on-chain trust registry for Stellaroid Earn. Approved issuers can verify credentials and unlock payment on Stellar testnet.",
 });
 
 export default function IssuerPage() {

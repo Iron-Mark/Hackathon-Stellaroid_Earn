@@ -5,7 +5,12 @@ export const SITE_NAME = "Stellaroid Earn";
 export const SITE_AUTHOR_NAME = "Mark Siazon";
 export const SITE_AUTHOR_URL = "https://marksiazon.dev";
 export const SITE_AUTHOR_LINKEDIN = "https://www.linkedin.com/in/mark-siazon/";
+export const SITE_AUTHOR_GITHUB = "https://github.com/Iron-Mark";
 export const SITE_REPOSITORY_URL = "https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn";
+// Public product contact inbox (pilot requests, privacy questions, security
+// reports). Override via env if a dedicated product address is set up later.
+export const SITE_CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "marksiazon.dev@gmail.com";
 export const SITE_CONTRACT_SOURCE_URL = `${SITE_REPOSITORY_URL}/tree/main/contract`;
 export const SITE_RISE_EVENT_URL =
   "https://www.risein.com/programs/build-on-stellar-philippine-blockchain-week-2026";
@@ -47,6 +52,12 @@ const canonicalConfig = resolveCanonicalConfig(process.env.NEXT_PUBLIC_CANONICAL
 export const SITE_CANONICAL_URL = canonicalConfig.url;
 export const SITE_CANONICAL_ORIGIN = canonicalConfig.origin;
 
+/** Absolute logo URL for Organization / Publisher rich-result schema. */
+export const SITE_LOGO_URL = `${SITE_CANONICAL_URL}/icon-512.png`;
+
+/** Disambiguating entity links for Organization/Person `sameAs`. */
+export const SITE_ORG_SAME_AS = [SITE_REPOSITORY_URL, SITE_AUTHOR_LINKEDIN, SITE_AUTHOR_URL];
+
 export const SITE_DESCRIPTION =
   "Stellaroid Earn is a Stellar testnet demo for on-chain credential verification and instant payroll for verified work.";
 
@@ -64,14 +75,10 @@ export function seoCanonicalUrl(path = "/") {
   return `${SITE_CANONICAL_URL}${normalized === "/" ? "" : normalized}`;
 }
 
-export function alternateLanguagesFor(path = "/") {
-  const normalized = normalizeSeoPath(path);
-  return {
-    "en-US": normalized,
-    en: normalized,
-    "tl-PH": normalized,
-  };
-}
+// NOTE: hreflang alternates are intentionally NOT emitted. Locale here is
+// cookie-based (see app/layout.tsx) — en and tl render at the SAME URL — so
+// per-language hreflang annotations would all point to one URL and be invalid.
+// Reintroduce this only alongside genuinely distinct per-locale URLs (/tl/...).
 
 interface BuildPageMetadataOptions {
   title: string;
@@ -112,7 +119,6 @@ export function buildPageMetadata({
     authors: [{ name: SITE_AUTHOR_NAME, url: SITE_AUTHOR_URL }],
     alternates: {
       canonical: canonicalPath,
-      languages: alternateLanguagesFor(canonicalPath),
     },
     openGraph: {
       type: openGraphType,

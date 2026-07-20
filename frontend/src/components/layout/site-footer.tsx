@@ -69,6 +69,19 @@ export function SiteFooter() {
               <Link href="/employer" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Employer</Link>
               <Link href="/pilot" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Pilot</Link>
               <Link href="/status" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Status</Link>
+              <Link href="/demo" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Demo</Link>
+              <Link href="/contact" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Contact</Link>
+            </nav>
+
+            {/* Learn */}
+            <nav aria-label="Learn links" className="flex flex-col text-[13px]">
+              <h2 className="font-pixel text-[11px] font-medium text-primary uppercase tracking-widest mb-3">Learn</h2>
+              <Link href="/docs" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Docs</Link>
+              <Link href="/guides" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Guides</Link>
+              <Link href="/glossary" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Glossary</Link>
+              <Link href="/verify-bootcamp-certificate" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">For bootcamps</Link>
+              <Link href="/verify-candidate-credentials" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">For employers</Link>
+              <Link href="/instant-payouts" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Instant payouts</Link>
             </nav>
 
             {/* On-chain */}
@@ -116,8 +129,22 @@ export function SiteFooter() {
           </div>
         </div>
 
+        {/* Pilot CTA strip — the one conversion ask on every page. */}
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/25 bg-primary/[0.06] px-5 py-4">
+          <p className="m-0 text-sm text-text">
+            Running a bootcamp or hiring? Pilots are free and testnet-only.
+          </p>
+          <Link
+            href="/pilot#request"
+            prefetch={false}
+            className="inline-flex min-h-10 items-center rounded-md border border-primary bg-primary px-4 text-sm font-semibold text-on-primary no-underline transition-colors hover:bg-primary-hover"
+          >
+            Request a testnet pilot →
+          </Link>
+        </div>
+
         {/* Bottom bar — stay stacked through tablet widths so attribution never collides. */}
-        <div className="mt-10 grid gap-3 border-t border-border-glass pt-5 pr-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6 lg:pr-0">
+        <div className="mt-8 grid gap-3 border-t border-border-glass pt-5 pr-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6 lg:pr-0">
           <FooterProgramLink year={new Date().getFullYear()} />
           <div className="grid min-w-0 justify-items-start gap-2 sm:grid-cols-[auto_auto] sm:items-center sm:gap-x-4 lg:flex lg:flex-wrap lg:justify-end lg:gap-y-2">
             <a
@@ -133,6 +160,13 @@ export function SiteFooter() {
             <span className="whitespace-nowrap font-pixel text-[10px] text-text-muted/70 uppercase tracking-widest select-none" aria-hidden="true">
               Built on Stellar testnet
             </span>
+            <Link
+              href="/privacy"
+              prefetch={false}
+              className="whitespace-nowrap py-1 text-xs text-text-muted hover:text-text transition-colors no-underline"
+            >
+              Privacy &amp; terms
+            </Link>
             <LocaleToggle />
           </div>
         </div>

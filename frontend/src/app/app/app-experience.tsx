@@ -13,6 +13,7 @@ import { VerifyForm } from "@/components/actions/verify-form";
 import { PayForm } from "@/components/actions/pay-form";
 import { ProofBlockPreview } from "@/components/proof/proof-block-preview";
 import { ActivitySnackbar } from "@/components/activity/activity-snackbar";
+import { WalletActivity } from "@/components/activity/wallet-activity";
 import { CopyButton } from "@/components/ui";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { FreighterWelcome } from "@/components/onboarding/freighter-welcome";
@@ -68,6 +69,9 @@ export function AppExperience({ sidebarActivity }: AppExperienceProps) {
       {sidebarActivity ? <ActivitySnackbar>{sidebarActivity}</ActivitySnackbar> : null}
       {!showWalletEmptyState ? <FreighterWelcome /> : null}
       <div className="flex flex-col gap-6">
+        <h1 className="sr-only">
+          Register, verify, and pay for credentials on Stellar testnet
+        </h1>
         <NetworkBanner wallet={wallet} />
         <div className="grid [grid-template-columns:minmax(0,1.5fr)_minmax(280px,0.95fr)] gap-6 items-start max-[920px]:grid-cols-1">
           <div className="flex flex-col gap-6 min-w-0">
@@ -251,6 +255,7 @@ export function AppExperience({ sidebarActivity }: AppExperienceProps) {
               certStatus={milestones.credentialStatus}
               credentialTitle={milestones.credentialTitle}
             />
+            <WalletActivity />
           </aside>
         </div>
         {!showWalletEmptyState ? <DemoAutofillButton registered={milestones.registered} /> : null}

@@ -18,13 +18,13 @@ import {
   SITE_NAME,
   SITE_REPOSITORY_URL,
 } from "@/lib/seo";
-import { buildAboutSoftwareProductSchema } from "@/lib/schema";
+import { buildAboutSoftwareProductSchema, buildFaqJsonLd } from "@/lib/schema";
 import { LocalizedAboutCopy } from "@/components/about/localized-about-copy";
 import { StatCard } from "@/components/about/stat-dialog";
 
 export const metadata: Metadata = buildPageMetadata({
   path: "/about",
-  title: "About Stellaroid Earn",
+  title: "About",
   description:
     "Why Stellaroid Earn exists: certificates should be verifiable in seconds, not emails, and trusted verification should unlock payment in the same flow.",
 });
@@ -154,46 +154,76 @@ const stack = [
 ];
 
 const testDetail = {
-  title: "6 contract tests, and why each one matters",
+  title: "12 contract tests, and why each one matters",
   description:
     "Every test maps to a real moment in Maria's story: from her school anchoring the hash, to the employer paying her wallet.",
   items: [
     {
-      name: "test_full_flow",
+      name: "t1_happy_path_with_approved_issuer",
       why: "The complete journey: init, register issuer, approve, register cert, verify, pay. If this passes, Maria gets paid.",
       tone: "flow" as const,
     },
     {
-      name: "test_duplicate_certificate",
-      why: "Tries to register the same hash twice. The contract must reject it, otherwise anyone could overwrite Maria's credential.",
+      name: "t2_unapproved_issuer_cannot_issue",
+      why: "A pending issuer tries to register a certificate before admin approval. The contract refuses — trust is earned first.",
       tone: "guard" as const,
     },
     {
-      name: "test_unauthorized_verify",
-      why: "A random wallet tries to verify. Only approved issuers or the admin can. This test proves the trust layer works.",
+      name: "t3_suspended_issuer_cannot_issue",
+      why: "A suspended issuer tries to keep issuing. Blocked at the contract level, not by the UI.",
       tone: "guard" as const,
     },
     {
-      name: "test_payment_requires_verification",
-      why: "Blocks payment to an unverified cert. Employers can't pay until the credential is confirmed on-chain.",
+      name: "t4_wrong_approved_issuer_cannot_verify",
+      why: "An approved issuer tries to verify a credential it didn't issue. Only the issuing school or the admin can.",
       tone: "guard" as const,
     },
     {
-      name: "test_issuer_registration",
-      why: "Issuer self-registers and enters the pending queue. Admin approves. Tests the two-step trust handshake.",
+      name: "t5_revoked_credential_blocks_payment",
+      why: "A revoked credential can't unlock payment — the employer's transfer is rejected on-chain.",
+      tone: "guard" as const,
+    },
+    {
+      name: "t6_issuer_events_emit",
+      why: "Issuer registration and approval emit auditable events, so the trust trail is public on stellar.expert.",
       tone: "pass" as const,
     },
     {
-      name: "test_certificate_lifecycle",
-      why: "Register → verify → suspend → unsuspend → revoke. Covers every status transition a credential can go through.",
+      name: "t7_opportunity_happy_path",
+      why: "The escrow journey: create, fund, submit, approve, release. A paid trial pays out milestone by milestone.",
       tone: "flow" as const,
+    },
+    {
+      name: "t8_revoked_credential_blocks_opportunity",
+      why: "A revoked credential can't anchor a new paid trial — escrow creation is rejected outright.",
+      tone: "guard" as const,
+    },
+    {
+      name: "t9_refund_funded_opportunity",
+      why: "An employer can pull escrowed funds back out of a funded trial that never progressed.",
+      tone: "pass" as const,
+    },
+    {
+      name: "t10_invalid_status_transitions_fail",
+      why: "Out-of-order escrow moves — releasing before approval, refunding after approval — fail with typed errors.",
+      tone: "guard" as const,
+    },
+    {
+      name: "t11_rejects_too_many_opportunity_milestones",
+      why: "Milestone counts are bounded, so an opportunity can't be created with an unpayable schedule.",
+      tone: "guard" as const,
+    },
+    {
+      name: "t12_employer_can_refund_submitted_opportunity",
+      why: "Even after a milestone is submitted, the employer can still exit and recover escrow before approving it.",
+      tone: "pass" as const,
     },
   ],
 };
 
 const stats = [
   {
-    value: "6",
+    value: "12",
     label: "Contract tests in repo",
     category: "Tests",
     scrollTo: "contract-surface",
@@ -211,7 +241,7 @@ const stats = [
     ),
   },
   {
-    value: "12",
+    value: "19",
     label: "Public functions",
     category: "Surface",
     scrollTo: "contract-surface",
@@ -230,7 +260,7 @@ const stats = [
     ),
   },
   {
-    value: "10",
+    value: "16",
     label: "Event types",
     category: "On-chain",
     scrollTo: "contract-surface",
@@ -409,6 +439,36 @@ const fnGroups = [
     ],
   },
   {
+    label: "Escrow",
+    tone: "primary" as const,
+    fns: [
+      {
+        sig: "create_opportunity(employer, candidate, cert_hash, title, amount, milestone_count)",
+        desc: "Employer opens a paid-trial escrow against a candidate's credential; rejects bad amounts, expired credentials, and mismatched owners; emits opp_crt.",
+      },
+      {
+        sig: "fund_opportunity(employer, opp_id)",
+        desc: "Employer escrows the full amount into the contract; re-funding fails with AlreadyFunded; emits opp_fund.",
+      },
+      {
+        sig: "submit_milestone(candidate, opp_id)",
+        desc: "Candidate marks the next milestone delivered; emits mile_sub.",
+      },
+      {
+        sig: "approve_milestone(employer, opp_id)",
+        desc: "Employer approves the submitted milestone; emits mile_apr.",
+      },
+      {
+        sig: "release_payment(employer, opp_id)",
+        desc: "Releases the approved milestone share from escrow to the candidate; emits pay_rel.",
+      },
+      {
+        sig: "refund_opportunity(employer, opp_id)",
+        desc: "Returns remaining escrowed funds to the employer; emits pay_ref.",
+      },
+    ],
+  },
+  {
     label: "Read",
     tone: "accent" as const,
     fns: [
@@ -419,6 +479,10 @@ const fnGroups = [
       {
         sig: "get_issuer(issuer)",
         desc: "Read-only lookup of issuer trust status and profile metadata.",
+      },
+      {
+        sig: "get_opportunity(opp_id)",
+        desc: "Read-only lookup of a paid-trial opportunity record.",
       },
     ],
   },
@@ -497,6 +561,36 @@ const errors = [
     copy: "Credential expired and must be reissued or renewed.",
     tone: "state",
   },
+  {
+    code: "13",
+    name: "OpportunityNotFound",
+    copy: "No paid-trial opportunity exists for this id.",
+    tone: "input",
+  },
+  {
+    code: "14",
+    name: "AlreadyFunded",
+    copy: "The opportunity has already been funded.",
+    tone: "state",
+  },
+  {
+    code: "15",
+    name: "InvalidMilestone",
+    copy: "Milestone submission or approval is out of order.",
+    tone: "input",
+  },
+  {
+    code: "16",
+    name: "InvalidOpportunityStatus",
+    copy: "Action isn't allowed in the opportunity's current status.",
+    tone: "state",
+  },
+  {
+    code: "17",
+    name: "PaymentLocked",
+    copy: "Escrowed funds can't be released in the current state.",
+    tone: "state",
+  },
 ];
 
 const fnBadgeClasses: Record<string, string> = {
@@ -514,6 +608,45 @@ const errCategoryClasses: Record<string, string> = {
     "text-primary bg-[rgba(245,158,11,0.12)] border-[rgba(245,158,11,0.3)]",
 };
 
+// Single source of truth: the visible FAQ below and the FAQPage schema render
+// from this array, so the on-page text always matches the structured data
+// (Google's requirement for FAQ rich results). Answers are grounded in the
+// product copy on this page and the homepage "How it works" flow.
+const faqItems: Array<{ question: string; answer: string }> = [
+  {
+    question: "Do I need a wallet to verify a certificate?",
+    answer:
+      "No. Verification is public and read-only — anyone can open a proof page and confirm a credential without connecting a wallet or logging in. A wallet is only needed to issue, verify, or pay on-chain.",
+  },
+  {
+    question: "How do I verify a credential on Stellar?",
+    answer:
+      "Paste the 64-character SHA-256 hash on the public proof page to view its on-chain record, the issuer's trust status, and any attached credential evidence.",
+  },
+  {
+    question: "What is an on-chain certificate?",
+    answer:
+      "An on-chain certificate is a credential whose SHA-256 hash is bound to a student's Stellar wallet by an issuer. The proof lives on Stellar testnet and is verifiable in seconds instead of by email, and duplicate hashes are rejected on-chain.",
+  },
+  {
+    question: "How does the employer pay the graduate?",
+    answer:
+      "Once a credential is verified, the employer calls link_payment, which transfers XLM through the native Stellar Asset Contract straight to the student's verified wallet. Settlement is typically under five seconds and costs a fraction of a centavo — no invoice and no platform fee.",
+  },
+  {
+    question: "Who can verify a credential?",
+    answer:
+      "Only an approved issuer or the admin wallet can submit the verify_certificate transaction. When they do, the contract updates the credential status to Verified and emits a cert_ver event that anyone can audit on stellar.expert.",
+  },
+  {
+    question: "What does it cost to use Stellaroid Earn?",
+    answer:
+      "It is a free public Stellar testnet demo — no purchase, subscription, or mainnet funds required. On-chain payments settle in under five seconds for a fraction of a centavo in network fees.",
+  },
+];
+
+const aboutFaqJsonLd = buildFaqJsonLd(faqItems);
+
 const problemBeatIconClass =
   "text-[#f87171] bg-[rgba(220,38,38,0.08)] border-[rgba(220,38,38,0.25)]";
 const approachBeatIconClass =
@@ -529,6 +662,7 @@ export default function About() {
       <JsonLd data={aboutJsonLd} />
       <JsonLd data={aboutSoftwareProductJsonLd} />
       <JsonLd data={aboutBreadcrumbJsonLd} />
+      <JsonLd data={aboutFaqJsonLd} />
       <div className="min-h-dvh">
         <SiteNav />
         <main id="main">
@@ -634,11 +768,12 @@ export default function About() {
                     </span>
                     <div>
                       <p className="font-pixel text-[11px] font-semibold tracking-[0.08em] uppercase text-[#f87171] mt-1.5 mb-1">
-                        14–21 days
+                        Days, not minutes
                       </p>
                       <p className="text-text-muted text-sm leading-[1.55] m-0">
-                        Verification drags. 32% of candidates misrepresent.
-                        Background checks cost $30–$75 each.
+                        Verification drags. Manual checks wait on someone
+                        answering an email, and background-check vendors charge
+                        per candidate.
                       </p>
                     </div>
                   </li>
@@ -1025,6 +1160,33 @@ export default function About() {
                 </div>
               </dl>
             </aside>
+
+            <section aria-labelledby="faq-heading" className="mb-16">
+              <h2
+                id="faq-heading"
+                className="text-[1.375rem] font-bold tracking-tight text-text mb-1"
+              >
+                Frequently asked questions
+              </h2>
+              <p className="text-text-muted text-sm mb-6">
+                Common questions from issuers, employers, and graduates.
+              </p>
+              <dl className="grid gap-3">
+                {faqItems.map((item) => (
+                  <div
+                    key={item.question}
+                    className="bg-surface border border-border rounded-lg px-5 py-4"
+                  >
+                    <dt className="text-[0.9375rem] font-semibold text-text mb-1.5 [&_code]:font-mono">
+                      {item.question}
+                    </dt>
+                    <dd className="m-0 text-sm text-text-muted leading-[1.6]">
+                      {item.answer}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
 
             <div className="flex gap-3 justify-center my-8 mb-16 flex-wrap">
               <Link

@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
 
+// Per-deploy build id baked into the client bundle. The service worker is
+// registered as /sw.js?v=<id>, so each deploy re-installs the worker, which
+// refreshes its precache and purges the previous deploy's caches.
+const SW_BUILD_ID = (
+  process.env.VERCEL_GIT_COMMIT_SHA ?? Date.now().toString(36)
+).slice(0, 12);
+
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_SW_BUILD: SW_BUILD_ID,
+  },
+
   experimental: {
     // Keep local Windows builds deterministic; parallel static workers have
     // intermittently raced while writing .next trace/manifests in this repo.
@@ -19,6 +30,14 @@ const nextConfig: NextConfig = {
 
   async headers() {
     return [
+      {
+        // The service worker script must revalidate on every fetch so a new
+        // deploy's worker (and its VERSION-stamped caches) takes over quickly.
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        ],
+      },
       {
         // CSP is nonce-based and is applied from src/middleware.ts.
         source: "/(.*)",

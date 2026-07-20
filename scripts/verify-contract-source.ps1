@@ -1,6 +1,6 @@
 Param(
-  [string]$ContractId = "CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3",
-  [string]$ExpectedHash = "59ca403e347f4c24b1dd16fbcb65662c2837cc852946e3ae88374eed509d6f7f",
+  [string]$ContractId = "CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV",
+  [string]$ExpectedHash = "1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f",
   [string]$RpcUrl = "https://soroban-testnet.stellar.org",
   [string]$NetworkPassphrase = "Test SDF Network ; September 2015",
   [string]$SourceRepo = "github:Iron-Mark/Hackathon-Stellaroid_Earn",

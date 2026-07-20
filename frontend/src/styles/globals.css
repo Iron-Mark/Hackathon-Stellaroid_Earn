@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Brand faces are self-hosted via next/font in app/layout.tsx, which sets
+   --font-orbitron / --font-exo2 on <html>. @theme inline forwards those
+   runtime variables into Tailwind's font-heading / font-sans utilities. */
+@theme inline {
+  --font-heading: var(--font-orbitron), system-ui, sans-serif;
+  --font-sans: var(--font-exo2), system-ui, sans-serif;
+}
+
 @theme {
   /* Colors — existing palette */
   --color-bg: #0F172A;
@@ -40,9 +48,9 @@
   --spacing-5: 24px;
   --spacing-6: 32px;
 
-  /* Fonts */
-  --font-heading: 'Orbitron', system-ui, sans-serif;
-  --font-sans: 'Exo 2', system-ui, sans-serif;
+  /* Fonts — heading/sans come from @theme inline above (next/font). Both
+     mono faces intentionally stay on system stacks: ~50 tightly-tracked
+     badges were metric-tuned against the fallbacks that actually render. */
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --font-pixel: 'Share Tech Mono', ui-monospace, monospace;
 
@@ -139,6 +147,20 @@
     font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Kill the 300ms double-tap-zoom delay on touch targets */
+  a, button, input, select, textarea, [role="button"], [role="tab"] {
+    touch-action: manipulation;
+  }
+
+  /* background-attachment: fixed forces per-scroll repaints on mobile GPUs
+     (and iOS Safari ignores it on body) — fall back to scroll */
+  @media (width < 64rem) {
+    body {
+      background-attachment: scroll;
+    }
   }
 
   main[id] {
@@ -233,6 +255,25 @@
 @keyframes modalFade {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+/* Mobile bottom-nav "More" sheet */
+@keyframes sheetUp {
+  from { opacity: 0.5; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reserve scroll clearance for the fixed bottom nav on mobile/tablet.
+   rem-gated and rem-sized so it tracks the bar (lg = 64rem, h-16 = 4rem)
+   at any user root font size. Horizontal insets keep content clear of the
+   notch under viewport-fit=cover — scoped to bottom-nav pages so full-bleed
+   layouts (/slides, proof embeds) keep their own geometry. */
+@media (width < 64rem) {
+  body:has([data-mobile-bottom-nav]) {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
 @keyframes modalRise {

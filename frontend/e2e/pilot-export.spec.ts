@@ -9,14 +9,24 @@ test("pilot intake page exposes issuer and employer paths", async ({ page }) => 
   await expect(
     page.getByRole("heading", { name: /run a narrow credential pilot/i }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: /book an issuer pilot/i })).toHaveAttribute(
-    "href",
-    /linkedin\.com\/in\/mark-siazon/,
-  );
+  await expect(
+    page.getByRole("link", { name: /request an issuer pilot/i }),
+  ).toHaveAttribute("href", "#request");
+  await expect(
+    page.getByRole("link", { name: /book directly on linkedin/i }),
+  ).toHaveAttribute("href", /linkedin\.com\/in\/mark-siazon/);
   await expect(page.getByRole("link", { name: /review proof workflow/i })).toHaveAttribute(
     "href",
     "/proof",
   );
+
+  // The on-site lead form is present with its required fields.
+  await expect(
+    page.getByRole("heading", { name: "Request a testnet pilot" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Your name")).toBeVisible();
+  await expect(page.getByLabel("Email")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Request a pilot" })).toBeDisabled();
   await expect(page.getByRole("heading", { name: "Pilot scope guardrails" })).toBeVisible();
   await expect(page.getByText("5 to 10 credentials")).toBeVisible();
   await expect(page.getByText("No mainnet or production payroll")).toBeVisible();

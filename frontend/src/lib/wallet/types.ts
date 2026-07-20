@@ -1,6 +1,6 @@
 import type { WalletSnapshot } from "@/lib/types";
 
-export type WalletProviderId = "freighter" | "albedo";
+export type WalletProviderId = "freighter" | "albedo" | "swk";
 
 // "extension" wallets need a desktop browser extension; "web" wallets run in
 // any browser (including mobile) via a popup/redirect and need no install.

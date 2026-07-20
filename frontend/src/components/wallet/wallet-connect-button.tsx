@@ -30,8 +30,16 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Prefer the concrete wallet name (e.g. "xBull") when the connection came
+  // through the Stellar Wallets Kit aggregator.
   const activeLabel =
-    providers.find((provider) => provider.id === activeProvider)?.label ?? "wallet";
+    wallet.providerLabel ??
+    providers.find((provider) => provider.id === activeProvider)?.label ??
+    "wallet";
+
+  function connectLabel(provider: { id: string; label: string }) {
+    return provider.id === "swk" ? `${provider.label}…` : `Connect ${provider.label}`;
+  }
 
   function handleCopyAddress() {
     if (copyTimer.current) clearTimeout(copyTimer.current);
@@ -213,7 +221,7 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
               className="w-full"
             >
               <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
-              Connect {provider.label}
+              {connectLabel(provider)}
             </Button>
           ))
         )}
@@ -252,7 +260,7 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
           onClick={() => void connectWallet(provider.id)}
         >
           <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
-          Connect {provider.label}
+          {connectLabel(provider)}
         </Button>
       ))}
     </div>

@@ -60,5 +60,8 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit --incremental false --pretty false
 
+      - name: Unit tests
+        run: npm run test:unit
+
       - name: Playwright E2E
         run: npm run test:e2e

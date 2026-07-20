@@ -79,7 +79,6 @@ frontend/
 │   │   ├── freighter.ts          Freighter wrapper (E2E mock included)
 │   │   ├── issuer-registry.ts    Known issuer label lookup
 │   │   ├── types.ts              Shared types (WalletStatus, TxState, etc.)
-│   │   ├── validators.ts         Address + input validation
 │   │   └── with-timeout.ts       Promise timeout helper
 │   └── styles/
 │       └── globals.css           Design tokens, reset, reduced-motion

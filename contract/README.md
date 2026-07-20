@@ -110,9 +110,9 @@ https://stellar.expert/explorer/testnet/contract/<CONTRACT_ID>
 ## Proof Block
 
 - **Pitch:** Trusted issuers verify a Philippine bootcamp credential and employers can pay the grad in one flow — on Stellar testnet.
-- **Live demo:** https://stellaroid-earn-demo.vercel.app/
-- **Contract ID (current security-hardened baseline):** `CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`
-  → https://stellar.expert/explorer/testnet/contract/CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3
+- **Live demo:** https://stellaroid.tech
+- **Contract ID (current security-hardened baseline):** `CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`
+  → https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV
 - **Contract ID (stable v1):** `CDWCARXLJUJ5ISC3GPXRLR5HC6QPLMGULCVRIACYKQM4U5AG7TFWXHVZ`
   → https://stellar.expert/explorer/testnet/contract/CDWCARXLJUJ5ISC3GPXRLR5HC6QPLMGULCVRIACYKQM4U5AG7TFWXHVZ
 - **Reward token (native XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
@@ -127,7 +127,7 @@ https://stellar.expert/explorer/testnet/contract/<CONTRACT_ID>
   - [x] Full register → verify → pay flow executed end to end on testnet (tx hashes above)
   - [x] `cert_reg` + `payment` events visible in explorer
   - [x] No raw ScVal / HostError surfaces (mapped in `frontend/src/lib/contract-client.ts` `normalizeError`)
-- **Current repo note:** trust-layer and opportunity escrow tests are included in `contract/src/test.rs`; the security-hardened contract has been redeployed to testnet with WASM hash `59ca403e347f4c24b1dd16fbcb65662c2837cc852946e3ae88374eed509d6f7f`.
+- **Current repo note:** trust-layer and opportunity escrow tests are included in `contract/src/test.rs`; the security-hardened contract has been redeployed to testnet with WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`.
 
 ## License
 

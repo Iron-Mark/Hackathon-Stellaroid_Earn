@@ -6,22 +6,13 @@ import {
   getRecentEvents,
   type RecentActivityItem,
 } from "@/lib/events";
+import { kindTag } from "./kind-tag";
 
 interface RecentActivityProps {
   className?: string;
   compact?: boolean;
   sidebar?: boolean;
   bare?: boolean;
-}
-
-function kindTag(kind: RecentActivityItem["kind"]) {
-  if (kind === "payment" || kind === "reward")
-    return "font-pixel text-[11px] text-primary bg-primary/10 px-2 py-0.5 rounded";
-  if (kind === "cert_ver")
-    return "font-pixel text-[11px] text-verified bg-verified-bg px-2 py-0.5 rounded";
-  if (kind === "cert_reg")
-    return "font-pixel text-[11px] text-accent bg-accent/10 px-2 py-0.5 rounded";
-  return "font-pixel text-[11px] text-text-muted bg-surface-2 px-2 py-0.5 rounded";
 }
 
 function sourceLabel(source: RecentActivityItem["source"]) {

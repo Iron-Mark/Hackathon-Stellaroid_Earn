@@ -8,11 +8,13 @@
     "start": "next start",
     "lint": "eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
     "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/*.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "gen:pwa": "node scripts/generate-pwa-icons.mjs && node scripts/generate-splash.mjs"
   },
   "dependencies": {
     "@albedo-link/intent": "^0.13.0",
     "@base-ui/react": "^1.4.0",
+    "@creit.tech/stellar-wallets-kit": "^2.5.0",
     "@stellar/freighter-api": "^4.1.0",
     "@stellar/stellar-sdk": "^13.1.0",
     "@tailwindcss/postcss": "^4.2.2",
@@ -40,9 +42,14 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.39.1",
     "eslint-config-next": "^15.5.15",
+    "sharp": "^0.34.5",
     "typescript": "^5.7.0"
   },
   "overrides": {
-    "postcss": "8.5.15"
+    "postcss": "8.5.15",
+    "protobufjs": "^7.6.3",
+    "jayson": {
+      "uuid": "^11.1.1"
+    }
   }
 }

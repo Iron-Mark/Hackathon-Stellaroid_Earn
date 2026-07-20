@@ -14,36 +14,11 @@ import { humanizeError } from "@/lib/errors";
 import { withTimeout } from "@/lib/with-timeout";
 import { ExternalLink } from "lucide-react";
 import { MilestoneStepper } from "./milestone-stepper";
+import { formatXlm, statusTone } from "./opportunity-format";
 import type { OpportunityRecord } from "@/lib/types";
 
 interface OpportunityCardProps {
   opportunity: OpportunityRecord;
-}
-
-function statusTone(
-  status: OpportunityRecord["status"],
-): "success" | "warning" | "danger" | "accent" | "neutral" {
-  switch (status) {
-    case "released":
-      return "success";
-    case "funded":
-    case "in_progress":
-      return "accent";
-    case "submitted":
-    case "approved":
-      return "warning";
-    case "refunded":
-    case "cancelled":
-      return "danger";
-    case "draft":
-    default:
-      return "neutral";
-  }
-}
-
-function formatXlm(stroops: bigint): string {
-  const xlm = Number(stroops) / 1e7;
-  return `${xlm.toLocaleString("en-US", { maximumFractionDigits: 2 })} ${appConfig.assetCode}`;
 }
 
 export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProps) {

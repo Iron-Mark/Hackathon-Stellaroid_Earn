@@ -9,6 +9,8 @@ const baseEvent: RecentActivityItem = {
   label: "Registered",
   detail: "Proof registered",
   hashHex: "c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3",
+  opportunityId: null,
+  actor: "GAWIOVGFSPJDEIJJZUSVRFPVP3D5VNO2LGCU47KEHJD6MV277QKNR34D",
   ledgerClosedAt: "2026-07-03T00:00:00.000Z",
   txHash: "tx-1",
   externalUrl: "https://stellar.expert/explorer/testnet/tx/tx-1",

@@ -34,14 +34,14 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
   return (
     <section
       className={cn(
-        "px-6 py-24 sm:px-0 sm:py-24 sm:pb-16 max-w-260 mx-auto text-center",
+        "px-6 pt-14 pb-16 sm:px-0 sm:py-24 sm:pb-16 max-w-260 mx-auto text-center",
         className,
       )}
     >
       <span className="inline-block font-pixel text-xs tracking-widest uppercase text-primary border border-amber-500/30 bg-amber-500/8 px-3 py-1 rounded-full mb-5">
         {t.eyebrow}
       </span>
-      <h1 className="text-4xl sm:text-7xl leading-tight -tracking-wide font-bold m-0 mb-5">
+      <h1 className="text-3xl sm:text-7xl leading-[1.15] sm:leading-tight -tracking-wide font-bold m-0 mb-5">
         {t.h1a}
         {" "}
         <br />
@@ -52,11 +52,11 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
       <p className="text-base sm:text-lg text-text-muted max-w-160 mx-auto mb-8 leading-[1.55]">
         {t.lede}
       </p>
-      <div className="flex gap-3 justify-center flex-wrap">
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center sm:flex-wrap">
         <Link
           href="/app"
           className={cn(
-            "inline-flex items-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
+            "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
             "bg-primary text-on-primary border border-primary shadow-lg shadow-amber-500/15",
             "hover:bg-primary-hover hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-0.5",
             "focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-1",
@@ -67,9 +67,9 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
           {t.ctaPrimary}
         </Link>
         <Link
-          href={`/proof/${DEFAULT_SAMPLE_PROOF_HASH}`}
+          href="/demo"
           className={cn(
-            "inline-flex items-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
+            "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
             "text-text border border-border bg-transparent",
             "hover:bg-surface hover:-translate-y-0.5",
             "focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-1",
