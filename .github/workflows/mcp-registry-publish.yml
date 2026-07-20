@@ -1,0 +1,44 @@
+# Publishes server.json to the official MCP Registry
+# (registry.modelcontextprotocol.io) under io.github.Iron-Mark/* via GitHub
+# Actions OIDC — no stored secrets. Trigger manually (workflow_dispatch) or by
+# pushing an mcp-v* tag (the app's own v* release tags deliberately do NOT
+# trigger this).
+#
+# Registry versions are immutable: bump `version` in server.json before
+# re-publishing.
+name: Publish to MCP Registry
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["mcp-v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # OIDC token for registry auth
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Validate server.json
+        run: ./mcp-publisher validate
+
+      - name: Authenticate to MCP Registry (OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        run: ./mcp-publisher publish
+
+      - name: Verify listing
+        run: |
+          sleep 5
+          curl -s "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.Iron-Mark/stellaroid-earn" | tee listing.json
+          grep -q '"io.github.Iron-Mark/stellaroid-earn"' listing.json
