@@ -2,24 +2,6 @@
 resolver = "2"
 members = [
   "contract",
-  "learning/hello-world",
-  "learning/rust-syntax",
-  "learning/variables-and-types",
-  "learning/conditionals-and-loops",
-  "learning/functions-and-errors",
-  "learning/state-storage",
-  "learning/events",
-  "learning/auth-and-admin",
-  "learning/maps-and-keys",
-  "learning/token-ledger-basics",
-  "learning/enums-and-matches",
-  "learning/structs-and-methods",
-  "learning/storage-ttl",
-  "soroban-examples/hello-soroban",
-  "soroban-examples/counter-storage",
-  "soroban-examples/auth-check",
-  "soroban-examples/events-demo",
-  "soroban-examples/simple-voting",
 ]
 
 [workspace.dependencies]

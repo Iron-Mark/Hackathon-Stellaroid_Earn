@@ -373,7 +373,7 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 
 ```
 stellaroid-earn/
-├── Cargo.toml                   # Rust workspace for learning + examples
+├── Cargo.toml                   # Rust workspace (Soroban contract)
 ├── contract/
 │   ├── src/
 │   │   ├── lib.rs              # Soroban credential + payment contract
@@ -392,8 +392,6 @@ stellaroid-earn/
 ├── docs/                       # Product docs, setup references, operations, and archives
 ├── demo/                       # Demo script, FAQ, press kit
 ├── images/                     # README screenshots
-├── learning/                   # Rust/Soroban workshop exercises
-├── soroban-examples/           # Standalone Soroban examples
 ├── scripts/                    # Screenshot capture and operations scripts
 ├── LICENSE
 └── README.md
