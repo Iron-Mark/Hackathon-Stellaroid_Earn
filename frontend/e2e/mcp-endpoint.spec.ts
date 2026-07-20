@@ -44,7 +44,7 @@ async function mcpCall(
 
 function toolPayload(rpc: JsonRpcResult): {
   note: string;
-  data: Record<string, never> & Record<string, unknown>;
+  data: Record<string, unknown>;
 } {
   const text = rpc.result?.content?.[0]?.text ?? "{}";
   return JSON.parse(text);
