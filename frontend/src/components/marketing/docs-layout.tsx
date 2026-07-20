@@ -123,7 +123,7 @@ export function DocsLayout({
 
               <CtaBand
                 title="Run it yourself on testnet"
-                body="Everything documented here is live in the early-access pilot — free, testnet-only, and auditable on stellar.expert."
+                body="Everything documented here is live in the early-access pilot: free, testnet-only, and auditable on stellar.expert."
                 primaryCta={{ label: "Try the app", href: "/app" }}
                 secondaryCta={{
                   label: "View the source",

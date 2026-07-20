@@ -1,4 +1,4 @@
-// Glossary hub content — definitions are deliberately 1-2 sentences so
+// Glossary hub content, definitions are deliberately 1-2 sentences so
 // answer engines can lift them verbatim (DefinedTermSet schema).
 import type { GlossaryContent } from "./types";
 
@@ -20,12 +20,12 @@ export const glossaryContent: GlossaryContent = {
   ],
   "eyebrow": "Reference / Glossary",
   "h1": "Verifiable credentials glossary",
-  "lede": "Plain-English definitions for on-chain credential verification — from verifiable credential to credential anchoring to the cert_ver event. Each entry is written to be quotable by people and answer engines alike, and grounded in how Stellaroid Earn actually works on Stellar testnet.",
+  "lede": "Plain-English definitions for on-chain credential verification, from verifiable credential to credential anchoring to the cert_ver event. Each entry is written to be quotable by people and answer engines alike, and grounded in how Stellaroid Earn actually works on Stellar testnet.",
   "sections": [
     {
       "heading": "What \"verifiable credential\" means here",
       "paragraphs": [
-        "A verifiable credential is a claim about a person — a diploma, a course completion, a certification — that a third party can confirm on their own, without emailing the issuer and waiting days for a reply. The confidence comes from a tamper-evident record rather than a PDF that can be quietly edited or forged.",
+        "A verifiable credential is a claim about a person, a diploma, a course completion, a certification, that a third party can confirm on their own, without emailing the issuer and waiting days for a reply. The confidence comes from a tamper-evident record rather than a PDF that can be quietly edited or forged.",
         "Stellaroid Earn puts that record on Stellar. An issuer anchors a certificate's SHA-256 hash to the graduate's wallet, an approved issuer or the admin verifies it on-chain, and the result is readable on a public proof page. This glossary defines the vocabulary that flow uses, one term at a time, so the same words mean the same thing to a graduate, a recruiter, and an answer engine."
       ]
     },
@@ -36,16 +36,16 @@ export const glossaryContent: GlossaryContent = {
         "Everything runs on Stellar testnet as an early-access pilot, and every step emits an event that is auditable on stellar.expert. Verification is public and read-only, so anyone can confirm a credential without a wallet or login; a wallet is only needed to issue, verify, or pay."
       ],
       "bullets": [
-        "Anchor — register_certificate binds a document's SHA-256 hash to a student's wallet and rejects duplicate hashes on-chain.",
-        "Verify — an approved issuer or the admin calls verify_certificate; the status becomes Verified and a cert_ver event is emitted.",
-        "Pay — link_payment transfers XLM through the native Stellar Asset Contract to the verified wallet, typically settling in under five seconds."
+        "Anchor, register_certificate binds a document's SHA-256 hash to a graduate's wallet and rejects duplicate hashes on-chain.",
+        "Verify, an approved issuer or the admin calls verify_certificate; the status becomes Verified and a cert_ver event is emitted.",
+        "Pay, link_payment transfers XLM through the native Stellar Asset Contract to the verified wallet, typically settling in under five seconds."
       ]
     }
   ],
   "terms": [
     {
       "term": "Verifiable credential",
-      "definition": "A digital claim about a person — such as a diploma or course completion — whose authenticity anyone can check against a tamper-evident record instead of contacting the issuer by email. On Stellaroid Earn, that record is an entry on Stellar."
+      "definition": "A digital claim about a person, such as a diploma or course completion, whose authenticity anyone can check against a tamper-evident record instead of contacting the issuer by email. On Stellaroid Earn, that record is an entry on Stellar."
     },
     {
       "term": "On-chain certificate",
@@ -57,7 +57,7 @@ export const glossaryContent: GlossaryContent = {
     },
     {
       "term": "SHA-256 hash",
-      "definition": "A one-way function that turns any file into a fixed 64-character hexadecimal fingerprint. The same file always produces the same hash, and any change produces a completely different one — so the hash proves a document without revealing it."
+      "definition": "A one-way function that turns any file into a fixed 64-character hexadecimal fingerprint. The same file always produces the same hash, and any change produces a completely different one, so the hash proves a document without revealing it."
     },
     {
       "term": "Issuer",
@@ -65,7 +65,7 @@ export const glossaryContent: GlossaryContent = {
     },
     {
       "term": "Trust registry",
-      "definition": "The on-chain list of issuers and their status — pending, approved, or suspended. It answers \"should I trust this issuer?\", so a verified credential is only as strong as the approved issuer behind it."
+      "definition": "The on-chain list of issuers and their status, pending, approved, or suspended. It answers \"should I trust this issuer?\", so a verified credential is only as strong as the approved issuer behind it."
     },
     {
       "term": "Soroban",
@@ -85,7 +85,7 @@ export const glossaryContent: GlossaryContent = {
     },
     {
       "term": "Credential status",
-      "definition": "The lifecycle state a credential carries: issued, verified, suspended, revoked, or expired. The status controls what is allowed — for example, payment only unlocks once a credential is verified."
+      "definition": "The lifecycle state a credential carries: issued, verified, suspended, revoked, or expired. The status controls what is allowed, for example, payment only unlocks once a credential is verified."
     },
     {
       "term": "Verification",
@@ -119,7 +119,7 @@ export const glossaryContent: GlossaryContent = {
   "faq": [
     {
       "question": "What is a verifiable credential?",
-      "answer": "A verifiable credential is a digital claim about a person — such as a diploma or course completion — that anyone can confirm independently against a tamper-evident record, instead of emailing the issuing institution and waiting for a reply. On Stellaroid Earn, that record is an entry on Stellar: an issuer binds the certificate's SHA-256 hash to the graduate's wallet, and the proof is verifiable in seconds."
+      "answer": "A verifiable credential is a digital claim about a person, such as a diploma or course completion, that anyone can confirm independently against a tamper-evident record, instead of emailing the issuing institution and waiting for a reply. On Stellaroid Earn, that record is an entry on Stellar: an issuer binds the certificate's SHA-256 hash to the graduate's wallet, and the proof is verifiable in seconds."
     },
     {
       "question": "What is an on-chain certificate?",
@@ -127,7 +127,7 @@ export const glossaryContent: GlossaryContent = {
     },
     {
       "question": "How does blockchain credential verification work?",
-      "answer": "An issuer computes a document's SHA-256 hash and anchors it to the recipient's Stellar wallet with register_certificate. An approved issuer or the admin then calls verify_certificate, which sets the credential's status to Verified and emits a cert_ver event. Anyone can confirm the result on a public proof page or on stellar.expert — no wallet or login required."
+      "answer": "An issuer computes a document's SHA-256 hash and anchors it to the recipient's Stellar wallet with register_certificate. An approved issuer or the admin then calls verify_certificate, which sets the credential's status to Verified and emits a cert_ver event. Anyone can confirm the result on a public proof page or on stellar.expert, no wallet or login required."
     },
     {
       "question": "Do I need a wallet or login to verify a credential?",
@@ -135,7 +135,7 @@ export const glossaryContent: GlossaryContent = {
     },
     {
       "question": "Is the document itself stored on the blockchain?",
-      "answer": "No. Only the document's SHA-256 hash — a 64-character fingerprint — is anchored on-chain, never the file. Because the same document always produces the same hash, a holder can prove a certificate matches the on-chain record without publishing the certificate's contents."
+      "answer": "No. Only the document's SHA-256 hash, a 64-character fingerprint, is anchored on-chain, never the file. Because the same document always produces the same hash, a holder can prove a certificate matches the on-chain record without publishing the certificate's contents."
     },
     {
       "question": "What is the difference between verified, suspended, and revoked?",

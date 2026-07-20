@@ -165,7 +165,7 @@ const testDetail = {
     },
     {
       name: "t2_unapproved_issuer_cannot_issue",
-      why: "A pending issuer tries to register a certificate before admin approval. The contract refuses — trust is earned first.",
+      why: "A pending issuer tries to register a certificate before admin approval. The contract refuses, trust is earned first.",
       tone: "guard" as const,
     },
     {
@@ -180,7 +180,7 @@ const testDetail = {
     },
     {
       name: "t5_revoked_credential_blocks_payment",
-      why: "A revoked credential can't unlock payment — the employer's transfer is rejected on-chain.",
+      why: "A revoked credential can't unlock payment, the employer's transfer is rejected on-chain.",
       tone: "guard" as const,
     },
     {
@@ -195,7 +195,7 @@ const testDetail = {
     },
     {
       name: "t8_revoked_credential_blocks_opportunity",
-      why: "A revoked credential can't anchor a new paid trial — escrow creation is rejected outright.",
+      why: "A revoked credential can't anchor a new paid trial, escrow creation is rejected outright.",
       tone: "guard" as const,
     },
     {
@@ -205,7 +205,7 @@ const testDetail = {
     },
     {
       name: "t10_invalid_status_transitions_fail",
-      why: "Out-of-order escrow moves — releasing before approval, refunding after approval — fail with typed errors.",
+      why: "Out-of-order escrow moves, releasing before approval, refunding after approval, fail with typed errors.",
       tone: "guard" as const,
     },
     {
@@ -616,7 +616,7 @@ const faqItems: Array<{ question: string; answer: string }> = [
   {
     question: "Do I need a wallet to verify a certificate?",
     answer:
-      "No. Verification is public and read-only — anyone can open a proof page and confirm a credential without connecting a wallet or logging in. A wallet is only needed to issue, verify, or pay on-chain.",
+      "No. Verification is public and read-only, anyone can open a proof page and confirm a credential without connecting a wallet or logging in. A wallet is only needed to issue, verify, or pay on-chain.",
   },
   {
     question: "How do I verify a credential on Stellar?",
@@ -631,7 +631,7 @@ const faqItems: Array<{ question: string; answer: string }> = [
   {
     question: "How does the employer pay the graduate?",
     answer:
-      "Once a credential is verified, the employer calls link_payment, which transfers XLM through the native Stellar Asset Contract straight to the student's verified wallet. Settlement is typically under five seconds and costs a fraction of a centavo — no invoice and no platform fee.",
+      "Once a credential is verified, the employer calls link_payment, which transfers XLM through the native Stellar Asset Contract straight to the graduate's verified wallet. On testnet, settlement is typically under five seconds and costs a fraction of a cent, with no invoice and no platform fee.",
   },
   {
     question: "Who can verify a credential?",
@@ -641,7 +641,7 @@ const faqItems: Array<{ question: string; answer: string }> = [
   {
     question: "What does it cost to use Stellaroid Earn?",
     answer:
-      "It is a free public Stellar testnet demo — no purchase, subscription, or mainnet funds required. On-chain payments settle in under five seconds for a fraction of a centavo in network fees.",
+      "It is a free public Stellar testnet demo, no purchase, subscription, or mainnet funds required. On-chain payments settle in under five seconds for a fraction of a cent in network fees.",
   },
 ];
 
@@ -899,7 +899,7 @@ export default function About() {
                       </p>
                       <p className="text-text-muted text-sm leading-[1.55] m-0">
                         The employer verifies the proof, hires Maria, and sends
-                        payment straight to her wallet — no invoice, no
+                        payment straight to her wallet, no invoice, no
                         middleman.
                       </p>
                     </div>

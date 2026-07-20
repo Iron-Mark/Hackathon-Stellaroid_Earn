@@ -81,7 +81,7 @@ export function LandingLayout({
 
         <CtaBand
           title="Try the live testnet pilot"
-          body="Free public early access on Stellar testnet — no purchase, subscription, or mainnet funds required."
+          body="Free public early access on Stellar testnet, with no purchase, subscription, or mainnet funds required."
           primaryCta={content.primaryCta}
           secondaryCta={content.secondaryCta}
         />

@@ -90,7 +90,7 @@ export function ArticleLayout({ article }: { article: GuideArticle }) {
 
         <CtaBand
           title="See it work on a live testnet proof"
-          body="Stellaroid Earn is in early access on Stellar testnet — open a public proof page or run the flow yourself."
+          body="Stellaroid Earn is in early access on Stellar testnet. Open a public proof page or run the flow yourself."
           primaryCta={article.primaryCta}
           secondaryCta={article.secondaryCta}
         />

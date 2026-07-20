@@ -16,7 +16,7 @@ export const verifyBootcampCertificate: LandingContent = {
   ],
   "eyebrow": "FOR BOOTCAMPS & CREDENTIAL ISSUERS",
   "h1": "Verify bootcamp certificates on the blockchain",
-  "lede": "Anchor each certificate's SHA-256 hash on Stellar so your graduates carry a tamper-evident proof anyone can check in seconds — no email thread, no phone call, no login. This is an early-access pilot running live on Stellar testnet.",
+  "lede": "Anchor each certificate's SHA-256 hash on Stellar so your graduates carry a tamper-evident proof anyone can check in seconds, no email thread, no phone call, no login. This is an early-access pilot running live on Stellar testnet.",
   "primaryCta": {
     "label": "Register as an issuer",
     "href": "/issuer/register"
@@ -29,7 +29,7 @@ export const verifyBootcampCertificate: LandingContent = {
     {
       "heading": "What it means to verify a bootcamp certificate on blockchain",
       "paragraphs": [
-        "When your bootcamp issues a certificate, the file itself is easy to copy, screenshot, or forge. Anchoring it on-chain fixes that. Your browser computes the certificate's SHA-256 hash — a 64-character fingerprint unique to that exact document — and an issuer signs the register_certificate transaction, binding the hash to the graduate's Stellar wallet.",
+        "When your bootcamp issues a certificate, the file itself is easy to copy, screenshot, or forge. Anchoring it on-chain fixes that. Your browser computes the certificate's SHA-256 hash, a 64-character fingerprint unique to that exact document, and an issuer signs the register_certificate transaction, binding the hash to the graduate's Stellar wallet.",
         "From that point the credential has an on-chain record: who issued it, which wallet owns it, and its status. Anyone can confirm the proof against the live contract on Stellar testnet without contacting your registrar. Verification stops being a favor your admissions staff does over email and becomes a public, read-only lookup."
       ],
       "bullets": [
@@ -41,18 +41,18 @@ export const verifyBootcampCertificate: LandingContent = {
     {
       "heading": "Tamper-evidence: duplicate hashes are rejected on-chain",
       "paragraphs": [
-        "The contract will not let the same certificate hash be registered twice. A second attempt to anchor an already-registered hash fails with an AlreadyExists error before anything is written. Nobody — not another issuer, not a bad actor — can quietly overwrite or re-mint a credential your school already anchored.",
+        "The contract will not let the same certificate hash be registered twice. A second attempt to anchor an already-registered hash fails with an AlreadyExists error before anything is written. Nobody, not another issuer, not a bad actor, can quietly overwrite or re-mint a credential your school already anchored.",
         "Because the hash is derived from the document, any edit to the certificate (a changed name, date, or grade) produces a completely different hash that will not match the anchored record. That mismatch is the tamper-evidence: an altered file simply won't verify."
       ]
     },
     {
       "heading": "The public proof page your graduates share",
       "paragraphs": [
-        "Every anchored credential gets a public proof page. A graduate pastes the 64-character hash — or shares the link — and the page shows the on-chain record, the issuing organization's trust status, the credential's current status, and any attached evidence. No wallet, no account, no login is required to open it.",
-        "That means an employer in another country can confirm a certificate the moment they receive it, and your graduate controls the link they hand out. A wallet is only ever needed to issue, verify, or pay on-chain — never to read a proof."
+        "Every anchored credential gets a public proof page. A graduate pastes the 64-character hash, or shares the link, and the page shows the on-chain record, the issuing organization's trust status, the credential's current status, and any attached evidence. No wallet, no account, no login is required to open it.",
+        "That means an employer in another country can confirm a certificate the moment they receive it, and your graduate controls the link they hand out. A wallet is only ever needed to issue, verify, or pay on-chain, never to read a proof."
       ],
       "bullets": [
-        "Wallet-free and login-free — verification is public and read-only",
+        "Wallet-free and login-free, verification is public and read-only",
         "Shows credential status, issuer trust status, and on-chain evidence",
         "Every action is auditable on stellar.expert via the emitted events"
       ]
@@ -61,13 +61,13 @@ export const verifyBootcampCertificate: LandingContent = {
       "heading": "The issuer trust registry",
       "paragraphs": [
         "A proof is only as good as the organization behind it, so issuers are first-class, on-chain identities. Your bootcamp self-registers with register_issuer and enters a pending queue; an admin approves it with approve_issuer before it can issue or verify anything. Approved status is visible on every proof page your credentials appear on.",
-        "This two-step trust handshake is what lets an employer distinguish a credential from an approved issuer from one issued by an unverified wallet — without you vouching for it manually. An admin can also suspend an issuer, which is reflected on-chain immediately."
+        "This two-step trust handshake is what lets an employer distinguish a credential from an approved issuer from one issued by an unverified wallet, without you vouching for it manually. An admin can also suspend an issuer, which is reflected on-chain immediately."
       ]
     },
     {
       "heading": "Verification and payment, bound in one flow",
       "paragraphs": [
-        "Most credential tools stop at issuing a badge; background-check firms only do verification. Stellaroid Earn sits at the intersection: once a credential is verified, the same flow can settle payment. An employer calls link_payment, which sends XLM through the native Stellar Asset Contract straight to the graduate's verified wallet — testnet settlement is typically under five seconds and costs a fraction of a cent.",
+        "Most credential tools stop at issuing a badge; background-check firms only do verification. Stellaroid Earn sits at the intersection: once a credential is verified, the same flow can settle payment. An employer calls link_payment, which sends XLM through the native Stellar Asset Contract straight to the graduate's verified wallet, testnet settlement is typically under five seconds and costs a fraction of a cent.",
         "For a bootcamp, that closes the loop between the proof you issue and the outcome your graduates are chasing: verified work that an employer can trust and pay against without an invoice or a middleman."
       ]
     }
@@ -79,7 +79,7 @@ export const verifyBootcampCertificate: LandingContent = {
     },
     {
       "title": "Wallet-free public proofs",
-      "body": "Graduates share a proof link that anyone can open — no wallet, no account, no login. Employers confirm a credential in seconds instead of waiting on an email reply."
+      "body": "Graduates share a proof link that anyone can open, no wallet, no account, no login. Employers confirm a credential in seconds instead of waiting on an email reply."
     },
     {
       "title": "On-chain issuer trust",
@@ -91,11 +91,11 @@ export const verifyBootcampCertificate: LandingContent = {
     },
     {
       "title": "Full credential lifecycle",
-      "body": "Credentials carry explicit statuses — issued, verified, suspended, revoked, expired — so you can pause or revoke a credential on-chain while keeping its full audit trail intact."
+      "body": "Credentials carry explicit statuses, issued, verified, suspended, revoked, expired, so you can pause or revoke a credential on-chain while keeping its full audit trail intact."
     },
     {
       "title": "Verify-then-pay in one flow",
-      "body": "Once verified, a graduate's wallet can receive XLM via link_payment through the native Stellar Asset Contract — testnet settlement typically under five seconds for a fraction of a cent."
+      "body": "Once verified, a graduate's wallet can receive XLM via link_payment through the native Stellar Asset Contract, testnet settlement typically under five seconds for a fraction of a cent."
     }
   ],
   "steps": [
@@ -123,7 +123,7 @@ export const verifyBootcampCertificate: LandingContent = {
     },
     {
       "question": "What does anchoring a certificate's SHA-256 hash actually prove?",
-      "answer": "The SHA-256 hash is a unique fingerprint of one exact certificate file. Anchoring it on-chain records which wallet holds that credential and when it was issued and verified. Because the hash is derived from the document, any change to the certificate produces a different hash that won't match the anchored record — so an altered or forged file will not verify."
+      "answer": "The SHA-256 hash is a unique fingerprint of one exact certificate file. Anchoring it on-chain records which wallet holds that credential and when it was issued and verified. Because the hash is derived from the document, any change to the certificate produces a different hash that won't match the anchored record, so an altered or forged file will not verify."
     },
     {
       "question": "Can the same certificate be registered twice?",
@@ -131,7 +131,7 @@ export const verifyBootcampCertificate: LandingContent = {
     },
     {
       "question": "Do graduates or employers need a wallet to check a certificate?",
-      "answer": "No. Verification is public and read-only — anyone can open a proof page or paste the 64-character hash to confirm a credential with no wallet and no login. A Stellar wallet is only needed to issue, verify, or pay on-chain."
+      "answer": "No. Verification is public and read-only, anyone can open a proof page or paste the 64-character hash to confirm a credential with no wallet and no login. A Stellar wallet is only needed to issue, verify, or pay on-chain."
     },
     {
       "question": "Who is allowed to verify a credential?",
@@ -139,7 +139,7 @@ export const verifyBootcampCertificate: LandingContent = {
     },
     {
       "question": "Is this running on Stellar mainnet?",
-      "answer": "No. Stellaroid Earn is an early-access pilot running live on Stellar testnet. It is a free public demo with no purchase, subscription, or mainnet funds required — you can register as an issuer and anchor test credentials to try the full issue-to-verify flow."
+      "answer": "No. Stellaroid Earn is an early-access pilot running live on Stellar testnet. It is a free public demo with no purchase, subscription, or mainnet funds required, you can register as an issuer and anchor test credentials to try the full issue-to-verify flow."
     }
   ],
   "internalLinks": [
@@ -189,7 +189,7 @@ export const verifyBootcampCertificate: LandingContent = {
 export const verifyCandidateCredentials: LandingContent = {
   "slug": "/verify-candidate-credentials",
   "metaTitle": "Verify Candidate Credentials Instantly on Stellar",
-  "metaDescription": "Verify candidate credentials instantly from a public, wallet-free proof URL — no login or background-check delay — then fund a paid trial in XLM on Stellar.",
+  "metaDescription": "Verify candidate credentials instantly from a public, wallet-free proof URL, no login or background-check delay, then fund a paid trial in XLM on Stellar.",
   "keywords": [
     "verify candidate credentials instantly",
     "how do employers verify bootcamp credentials",
@@ -200,8 +200,8 @@ export const verifyCandidateCredentials: LandingContent = {
     "credential verification for recruiters"
   ],
   "eyebrow": "For employers and recruiters",
-  "h1": "Verify candidate credentials instantly — from one public URL",
-  "lede": "Open a candidate's proof page and confirm their credential on Stellar in seconds — no login, no wallet, no third-party background-check wait. When the record checks out, fund a paid trial in XLM tied to that exact verified credential.",
+  "h1": "Verify candidate credentials instantly, from one public URL",
+  "lede": "Open a candidate's proof page and confirm their credential on Stellar in seconds, no login, no wallet, no third-party background-check wait. When the record checks out, fund a paid trial in XLM tied to that exact verified credential.",
   "primaryCta": {
     "label": "Verify a credential",
     "href": "/proof"
@@ -214,13 +214,13 @@ export const verifyCandidateCredentials: LandingContent = {
     {
       "heading": "The credential check that doesn't wait on an email",
       "paragraphs": [
-        "A candidate presents a certificate. Confirming it the usual way means emailing the school, waiting on a reply, or routing it through a third-party check — days or weeks before you can move. Stellaroid Earn removes that step for the credential itself, because the proof already lives on Stellar.",
-        "When an issuer registers a certificate, its SHA-256 hash is bound on-chain to the graduate's wallet with register_certificate, and duplicate hashes are rejected. You confirm it by opening a public proof page — read-only, with no login and no wallet."
+        "A candidate presents a certificate. Confirming it the usual way means emailing the school, waiting on a reply, or routing it through a third-party check, days or weeks before you can move. Stellaroid Earn removes that step for the credential itself, because the proof already lives on Stellar.",
+        "When an issuer registers a certificate, its SHA-256 hash is bound on-chain to the graduate's wallet with register_certificate, and duplicate hashes are rejected. You confirm it by opening a public proof page, read-only, with no login and no wallet."
       ],
       "bullets": [
-        "Public and read-only — open the proof URL and the record loads without an account.",
-        "Auditable — verification emits an on-chain event you can inspect on stellar.expert.",
-        "Not just a logo you trust — the issuer's on-chain approval status is shown next to the credential."
+        "Public and read-only, open the proof URL and the record loads without an account.",
+        "Auditable, verification emits an on-chain event you can inspect on stellar.expert.",
+        "Not just a logo you trust, the issuer's on-chain approval status is shown next to the credential."
       ]
     },
     {
@@ -233,20 +233,20 @@ export const verifyCandidateCredentials: LandingContent = {
         "The issuer's trust state: approved, pending, or suspended.",
         "The graduate's wallet address and the certificate hash, both copyable.",
         "A direct link to the contract's on-chain events on stellar.expert.",
-        "Credential details attached by the issuer — title, cohort, and any linked evidence."
+        "Credential details attached by the issuer, title, cohort, and any linked evidence."
       ]
     },
     {
       "heading": "Verified once, then fund the work in the same flow",
       "paragraphs": [
-        "Verification and payment are bound together on-chain — that is the wedge. Credential platforms issue badges; screening firms confirm history; Stellaroid does the one thing neither does: it lets you pay against the exact credential you just verified.",
-        "Once an approved issuer or the admin wallet has run verify_certificate, you can fund a paid trial with link_payment, which sends XLM through Stellar's native Stellar Asset Contract straight to the verified wallet. On testnet that settles in typically under five seconds for a fraction of a cent — no invoice, no net-terms, no platform take rate."
+        "Verification and payment are bound together on-chain, that is the wedge. Credential platforms issue badges; screening firms confirm history; Stellaroid does the one thing neither does: it lets you pay against the exact credential you just verified.",
+        "Once an approved issuer or the admin wallet has run verify_certificate, you can fund a paid trial with link_payment, which sends XLM through the native Stellar Asset Contract straight to the verified wallet. On testnet that settles in typically under five seconds for a fraction of a cent, no invoice, no net-terms, no platform take rate."
       ]
     },
     {
       "heading": "Where we are: a live testnet pilot",
       "paragraphs": [
-        "Stellaroid Earn is an early-access startup running a live pilot on Stellar testnet. Everything here is real and on-chain, but it settles in testnet XLM, not mainnet funds — it is a working demonstration of the verify-then-pay flow, not a regulated background-screening or financial product.",
+        "Stellaroid Earn is an early-access startup running a live pilot on Stellar testnet. Everything here is real and on-chain, but it settles in testnet XLM, not mainnet funds, it is a working demonstration of the verify-then-pay flow, not a regulated background-screening or financial product.",
         "It verifies the credential a candidate presents; it does not run criminal, employment-history, or identity checks. If you want to put it in front of real candidates, join the pilot and fund a paid trial."
       ]
     }
@@ -254,7 +254,7 @@ export const verifyCandidateCredentials: LandingContent = {
   "features": [
     {
       "title": "Confirm in seconds",
-      "body": "Open a public proof URL and read the credential's on-chain status right away — no account, no wallet, no waiting on an email reply from the school."
+      "body": "Open a public proof URL and read the credential's on-chain status right away, no account, no wallet, no waiting on an email reply from the school."
     },
     {
       "title": "Auditable, not just asserted",
@@ -262,15 +262,15 @@ export const verifyCandidateCredentials: LandingContent = {
     },
     {
       "title": "Issuer trust is on the page",
-      "body": "Each proof shows whether the issuing school or bootcamp is an approved, pending, or suspended issuer — so you know who stands behind the credential."
+      "body": "Each proof shows whether the issuing school or bootcamp is an approved, pending, or suspended issuer, so you know who stands behind the credential."
     },
     {
       "title": "Live credential status",
-      "body": "Credentials carry a real status — issued, verified, suspended, revoked, or expired — so you never act on a stale or withdrawn record."
+      "body": "Credentials carry a real status, issued, verified, suspended, revoked, or expired, so you never act on a stale or withdrawn record."
     },
     {
       "title": "Pay against the verified credential",
-      "body": "link_payment sends XLM via Stellar's native asset contract straight to the verified wallet, settling in typically under five seconds for a fraction of a cent."
+      "body": "link_payment sends XLM via the native Stellar Asset Contract straight to the verified wallet, settling on testnet in typically under five seconds for a fraction of a cent."
     },
     {
       "title": "Wallet-free to verify",
@@ -280,7 +280,7 @@ export const verifyCandidateCredentials: LandingContent = {
   "steps": [
     {
       "name": "Open the proof page",
-      "text": "Paste the candidate's 64-character certificate hash at /proof, or open the proof URL they shared. The record loads read-only — no login or wallet needed."
+      "text": "Paste the candidate's 64-character certificate hash at /proof, or open the proof URL they shared. The record loads read-only, no login or wallet needed."
     },
     {
       "name": "Read the status and issuer",
@@ -298,7 +298,7 @@ export const verifyCandidateCredentials: LandingContent = {
   "faq": [
     {
       "question": "How do employers verify bootcamp credentials with Stellaroid Earn?",
-      "answer": "Open the candidate's public proof page and paste the 64-character SHA-256 hash of their certificate. The page loads the on-chain record — the credential's status, the issuing school or bootcamp's trust state, the graduate's wallet, and a link to the raw events on stellar.expert — all read-only, with no login or wallet required."
+      "answer": "Open the candidate's public proof page and paste the 64-character SHA-256 hash of their certificate. The page loads the on-chain record, the credential's status, the issuing school or bootcamp's trust state, the graduate's wallet, and a link to the raw events on stellar.expert, all read-only, with no login or wallet required."
     },
     {
       "question": "Do I need an account or wallet to verify a candidate's credential?",
@@ -314,11 +314,11 @@ export const verifyCandidateCredentials: LandingContent = {
     },
     {
       "question": "How do I pay a candidate once their credential is verified?",
-      "answer": "Call link_payment, which transfers XLM through Stellar's native Stellar Asset Contract directly to the graduate's verified wallet. On testnet this settles in typically under five seconds for a fraction of a cent, with no invoice and no platform fee."
+      "answer": "Call link_payment, which transfers XLM through the native Stellar Asset Contract directly to the graduate's verified wallet. On testnet this settles in typically under five seconds for a fraction of a cent, with no invoice and no platform fee."
     },
     {
       "question": "What if the credential was revoked or expired?",
-      "answer": "The proof page shows it. Credentials carry a live status — issued, verified, suspended, revoked, or expired — and revoked or expired credentials stay visible on-chain for auditability but are no longer eligible for verification-based actions like payment."
+      "answer": "The proof page shows it. Credentials carry a live status, issued, verified, suspended, revoked, or expired, and revoked or expired credentials stay visible on-chain for auditability but are no longer eligible for verification-based actions like payment."
     }
   ],
   "internalLinks": [
@@ -373,7 +373,7 @@ export const instantPayouts: LandingContent = {
   ],
   "eyebrow": "PROOF, THEN PAYMENT",
   "h1": "Get paid in XLM the moment your credential is verified",
-  "lede": "Stellaroid Earn binds credential verification to an instant payout in one on-chain flow. Once an approved issuer verifies your credential, link_payment sends XLM straight to your verified wallet — typically in under five seconds, for a fraction of a cent. This is a live pilot on Stellar testnet.",
+  "lede": "Stellaroid Earn binds credential verification to an instant payout in one on-chain flow. Once an approved issuer verifies your credential, link_payment sends XLM straight to your verified wallet, typically in under five seconds, for a fraction of a cent. This is a live pilot on Stellar testnet.",
   "primaryCta": {
     "label": "Try the pilot",
     "href": "/app"
@@ -392,49 +392,49 @@ export const instantPayouts: LandingContent = {
       "bullets": [
         "Verification and payment share one on-chain source of truth",
         "No invoice, no net-terms, no 30-day wait after work is verified",
-        "Payment lands on the wallet the credential is bound to — not a routing account"
+        "Payment lands on the wallet the credential is bound to, not a routing account"
       ]
     },
     {
       "heading": "The verify-then-pay flow, on-chain",
       "paragraphs": [
-        "Three contract calls carry a credential from issued to paid. An issuer calls register_certificate to bind a certificate's SHA-256 hash to a student's Stellar wallet; duplicate hashes are rejected on-chain. An approved issuer or the admin then calls verify_certificate, which sets the credential status to Verified and emits a cert_ver event anyone can audit on stellar.expert.",
+        "Three contract calls carry a credential from issued to paid. An issuer calls register_certificate to bind a certificate's SHA-256 hash to a graduate's Stellar wallet; duplicate hashes are rejected on-chain. An approved issuer or the admin then calls verify_certificate, which sets the credential status to Verified and emits a cert_ver event anyone can audit on stellar.expert.",
         "Only after that does payment open. link_payment transfers XLM via the native Stellar Asset Contract directly to the verified wallet and emits a payment event. On Stellar testnet, settlement is typically under five seconds and costs a fraction of a cent in network fees."
       ],
       "bullets": [
-        "register_certificate — anchor the hash to the graduate's wallet",
-        "verify_certificate — trusted verification, status becomes Verified, emits cert_ver",
-        "link_payment — XLM moves wallet-to-wallet via the native SAC, emits payment"
+        "register_certificate, anchor the hash to the graduate's wallet",
+        "verify_certificate, trusted verification, status becomes Verified, emits cert_ver",
+        "link_payment, XLM moves wallet-to-wallet via the native SAC, emits payment"
       ]
     },
     {
       "heading": "Payment is gated on verification, by the contract",
       "paragraphs": [
-        "Binding proof to payment only matters if the payment cannot jump the queue. In Stellaroid Earn, it cannot. An employer cannot pay a credential that has not been verified — the contract blocks the write until a credential reaches the Verified state, and a revoked credential is rejected with a typed CredentialRevoked error.",
+        "Binding proof to payment only matters if the payment cannot jump the queue. In Stellaroid Earn, it cannot. An employer cannot pay a credential that has not been verified, the contract blocks the write until a credential reaches the Verified state, and a revoked credential is rejected with a typed CredentialRevoked error.",
         "The gate stays closed on bad credentials too. A revoked credential can no longer unlock payment (the contract returns CredentialRevoked), and suspended or expired credentials are not eligible for verification-based actions. The status that graduates and employers see on a proof page is the same status the contract enforces before it releases a single stroop."
       ],
       "bullets": [
-        "No payment to an unverified credential — enforced on-chain",
+        "No payment to an unverified credential, enforced on-chain",
         "Revoked, suspended, and expired credentials cannot trigger a payout",
         "The proof page status and the contract's gate are the same record"
       ]
     },
     {
-      "heading": "The wedge: nobody else binds verify-then-pay",
+      "heading": "The wedge: verification and payment, bound in one flow",
       "paragraphs": [
         "Credential platforms like Credly, Accredible, Dock, Blockcerts, and BCdiploma issue and display credentials. Background-check firms verify people. Neither side pays anyone. Stellaroid Earn sits at the intersection they leave empty: it verifies a credential and pays its owner in a single on-chain flow.",
-        "Because it runs on Stellar, the payout is near-instant and near-free, it moves wallet-to-wallet with no platform take rate, and every step — the verification and the payment — is a public event on stellar.expert. Anyone can open a proof page and confirm a credential with no wallet and no login; a wallet is only needed to issue, verify, or pay."
+        "Because it runs on Stellar, the payout is near-instant and near-free, it moves wallet-to-wallet with no platform take rate, and every step, the verification and the payment, is a public event on stellar.expert. Anyone can open a proof page and confirm a credential with no wallet and no login; a wallet is only needed to issue, verify, or pay."
       ]
     }
   ],
   "features": [
     {
       "title": "Direct to the verified wallet",
-      "body": "link_payment sends XLM through the native Stellar Asset Contract straight to the wallet the credential is bound to — wallet-to-wallet, with no platform take rate between the employer and the graduate."
+      "body": "link_payment sends XLM through the native Stellar Asset Contract straight to the wallet the credential is bound to, wallet-to-wallet, with no platform take rate between the employer and the graduate."
     },
     {
       "title": "Sub-5-second settlement",
-      "body": "On Stellar testnet, a payment typically clears in under five seconds. There is no invoice to raise, no net-30 to wait out, and no batch run — the payout follows verification immediately."
+      "body": "On Stellar testnet, a payment typically clears in under five seconds. There is no invoice to raise, no net-30 to wait out, and no batch run, the payout follows verification immediately."
     },
     {
       "title": "A fraction of a cent in fees",
@@ -460,7 +460,7 @@ export const instantPayouts: LandingContent = {
     },
     {
       "name": "An approved issuer verifies it",
-      "text": "An approved issuer or the admin wallet calls verify_certificate with the hash. The contract sets the credential status to Verified and emits a cert_ver event that anyone can audit on stellar.expert — no email thread required."
+      "text": "An approved issuer or the admin wallet calls verify_certificate with the hash. The contract sets the credential status to Verified and emits a cert_ver event that anyone can audit on stellar.expert, no email thread required."
     },
     {
       "name": "The employer pays the verified wallet",
@@ -474,7 +474,7 @@ export const instantPayouts: LandingContent = {
     },
     {
       "question": "Can an employer pay before a credential is verified?",
-      "answer": "No. The contract blocks payment to any credential that has not reached the Verified status — this is enforced on-chain by the contract itself. A revoked credential also cannot unlock payment; the contract returns a CredentialRevoked error."
+      "answer": "No. The contract blocks payment to any credential that has not reached the Verified status, this is enforced on-chain by the contract itself. A revoked credential also cannot unlock payment; the contract returns a CredentialRevoked error."
     },
     {
       "question": "How fast does the payout settle and what does it cost?",
@@ -486,7 +486,7 @@ export const instantPayouts: LandingContent = {
     },
     {
       "question": "Do I need a wallet to view a proof of payment or verification?",
-      "answer": "No. Verification is public and read-only — anyone can open a proof page and confirm a credential's status, its issuer's trust standing, and its on-chain events without connecting a wallet or logging in. A wallet is only needed to issue, verify, or pay on-chain."
+      "answer": "No. Verification is public and read-only, anyone can open a proof page and confirm a credential's status, its issuer's trust standing, and its on-chain events without connecting a wallet or logging in. A wallet is only needed to issue, verify, or pay on-chain."
     },
     {
       "question": "Is this real money on mainnet?",
