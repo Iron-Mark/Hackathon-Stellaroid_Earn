@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Badge, Button, useToast } from "@/components/ui";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
-import { appConfig } from "@/lib/config";
+import { NetworkBanner } from "@/components/app/network-banner";
+import { appConfig, getExpectedNetworkLabel } from "@/lib/config";
 import {
   submitMilestone,
   approveMilestone,
@@ -27,12 +28,35 @@ export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProp
   const [opp, setOpp] = useState(initialOpp);
   const [busy, setBusy] = useState<string | null>(null);
 
+  // Match every other write surface (pay-form, verify-form, issuer-dashboard):
+  // only enable actions when connected AND on the expected network — a
+  // wrong-network signature is rejected by the wallet with a dead-end error.
+  const canConnectAct =
+    wallet.status === "connected" && wallet.isExpectedNetwork;
   const isEmployer =
-    wallet.status === "connected" &&
+    canConnectAct &&
     wallet.address?.toUpperCase() === opp.employer.toUpperCase();
   const isCandidate =
-    wallet.status === "connected" &&
+    canConnectAct &&
     wallet.address?.toUpperCase() === opp.candidate.toUpperCase();
+
+  const canSubmit =
+    isCandidate && (opp.status === "funded" || opp.status === "in_progress");
+  const canApprove = isEmployer && opp.status === "submitted";
+  const canRelease = isEmployer && opp.status === "approved";
+  const canRefund =
+    isEmployer && (opp.status === "funded" || opp.status === "in_progress");
+  const showActions = canSubmit || canApprove || canRelease || canRefund;
+  const actionHint =
+    opp.status === "released" ||
+    opp.status === "refunded" ||
+    opp.status === "cancelled"
+      ? "This opportunity is complete."
+      : wallet.status !== "connected"
+        ? "Connect the employer or candidate wallet to act on this opportunity."
+        : !wallet.isExpectedNetwork
+          ? `Switch your wallet to ${getExpectedNetworkLabel()} to act on this opportunity.`
+          : "No actions are available for your wallet at this stage.";
 
   async function handleAction(
     action: string,
@@ -83,6 +107,8 @@ export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProp
         </Badge>
       </div>
 
+      <NetworkBanner wallet={wallet} />
+
       <div className="grid gap-3 text-sm">
         <div className="flex items-center gap-2">
           <span className="text-text-muted">Amount:</span>
@@ -104,76 +130,80 @@ export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProp
         status={opp.status}
       />
 
-      <div className="flex gap-3 flex-wrap border-t border-border pt-4">
-        {isCandidate &&
-          (opp.status === "funded" || opp.status === "in_progress") ? (
-          <Button
-            variant="primary"
-            onClick={() =>
-              void handleAction(
-                "Submit milestone",
-                () => submitMilestone(wallet.address!, opp.id),
-                "submitted",
-              )
-            }
-            loading={busy === "Submit milestone"}
-          >
-            Submit milestone
-          </Button>
-        ) : null}
+      {showActions ? (
+        <div className="flex gap-3 flex-wrap border-t border-border pt-4">
+          {canSubmit ? (
+            <Button
+              variant="primary"
+              onClick={() =>
+                void handleAction(
+                  "Submit milestone",
+                  () => submitMilestone(wallet.address!, opp.id),
+                  "submitted",
+                )
+              }
+              loading={busy === "Submit milestone"}
+            >
+              Submit milestone
+            </Button>
+          ) : null}
 
-        {isEmployer && opp.status === "submitted" ? (
-          <Button
-            variant="primary"
-            onClick={() =>
-              void handleAction(
-                "Approve milestone",
-                () => approveMilestone(wallet.address!, opp.id),
-                opp.currentMilestone + 1 >= opp.milestoneCount
-                  ? "approved"
-                  : "in_progress",
-                true,
-              )
-            }
-            loading={busy === "Approve milestone"}
-          >
-            Approve milestone
-          </Button>
-        ) : null}
+          {canApprove ? (
+            <Button
+              variant="primary"
+              onClick={() =>
+                void handleAction(
+                  "Approve milestone",
+                  () => approveMilestone(wallet.address!, opp.id),
+                  opp.currentMilestone + 1 >= opp.milestoneCount
+                    ? "approved"
+                    : "in_progress",
+                  true,
+                )
+              }
+              loading={busy === "Approve milestone"}
+            >
+              Approve milestone
+            </Button>
+          ) : null}
 
-        {isEmployer && opp.status === "approved" ? (
-          <Button
-            variant="primary"
-            onClick={() =>
-              void handleAction(
-                "Release payment",
-                () => releasePayment(wallet.address!, opp.id),
-                "released",
-              )
-            }
-            loading={busy === "Release payment"}
-          >
-            Release payment
-          </Button>
-        ) : null}
+          {canRelease ? (
+            <Button
+              variant="primary"
+              onClick={() =>
+                void handleAction(
+                  "Release payment",
+                  () => releasePayment(wallet.address!, opp.id),
+                  "released",
+                )
+              }
+              loading={busy === "Release payment"}
+            >
+              Release payment
+            </Button>
+          ) : null}
 
-        {isEmployer &&
-          (opp.status === "funded" || opp.status === "in_progress") ? (
-          <Button
-            variant="warning"
-            onClick={() =>
-              void handleAction(
-                "Refund",
-                () => refundOpportunity(wallet.address!, opp.id),
-                "refunded",
-              )
-            }
-            loading={busy === "Refund"}
-          >
-            Refund
-          </Button>
-        ) : null}
-      </div>
+          {canRefund ? (
+            <Button
+              variant="warning"
+              onClick={() =>
+                void handleAction(
+                  "Refund",
+                  () => refundOpportunity(wallet.address!, opp.id),
+                  "refunded",
+                )
+              }
+              loading={busy === "Refund"}
+            >
+              Refund
+            </Button>
+          ) : null}
+        </div>
+      ) : (
+        <p className="border-t border-border pt-4 text-sm text-text-muted">
+          {actionHint}
+        </p>
+      )}
     </article>
   );
 }
