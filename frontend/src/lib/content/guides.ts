@@ -618,6 +618,117 @@ export const guides: GuideArticle[] = [
       "label": "View the contract on GitHub",
       "href": "https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn"
     }
+  },
+  {
+    "slug": "share-verifiable-credential-with-employer",
+    "title": "How to share a verifiable credential with an employer",
+    "metaTitle": "Share a Verifiable Credential With an Employer",
+    "metaDescription": "How to share a verifiable credential with an employer: send one public proof link they can check in seconds on Stellar, with no login, no wallet, and no PDF.",
+    "keywords": [
+      "how to share a verifiable credential",
+      "share proof of certificate with employer",
+      "verifiable credential link",
+      "prove your bootcamp certificate online",
+      "public credential proof page",
+      "share a credential without a wallet"
+    ],
+    "audience": "Graduates and job seekers",
+    "datePublished": "2026-07-20",
+    "technical": false,
+    "lede": "Your certificate is only as useful as your ability to prove it. This guide shows how to share a verifiable credential as a single public link an employer can check in seconds, with no PDF, no login, and no wallet on their end.",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "A certificate sitting in a PDF or a screenshot is hard for an employer to trust and easy to ignore. A verifiable credential fixes that: instead of sending a file, you send a link to a public proof page that reads the credential's status straight from the Stellar network. This guide covers how to share that link, what the employer sees, and how to keep your proof credible."
+      },
+      {
+        "type": "callout",
+        "text": "Where this runs: proof pages are part of Stellaroid Earn, an early-access pilot on Stellar testnet. It is free to try, and no wallet is needed to open or read a proof."
+      },
+      {
+        "type": "h2",
+        "text": "Why a link beats a PDF or a screenshot"
+      },
+      {
+        "type": "p",
+        "text": "A file proves nothing on its own. A public proof page does, because the status it shows is read live from the contract rather than from the file you sent."
+      },
+      {
+        "type": "ul",
+        "items": [
+          "It cannot be edited: the page reflects the on-chain record, not a document you could alter.",
+          "It checks in seconds: the employer opens the link and sees Verified or Issued right away, with no email thread.",
+          "It asks nothing of them: no login, no wallet, no account, so there is no reason to skip the check.",
+          "It is auditable: every status change is a public event anyone can trace on stellar.expert."
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "What the employer sees"
+      },
+      {
+        "type": "p",
+        "text": "The proof page is built to be read by someone who has never used Stellar. It shows the credential's status as a colored badge and links to the underlying record."
+      },
+      {
+        "type": "ul",
+        "items": [
+          "A green Verified badge means an approved issuer or the admin has confirmed the credential on-chain.",
+          "An amber Issued badge means the certificate is registered but not yet verified, so payment stays locked.",
+          "A link to stellar.expert, so a technical reviewer can inspect the raw contract events.",
+          "The issuer's identity and the credential's status history, so trust is explicit rather than assumed."
+        ]
+      },
+      {
+        "type": "h2",
+        "text": "Keep your proof credible"
+      },
+      {
+        "type": "p",
+        "text": "A verifiable credential is only convincing while its status is clean. Share the proof link itself rather than a screenshot of it, so the employer always sees the live status. If a credential is ever suspended or revoked by its issuer, the page will say so, and that is the point: the record stays honest by default."
+      }
+    ],
+    "howToName": "How to share your verifiable credential with an employer",
+    "howToSteps": [
+      {
+        "name": "Confirm your credential is verified",
+        "text": "Open your proof page and check for the green Verified badge. If it still shows amber Issued, ask your issuer to verify it before you share."
+      },
+      {
+        "name": "Copy your proof link",
+        "text": "Copy the public proof URL for your credential. It works in any browser and needs no login or wallet to open."
+      },
+      {
+        "name": "Send it to the employer",
+        "text": "Paste the link into your application, email, or message. Send the link itself, not a screenshot, so they always see the live on-chain status."
+      },
+      {
+        "name": "Let them verify in seconds",
+        "text": "The employer opens the link, sees the Verified badge, and can follow it to stellar.expert to inspect the record. No account or wallet is required on their side."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Does the employer need a wallet to check my credential?",
+        "answer": "No. Reading a proof page is public and read-only, so the employer needs no wallet, no login, and no account. A wallet is only needed to issue, verify, or pay on-chain, which is the issuer's and employer's side of the flow."
+      },
+      {
+        "question": "Is this on mainnet or testnet?",
+        "answer": "The proof pages run on the Stellar testnet pilot. It is a free public demo, so it is meant for showing how verification works rather than as a system of record yet."
+      },
+      {
+        "question": "What happens if my credential is suspended or revoked?",
+        "answer": "The proof page shows the current status, including suspended or revoked, straight from the contract. That transparency is the point: the record stays honest, so sharing the link is always accurate."
+      }
+    ],
+    "primaryCta": {
+      "label": "See a live proof",
+      "href": "/proof"
+    },
+    "secondaryCta": {
+      "label": "Browse the guides",
+      "href": "/guides"
+    }
   }
 ];
 
