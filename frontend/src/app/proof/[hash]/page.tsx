@@ -54,6 +54,10 @@ export async function generateMetadata({
     description,
     openGraphType: "article",
     keywords: `${title}, ${description}`,
+    // Only real, on-chain-backed proofs are indexable. A well-formed hash with
+    // no record renders a "no record" page (200) — keep those out of the index
+    // as thin content while staying crawlable for the links they carry.
+    robots: cert ? undefined : { index: false, follow: true },
   });
 }
 
