@@ -109,6 +109,19 @@ function normalizeString(value: unknown): string {
   return "";
 }
 
+// cert_hash arrives from scValToNative as raw 32 bytes (Buffer/Uint8Array).
+// Coercing it through normalizeString would UTF-8-mangle bytes >0x7f into
+// replacement chars and destroy the hash, so hex-encode it explicitly.
+function normalizeHashHex(value: unknown): string {
+  if (value instanceof Uint8Array) {
+    return Array.from(value, (b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  if (typeof value === "string" && /^[0-9a-f]{64}$/i.test(value.trim())) {
+    return value.trim().toLowerCase();
+  }
+  return "";
+}
+
 function normalizeTimestamp(value: unknown): number {
   if (typeof value === "number") return value;
   if (typeof value === "bigint") return Number(value);
@@ -362,7 +375,7 @@ function normalizeOpportunity(value: unknown): OpportunityRecord | null {
     id: normalizeOpportunityId(normalizeBigInt(record.id)),
     employer: normalizeAddress(record.employer),
     candidate: normalizeAddress(record.candidate),
-    certHash: normalizeString(record.cert_hash),
+    certHash: normalizeHashHex(record.cert_hash),
     title: normalizeString(record.title),
     amount: normalizeBigInt(record.amount),
     status: normalizeOpportunityStatus(record.status),
