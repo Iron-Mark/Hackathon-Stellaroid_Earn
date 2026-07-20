@@ -343,6 +343,7 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 - **Health endpoint:** [`/api/health`](https://stellaroid.tech/api/health) - cached JSON health check (config, RPC latency, contract availability)
 - **Events API:** [`/api/events`](https://stellaroid.tech/api/events) - structured contract event data for external consumers
 - **Events stream:** [`/api/events/stream`](https://stellaroid.tech/api/events/stream) - short-lived Server-Sent Events stream for live demo refreshes without adding a database
+- **MCP server:** [`/api/mcp`](https://stellaroid.tech/api/mcp) - read-only remote Model Context Protocol endpoint (Streamable HTTP, no auth) so AI agents can verify credentials, inspect issuers, and browse escrowed paid trials; built on Vercel's `mcp-handler` + the official MCP TypeScript SDK
 - **Vercel Analytics:** Page analytics plus privacy-safe custom events for proof sharing, proof-pack downloads, employer handoff, shortlist saves, and escrow-start actions
 
 ### Data Indexing
