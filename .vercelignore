@@ -5,7 +5,7 @@
 .tools/
 .vscode/
 
-contract/target/
+contracts/stellaroid_earn/target/
 frontend/.next/
 frontend/node_modules/
 frontend/playwright-report/

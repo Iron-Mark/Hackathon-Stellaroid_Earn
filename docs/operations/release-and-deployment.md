@@ -41,7 +41,7 @@ Pick checks by changed surface area.
 
 Frontend CI is path-filtered. Push CI runs on `main` and `staging` only for `frontend/**` or `.github/workflows/frontend-ci.yml`; PR CI targets `main` and `staging` for the same paths. Monthly-builder branches do not run push CI by default.
 
-Contract CI is path-filtered. Push and PR CI run on `main`, `staging`, and `*-monthly-builder` only for `contract/**`, root Cargo files, or `.github/workflows/contract-ci.yml`.
+Contract CI is path-filtered. Push and PR CI run on `main`, `staging`, and `*-monthly-builder` only for `contracts/**`, root Cargo files, or `.github/workflows/contract-ci.yml`.
 
 ## Domains
 

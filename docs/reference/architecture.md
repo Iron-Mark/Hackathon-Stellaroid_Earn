@@ -60,7 +60,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 
 ## Component Breakdown
 
-### 1. Smart Contract (`contract/src/lib.rs`)
+### 1. Smart Contract (`contracts/stellaroid_earn/src/lib.rs`)
 
 **Language:** Rust (soroban-sdk 22.0.0)
 **Target:** `wasm32v1-none`
