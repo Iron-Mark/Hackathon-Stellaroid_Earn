@@ -57,3 +57,5 @@ team-expiration*.json
 *.wasm
 demo/video-frames/
 demo/seed-log.txt
+# Scratch dir used by scripts/capture-demo-video.ts (raw webm before ffmpeg)
+.video-capture-tmp/

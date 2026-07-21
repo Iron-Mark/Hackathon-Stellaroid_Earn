@@ -163,6 +163,16 @@ async function main() {
       const context = await browser.newContext({
         viewport: { width: cap.width, height: cap.height },
       });
+      // Suppress the first-visit Freighter onboarding modal so /app captures
+      // the real dashboard instead of the "New to Stellar?" overlay. Runs
+      // before any page script, so the modal's effect never opens it.
+      await context.addInitScript(() => {
+        try {
+          localStorage.setItem("stellaroid:freighter-welcome-dismissed", "1");
+        } catch {
+          /* ignore */
+        }
+      });
       const page: Page = await context.newPage();
 
       try {
