@@ -28,9 +28,9 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
     // locked to a per-request nonce + 'self'. Do not relax script-src "to match".
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    // stellar.creit.tech serves the wallet icons in the Stellar Wallets Kit
-    // picker modal (images only; the kit itself is bundled locally).
-    "img-src 'self' data: blob: https://stellar.creit.tech",
+    // Wallet-picker icons are self-hosted under /wallet-icons (see
+    // swk-provider.ts), so no third-party image host is needed.
+    "img-src 'self' data: blob:",
     "worker-src 'self'",
     "manifest-src 'self'",
     // WalletConnect (Reown) relay for mobile wallet pairing/signing. We use

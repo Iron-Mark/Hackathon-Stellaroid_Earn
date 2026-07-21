@@ -49,6 +49,18 @@ function loadKit(): Promise<Kit> {
       import("@creit.tech/stellar-wallets-kit/modules/bitget").then((m) => new m.BitgetModule()),
     ] as const);
 
+    // Serve the picker's wallet icons from our own origin instead of
+    // stellar.creit.tech, so the CSP img-src can stay 'self' with no
+    // third-party image host. The 6 PNGs live in public/wallet-icons/.
+    for (const mod of modules as Array<{ productIcon?: string }>) {
+      if (
+        typeof mod.productIcon === "string" &&
+        mod.productIcon.includes("stellar.creit.tech/wallet-icons/")
+      ) {
+        mod.productIcon = `/wallet-icons/${mod.productIcon.split("/").pop()}`;
+      }
+    }
+
     StellarWalletsKit.init({
       modules,
       // The Networks enum values ARE the network passphrases.
