@@ -171,7 +171,7 @@ sequenceDiagram
 - **Issuer trust layer**: self-register → admin approve → issue credentials. Suspended issuers are blocked on-chain
 - **Two read paths**: server-side RSC with `revalidate=60` (CDN-cached proof pages) + client-side `simulateTransaction` (dashboard state)
 - **One write path**: Freighter signs → `sendTransaction` → poll for result
-- **CSP** locks `connect-src` to `*.stellar.org` - no third-party data leaks
+- **CSP** locks `connect-src` to `*.stellar.org` and the WalletConnect relay - no other third-party origins
 
 ---
 
@@ -394,7 +394,7 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 
 **Implementation:**
 - Server route: [`frontend/src/app/api/fee-bump/route.ts`](frontend/src/app/api/fee-bump/route.ts)
-- Client helper: [`frontend/src/lib/fee-bump.ts`](frontend/src/lib/fee-bump.ts)
+- Request policy: [`frontend/src/lib/fee-bump-policy.ts`](frontend/src/lib/fee-bump-policy.ts)
 - Config: `FEE_SPONSOR_SECRET` + `FEE_SPONSOR_TOKEN` are server-only. Public browser auto-sponsorship stays disabled; trusted server callers must provide the bearer token explicitly.
 - Browser fallback: normal user-paid Freighter transactions remain the default path.
 

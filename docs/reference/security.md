@@ -28,7 +28,7 @@ smart-contract, frontend, infrastructure, and operational layers.
 
 | # | Control | Status | Notes |
 |---|---------|--------|-------|
-| 1 | **Content Security Policy** | PASS | `default-src 'self'`; `connect-src` restricted to `https://*.stellar.org`; `frame-src 'none'` globally; production `script-src` does not allow `unsafe-inline`. |
+| 1 | **Content Security Policy** | PASS | `default-src 'self'`; `connect-src` restricted to `https://*.stellar.org` plus the WalletConnect relay (`relay.walletconnect.org` / `verify.walletconnect.org`); `frame-src 'none'` globally; production `script-src` does not allow `unsafe-inline`. |
 | 2 | **X-Content-Type-Options** | PASS | `nosniff` header set on all responses. |
 | 3 | **X-Frame-Options** | PASS | `DENY` globally; `/proof/[hash]/embed` route permits controlled framing for embed use-case. |
 | 4 | **HSTS** | PASS | `max-age=63072000; includeSubDomains; preload` on all routes. |
