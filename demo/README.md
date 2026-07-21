@@ -21,7 +21,7 @@ This folder is the demo hub for judges, sponsors, employers, and early design pa
 
 ## The one-line reframe
 
-> We did not pick a vertical. We picked a shape of transaction: prove -> verify -> act. Which vertical it runs in is a go-to-market decision, not a technical one.
+> I did not pick a vertical. I picked a shape of transaction: prove -> verify -> act. Which vertical it runs in is a go-to-market decision, not a technical one.
 
 ## Live demo
 

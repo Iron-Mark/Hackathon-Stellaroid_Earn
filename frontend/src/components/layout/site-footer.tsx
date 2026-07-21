@@ -143,6 +143,12 @@ export function SiteFooter() {
           </Link>
         </div>
 
+        {/* Persistent legal disclaimer: everything here runs on testnet and is not advice. */}
+        <p className="mt-6 text-[11px] leading-relaxed text-text-muted/80">
+          Testnet demo. All amounts are Stellar testnet XLM with no real-world monetary
+          value, and nothing here is financial, investment, or legal advice.
+        </p>
+
         {/* Bottom bar — stay stacked through tablet widths so attribution never collides. */}
         <div className="mt-8 grid gap-3 border-t border-border-glass pt-5 pr-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6 lg:pr-0">
           <FooterProgramLink year={new Date().getFullYear()} />
