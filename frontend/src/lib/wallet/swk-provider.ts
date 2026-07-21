@@ -156,7 +156,10 @@ export function forgetSwkSession() {
 export const swkProvider: WalletProviderModule = {
   id: "swk",
   label: "More wallets",
-  kind: "web",
+  // The kit's wallets are browser EXTENSIONS, which do not exist on mobile
+  // browsers. Marking it "extension" hides it on mobile (where WalletConnect
+  // and Albedo take over) while keeping the one-click picker on desktop.
+  kind: "extension",
   tagline: "xBull, Rabet, LOBSTR, Hana & more",
   read,
   connect,
