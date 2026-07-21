@@ -20,6 +20,7 @@
     "@stellar/stellar-sdk": "^13.1.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@vercel/analytics": "^2.0.1",
+    "@walletconnect/sign-client": "^2.23.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",

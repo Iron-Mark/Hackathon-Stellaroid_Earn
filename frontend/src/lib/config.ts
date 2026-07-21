@@ -30,8 +30,14 @@ export const appConfig = {
   explorerUrl:
     process.env.NEXT_PUBLIC_STELLAR_EXPLORER_URL ??
     "https://stellar.expert/explorer/testnet",
+  canonicalUrl:
+    process.env.NEXT_PUBLIC_CANONICAL_URL ?? "https://stellaroid.tech",
   readAddress: process.env.NEXT_PUBLIC_STELLAR_READ_ADDRESS ?? "",
   adminAddress: process.env.NEXT_PUBLIC_STELLAR_ADMIN_ADDRESS ?? "",
+  // Reown/WalletConnect Cloud project id (public, safe to expose). When unset,
+  // the WalletConnect provider is hidden from the picker. Get one free at
+  // https://dashboard.reown.com and allowlist your domains.
+  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "",
   sponsorAddress: process.env.NEXT_PUBLIC_FEE_SPONSOR_ADDRESS ?? "",
   // Seeded demo-exhibit escrows for the wallet-less guided tour (/demo).
   // Defaults match the exhibits seeded on the current contract; override on

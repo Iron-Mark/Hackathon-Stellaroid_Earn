@@ -228,7 +228,9 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
 
         {isMobileBrowser ? (
           <p className="text-[11px] text-text-muted leading-relaxed">
-            On mobile? Albedo signs right in your browser — no extension needed.
+            {availableProviders.some((provider) => provider.id === "walletconnect")
+              ? "On mobile? Use WalletConnect for LOBSTR, xBull and more, or Albedo. Both work in your browser, no extension needed."
+              : "On mobile? Albedo signs right in your browser, no extension needed."}
           </p>
         ) : null}
       </div>

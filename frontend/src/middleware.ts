@@ -23,7 +23,11 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
     "img-src 'self' data: blob: https://stellar.creit.tech",
     "worker-src 'self'",
     "manifest-src 'self'",
-    `connect-src 'self' https://*.stellar.org${isVercelPreview ? " https://vercel.live https://*.vercel.live" : ""}`,
+    // WalletConnect (Reown) relay for mobile wallet pairing/signing. We use
+    // @stellar/stellar-sdk for chain data and sign-client only for the relay
+    // websocket + its verify attestation — no web3modal API, no EVM RPC, and
+    // no iframe (frame-src stays 'none'; the verify iframe degrades silently).
+    `connect-src 'self' https://*.stellar.org wss://relay.walletconnect.org https://relay.walletconnect.org https://verify.walletconnect.org${isVercelPreview ? " https://vercel.live https://*.vercel.live" : ""}`,
     "frame-src 'none'",
     "object-src 'none'",
     "base-uri 'self'",
