@@ -1,6 +1,6 @@
 // Developer documentation registry — /docs, /docs/[slug], the sitemap, and
 // the docs sidebar all derive from this single typed source. Content is
-// grounded in docs/reference/*.md, contract/src/lib.rs, and the contract
+// grounded in docs/reference/*.md, contracts/stellaroid_earn/src/lib.rs, and the contract
 // surface on /about; reviewed against the deployed testnet contract.
 import type { DocPage } from "./types";
 

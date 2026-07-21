@@ -7,7 +7,7 @@ on:
       - staging
       - "*-monthly-builder"
     paths:
-      - "contract/**"
+      - "contracts/**"
       - "Cargo.toml"
       - "Cargo.lock"
       - ".github/workflows/contract-ci.yml"
@@ -17,7 +17,7 @@ on:
       - staging
       - "*-monthly-builder"
     paths:
-      - "contract/**"
+      - "contracts/**"
       - "Cargo.toml"
       - "Cargo.lock"
       - ".github/workflows/contract-ci.yml"
@@ -52,7 +52,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: contract-cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'contract/Cargo.toml') }}
+          key: contract-cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'contracts/stellaroid_earn/Cargo.toml') }}
           restore-keys: |
             contract-cargo-${{ runner.os }}-
 

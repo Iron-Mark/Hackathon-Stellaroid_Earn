@@ -175,6 +175,69 @@ sequenceDiagram
 
 ---
 
+## Contract Integration (Frontend to Soroban)
+
+The frontend talks to the deployed `stellaroid_earn` contract with **`@stellar/stellar-sdk`**. The client lives in [`frontend/src/lib/contract-client.ts`](frontend/src/lib/contract-client.ts) (writes + client-side reads) and [`frontend/src/lib/contract-read-server.ts`](frontend/src/lib/contract-read-server.ts) (server-rendered proof pages). The SDK is lazy-loaded so its multi-megabyte bundle stays out of every route's first load.
+
+```ts
+// frontend/src/lib/contract-client.ts
+import type * as StellarSdk from "@stellar/stellar-sdk";
+
+// Lazy-load the SDK once, on the first contract read or wallet action.
+const getSdk = () => import("@stellar/stellar-sdk");
+
+// READ (no wallet): simulate an invocation against Soroban RPC.
+const server = new sdk.rpc.Server(appConfig.rpcUrl);
+const sim = await server.simulateTransaction(tx);
+const value = sdk.scValToNative(sim.result.retval);
+
+// WRITE: build with TransactionBuilder, wallet signs, submit + poll.
+const tx = new sdk.TransactionBuilder(account, {
+  fee: sdk.BASE_FEE,
+  networkPassphrase: getExpectedNetworkPassphrase(),
+})
+  .addOperation(
+    sdk.Operation.invokeContractFunction({
+      contract: appConfig.contractId,   // NEXT_PUBLIC_SOROBAN_CONTRACT_ID
+      function: method,                  // e.g. "verify_certificate"
+      args,                              // sdk.nativeToScVal(...) per argument
+    }),
+  )
+  .setTimeout(30)
+  .build();
+
+const signedXdr = await wallet.sign(tx.toXDR());        // Freighter / Albedo / Stellar Wallets Kit
+const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXDR(signedXdr, passphrase));
+const result = await server.pollTransaction(sent.hash);
+```
+
+Every public contract function has a matching typed wrapper in the client. The wrapper passes the exact contract function name to `Operation.invokeContractFunction`:
+
+| Contract function (`contracts/stellaroid_earn/src/lib.rs`) | Frontend wrapper (`contract-client.ts`) |
+| --- | --- |
+| `register_issuer` | `registerIssuer()` |
+| `approve_issuer` | `approveIssuer()` |
+| `suspend_issuer` | `suspendIssuer()` |
+| `get_issuer` | `getIssuer()` (read / `simulateTransaction`) |
+| `register_certificate` | `registerCertificate()` |
+| `verify_certificate` | `verifyCertificate()` |
+| `get_certificate` | `getCertificate()` (read / `simulateTransaction`) |
+| `revoke_certificate` | `revokeCertificate()` |
+| `suspend_certificate` | `suspendCertificate()` |
+| `reward_student` | `rewardStudent()` |
+| `link_payment` | `linkPayment()` |
+| `create_opportunity` | `createOpportunity()` |
+| `fund_opportunity` | `fundOpportunity()` |
+| `submit_milestone` | `submitMilestone()` |
+| `approve_milestone` | `approveMilestone()` |
+| `release_payment` | `releasePayment()` |
+| `refund_opportunity` | `refundOpportunity()` |
+| `get_opportunity` | `getOpportunity()` (read / `simulateTransaction`) |
+
+The network passphrase in `NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE` must match the network the contract is deployed on (testnet), or the wallet rejects the signature.
+
+---
+
 ## Quick Start
 
 ### Prerequisites
@@ -189,9 +252,9 @@ Full setup guide: [`docs/reference/pre-workshop-setup-guide.pdf`](docs/reference
 ### Smart Contract
 
 ```bash
-cd contract
-cargo test                    # contract test suite
-stellar contract build        # builds wasm32v1-none target
+cd contracts/stellaroid_earn
+make test                     # cargo test (contract suite)
+make build                    # builds wasm32v1-none target
 
 # Deploy to testnet
 stellar keys generate my-key --network testnet --fund
@@ -375,11 +438,13 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 ```
 stellaroid-earn/
 ├── Cargo.toml                   # Rust workspace (Soroban contract)
-├── contract/
-│   ├── src/
-│   │   ├── lib.rs              # Soroban credential + payment contract
-│   │   └── test.rs             # contract security and lifecycle tests
-│   └── Cargo.toml
+├── contracts/
+│   └── stellaroid_earn/
+│       ├── src/
+│       │   ├── lib.rs          # Soroban credential + payment contract
+│       │   └── test.rs         # contract security and lifecycle tests
+│       ├── Makefile            # build / test / fmt / clean targets
+│       └── Cargo.toml
 ├── frontend/
 │   ├── src/
 │   │   ├── app/                # Next.js App Router pages
