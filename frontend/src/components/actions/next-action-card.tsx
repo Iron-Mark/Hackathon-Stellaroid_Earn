@@ -177,11 +177,21 @@ export function NextActionCard({
           </button>
         </div>
       </div>
-      {/* Role guidance hint — visible only in fresh state */}
+      {/* Role chooser guidance — visible only in the fresh state. Shows what
+          BOTH roles do, not just the selected one, so a freshly-connected user
+          can tell which to pick (pilot feedback: "not clear which role to
+          pick after connecting wallet"). */}
       {walletConnected && !milestones.registered && !milestones.paid && (
-        <p className="text-xs text-text-muted italic px-4 py-2 m-0 border-t border-border/50">
-          {role === "issuer" ? t.roleHintIssuer : t.roleHintEmployer}
-        </p>
+        <div className="flex flex-col gap-1.5 px-4 py-2.5 m-0 border-t border-border/50 text-xs text-text-muted">
+          <p className="m-0">
+            <span className="font-semibold text-text">{t.issuerLabel}</span>:{" "}
+            {t.roleHintIssuer}
+          </p>
+          <p className="m-0">
+            <span className="font-semibold text-text">{t.employerLabel}</span>:{" "}
+            {t.roleHintEmployer}
+          </p>
+        </div>
       )}
       {/* Body */}
       <div className="flex items-center gap-3 p-4 max-[420px]:px-4 max-[420px]:pt-4 max-[420px]:pb-5">
