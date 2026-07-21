@@ -8,7 +8,18 @@ import {
   tryConsumeBudget,
 } from "./rate-limit.ts";
 
-test("getClientId prefers the first x-forwarded-for hop, then x-real-ip", () => {
+test("getClientId prefers the non-forgeable x-real-ip, then the first x-forwarded-for hop", () => {
+  // x-real-ip wins even when a (potentially forged) x-forwarded-for is present.
+  assert.equal(
+    getClientId(
+      new Headers({
+        "x-forwarded-for": "1.2.3.4, 10.0.0.1",
+        "x-real-ip": "198.51.100.7",
+      }),
+    ),
+    "198.51.100.7",
+  );
+  // Falls back to the leftmost x-forwarded-for hop when x-real-ip is absent.
   assert.equal(
     getClientId(new Headers({ "x-forwarded-for": "203.0.113.9, 10.0.0.1" })),
     "203.0.113.9",

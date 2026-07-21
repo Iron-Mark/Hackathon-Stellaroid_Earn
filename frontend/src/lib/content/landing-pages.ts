@@ -189,7 +189,7 @@ export const verifyBootcampCertificate: LandingContent = {
 export const verifyCandidateCredentials: LandingContent = {
   "slug": "/verify-candidate-credentials",
   "metaTitle": "Verify Candidate Credentials on Stellar",
-  "metaDescription": "Verify candidate credentials instantly from a public, wallet-free proof URL, no login or background-check delay, then fund a paid trial in XLM on Stellar.",
+  "metaDescription": "Verify candidate credentials instantly from a public, wallet-free proof URL, no login or background-check delay, then fund a paid trial in testnet XLM on Stellar testnet.",
   "keywords": [
     "verify candidate credentials instantly",
     "verify a job candidate's certificate",
@@ -359,8 +359,8 @@ export const verifyCandidateCredentials: LandingContent = {
 
 export const instantPayouts: LandingContent = {
   "slug": "/instant-payouts",
-  "metaTitle": "Get Paid in XLM for Verified Credentials",
-  "metaDescription": "Instant payouts in XLM the moment your credential is verified: link_payment sends XLM straight to your verified Stellar wallet in seconds for a fraction of a cent.",
+  "metaTitle": "Get Paid in Testnet XLM for Verified Credentials",
+  "metaDescription": "Instant payouts in testnet XLM the moment your credential is verified: link_payment sends XLM straight to your verified wallet on Stellar testnet in seconds for a fraction of a cent.",
   "keywords": [
     "get paid in XLM when your credential is verified",
     "instant crypto payout on credential verification",

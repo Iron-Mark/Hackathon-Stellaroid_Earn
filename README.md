@@ -1,6 +1,6 @@
 # Stellaroid Earn
 
-**On-chain credential trust for Stellar PH Bootcamp 2026**
+**A reusable prove, verify, pay primitive for on-chain credentials, built for Stellar PH Bootcamp 2026**
 
 Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 supported wallets (Freighter, Albedo, xBull, LOBSTR & more), installable PWA, end-to-end.
 

@@ -9,13 +9,17 @@
 // rate limit in front (Vercel WAF / Firewall rules).
 
 export function getClientId(headers: Headers): string {
-  const forwarded = headers.get("x-forwarded-for");
-  if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) return first;
-  }
+  // Prefer x-real-ip: on Vercel it is the real connection IP and is NOT
+  // client-forgeable. The leftmost x-forwarded-for entry, by contrast, is
+  // attacker-controllable (a client can prepend a fake IP and Vercel appends
+  // the real one after it), which would hand each forged request a fresh
+  // limiter window. Fall back to XFF's leftmost only when x-real-ip is absent
+  // (non-Vercel / local dev).
   const realIp = headers.get("x-real-ip")?.trim();
-  return realIp || "unknown";
+  if (realIp) return realIp;
+  const forwarded = headers.get("x-forwarded-for");
+  const first = forwarded?.split(",")[0]?.trim();
+  return first || "unknown";
 }
 
 type WindowEntry = { count: number; resetAt: number };
