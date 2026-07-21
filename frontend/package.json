@@ -50,6 +50,7 @@
     "typescript": "^5.7.0"
   },
   "overrides": {
+    "axios": "^1.18.1",
     "postcss": "8.5.15",
     "protobufjs": "^7.6.3",
     "jayson": {
