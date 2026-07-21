@@ -123,8 +123,15 @@ export function buildPageMetadata({
   const canonicalUrl = seoCanonicalUrl(canonicalPath);
   // Give every page a social-card image by default so the summary_large_image
   // card actually renders. Routes with their own opengraph-image opt out with
-  // `images: null`.
-  const socialImages = images === null ? undefined : images ?? [SITE_OG_IMAGE];
+  // `images: null`. The default is a structured object so Next emits
+  // og:image:width/height/alt and twitter:image:alt; caller-supplied string
+  // arrays pass through as-is.
+  const socialImages: Array<
+    string | { url: string; width: number; height: number; alt: string }
+  > | undefined =
+    images === null
+      ? undefined
+      : (images ?? [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }]);
 
   return {
     title,

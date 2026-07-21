@@ -8,8 +8,15 @@ function createNonce() {
   return btoa(String.fromCharCode(...bytes));
 }
 
+// The public badge at /proof/<64hex>/embed is meant to be embedded anywhere;
+// every other route refuses framing. This single predicate drives both the CSP
+// frame-ancestors directive and the legacy X-Frame-Options header below.
+function isEmbedRoute(pathname: string) {
+  return /^\/proof\/[0-9a-f]{64}\/embed$/i.test(pathname);
+}
+
 function buildContentSecurityPolicy(nonce: string, pathname: string) {
-  const frameAncestors = /^\/proof\/[0-9a-f]{64}\/embed$/i.test(pathname)
+  const frameAncestors = isEmbedRoute(pathname)
     ? "frame-ancestors *"
     : "frame-ancestors 'none'";
 
@@ -34,7 +41,8 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
 
 export function middleware(request: NextRequest) {
   const nonce = createNonce();
-  const csp = buildContentSecurityPolicy(nonce, request.nextUrl.pathname);
+  const pathname = request.nextUrl.pathname;
+  const csp = buildContentSecurityPolicy(nonce, pathname);
   const requestHeaders = new Headers(request.headers);
 
   requestHeaders.set("x-nonce", nonce);
@@ -48,6 +56,11 @@ export function middleware(request: NextRequest) {
 
   response.headers.set("Content-Security-Policy", csp);
   response.headers.set("x-nonce", nonce);
+  // Legacy clickjacking header for older browsers / proxies that ignore CSP
+  // frame-ancestors. DENY everywhere except the intentionally embeddable badge.
+  if (!isEmbedRoute(pathname)) {
+    response.headers.set("X-Frame-Options", "DENY");
+  }
 
   return response;
 }

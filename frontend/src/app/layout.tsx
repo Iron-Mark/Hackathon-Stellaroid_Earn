@@ -6,6 +6,7 @@ import { DeferredToastProvider } from "@/components/layout/deferred-toast-provid
 import { ErrorReporter } from "@/components/telemetry/error-reporter";
 import { JsonLd } from "@/components/ui/json-ld";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
+import { MotionProvider } from "@/components/layout/motion-provider";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { APPLE_SPLASH } from "@/lib/apple-splash.generated";
 import "../styles/globals.css";
@@ -205,7 +206,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         ))}
         <JsonLd data={webSiteJsonLd} />
         <JsonLd data={authorProfileJsonLd} />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <ScrollToTop />
         {ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null}
         <DeferredToastProvider />

@@ -12,6 +12,14 @@ This runbook is the active source for branch flow, Vercel domains, release check
 
 Do not create additional Vercel projects for branch showcase domains.
 
+### Environment gates
+
+- **WalletConnect (`NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`)**: setting the Reown
+  project id enables the WalletConnect option, at which point wallet
+  connections traverse the third-party Reown relay. The `/privacy` "Wallets"
+  section must disclose that relay **before** WalletConnect goes live in a given
+  environment. Ship the privacy disclosure first, then set the env var.
+
 ## Branch Flow
 
 ```text

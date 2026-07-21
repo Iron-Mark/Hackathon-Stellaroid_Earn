@@ -66,7 +66,7 @@ const aboutSoftwareProductJsonLd = buildAboutSoftwareProductSchema();
 
 const stack = [
   {
-    title: "Rust + soroban-sdk 22",
+    title: "Rust + soroban-sdk 26.1",
     desc: "Contract crate, trust-layer tests included",
     icon: (
       <svg
