@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <!-- Pixel art magnifying glass — 16×16, 2px block grid -->
-  <!-- Lens ring -->
-  <rect x="4" y="0" width="4" height="2" fill="#F8FAFC" shape-rendering="crispEdges"/>
-  <rect x="2" y="2" width="2" height="4" fill="#F8FAFC" shape-rendering="crispEdges"/>
-  <rect x="8" y="2" width="2" height="4" fill="#F8FAFC" shape-rendering="crispEdges"/>
-  <rect x="4" y="6" width="4" height="2" fill="#F8FAFC" shape-rendering="crispEdges"/>
-  <!-- Handle (diagonal, lower-right) -->
-  <rect x="10" y="6" width="2" height="2" fill="#F8FAFC" shape-rendering="crispEdges"/>
-  <rect x="12" y="8" width="2" height="2" fill="#F8FAFC" shape-rendering="crispEdges"/>
-  <rect x="14" y="10" width="2" height="2" fill="#F8FAFC" shape-rendering="crispEdges"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="4" height="2" x="4" y="0" fill="#F8FAFC" shape-rendering="crispEdges"/><rect width="2" height="4" x="2" y="2" fill="#F8FAFC" shape-rendering="crispEdges"/><rect width="2" height="4" x="8" y="2" fill="#F8FAFC" shape-rendering="crispEdges"/><rect width="4" height="2" x="4" y="6" fill="#F8FAFC" shape-rendering="crispEdges"/><rect width="2" height="2" x="10" y="6" fill="#F8FAFC" shape-rendering="crispEdges"/><rect width="2" height="2" x="12" y="8" fill="#F8FAFC" shape-rendering="crispEdges"/><rect width="2" height="2" x="14" y="10" fill="#F8FAFC" shape-rendering="crispEdges"/></svg>
