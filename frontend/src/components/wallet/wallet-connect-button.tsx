@@ -50,6 +50,9 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
 
   useEffect(() => {
     if (wallet.error && wallet.status !== "unsupported") {
+      // Closing a wallet picker / WalletConnect QR is a choice, not an error
+      // worth an alarming red toast.
+      if (/cancel|closed|dismiss/i.test(wallet.error)) return;
       toast({ title: "Wallet error", detail: wallet.error, tone: "danger" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

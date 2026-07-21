@@ -106,6 +106,10 @@ function getClient(): Promise<SignClient> {
       return SignClient.init({
         projectId,
         relayUrl: RELAY_URL,
+        // Core defaults telemetry ON (POSTs to pulse.walletconnect.org); our
+        // CSP already blocks that host, so leave it blocked and silence it at
+        // the source rather than ever widening connect-src to a analytics host.
+        telemetryEnabled: false,
         metadata: {
           name: "Stellaroid Earn",
           description: "Verifiable credentials and payments on Stellar",
@@ -289,8 +293,13 @@ export function forgetWalletConnectSession() {
   const topic = store?.getItem(WC_TOPIC_KEY);
   store?.removeItem(WC_ADDRESS_KEY);
   store?.removeItem(WC_TOPIC_KEY);
-  if (clientPromise && topic) {
-    void clientPromise
+  // Tell the relay/wallet to drop the pairing. After a page reload the client
+  // is not yet initialized (read() restores from localStorage lazily), so use
+  // getClient() — which initialises it if needed — rather than only acting when
+  // clientPromise already exists, else the session lingers until ~7-day expiry.
+  // Disconnect is an explicit user action, so eagerly loading the chunk is fine.
+  if (topic && appConfig.walletConnectProjectId) {
+    void getClient()
       .then((client) =>
         client.disconnect({
           topic,

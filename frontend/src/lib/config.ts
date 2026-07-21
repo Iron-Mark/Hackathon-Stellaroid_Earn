@@ -30,8 +30,9 @@ export const appConfig = {
   explorerUrl:
     process.env.NEXT_PUBLIC_STELLAR_EXPLORER_URL ??
     "https://stellar.expert/explorer/testnet",
-  canonicalUrl:
-    process.env.NEXT_PUBLIC_CANONICAL_URL ?? "https://stellaroid.tech",
+  canonicalUrl: (
+    process.env.NEXT_PUBLIC_CANONICAL_URL ?? "https://stellaroid.tech"
+  ).replace(/\/+$/, ""),
   readAddress: process.env.NEXT_PUBLIC_STELLAR_READ_ADDRESS ?? "",
   adminAddress: process.env.NEXT_PUBLIC_STELLAR_ADMIN_ADDRESS ?? "",
   // Reown/WalletConnect Cloud project id (public, safe to expose). When unset,

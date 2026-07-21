@@ -2,7 +2,7 @@
 
 **On-chain credential trust for Stellar PH Bootcamp 2026**
 
-Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 supported wallets (Freighter, Albedo, xBull, LOBSTR & more), installable PWA, end-to-end.
+Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 supported wallets plus WalletConnect for mobile (Freighter, Albedo, LOBSTR, xBull & more), installable PWA, end-to-end.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
@@ -65,7 +65,7 @@ Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain
 - **Mobile-first redesign** - app-style bottom navigation with a More sheet, auto-hiding header, bottom-sheet dialogs, full safe-area/notch handling.
 - **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (all 19 functions, 17 error codes, 16 events), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
 - **Content engine** - audience landing pages for [bootcamps](https://stellaroid.tech/verify-bootcamp-certificate), [employers](https://stellaroid.tech/verify-candidate-credentials), and [graduate payouts](https://stellaroid.tech/instant-payouts), plus a [guides library](https://stellaroid.tech/guides) and a [verifiable-credentials glossary](https://stellaroid.tech/glossary) - all with FAQPage/HowTo/DefinedTermSet structured data and an [`llms.txt`](https://stellaroid.tech/llms.txt).
-- **Multi-wallet signing** - Freighter and Albedo natively, plus xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use.
+- **Multi-wallet signing** - Freighter and Albedo natively, WalletConnect for mobile wallets (LOBSTR, xBull, Hana, Freighter mobile), and on desktop xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use. WalletConnect activates when a Reown project id is configured.
 
 The public entry flow is organized around three personas: **Issue**, **Verify**, and **Hire**. Verified proof pages now hand employers into `/employer` with the proof hash and candidate wallet preloaded, then require a review checklist before escrow creation. They also hand recruiters into `/talent/<address>?proof=<hash>` so the candidate passport can show a known proof without pretending wallet-wide credential discovery exists yet. Issuer registration now explains approval readiness before signing, and `/pilot` keeps the first rollout bounded to a small testnet issuer pilot. Employer proof packs include a recruiter-safe summary plus an unsigned standards-alignment preview for W3C VC 2.0 and Open Badges 3.0 mapping. That preview is not a signed standards credential yet.
 
