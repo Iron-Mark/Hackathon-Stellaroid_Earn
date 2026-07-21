@@ -1,29 +1,29 @@
-# Stellaroid Earn — One-Pager
+# Stellaroid Earn: One-Pager
 
-## The problem — the friction costs more than the fraud
+## The problem: the friction costs more than the fraud
 
-**Maria graduated top of her bootcamp cohort in Quezon City.** She applies to a Singapore fintech on a Tuesday. The employer emails her school to confirm the certificate. Three weeks later, the role is filled — by a candidate who didn't need verifying.
+**Maria graduated top of her bootcamp cohort in Quezon City.** She applies to a Singapore fintech on a Tuesday. The employer emails her school to confirm the certificate. Three weeks later, the role is filled, taken by a candidate who didn't need verifying.
 
 - Verification takes **14–21 days**.
 - **32%** of candidates misrepresent their education.
 - Background checks cost **$30–$75** each.
-- So employers default to the candidate they *can* vet cheaply — and Maria loses a job she earned.
+- So employers default to the candidate they *can* vet cheaply, and Maria loses a job she earned.
 
 The certificate is real. The problem is that proving it costs more than hiring around it.
 
 **Stellaroid Earn makes proof cheaper than skipping it.**
 
-## The approach — bind the hash, pay the wallet, prove the work
+## The approach: bind the hash, pay the wallet, prove the work
 
-Maria's school hashes her diploma and anchors it on Stellar. The Singapore employer verifies in 5 seconds, pays 500 XLM directly to her wallet — no invoice, no platform, no wait. The whole cycle takes less time than reading this paragraph.
+Maria's school hashes her diploma and anchors it on Stellar. The Singapore employer verifies in 5 seconds, then pays 500 testnet XLM (no real-world value) directly to her wallet: no invoice, no platform, no wait. The whole cycle takes less time than reading this paragraph.
 
-1. **Register** — Issuer anchors a SHA-256 hash of the deliverable on-chain.
-2. **Verify** — Employer confirms the hash matches their copy.
-3. **Pay** — Settlement happens in the same flow, in the same app, on the same ledger.
-4. **Share** — The result is a public proof URL — a receipt anyone can open.
-5. **Lookup** — Anyone can paste a hash at `/proof` and resolve a proof page **without a wallet**.
+1. **Register**: Issuer anchors a SHA-256 hash of the deliverable on-chain.
+2. **Verify**: Employer confirms the hash matches their copy.
+3. **Pay**: Settlement happens in the same flow, in the same app, on the same ledger, in testnet XLM with no real-world value.
+4. **Share**: The result is a public proof URL, a receipt anyone can open.
+5. **Lookup**: Anyone can paste a hash at `/proof` and resolve a proof page **without a wallet**.
 
-The canonical output isn't the UI — it's the **event stream on stellar.expert**. A reviewer with no frontend access still sees every issuance, verification, and payment. The proof is public by default.
+The canonical output isn't the UI, it's the **event stream on stellar.expert**. A reviewer with no frontend access still sees every issuance, verification, and payment. The proof is public by default.
 
 No backend. No database. No middleman. Just a contract, a wallet, and a link.
 
@@ -46,11 +46,11 @@ No backend. No database. No middleman. Just a contract, a wallet, and a link.
 
 ## Edge
 
-- **Proof-first UX** — the artifact *is* the product, not a tab in a dashboard.
-- **Shareable by default** — every completed flow produces a link, not a record.
-- **Walletless verification** — any third party can resolve a proof page from a hash at `/proof` without installing Freighter or creating an account.
-- **Payment is a step, not an afterthought** — most credentialing dApps stop at verification.
-- **Production-grade polish** — 15s RPC timeouts, humanized errors, branded 404 / error boundary, WCAG AA, reduced-motion, 44×44 touch targets.
+- **Proof-first UX**: the artifact *is* the product, not a tab in a dashboard.
+- **Shareable by default**: every completed flow produces a link, not a record.
+- **Walletless verification**: any third party can resolve a proof page from a hash at `/proof` without installing Freighter or creating an account.
+- **Payment is a step, not an afterthought**: most credentialing dApps stop at verification.
+- **Production-grade polish**: 15s RPC timeouts, humanized errors, branded 404 / error boundary, WCAG AA, reduced-motion, 44×44 touch targets.
 
 ## Status
 
@@ -61,7 +61,7 @@ No backend. No database. No middleman. Just a contract, a wallet, and a link.
 
 ## Ask
 
-We're looking for:
-- **Design partners** — one freelance platform, one bootcamp, one bounty program.
-- **Feedback** — from Stellar ecosystem judges on mainnet-readiness.
-- **Distribution** — a slot in Stellar community showcases.
+I'm looking for:
+- **Design partners**: one freelance platform, one bootcamp, one bounty program.
+- **Feedback**: from Stellar ecosystem judges on mainnet-readiness.
+- **Distribution**: a slot in Stellar community showcases.

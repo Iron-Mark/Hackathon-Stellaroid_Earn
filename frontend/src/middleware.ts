@@ -23,6 +23,9 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com${isVercelPreview ? " https://vercel.live" : ""}`,
+    // 'unsafe-inline' here is a deliberate, reviewed tradeoff for Tailwind v4 /
+    // Next 15 inline styles. It does NOT extend to scripts: script-src stays
+    // locked to a per-request nonce + 'self'. Do not relax script-src "to match".
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     // stellar.creit.tech serves the wallet icons in the Stellar Wallets Kit

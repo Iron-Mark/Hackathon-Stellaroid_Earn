@@ -20,7 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/contact",
   title: "Contact",
   description:
-    "Reach the Stellaroid Earn team: pilot requests, general questions, bug reports, and security disclosures.",
+    "Reach Stellaroid Earn: pilot requests, general questions, bug reports, and security disclosures.",
   keywords: "stellaroid contact, pilot request, security disclosure",
 });
 
@@ -28,13 +28,13 @@ const channels = [
   {
     Icon: FlaskConical,
     title: "Pilot requests",
-    body: "Bootcamps, training providers, and employers: the pilot form is the fastest route and goes straight to our inbox.",
+    body: "Bootcamps, training providers, and employers: the pilot form is the fastest route and goes straight to my inbox.",
     action: { label: "Request a pilot", href: "/pilot#request", external: false },
   },
   {
     Icon: Mail,
     title: "General questions",
-    body: "Anything else — partnerships, press, feedback, or privacy/data-deletion requests.",
+    body: "Anything else: partnerships, press, feedback, or privacy/data-deletion requests.",
     action: {
       label: SITE_CONTACT_EMAIL,
       href: `mailto:${SITE_CONTACT_EMAIL}`,
@@ -44,7 +44,7 @@ const channels = [
   {
     Icon: Bug,
     title: "Bug reports",
-    body: "Found something broken? Open a GitHub issue with steps to reproduce — the whole codebase is public.",
+    body: "Found something broken? Open a GitHub issue with steps to reproduce. The whole codebase is public.",
     action: {
       label: "Open a GitHub issue",
       href: `${SITE_REPOSITORY_URL}/issues`,
@@ -54,7 +54,7 @@ const channels = [
   {
     Icon: ShieldAlert,
     title: "Security disclosures",
-    body: "Report vulnerabilities privately by email. Machine-readable details live in our security.txt.",
+    body: "Report vulnerabilities privately by email. Machine-readable details live in my security.txt.",
     action: {
       label: "/.well-known/security.txt",
       href: "/.well-known/security.txt",
@@ -69,11 +69,11 @@ export default function ContactPage() {
       <JsonLd data={breadcrumbJsonLd} />
       <header>
         <p className="m-0 font-pixel text-xs font-medium uppercase tracking-widest text-primary">
-          Talk to us
+          Talk to me
         </p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-text">Contact</h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-text-muted">
-          Stellaroid Earn is solo-built and early-access — you&rsquo;ll be
+          Stellaroid Earn is solo-built and early-access, so you&rsquo;ll be
           talking to the person who wrote the code. Pick the channel that fits.
         </p>
       </header>

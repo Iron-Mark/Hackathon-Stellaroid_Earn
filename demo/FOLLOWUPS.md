@@ -2,7 +2,7 @@
 
 Current audit of the deployed app versus the original punch list.
 
-Use this as the live backlog. Items already shipped are called out so we do not re-audit stale issues.
+Use this as the live backlog. Items already shipped are called out so I do not re-audit stale issues.
 
 ---
 
@@ -14,10 +14,10 @@ Use this as the live backlog. Items already shipped are called out so we do not 
 - Done.
 
 **What shipped**
-- `frontend/src/hooks/use-locale.ts` — shared subscription hook
-- `frontend/src/lib/i18n.ts` — typed en/tl dictionary (hero, footer, about, app sections)
-- `frontend/src/components/layout/footer-tagline.tsx` — client island for footer brand tagline
-- `frontend/src/components/about/localized-about-copy.tsx` — client island for about lede + story kickers
+- `frontend/src/hooks/use-locale.ts`: shared subscription hook
+- `frontend/src/lib/i18n.ts`: typed en/tl dictionary (hero, footer, about, app sections)
+- `frontend/src/components/layout/footer-tagline.tsx`: client island for footer brand tagline
+- `frontend/src/components/about/localized-about-copy.tsx`: client island for about lede + story kickers
 - Updated: `localized-hero.tsx`, `site-footer.tsx`, `about/page.tsx`, `next-action-card.tsx`
 
 **Notes**
