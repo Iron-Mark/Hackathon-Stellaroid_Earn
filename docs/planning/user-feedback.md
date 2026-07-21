@@ -68,6 +68,45 @@ After reviewing pilot feedback, the following improvements were implemented:
 
 **Commit:** [`c1450bf`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/c1450bf)
 
+### Iteration 2: Role Choice Guidance After Connect
+
+**Feedback addressed:** Testers were unsure which role to pick right after connecting their wallet ("Not clear which role to pick after connecting wallet").
+
+**Changes made:**
+- The fresh-state hint now shows what *both* Issuer and Employer do, labeled, instead of only the selected role, so a new user can choose.
+- Reuses the existing localized strings, so it works across all six supported languages.
+
+**Commit:** [`09c9d45`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/09c9d45)
+
+### Iteration 3: Wallet Transaction History
+
+**Feedback addressed:** Users wanted transaction history visible in the dashboard.
+
+**Changes made:**
+- Added an "Activity involving your wallet" panel on `/app` that lists recent contract events tied to the connected wallet, with a link to full account history on Stellar Expert.
+
+**Commit:** [`fa0c5d0`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/fa0c5d0)
+
+### Iteration 4: Mobile Support
+
+**Feedback addressed:** Users asked for mobile support to check proofs on the go.
+
+**Changes made:**
+- Mobile-first redesign (bottom navigation, bottom-sheet dialogs, safe-area handling).
+- Installable PWA with an offline fallback.
+- WalletConnect signing for mobile wallets (LOBSTR, xBull, Hana, Freighter mobile).
+
+**Commit:** [`145f6ad`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/145f6ad)
+
+### Iteration 5: Issued-Credential Clarity
+
+**Feedback addressed:** An issuer wanted a list of all credentials they had issued.
+
+**Changes made:**
+- Clarified in the wallet activity panel that issued credentials surface on the recipient's wallet, and that every signed action (issue, verify, pay) is in the issuer's full account history.
+
+**Commit:** [`eb181b8`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/eb181b8)
+
 ---
 
 ## How to Reproduce User Testing

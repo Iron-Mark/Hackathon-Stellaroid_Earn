@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect } from "react";
 /*  Metadata is exported from a separate file since this is "use client" */
 /* ------------------------------------------------------------------ */
 
-const TOTAL = 7;
+const TOTAL = 10;
 
 /* ------------------------------------------------------------------ */
 /*  SVG icon helpers                                                   */
@@ -199,7 +199,7 @@ export default function SlidesPage() {
             On-chain credential trust for Stellar testnet
           </h3>
           <p className="text-sm sm:text-base text-text-muted/80 leading-relaxed">
-            Issue, verify, and pay graduates - Soroban + Freighter, end-to-end.
+            Issue, verify, and pay graduates - Soroban + multi-wallet, proof to payment end-to-end.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mt-6 items-start">
@@ -443,7 +443,7 @@ export default function SlidesPage() {
                 variant: "purple" as const,
                 stroke: "#a78bfa",
                 title: "Frontend",
-                desc: "Next.js 15, React 19, installable PWA, lazy-loaded SDK (~260 KB first load), 8 wallets via Stellar Wallets Kit",
+                desc: "Next.js 15, React 19, installable PWA, lazy-loaded SDK (~260 KB first load), 8 wallets: Freighter + Albedo native, WalletConnect for mobile, 6 more via Stellar Wallets Kit",
                 icon: (
                   <>
                     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -626,9 +626,171 @@ export default function SlidesPage() {
         </Slide>
 
         {/* ============================================================ */}
-        {/* SLIDE 7 -- Links                                             */}
+        {/* SLIDE 7 -- Market Opportunity                                */}
         {/* ============================================================ */}
         <Slide direction={direction} active={current === 6}>
+          <Badge variant="purple">Market Opportunity</Badge>
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-4">
+            A trust gap <span className="text-primary">worth closing</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-4">
+            {[
+              {
+                title: "Credentials are unverifiable",
+                desc: "Bootcamp and course certificates are PDFs. Employers trust them blindly or pay for background checks.",
+              },
+              {
+                title: "Graduates lack portable proof",
+                desc: "Millions finish online programs each year with nothing an employer can confirm in seconds.",
+              },
+              {
+                title: "Stellar makes it economic",
+                desc: "Sub-cent fees and ~5s finality make anchoring each credential  - and paying graduates directly  - viable where gas-heavy chains can't.",
+              },
+            ].map((c) => (
+              <div
+                key={c.title}
+                className="bg-surface-glass border border-border/60 rounded-lg p-4 md:p-5 backdrop-blur-sm"
+              >
+                <h4 className="text-sm sm:text-base font-bold text-primary mb-1.5">
+                  {c.title}
+                </h4>
+                <p className="text-xs sm:text-sm text-text-muted leading-snug">
+                  {c.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-accent/10 border border-accent/30 rounded-lg p-4 md:p-5 mt-5 max-w-full">
+            <p className="text-sm sm:text-base text-text-muted leading-relaxed">
+              <span className="font-bold text-accent">Our wedge:</span> bootcamps and
+              training providers as issuers, employers and recruiters as verifiers
+              {" - "}starting where credential trust and cross-border payout friction are
+              highest.
+            </p>
+          </div>
+        </Slide>
+
+        {/* ============================================================ */}
+        {/* SLIDE 8 -- Growth Strategy                                   */}
+        {/* ============================================================ */}
+        <Slide direction={direction} active={current === 7}>
+          <Badge>Growth Strategy</Badge>
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-4">
+            How it <span className="text-primary">spreads</span>
+          </h2>
+
+          {/* Two-sided loop */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 my-5">
+            {[
+              "Issuers anchor credentials",
+              "Graduates share proof links",
+              "Employers verify in one click",
+              "Trust pulls in more issuers",
+            ].map((step, i) => (
+              <div key={step} className="contents">
+                {i > 0 && <span className="text-border text-sm sm:text-base">&rarr;</span>}
+                <span className="bg-primary/10 border border-primary/30 rounded-lg px-3 py-2 sm:px-4 font-semibold text-primary text-xs sm:text-sm">
+                  {step}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-2">
+            {[
+              {
+                title: "Zero-friction verification",
+                desc: "Employers check a credential from a shared link or QR  - no install, no account. Every shared proof is a live demo.",
+              },
+              {
+                title: "Pilot-led onboarding",
+                desc: "The /pilot form captures training providers; first rollouts stay small (5-10 credentials) to prove the loop before scaling.",
+              },
+              {
+                title: "Ecosystem distribution",
+                desc: "Stellar PH + Rise In community, testnet-first to lower adoption risk, installable PWA for checks on the go.",
+              },
+            ].map((c) => (
+              <div
+                key={c.title}
+                className="bg-surface-glass border border-border/60 rounded-lg p-4 md:p-5 backdrop-blur-sm"
+              >
+                <h4 className="text-sm sm:text-base font-bold text-primary mb-1.5">
+                  {c.title}
+                </h4>
+                <p className="text-xs sm:text-sm text-text-muted leading-snug">
+                  {c.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Slide>
+
+        {/* ============================================================ */}
+        {/* SLIDE 9 -- Future Roadmap                                    */}
+        {/* ============================================================ */}
+        <Slide direction={direction} active={current === 8}>
+          <Badge variant="green">Future Roadmap</Badge>
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-4">
+            What&apos;s <span className="text-primary">next</span>
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mt-4">
+            {[
+              {
+                phase: "01",
+                title: "Keep it reliable",
+                desc: "Green E2E for register, verify, and pay; testnet clarity; no scope creep.",
+              },
+              {
+                phase: "02",
+                title: "Useful after the event",
+                desc: "Issuer onboarding, proof-to-employer handoff, /pilot capture, honest talent passports.",
+              },
+              {
+                phase: "03",
+                title: "Pilot with real users",
+                desc: "One real issuer, 5-10 live credentials, employer feedback on proof clarity and trust.",
+              },
+              {
+                phase: "04",
+                title: "Product decisions",
+                desc: "Mainnet feasibility, standards signing, indexing  - each gated behind written policy, not rushed.",
+              },
+            ].map((p) => (
+              <div
+                key={p.phase}
+                className="bg-surface-glass border border-border/60 rounded-lg p-4 md:p-5 backdrop-blur-sm flex gap-3.5 items-start"
+              >
+                <span className="font-heading text-lg sm:text-xl font-extrabold text-primary/70 shrink-0 leading-none mt-0.5">
+                  {p.phase}
+                </span>
+                <div>
+                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1">
+                    {p.title}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-text-muted leading-snug">
+                    {p.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs sm:text-sm text-text-muted/70 mt-5 max-w-full">
+            <span className="font-semibold text-text-muted">Deliberately not now:</span> no
+            marketplace, no mainnet from examples, no NFT layer before real issuer demand is
+            validated.
+          </p>
+        </Slide>
+
+        {/* ============================================================ */}
+        {/* SLIDE 10 -- Links                                            */}
+        {/* ============================================================ */}
+        <Slide direction={direction} active={current === 9}>
           {/* Decorative rings */}
           <svg
             className="absolute right-[5vw] bottom-[5vh] opacity-[0.04] hidden md:block"

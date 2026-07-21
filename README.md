@@ -533,11 +533,15 @@ The demo video is committed in this repository so the submission does not depend
 
 ### Improvements Based on Feedback
 
-After reviewing the anonymized pilot feedback snapshot, the following iteration was completed:
+Every improvement below maps to a piece of pilot feedback and the commit that shipped it:
 
 | Feedback | Improvement | Commit |
 |----------|-------------|--------|
-| Users confused about which role (Issuer vs Employer) to pick after connecting wallet | Added contextual role guidance hints below the persona toggle | [`c1450bf`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/c1450bf) |
+| "Issuer vs Employer toggle was confusing at first" | Contextual role guidance hints below the persona toggle | [`c1450bf`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/c1450bf) |
+| "Not clear which role to pick after connecting wallet" | Fresh-state hint now shows what *both* roles do, so a new user can choose | [`09c9d45`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/09c9d45) |
+| "Would like to see transaction history in the dashboard" | Added a wallet-scoped "Activity involving your wallet" panel on `/app` | [`fa0c5d0`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/fa0c5d0) |
+| "Mobile support would be great for checking proofs on the go" | Mobile-first redesign, installable PWA, and WalletConnect mobile signing | [`145f6ad`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/145f6ad) |
+| "Would be nice to have a list of all credentials I've issued" | Clarified where issued credentials surface, with a link to full account history | [`eb181b8`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/eb181b8) |
 
 ---
 
