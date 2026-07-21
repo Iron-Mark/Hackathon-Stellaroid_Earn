@@ -255,6 +255,14 @@ async function main() {
   const outMb = (fs.statSync(OUT).size / 1024 / 1024).toFixed(2);
   console.log(`\n=== Done ===`);
   console.log(`Wrote ${path.relative(ROOT, OUT)} (${outMb} MB)`);
+  // NOTE: the App + WalletConnect scene records a live relay handshake, so the
+  // raw capture holds a multi-second "Connecting…" beat before the QR renders.
+  // Find its window (frame-check around the /app scene) and trim it, e.g.:
+  //   ffmpeg -y -i in.mp4 -filter_complex \
+  //     "[0:v]trim=0:A,setpts=PTS-STARTPTS[a];[0:v]trim=B,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1[out]" \
+  //     -map "[out]" -c:v libx264 -preset slow -crf 28 -pix_fmt yuv420p -movflags +faststart out.mp4
+  // where A = just after the click and B = the QR onset. The committed mp4 is
+  // trimmed this way; handshake latency varies per run, so re-derive A/B.
 }
 
 main().catch((err) => {

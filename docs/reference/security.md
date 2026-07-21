@@ -50,7 +50,7 @@ smart-contract, frontend, infrastructure, and operational layers.
 | 2 | **Small server-side attack surface** | PASS | Server routes are limited to cached health/events and restricted fee sponsorship; fee bump requires bearer auth plus XDR, contract, method, and fee validation. |
 | 3 | **CDN caching** | PASS | Dynamic proof routes use `revalidate=60` to reduce RPC load while keeping data fresh. |
 | 4 | **Crawl protection** | PASS | `robots.ts` disallows crawlers from spidering `/proof/[hash]` routes to prevent mass enumeration. |
-| 5 | **Dependency audit** | PASS | `npm audit` run pre-submission; no known critical vulnerabilities at time of review. |
+| 5 | **Dependency audit** | PASS | `npm audit`: 0 critical, 0 high, 0 moderate (the July 2026 axios and brace-expansion highs were patched). 23 low-severity alerts remain, all chaining to a single unpatched advisory (`elliptic <=6.6.1`, "risky cryptographic primitive") reached only through Stellar Wallets Kit's bundled Trezor / HOT / NEAR wallet SDKs, which this app never executes. `elliptic 6.6.1` is the latest published version, so no non-breaking upstream fix exists; npm's only remedy is a breaking Stellar Wallets Kit downgrade. Accepted and tracked; revisit when elliptic ships a patch or the kit slims its tree. |
 
 ---
 
@@ -77,4 +77,4 @@ out of scope for this testnet MVP submission:
 
 ---
 
-Last reviewed: 2026-07-02
+Last reviewed: 2026-07-21
