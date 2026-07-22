@@ -265,8 +265,16 @@ content-level and are caught by tests rather than handled at runtime:
 
 ## Testing
 
-**Unit** (`lib/content/journey.test.ts`, run by the existing `npm run test:unit`
-glob):
+**Unit** (`lib/content/journey.test.ts`):
+
+The current `test:unit` script globs `src/lib/*.test.ts`, which does **not**
+match a test one directory down in `src/lib/content/`. Left alone, the test file
+would exist and silently never run. The script must be broadened to
+`src/lib/**/*.test.ts` as part of this work. Every existing lib test sits at
+`src/lib/*.test.ts`, so the broader glob is a superset and no current test is
+dropped. Verify by confirming the reported test count does not fall.
+
+Assertions:
 
 - Every `JourneyChapter.slug` is unique and matches `/^[a-z0-9-]+$/`.
 - Every `JourneyAward.slug` is unique and matches the same pattern.
