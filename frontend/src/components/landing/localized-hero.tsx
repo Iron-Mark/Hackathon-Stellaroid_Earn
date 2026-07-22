@@ -81,7 +81,14 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
         </Link>
         <Link
           href="/start"
-          className="inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-text hover:border-primary"
+          className={cn(
+            "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
+            "text-text border border-border bg-transparent",
+            "hover:bg-surface hover:-translate-y-0.5",
+            "focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-1",
+            "transition-all duration-150 ease-out",
+            "motion-safe:hover:-translate-y-px motion-reduce:hover:translate-y-0",
+          )}
         >
           Try it yourself in 60s
         </Link>

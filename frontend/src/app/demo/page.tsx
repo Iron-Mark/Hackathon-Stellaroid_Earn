@@ -208,7 +208,7 @@ export default async function DemoPage() {
               href="/start"
               className="inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-text no-underline transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
             >
-              Try it yourself (60s)
+              Try it yourself in 60s
             </Link>
           </div>
         </section>
