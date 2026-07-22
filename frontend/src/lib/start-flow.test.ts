@@ -11,10 +11,16 @@ test("explorerTxUrl builds a tx link", () => {
   assert.ok(explorerTxUrl("abc").endsWith("/tx/abc"));
 });
 
-test("feedbackFormUrl includes the wallet address", () => {
-  const url = feedbackFormUrl("GALGZZRX");
+test("feedbackFormUrl prefills the wallet when an entry id is configured", () => {
+  const url = feedbackFormUrl("GALGZZRX", "entry.123");
   assert.ok(url.includes("docs.google.com/forms"));
-  assert.ok(url.includes("GALGZZRX"));
+  assert.ok(url.includes("entry.123=GALGZZRX"));
+});
+
+test("feedbackFormUrl falls back to a plain form link when no entry id", () => {
+  const url = feedbackFormUrl("GALGZZRX", "");
+  assert.ok(url.includes("docs.google.com/forms"));
+  assert.ok(!url.includes("GALGZZRX"));
 });
 
 test("TIP_RECIPIENT is the seeded graduate", () => {

@@ -22,12 +22,9 @@ export function explorerTxUrl(hash: string): string {
   return `${appConfig.explorerUrl}/tx/${hash}`;
 }
 
-export function feedbackFormUrl(address: string): string {
-  const params = new URLSearchParams({ usp: "pp_url", address });
-  if (WALLET_ENTRY_ID) {
-    params.set(WALLET_ENTRY_ID, address);
-  }
-  return `${FEEDBACK_FORM_BASE}?${params.toString()}`;
+export function feedbackFormUrl(address: string, entryId: string = WALLET_ENTRY_ID): string {
+  if (!entryId) return `${FEEDBACK_FORM_BASE}?usp=pp_url`;
+  return `${FEEDBACK_FORM_BASE}?usp=pp_url&${entryId}=${encodeURIComponent(address)}`;
 }
 
 export async function registerIssuerAction(
@@ -35,7 +32,7 @@ export async function registerIssuerAction(
   name: string,
   category: string,
 ): Promise<{ hash: string }> {
-  const { registerIssuer } = await import("./contract-client.ts");
+  const { registerIssuer } = await import("./contract-client");
   const res = await registerIssuer(address, name, "", category);
   return { hash: res.hash ?? "" };
 }
@@ -44,7 +41,7 @@ export async function sendTipAction(
   address: string,
   xlm: number,
 ): Promise<{ hash: string }> {
-  const { linkPayment } = await import("./contract-client.ts");
+  const { linkPayment } = await import("./contract-client");
   const res = await linkPayment(address, TIP_RECIPIENT, TIP_CERT_HASH, xlmToStroops(xlm));
   return { hash: res.hash ?? "" };
 }
