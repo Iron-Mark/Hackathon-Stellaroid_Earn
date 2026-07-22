@@ -6,6 +6,9 @@ Exact versions are pinned in `frontend/package.json` and
 `frontend/package-lock.json`; the Rust contract's dependencies are in
 `contracts/stellaroid_earn/Cargo.toml`.
 
+These same attributions are published in human-readable form at
+<https://stellaroid.tech/journey#credits>.
+
 ## Fonts (self-hosted via `next/font`)
 
 - **Orbitron** — Copyright The Orbitron Project Authors. Licensed under the

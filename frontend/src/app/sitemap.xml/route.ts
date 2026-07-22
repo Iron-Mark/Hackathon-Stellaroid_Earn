@@ -27,6 +27,7 @@ const routes: SitemapRoute[] = [
   { path: "/proof", changeFrequency: "monthly", priority: 0.7 },
   { path: "/opportunity", changeFrequency: "weekly", priority: 0.6 },
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/journey", changeFrequency: "monthly", priority: 0.5 },
   { path: "/issuer", changeFrequency: "monthly", priority: 0.7 },
   { path: "/issuer/register", changeFrequency: "monthly", priority: 0.5 },
   { path: "/employer", changeFrequency: "monthly", priority: 0.6 },

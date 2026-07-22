@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
-    "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/*.test.ts src/app/**/*.test.ts",
+    "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/**/*.test.ts src/app/**/*.test.ts",
     "test:e2e": "playwright test",
     "gen:pwa": "node scripts/generate-pwa-icons.mjs && node scripts/generate-splash.mjs"
   },

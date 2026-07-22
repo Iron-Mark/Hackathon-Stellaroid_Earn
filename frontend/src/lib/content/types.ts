@@ -126,3 +126,60 @@ export interface GuideArticle {
   primaryCta: Cta;
   secondaryCta?: Cta;
 }
+
+/** One dated entry inside a journey chapter. */
+export interface JourneyMilestone {
+  /** "2026-04-18" (day precision) or "2026-05" (month precision). */
+  date: string;
+  title: string;
+  detail: string;
+  /** Short or full commit SHA, 7-40 hex chars. Rendered as a GitHub link. */
+  commit?: string;
+  /** Pull request number. Rendered as a GitHub link. */
+  pr?: number;
+  /** Release tag, e.g. "v1.0.0". Rendered as a GitHub link. */
+  tag?: string;
+  /** A live surface this milestone produced. */
+  link?: { label: string; href: string };
+}
+
+/** A recognition. Rendered both in the top band and inside its chapter. */
+export interface JourneyAward {
+  /** Unique, URL-safe. */
+  slug: string;
+  /** Must match a JourneyChapter.slug. */
+  chapter: string;
+  /** "2026-04" or "2026-07-21". Orders the band. */
+  date: string;
+  /** Display override for spans, e.g. "April - July 2026". */
+  period?: string;
+  headline: string;
+  detail: string;
+  evidence?: { kind: "image" | "link"; href: string; label: string };
+}
+
+/** One act of the story. Its slug is the page anchor. */
+export interface JourneyChapter {
+  /** Unique, URL-safe. Becomes the #anchor and the rail target. */
+  slug: string;
+  eyebrow: string;
+  title: string;
+  /** The one-line skim, shown collapsed. */
+  summary: string;
+  milestones: JourneyMilestone[];
+}
+
+export interface JourneyCreditItem {
+  name: string;
+  /** What it does for this project. */
+  role: string;
+  /** SPDX-ish identifier, e.g. "Apache-2.0", "MIT", "OFL-1.1". */
+  license?: string;
+  href?: string;
+}
+
+export interface JourneyCreditGroup {
+  title: string;
+  note?: string;
+  items: JourneyCreditItem[];
+}
