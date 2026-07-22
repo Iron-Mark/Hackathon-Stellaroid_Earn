@@ -1,10 +1,10 @@
 import { appConfig } from "./config.ts";
+import { DEFAULT_SAMPLE_PROOF_HASH } from "./demo-data.ts";
 
 // The seeded, verified demo credential and its graduate (cert.owner). The tip
 // action pays this graduate against this credential; the contract enforces
 // cert.owner == recipient, so these must stay in sync with the live exhibit.
-export const TIP_CERT_HASH =
-  "c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3";
+export const TIP_CERT_HASH = DEFAULT_SAMPLE_PROOF_HASH;
 export const TIP_RECIPIENT =
   "GALGZZRXRB5SIBGT62OZDA7BMPC4YUZDECHVHGWOAMXIMNLTZGFGTLMN";
 

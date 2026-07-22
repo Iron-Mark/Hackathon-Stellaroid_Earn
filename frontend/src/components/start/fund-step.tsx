@@ -5,7 +5,7 @@ import { fundTestnetAccount } from "@/lib/friendbot";
 import { StepShell } from "./step-shell";
 
 export function FundStep({ onFunded }: { onFunded: () => void }) {
-  const { wallet } = useFreighterWallet();
+  const { wallet, refreshWallet } = useFreighterWallet();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -13,9 +13,16 @@ export function FundStep({ onFunded }: { onFunded: () => void }) {
     return (
       <StepShell stepIndex={3} total={5} title="Switch your wallet to Testnet">
         <p aria-live="polite" className="text-sm leading-relaxed text-text-muted">
-          Your wallet is on a different network. Switch it to Stellar Testnet, then
-          come back to this step.
+          Your wallet is on a different network. Switch it to Stellar Testnet,
+          then re-check below.
         </p>
+        <button
+          type="button"
+          onClick={() => void refreshWallet()}
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-primary"
+        >
+          Re-check network
+        </button>
       </StepShell>
     );
   }
