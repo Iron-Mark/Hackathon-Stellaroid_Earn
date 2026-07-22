@@ -309,8 +309,12 @@ Binding for every string in `journey.ts` and every component:
 - No claim without either a link, a repo artifact, or a plainly stated fact
   that I can stand behind. The quiet May and June commit counts stay in.
 
-## Open item
+## Resolved items
 
-The `ph-representative` wording is the single string awaiting confirmation of
-the 210/400 shape. It ships as written above unless corrected during
-implementation.
+- **`ph-representative` wording: confirmed correct** on 2026-07-23. It ships as
+  "1 of 13 Philippine builders selected. Among 210 builders selected globally
+  from more than 400 applicants in the June Monthly Builder round."
+- **Evidence links: not required.** Confirmed on 2026-07-23 that the four awards
+  without a linked receipt are stated facts and ship that way. `bootcamp-top5`
+  keeps its image. The optional `evidence` field stays in the model so any of
+  the four can gain a link later as a one-line edit, but nothing is pending.
