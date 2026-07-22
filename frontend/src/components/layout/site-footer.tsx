@@ -66,6 +66,7 @@ export function SiteFooter() {
               <Link href="/proof" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Verify</Link>
               <Link href="/issuer" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Issuer</Link>
               <Link href="/about" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">About</Link>
+              <Link href="/journey" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Journey</Link>
               <Link href="/employer" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Employer</Link>
               <Link href="/pilot" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Pilot</Link>
               <Link href="/status" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Status</Link>
