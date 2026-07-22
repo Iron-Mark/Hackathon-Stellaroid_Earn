@@ -79,6 +79,12 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
         >
           {t.ctaGhost}
         </Link>
+        <Link
+          href="/start"
+          className="inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-text hover:border-primary"
+        >
+          Try it yourself in 60s
+        </Link>
       </div>
       <div
         className="mt-10 grid gap-3 px-0 text-left sm:grid-cols-3"

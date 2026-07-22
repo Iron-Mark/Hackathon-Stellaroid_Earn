@@ -205,10 +205,10 @@ export default async function DemoPage() {
               Browse opportunities
             </Link>
             <Link
-              href="/app"
+              href="/start"
               className="inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-text no-underline transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
             >
-              Launch the app
+              Try it yourself (60s)
             </Link>
           </div>
         </section>
