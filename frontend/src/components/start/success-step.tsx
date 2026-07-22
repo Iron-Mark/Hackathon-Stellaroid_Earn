@@ -28,7 +28,8 @@ export function SuccessStep({
       <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4">
         <p className="text-sm font-semibold text-text">Want to be counted?</p>
         <p className="mt-1 text-xs text-text-muted">
-          Add your name and a quick rating (about 20 seconds).
+          Add your name and a quick rating (about 20 seconds). Your wallet is
+          filled in for you.
         </p>
         <a
           href={feedbackFormUrl(address)}
