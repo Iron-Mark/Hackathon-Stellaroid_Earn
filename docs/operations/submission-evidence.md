@@ -1,6 +1,27 @@
 # Submission Evidence Map
 
-Use this as the reviewer-facing evidence index for the Rise In Level 3 checklist. Keep claims tied to artifacts that can be opened, run, or inspected.
+Use this as the reviewer-facing evidence index for the Rise In checklists. Keep claims tied to artifacts that can be opened, run, or inspected.
+
+## Level 5 (Blue Belt) Evidence
+
+Focus: user growth, product iteration, pitch and demo. Everything below is already linked and current; the two items marked *in progress* are gated only on reaching the 50-user threshold.
+
+| Requirement | Evidence | Status |
+| --- | --- | --- |
+| Public GitHub repository | `https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn` | Done |
+| 20+ meaningful commits | Repository history is well above the minimum | Done |
+| Live deployed application | `https://stellaroid.tech` | Done |
+| Pitch deck (Problem, Solution, Market opportunity, Architecture, Growth strategy, Future roadmap) | `https://stellaroid.tech/slides` - 10-slide deck covering all six required sections | Done |
+| Demo video / full product walkthrough | [`demo/stellaroid-earn-demo.mp4`](../../demo/stellaroid-earn-demo.mp4) | Done |
+| Updated README and documentation | Root [`README.md`](../../README.md) + [`docs/`](../README.md) | Done |
+| User feedback collection via Google Form (wallet, email, name, rating) | [Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSftFt8grSRUPecRVQWSRROLA8DAUOn4T61CrZQHtPQaMTxaWw/viewform) | Done |
+| Responses exported to Excel and linked in README | [`docs/planning/user-feedback-responses.xlsx`](../planning/user-feedback-responses.xlsx) (CSV also committed) | Done |
+| User feedback iteration summary with git commit links | README "Improvements Based on Feedback" table + [`docs/planning/user-feedback.md`](../planning/user-feedback.md) - five pilot feedback points each mapped to the improvement and commit that addressed it | Done |
+| Optimized onboarding experience | `https://stellaroid.tech/start` - a one-tap "try it in 60 seconds" wizard: connect a wallet, auto-fund on testnet, sign one real on-chain action | Done |
+| Proof of 50+ testnet users onboarded, with real transaction activity | Participant wallets and their on-chain interactions listed in the README "User Validation" section (verifiable on Stellar Expert) | In progress (recruiting to 50) |
+| Screenshots of analytics / transaction activity | Capture from `/status#metrics` and Vercel Web Analytics once the user threshold is reached | In progress |
+
+**One commit from complete:** when the 50-user threshold is reached, update the participant list / count in the README "User Validation" section and attach the analytics + transaction-activity screenshots. Every other Level 5 artifact above is already present and linked.
 
 ## Required Checklist
 
