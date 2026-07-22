@@ -528,7 +528,7 @@ The demo video is committed in this repository so the submission does not depend
 ### Feedback Collection
 
 - **Google Form:** [Stellaroid Earn - User Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSftFt8grSRUPecRVQWSRROLA8DAUOn4T61CrZQHtPQaMTxaWw/viewform)
-- **Anonymized response snapshot:** [`docs/planning/user-feedback-responses.csv`](docs/planning/user-feedback-responses.csv)
+- **Response export (Excel):** [`docs/planning/user-feedback-responses.xlsx`](docs/planning/user-feedback-responses.xlsx) (plain-text CSV also committed: [`user-feedback-responses.csv`](docs/planning/user-feedback-responses.csv))
 - **Full feedback documentation:** [`docs/planning/user-feedback.md`](docs/planning/user-feedback.md)
 
 ### Improvements Based on Feedback

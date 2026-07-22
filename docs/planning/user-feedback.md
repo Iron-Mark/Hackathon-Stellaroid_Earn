@@ -9,7 +9,7 @@ Pilot users were asked to:
 2. Explore the credential verification flow (view a proof page, check on-chain status)
 3. Complete the feedback form with their wallet address, email, name, and product rating
 
-**Anonymized public response snapshot:** [`user-feedback-responses.csv`](user-feedback-responses.csv)
+**Anonymized public response export:** [`user-feedback-responses.xlsx`](user-feedback-responses.xlsx) (Excel), with the plain-text [`user-feedback-responses.csv`](user-feedback-responses.csv) committed alongside it.
 
 Privacy note: raw form responses are not committed to this repository. The public CSV keeps the feedback text, ratings, timestamps, and testnet wallet addresses needed for review, but redacts names and emails before publishing.
 
