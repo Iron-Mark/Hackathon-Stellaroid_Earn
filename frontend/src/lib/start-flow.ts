@@ -11,8 +11,9 @@ export const TIP_RECIPIENT =
 // Feedback Form; prefill entry id is filled in Task 7 (fall back to plain link).
 const FEEDBACK_FORM_BASE =
   "https://docs.google.com/forms/d/e/1FAIpQLSftFt8grSRUPecRVQWSRROLA8DAUOn4T61CrZQHtPQaMTxaWw/viewform";
-// Replace WALLET_ENTRY_ID in Task 7 once obtained from the Form's prefill link.
-const WALLET_ENTRY_ID = "";
+// The feedback Form's "Stellar Wallet Address" field id, so the success screen
+// pre-fills the connected wallet into the Form (from the Form's prefill link).
+const WALLET_ENTRY_ID = "entry.654213072";
 
 export function xlmToStroops(xlm: number): bigint {
   return BigInt(Math.round(xlm * 10_000_000));
