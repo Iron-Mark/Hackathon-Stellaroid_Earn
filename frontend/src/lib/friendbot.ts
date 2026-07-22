@@ -6,7 +6,7 @@ export type FundResult =
       message: string;
     };
 
-const STELLAR_ADDRESS_RE = /^G[A-Z2-7]+$/;
+const STELLAR_ADDRESS_RE = /^G[A-Z2-7]{55}$/;
 
 export function friendbotUrl(address: string): string {
   return `https://friendbot.stellar.org/?addr=${encodeURIComponent(address)}`;
