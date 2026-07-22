@@ -9,6 +9,8 @@ type SitemapRoute = {
   path: string;
   changeFrequency: ChangeFrequency;
   priority: number;
+  /** Stable W3C date; falls back to RELEASE_DATE when omitted. */
+  lastModified?: string;
 };
 
 const HASH_RE = /^[0-9a-f]{64}$/i;
@@ -21,9 +23,11 @@ const routes: SitemapRoute[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/app", changeFrequency: "weekly", priority: 0.9 },
   { path: "/demo", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/start", changeFrequency: "monthly", priority: 0.8 },
   { path: "/proof", changeFrequency: "monthly", priority: 0.7 },
   { path: "/opportunity", changeFrequency: "weekly", priority: 0.6 },
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/journey", changeFrequency: "monthly", priority: 0.5 },
   { path: "/issuer", changeFrequency: "monthly", priority: 0.7 },
   { path: "/issuer/register", changeFrequency: "monthly", priority: 0.5 },
   { path: "/employer", changeFrequency: "monthly", priority: 0.6 },
@@ -43,6 +47,7 @@ const routes: SitemapRoute[] = [
     path: `/guides/${g.slug}`,
     changeFrequency: "monthly" as ChangeFrequency,
     priority: 0.6,
+    lastModified: g.dateModified ?? g.datePublished,
   })),
   // Developer documentation hub
   ...docsPages.map((d) => ({
@@ -56,11 +61,13 @@ if (sampleProofRoute) {
   routes.push(sampleProofRoute);
 }
 
-// Statically generated at build time so <lastmod> is a stable, meaningful
-// per-deploy timestamp instead of "now" on every request (which is noise
-// search/AI crawlers learn to ignore).
+// Statically generated so <lastmod> is a stable, meaningful date instead of a
+// per-request "now". Guides carry their own content dates; every other route
+// uses a fixed release date so an unchanged page does not report a fresh
+// lastmod on each deploy (a signal crawlers learn to distrust). Bump
+// RELEASE_DATE when the static marketing surface meaningfully changes.
 export const dynamic = "force-static";
-const LAST_MODIFIED = new Date().toISOString();
+const RELEASE_DATE = "2026-07-20";
 
 function escapeXml(value: string) {
   return value
@@ -72,14 +79,13 @@ function escapeXml(value: string) {
 }
 
 export function GET() {
-  const lastModified = LAST_MODIFIED;
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...routes.map(
-      ({ path, changeFrequency, priority }) => `  <url>
+      ({ path, changeFrequency, priority, lastModified }) => `  <url>
     <loc>${escapeXml(seoCanonicalUrl(path))}</loc>
-    <lastmod>${lastModified}</lastmod>
+    <lastmod>${lastModified ?? RELEASE_DATE}</lastmod>
     <changefreq>${changeFrequency}</changefreq>
     <priority>${priority}</priority>
   </url>`,

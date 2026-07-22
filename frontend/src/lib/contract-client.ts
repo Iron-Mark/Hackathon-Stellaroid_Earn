@@ -9,13 +9,16 @@ import {
 import { DEFAULT_SAMPLE_PROOF_HASH } from "@/lib/demo-data";
 import { signTransaction as signWithWallet } from "@/lib/wallet";
 import {
+  normalizeCertificateStatus,
+  normalizeIssuerStatus,
+} from "@/lib/contract-status";
+import {
   opportunityIdToBigInt,
   type OpportunityIdInput,
 } from "@/lib/opportunity-id";
 import type {
   CertificateStatus,
   IssuerRecord,
-  IssuerStatus,
 } from "@/lib/types";
 
 // The stellar-sdk browser build is a ~900 KB pre-bundled UMD that webpack
@@ -579,59 +582,9 @@ function normalizeBigInt(value: unknown): bigint {
   throw new Error("Unable to parse integer value returned by the contract.");
 }
 
-function normalizeStatusKey(value: unknown): string {
-  if (typeof value === "string") return value.toLowerCase();
-  if (typeof value === "number") return String(value);
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    if (typeof record.tag === "string") return record.tag.toLowerCase();
-    if (typeof record.name === "string") return record.name.toLowerCase();
-    if (typeof record.value === "string") return record.value.toLowerCase();
-    // scValToNative serializes Soroban enums as { "VariantName": null }
-    const keys = Object.keys(record);
-    if (keys.length >= 1) return keys[0].toLowerCase();
-  }
-  return "";
-}
-
-function normalizeIssuerStatus(value: unknown): IssuerStatus {
-  const key = normalizeStatusKey(value);
-  switch (key) {
-    case "approved":
-    case "1":
-      return "approved";
-    case "suspended":
-    case "2":
-      return "suspended";
-    case "pending":
-    case "0":
-    default:
-      return "pending";
-  }
-}
-
-function normalizeCertificateStatus(value: unknown): CertificateStatus {
-  const key = normalizeStatusKey(value);
-  switch (key) {
-    case "verified":
-    case "1":
-      return "verified";
-    case "revoked":
-    case "2":
-      return "revoked";
-    case "suspended":
-    case "3":
-      return "suspended";
-    case "expired":
-    case "4":
-      return "expired";
-    case "issued":
-    case "0":
-      return "issued";
-    default:
-      return "unknown";
-  }
-}
+// Status normalizers are shared with the server read path; see
+// @/lib/contract-status. The old private copy here mis-handled the ["Variant"]
+// array wire shape (Object.keys(["Verified"]) === ["0"] → "issued").
 
 function normalizeTimestamp(value: unknown): number {
   if (typeof value === "number") return value;

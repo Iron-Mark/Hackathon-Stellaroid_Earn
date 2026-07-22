@@ -79,6 +79,19 @@ export function LocalizedHero({ className }: LocalizedHeroProps) {
         >
           {t.ctaGhost}
         </Link>
+        <Link
+          href="/start"
+          className={cn(
+            "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-base no-underline",
+            "text-text border border-border bg-transparent",
+            "hover:bg-surface hover:-translate-y-0.5",
+            "focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-1",
+            "transition-all duration-150 ease-out",
+            "motion-safe:hover:-translate-y-px motion-reduce:hover:translate-y-0",
+          )}
+        >
+          Try it yourself in 60s
+        </Link>
       </div>
       <div
         className="mt-10 grid gap-3 px-0 text-left sm:grid-cols-3"

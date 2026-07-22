@@ -66,6 +66,7 @@ export function SiteFooter() {
               <Link href="/proof" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Verify</Link>
               <Link href="/issuer" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Issuer</Link>
               <Link href="/about" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">About</Link>
+              <Link href="/journey" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Journey</Link>
               <Link href="/employer" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Employer</Link>
               <Link href="/pilot" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Pilot</Link>
               <Link href="/status" prefetch={false} className="py-1.5 text-text-muted hover:text-text transition-colors no-underline">Status</Link>
@@ -142,6 +143,12 @@ export function SiteFooter() {
             Request a testnet pilot →
           </Link>
         </div>
+
+        {/* Persistent legal disclaimer: everything here runs on testnet and is not advice. */}
+        <p className="mt-6 text-[11px] leading-relaxed text-text-muted/80">
+          Testnet demo. All amounts are Stellar testnet XLM with no real-world monetary
+          value, and nothing here is financial, investment, or legal advice.
+        </p>
 
         {/* Bottom bar — stay stacked through tablet widths so attribution never collides. */}
         <div className="mt-8 grid gap-3 border-t border-border-glass pt-5 pr-16 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6 lg:pr-0">

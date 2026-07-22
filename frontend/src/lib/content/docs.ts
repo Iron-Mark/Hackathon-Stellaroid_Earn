@@ -1,6 +1,6 @@
 // Developer documentation registry — /docs, /docs/[slug], the sitemap, and
 // the docs sidebar all derive from this single typed source. Content is
-// grounded in docs/reference/*.md, contract/src/lib.rs, and the contract
+// grounded in docs/reference/*.md, contracts/stellaroid_earn/src/lib.rs, and the contract
 // surface on /about; reviewed against the deployed testnet contract.
 import type { DocPage } from "./types";
 
@@ -178,7 +178,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "Which wallets does Stellaroid Earn support?",
-        "answer": "Freighter (a browser extension, set to Testnet) and Albedo (a web-based wallet that also covers the mobile signing path). Reads never require a wallet; writes are signed by whichever wallet you connect."
+        "answer": "Freighter (a browser extension, set to Testnet) and Albedo (a web-based wallet that also covers the mobile signing path) natively, plus WalletConnect for mobile apps such as LOBSTR, xBull, Hana, and Freighter mobile, and a \"More wallets\" picker (xBull, Rabet, LOBSTR, Hana, Klever, Bitget) via Stellar Wallets Kit. Reads never require a wallet; writes are signed by whichever wallet you connect."
       },
       {
         "question": "Where can I inspect the deployed contract?",
@@ -747,7 +747,7 @@ export const docsPages: DocPage[] = [
       "stellar-sdk"
     ],
     "navLabel": "Integration",
-    "lede": "How the Stellaroid Earn Next.js frontend talks to Stellar: a config layer of NEXT_PUBLIC_* env vars, a multi-provider wallet layer (Freighter extension + Albedo web wallet), and a contract client that simulates reads and signs-and-submits writes over Soroban RPC.",
+    "lede": "How the Stellaroid Earn Next.js frontend talks to Stellar: a config layer of NEXT_PUBLIC_* env vars, a multi-provider wallet layer (Freighter, Albedo, WalletConnect, and a Stellar Wallets Kit picker), and a contract client that simulates reads and signs-and-submits writes over Soroban RPC.",
     "blocks": [
       {
         "type": "p",
@@ -769,7 +769,7 @@ export const docsPages: DocPage[] = [
         "type": "ul",
         "items": [
           "Config layer (`frontend/src/lib/config.ts`) — reads all `NEXT_PUBLIC_*` env vars once into a single `appConfig` object, maps network names to canonical passphrases, and exposes guards like `hasRequiredConfig()`.",
-          "Wallet provider layer (`frontend/src/lib/wallet/`) — a registry of providers behind one three-method interface (`read`, `connect`, `sign`). Two providers ship today: Freighter (desktop browser extension) and Albedo (web wallet that also works on mobile). The active provider id is persisted in `localStorage` so sessions survive reloads.",
+          "Wallet provider layer (`frontend/src/lib/wallet/`), a registry of providers behind one three-method interface (`read`, `connect`, `sign`). Four providers ship today: Freighter (desktop extension) and Albedo (web wallet, also mobile) natively, WalletConnect (Reown relay, for mobile apps like LOBSTR and xBull), and a \"More wallets\" entry backed by Stellar Wallets Kit. The active provider id is persisted in `localStorage` so sessions survive reloads.",
           "Contract client (`frontend/src/lib/contract-client.ts`) — builds transactions with `@stellar/stellar-sdk`. Reads run as signature-free simulations sourced from a read-only address; writes are prepared by the RPC, signed by the active wallet, submitted, and polled to confirmation.",
           "UI layer (`components/`, `hooks/`) — everything touching a wallet is marked `\"use client\"`, because both wallet SDKs are browser-only APIs that cannot run in Server Components."
         ]
@@ -876,12 +876,12 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The wallet layer is no longer Freighter-only. `frontend/src/lib/wallet/index.ts` keeps a registry of providers (`PROVIDERS = [freighterProvider, albedoProvider]` — order is display priority in the picker), each implementing the same interface from `frontend/src/lib/wallet/types.ts`:"
+        "text": "The wallet layer is no longer Freighter-only. `frontend/src/lib/wallet/index.ts` keeps a registry of providers (`PROVIDERS = [freighterProvider, albedoProvider, walletConnectProvider, swkProvider]`, in picker display order), each implementing the same interface from `frontend/src/lib/wallet/types.ts`:"
       },
       {
         "type": "code",
         "lang": "ts",
-        "text": "export type WalletProviderId = \"freighter\" | \"albedo\";\n\n// \"extension\" wallets need a desktop browser extension; \"web\" wallets run in\n// any browser (including mobile) via a popup/redirect and need no install.\nexport type WalletProviderKind = \"extension\" | \"web\";\n\nexport interface WalletProviderModule extends WalletProviderMeta {\n  /** Read the current connection without prompting the user. */\n  read(): Promise<WalletSnapshot>;\n  /** Prompt the user to connect; resolves to a connected snapshot or throws. */\n  connect(): Promise<WalletSnapshot>;\n  /** Sign a transaction XDR for `address`; resolves to the signed XDR. */\n  sign(xdr: string, address: string): Promise<string>;\n}"
+        "text": "export type WalletProviderId = \"freighter\" | \"albedo\" | \"walletconnect\" | \"swk\";\n\n// \"extension\" wallets need a desktop browser extension; \"web\" wallets run in\n// any browser (including mobile) via a popup/redirect and need no install.\nexport type WalletProviderKind = \"extension\" | \"web\";\n\nexport interface WalletProviderModule extends WalletProviderMeta {\n  /** Read the current connection without prompting the user. */\n  read(): Promise<WalletSnapshot>;\n  /** Prompt the user to connect; resolves to a connected snapshot or throws. */\n  connect(): Promise<WalletSnapshot>;\n  /** Sign a transaction XDR for `address`; resolves to the signed XDR. */\n  sign(xdr: string, address: string): Promise<string>;\n}"
       },
       {
         "type": "table",
@@ -897,15 +897,29 @@ export const docsPages: DocPage[] = [
             "Freighter",
             "extension",
             "In-page popup from the browser extension",
-            "No — desktop browser extension (install at freighter.app)",
+            "No, desktop browser extension (install at freighter.app)",
             "Extension calls are wrapped in a 5-second timeout so a missing extension fails fast instead of hanging"
           ],
           [
             "Albedo",
             "web",
             "Popup/redirect to albedo.link",
-            "Yes — any browser, including iOS Safari and Android Chrome; no install",
+            "Yes, any browser, including iOS Safari and Android Chrome; no install",
             "No silently readable session: the connected public key is cached in localStorage for display only, and every signature re-prompts the user. Albedo signs for the network the app requests, so a wrong-network state cannot occur"
+          ],
+          [
+            "WalletConnect",
+            "web",
+            "QR / deep-link pairing over the Reown relay",
+            "Yes, pairs with mobile apps like LOBSTR, xBull, Hana, and Freighter mobile",
+            "Built on raw @walletconnect/sign-client (no web3modal or EVM); requires NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID, otherwise the option is hidden"
+          ],
+          [
+            "More wallets (Stellar Wallets Kit)",
+            "extension",
+            "Kit auth modal (xBull, Rabet, LOBSTR, Hana, Klever, Bitget)",
+            "No, desktop extensions; the entry is hidden on mobile browsers",
+            "Lazy-loaded on first use; picker icons are self-hosted so the CSP img-src stays 'self'"
           ]
         ]
       },
@@ -979,7 +993,7 @@ export const docsPages: DocPage[] = [
       {
         "type": "code",
         "lang": "ts",
-        "text": "\"use client\";\n\nimport { connectWallet, listProviders, readWallet } from \"@/lib/wallet\";\n\n// Enumerate wallets for the picker UI (registry order = display priority)\nconst providers = listProviders();\n// [{ id: \"freighter\", kind: \"extension\", label: \"Freighter\", ... },\n//  { id: \"albedo\",    kind: \"web\",       label: \"Albedo\", ... }]\n\n// Restore an existing session on mount, without prompting\nconst existing = await readWallet();\n\n// Prompt the user to connect a specific provider\nconst snapshot = await connectWallet(\"albedo\");\nif (snapshot.status === \"connected\") {\n  // snapshot.address, snapshot.provider, snapshot.isExpectedNetwork\n}"
+        "text": "\"use client\";\n\nimport { connectWallet, listProviders, readWallet } from \"@/lib/wallet\";\n\n// Enumerate wallets for the picker UI (registry order = display priority)\nconst providers = listProviders();\n// [{ id: \"freighter\", kind: \"extension\", label: \"Freighter\", ... },\n//  { id: \"albedo\",    kind: \"web\",       label: \"Albedo\", ... },\n//  { id: \"walletconnect\", kind: \"web\", label: \"WalletConnect\", ... },\n//  { id: \"swk\", kind: \"extension\", label: \"More wallets\", ... }]\n// (walletconnect only listed when a Reown project id is configured)\n\n// Restore an existing session on mount, without prompting\nconst existing = await readWallet();\n\n// Prompt the user to connect a specific provider\nconst snapshot = await connectWallet(\"albedo\");\nif (snapshot.status === \"connected\") {\n  // snapshot.address, snapshot.provider, snapshot.isExpectedNetwork\n}"
       },
       {
         "type": "h3",

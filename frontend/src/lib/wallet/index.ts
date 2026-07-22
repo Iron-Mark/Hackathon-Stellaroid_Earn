@@ -5,6 +5,10 @@ import type { WalletSnapshot } from "@/lib/types";
 import { albedoProvider, forgetAlbedoSession } from "./albedo-provider";
 import { freighterProvider } from "./freighter-provider";
 import { swkProvider, forgetSwkSession } from "./swk-provider";
+import {
+  walletConnectProvider,
+  forgetWalletConnectSession,
+} from "./walletconnect-provider";
 import type {
   WalletProviderId,
   WalletProviderMeta,
@@ -12,12 +16,23 @@ import type {
 } from "./types";
 
 // Registry of supported wallets. Order = display priority in the picker.
-// "swk" is the Stellar Wallets Kit aggregator (xBull, Rabet, LOBSTR, Hana…).
+// - "walletconnect" reaches mobile wallets (LOBSTR, xBull, Hana, Freighter
+//   mobile…) over the WalletConnect relay; works on desktop (QR) and mobile.
+// - "swk" is the Stellar Wallets Kit aggregator, scoped to desktop browser
+//   EXTENSIONS (xBull, Rabet, LOBSTR, Hana…); it is hidden on mobile.
 const PROVIDERS: WalletProviderModule[] = [
   freighterProvider,
   albedoProvider,
+  walletConnectProvider,
   swkProvider,
 ];
+
+// WalletConnect needs a Reown project id; when it is unset, hide it from the
+// picker (a previously-connected session can still read and sign).
+function isProviderConfigured(id: WalletProviderId): boolean {
+  if (id === "walletconnect") return Boolean(appConfig.walletConnectProjectId);
+  return true;
+}
 
 const ACTIVE_PROVIDER_KEY = "stellaroid:wallet-provider";
 
@@ -63,13 +78,15 @@ function disconnectedSnapshot(): WalletSnapshot {
 }
 
 export function listProviders(): WalletProviderMeta[] {
-  return PROVIDERS.map(({ id, label, kind, tagline, installUrl }) => ({
-    id,
-    label,
-    kind,
-    tagline,
-    installUrl,
-  }));
+  return PROVIDERS.filter((provider) => isProviderConfigured(provider.id)).map(
+    ({ id, label, kind, tagline, installUrl }) => ({
+      id,
+      label,
+      kind,
+      tagline,
+      installUrl,
+    }),
+  );
 }
 
 function getProvider(id: WalletProviderId): WalletProviderModule | undefined {
@@ -78,7 +95,10 @@ function getProvider(id: WalletProviderId): WalletProviderModule | undefined {
 
 function getActiveProviderId(): WalletProviderId | null {
   const value = localStore()?.getItem(ACTIVE_PROVIDER_KEY);
-  return value === "freighter" || value === "albedo" || value === "swk"
+  return value === "freighter" ||
+    value === "albedo" ||
+    value === "walletconnect" ||
+    value === "swk"
     ? value
     : null;
 }
@@ -145,6 +165,7 @@ export function disconnectWallet() {
   }
   clearActiveProviderId();
   forgetAlbedoSession();
+  forgetWalletConnectSession();
   forgetSwkSession();
 }
 

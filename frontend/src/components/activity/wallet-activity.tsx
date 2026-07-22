@@ -136,11 +136,17 @@ export function WalletActivity() {
         </ul>
       )}
 
+      <p className="mt-3 mb-0 text-[12px] leading-snug text-text-muted">
+        This panel lists events where your wallet is the subject. Credentials
+        you issued show on the recipient&apos;s wallet, and everything you
+        signed  - issuing, verifying, paying  - is in your full account history.
+      </p>
+
       <a
         href={`${appConfig.explorerUrl}/account/${address}`}
         target="_blank"
         rel="noreferrer"
-        className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-primary no-underline hover:opacity-80"
+        className="mt-2 inline-flex items-center gap-1 text-[12px] font-semibold text-primary no-underline hover:opacity-80"
       >
         Full account history on stellar.expert
         <ExternalLink className="h-3 w-3" aria-hidden="true" />

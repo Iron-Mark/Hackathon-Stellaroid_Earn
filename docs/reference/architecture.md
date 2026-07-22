@@ -36,7 +36,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
            │
            ▼
 ┌──────────────────────────────────────────────────────────┐
-│              Wallet Layer (Freighter)                     │
+│              Wallet Layer (pluggable)                     │
 │  requestAccess → signTransaction → submit                │
 └──────────┬───────────────────────────────────────────────┘
            │
@@ -60,7 +60,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 
 ## Component Breakdown
 
-### 1. Smart Contract (`contract/src/lib.rs`)
+### 1. Smart Contract (`contracts/stellaroid_earn/src/lib.rs`)
 
 **Language:** Rust (soroban-sdk 22.0.0)
 **Target:** `wasm32v1-none`
@@ -96,19 +96,21 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 - Vercel Web Analytics is loaded in production. The app also emits privacy-safe custom events for proof sharing, proof-pack downloads, proof-to-employer handoff, employer shortlist saves, and escrow create/fund starts. Event properties are limited to coarse state such as proof status, hash shape, source surface, channel, issuer trust tier, and validation state; raw wallet addresses and proof hashes are not sent. These events support demo/product iteration, not durable audit history.
 
 **Write path (1):**
-- All mutations route through Freighter: build tx → `signTransaction()` → `sendTransaction()` → poll `getTransaction()` until confirmed.
+- All mutations route through the connected wallet: build tx → `signTransaction()` (Freighter / Albedo / WalletConnect / kit) → `sendTransaction()` → poll `getTransaction()` until confirmed.
 
 **Security:**
-- CSP headers restrict `connect-src` to `*.stellar.org` and production `script-src` avoids `unsafe-inline`
-- `X-Frame-Options: DENY` on all routes
+- CSP (nonce-based, in `src/middleware.ts`) restricts `connect-src` to `*.stellar.org` plus the WalletConnect relay (`relay.walletconnect.org`, `verify.walletconnect.org`); production `script-src` is nonce + `'self'` and avoids `unsafe-inline`
+- `X-Frame-Options: DENY` on every route except the intentionally embeddable `/proof/[hash]/embed` badge (CSP `frame-ancestors` mirrors this)
 - `/proof/[hash]` validates hex format before any RPC call
 - HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`
 
-### 3. Wallet Integration (Freighter)
+### 3. Wallet Integration (multi-provider)
 
-- Connection state managed via React hooks (`useWallet`)
-- Network validation ensures Freighter is on Testnet before any write
+- Provider registry (`frontend/src/lib/wallet/`) behind one `read` / `connect` / `sign` interface. Ships **Freighter** (desktop extension) and **Albedo** (web wallet, also covers mobile) natively; **WalletConnect** (Reown relay) for mobile apps such as LOBSTR, xBull, Hana, and Freighter mobile; and a "More wallets" entry via **Stellar Wallets Kit** (xBull, Rabet, LOBSTR, Hana, Klever, Bitget). Every wallet SDK is lazy-loaded on first use.
+- Connection state managed via React hooks (`useWallet`); the active provider id is persisted in `localStorage` so sessions survive reloads
+- Network validation ensures the wallet is on Testnet before any write (Albedo and kit wallets sign for the network the app requests, so a wrong-network state cannot occur there)
 - Public key used for role detection (admin vs issuer vs employer)
+- WalletConnect is gated on a Reown project id (`NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`); when unset the option is hidden from the picker
 
 ## Data Flow
 

@@ -66,7 +66,7 @@ const aboutSoftwareProductJsonLd = buildAboutSoftwareProductSchema();
 
 const stack = [
   {
-    title: "Rust + soroban-sdk 22",
+    title: "Rust + soroban-sdk 26.1",
     desc: "Contract crate, trust-layer tests included",
     icon: (
       <svg
@@ -1159,6 +1159,10 @@ export default function About() {
                   </dd>
                 </div>
               </dl>
+
+              <p className="mt-5 pt-4 border-t border-dashed border-border m-0 text-xs text-text-muted leading-normal">
+                Designed and built solo by Mark Siazon
+              </p>
             </aside>
 
             <section aria-labelledby="faq-heading" className="mb-16">
@@ -1200,6 +1204,12 @@ export default function About() {
                 className="inline-flex items-center gap-2 px-5.5 py-3 rounded-md font-semibold text-[0.9375rem] no-underline text-text border border-border bg-transparent hover:bg-surface hover:-translate-y-px transition-[transform,background] duration-150 motion-reduce:hover:translate-y-0"
               >
                 Look up a certificate
+              </Link>
+              <Link
+                href="/journey"
+                className="inline-flex items-center gap-2 px-5.5 py-3 rounded-md font-semibold text-[0.9375rem] no-underline text-text border border-border bg-transparent hover:bg-surface hover:-translate-y-px transition-[transform,background] duration-150 motion-reduce:hover:translate-y-0"
+              >
+                See the journey
               </Link>
             </div>
           </div>

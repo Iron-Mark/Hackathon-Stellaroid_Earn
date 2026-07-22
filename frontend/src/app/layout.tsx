@@ -6,6 +6,7 @@ import { DeferredToastProvider } from "@/components/layout/deferred-toast-provid
 import { ErrorReporter } from "@/components/telemetry/error-reporter";
 import { JsonLd } from "@/components/ui/json-ld";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
+import { MotionProvider } from "@/components/layout/motion-provider";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import { APPLE_SPLASH } from "@/lib/apple-splash.generated";
 import "../styles/globals.css";
@@ -16,9 +17,7 @@ import {
   SITE_CANONICAL_URL,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
-  SITE_LOGO_URL,
   SITE_NAME,
-  SITE_ORG_SAME_AS,
 } from "@/lib/seo";
 
 // Self-hosted brand faces (globals.css declared these families for months but
@@ -105,26 +104,6 @@ export const metadata: Metadata = {
   },
 };
 
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Stellaroid Earn",
-  url: BASE_URL,
-  logo: {
-    "@type": "ImageObject",
-    url: SITE_LOGO_URL,
-    width: 512,
-    height: 512,
-  },
-  description: SITE_DESCRIPTION,
-  sameAs: SITE_ORG_SAME_AS,
-  founder: {
-    "@type": "Person",
-    name: SITE_AUTHOR_NAME,
-    url: SITE_AUTHOR_URL,
-  },
-};
-
 const webAppJsonLd = [
   {
     "@context": "https://schema.org",
@@ -139,7 +118,9 @@ const webAppJsonLd = [
     },
     description:
       "Stellaroid Earn links proof and payment on Stellar for certificates, completed work, and milestone approvals.",
-    applicationCategory: "FinanceApplication",
+    // Not a regulated financial product: this is a solo developer demo running on
+    // Stellar testnet, so it is categorized as a developer tool rather than finance.
+    applicationCategory: "DeveloperApplication",
     operatingSystem: "Web",
     // Free public testnet demo — feeds "what does it cost / do" generative answers.
     offers: {
@@ -156,7 +137,6 @@ const webAppJsonLd = [
       "Public, wallet-free proof pages",
     ],
   },
-  organizationJsonLd,
 ];
 
 const authorProfileJsonLd = {
@@ -173,8 +153,10 @@ const webSiteJsonLd = {
   name: SITE_NAME,
   url: BASE_URL,
   description: SITE_DESCRIPTION,
-  publisher: { "@type": "Organization", name: SITE_NAME, url: BASE_URL },
-  // Proof lookup by hash — enables the sitelinks search box.
+  // Unincorporated solo project: the publisher is the individual who builds and
+  // controls it, not an organization.
+  publisher: { "@type": "Person", name: SITE_AUTHOR_NAME, url: SITE_AUTHOR_URL },
+  // Proof lookup by hash: enables the sitelinks search box.
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -205,7 +187,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         ))}
         <JsonLd data={webSiteJsonLd} />
         <JsonLd data={authorProfileJsonLd} />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <ScrollToTop />
         {ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null}
         <DeferredToastProvider />

@@ -16,6 +16,7 @@ import {
 } from "@/lib/wallet";
 import type { WalletProviderId, WalletProviderMeta } from "@/lib/wallet/types";
 import type { WalletSnapshot } from "@/lib/types";
+import { WalletConnectModal } from "@/components/wallet/walletconnect-modal";
 
 const initialWalletState: WalletSnapshot = {
   status: "disconnected",
@@ -118,6 +119,7 @@ function useFreighterWalletState(): FreighterWalletState {
     wallet.status === "connected" &&
     (wallet.provider === "albedo" ||
       wallet.provider === "freighter" ||
+      wallet.provider === "walletconnect" ||
       wallet.provider === "swk")
       ? wallet.provider
       : null;
@@ -141,6 +143,7 @@ export function FreighterWalletProvider({ children }: { children: ReactNode }) {
   return (
     <FreighterWalletContext.Provider value={value}>
       {children}
+      <WalletConnectModal />
     </FreighterWalletContext.Provider>
   );
 }

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
-    "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/*.test.ts",
+    "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/**/*.test.ts src/app/**/*.test.ts",
     "test:e2e": "playwright test",
     "gen:pwa": "node scripts/generate-pwa-icons.mjs && node scripts/generate-splash.mjs"
   },
@@ -20,6 +20,7 @@
     "@stellar/stellar-sdk": "^13.1.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@vercel/analytics": "^2.0.1",
+    "@walletconnect/sign-client": "^2.23.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
@@ -29,7 +30,6 @@
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "shadcn": "^4.3.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
@@ -45,10 +45,12 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.39.1",
     "eslint-config-next": "^15.5.15",
+    "shadcn": "^4.3.0",
     "sharp": "^0.34.5",
     "typescript": "^5.7.0"
   },
   "overrides": {
+    "axios": "^1.18.1",
     "postcss": "8.5.15",
     "protobufjs": "^7.6.3",
     "jayson": {

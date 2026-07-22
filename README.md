@@ -1,8 +1,8 @@
 # Stellaroid Earn
 
-**On-chain credential trust for Stellar PH Bootcamp 2026**
+**A reusable prove, verify, pay primitive for on-chain credentials, built for Stellar PH Bootcamp 2026**
 
-Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 supported wallets (Freighter, Albedo, xBull, LOBSTR & more), installable PWA, end-to-end.
+Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 supported wallets plus WalletConnect for mobile (Freighter, Albedo, LOBSTR, xBull & more), installable PWA, end-to-end.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
@@ -20,7 +20,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 | **Tx evidence** | [init](https://stellar.expert/explorer/testnet/tx/faf278d7c2e2c92faff965ee790e7a79b7188511671f175d3ed0ee7d0bf085e6) · [register](https://stellar.expert/explorer/testnet/tx/8c20a9443af1e7ea16d65b6292829a15d614858cadc6d11bef46ab246bb4a0e8) · [verify](https://stellar.expert/explorer/testnet/tx/67137aa8b3b887443be9bc2e0806a438a5c6a23beb8834cc32493a1341c82cb9) |
 | **Source verification** | Deployed WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`, built from committed source with `source_repo` + `home_domain` metadata embedded. Attestation runbook: [`docs/operations/contract-verification.md`](docs/operations/contract-verification.md). |
 | **Submission** | Rise In · Stellar Smart Contract Bootcamp · Stellar PH Bootcamp 2026 |
-| **Result** | **Top 5 / 105 participants** · Score: 75.00 |
+| **Result** | **Top 5 / 105 participants** · Score: 75.00 · [full journey](https://stellaroid.tech/journey) |
 
 ![Top 5 - Stellar Bootcamp Prize Pool](images/bootcamp-top5.jpg)
 
@@ -65,7 +65,7 @@ Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain
 - **Mobile-first redesign** - app-style bottom navigation with a More sheet, auto-hiding header, bottom-sheet dialogs, full safe-area/notch handling.
 - **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (all 19 functions, 17 error codes, 16 events), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
 - **Content engine** - audience landing pages for [bootcamps](https://stellaroid.tech/verify-bootcamp-certificate), [employers](https://stellaroid.tech/verify-candidate-credentials), and [graduate payouts](https://stellaroid.tech/instant-payouts), plus a [guides library](https://stellaroid.tech/guides) and a [verifiable-credentials glossary](https://stellaroid.tech/glossary) - all with FAQPage/HowTo/DefinedTermSet structured data and an [`llms.txt`](https://stellaroid.tech/llms.txt).
-- **Multi-wallet signing** - Freighter and Albedo natively, plus xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use.
+- **Multi-wallet signing** - Freighter and Albedo natively, WalletConnect for mobile wallets (LOBSTR, xBull, Hana, Freighter mobile), and on desktop xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use. WalletConnect activates when a Reown project id is configured.
 
 The public entry flow is organized around three personas: **Issue**, **Verify**, and **Hire**. Verified proof pages now hand employers into `/employer` with the proof hash and candidate wallet preloaded, then require a review checklist before escrow creation. They also hand recruiters into `/talent/<address>?proof=<hash>` so the candidate passport can show a known proof without pretending wallet-wide credential discovery exists yet. Issuer registration now explains approval readiness before signing, and `/pilot` keeps the first rollout bounded to a small testnet issuer pilot. Employer proof packs include a recruiter-safe summary plus an unsigned standards-alignment preview for W3C VC 2.0 and Open Badges 3.0 mapping. That preview is not a signed standards credential yet.
 
@@ -171,7 +171,70 @@ sequenceDiagram
 - **Issuer trust layer**: self-register → admin approve → issue credentials. Suspended issuers are blocked on-chain
 - **Two read paths**: server-side RSC with `revalidate=60` (CDN-cached proof pages) + client-side `simulateTransaction` (dashboard state)
 - **One write path**: Freighter signs → `sendTransaction` → poll for result
-- **CSP** locks `connect-src` to `*.stellar.org` - no third-party data leaks
+- **CSP** locks `connect-src` to `*.stellar.org` and the WalletConnect relay - no other third-party origins
+
+---
+
+## Contract Integration (Frontend to Soroban)
+
+The frontend talks to the deployed `stellaroid_earn` contract with **`@stellar/stellar-sdk`**. The client lives in [`frontend/src/lib/contract-client.ts`](frontend/src/lib/contract-client.ts) (writes + client-side reads) and [`frontend/src/lib/contract-read-server.ts`](frontend/src/lib/contract-read-server.ts) (server-rendered proof pages). The SDK is lazy-loaded so its multi-megabyte bundle stays out of every route's first load.
+
+```ts
+// frontend/src/lib/contract-client.ts
+import type * as StellarSdk from "@stellar/stellar-sdk";
+
+// Lazy-load the SDK once, on the first contract read or wallet action.
+const getSdk = () => import("@stellar/stellar-sdk");
+
+// READ (no wallet): simulate an invocation against Soroban RPC.
+const server = new sdk.rpc.Server(appConfig.rpcUrl);
+const sim = await server.simulateTransaction(tx);
+const value = sdk.scValToNative(sim.result.retval);
+
+// WRITE: build with TransactionBuilder, wallet signs, submit + poll.
+const tx = new sdk.TransactionBuilder(account, {
+  fee: sdk.BASE_FEE,
+  networkPassphrase: getExpectedNetworkPassphrase(),
+})
+  .addOperation(
+    sdk.Operation.invokeContractFunction({
+      contract: appConfig.contractId,   // NEXT_PUBLIC_SOROBAN_CONTRACT_ID
+      function: method,                  // e.g. "verify_certificate"
+      args,                              // sdk.nativeToScVal(...) per argument
+    }),
+  )
+  .setTimeout(30)
+  .build();
+
+const signedXdr = await wallet.sign(tx.toXDR());        // Freighter / Albedo / Stellar Wallets Kit
+const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXDR(signedXdr, passphrase));
+const result = await server.pollTransaction(sent.hash);
+```
+
+Every public contract function has a matching typed wrapper in the client. The wrapper passes the exact contract function name to `Operation.invokeContractFunction`:
+
+| Contract function (`contracts/stellaroid_earn/src/lib.rs`) | Frontend wrapper (`contract-client.ts`) |
+| --- | --- |
+| `register_issuer` | `registerIssuer()` |
+| `approve_issuer` | `approveIssuer()` |
+| `suspend_issuer` | `suspendIssuer()` |
+| `get_issuer` | `getIssuer()` (read / `simulateTransaction`) |
+| `register_certificate` | `registerCertificate()` |
+| `verify_certificate` | `verifyCertificate()` |
+| `get_certificate` | `getCertificate()` (read / `simulateTransaction`) |
+| `revoke_certificate` | `revokeCertificate()` |
+| `suspend_certificate` | `suspendCertificate()` |
+| `reward_student` | `rewardStudent()` |
+| `link_payment` | `linkPayment()` |
+| `create_opportunity` | `createOpportunity()` |
+| `fund_opportunity` | `fundOpportunity()` |
+| `submit_milestone` | `submitMilestone()` |
+| `approve_milestone` | `approveMilestone()` |
+| `release_payment` | `releasePayment()` |
+| `refund_opportunity` | `refundOpportunity()` |
+| `get_opportunity` | `getOpportunity()` (read / `simulateTransaction`) |
+
+The network passphrase in `NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE` must match the network the contract is deployed on (testnet), or the wallet rejects the signature.
 
 ---
 
@@ -189,9 +252,9 @@ Full setup guide: [`docs/reference/pre-workshop-setup-guide.pdf`](docs/reference
 ### Smart Contract
 
 ```bash
-cd contract
-cargo test                    # contract test suite
-stellar contract build        # builds wasm32v1-none target
+cd contracts/stellaroid_earn
+make test                     # cargo test (contract suite)
+make build                    # builds wasm32v1-none target
 
 # Deploy to testnet
 stellar keys generate my-key --network testnet --fund
@@ -331,7 +394,7 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 
 **Implementation:**
 - Server route: [`frontend/src/app/api/fee-bump/route.ts`](frontend/src/app/api/fee-bump/route.ts)
-- Client helper: [`frontend/src/lib/fee-bump.ts`](frontend/src/lib/fee-bump.ts)
+- Request policy: [`frontend/src/lib/fee-bump-policy.ts`](frontend/src/lib/fee-bump-policy.ts)
 - Config: `FEE_SPONSOR_SECRET` + `FEE_SPONSOR_TOKEN` are server-only. Public browser auto-sponsorship stays disabled; trusted server callers must provide the bearer token explicitly.
 - Browser fallback: normal user-paid Freighter transactions remain the default path.
 
@@ -375,11 +438,13 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 ```
 stellaroid-earn/
 ├── Cargo.toml                   # Rust workspace (Soroban contract)
-├── contract/
-│   ├── src/
-│   │   ├── lib.rs              # Soroban credential + payment contract
-│   │   └── test.rs             # contract security and lifecycle tests
-│   └── Cargo.toml
+├── contracts/
+│   └── stellaroid_earn/
+│       ├── src/
+│       │   ├── lib.rs          # Soroban credential + payment contract
+│       │   └── test.rs         # contract security and lifecycle tests
+│       ├── Makefile            # build / test / fmt / clean targets
+│       └── Cargo.toml
 ├── frontend/
 │   ├── src/
 │   │   ├── app/                # Next.js App Router pages
@@ -463,16 +528,20 @@ The demo video is committed in this repository so the submission does not depend
 ### Feedback Collection
 
 - **Google Form:** [Stellaroid Earn - User Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSftFt8grSRUPecRVQWSRROLA8DAUOn4T61CrZQHtPQaMTxaWw/viewform)
-- **Anonymized response snapshot:** [`docs/planning/user-feedback-responses.csv`](docs/planning/user-feedback-responses.csv)
+- **Response export (Excel):** [`docs/planning/user-feedback-responses.xlsx`](docs/planning/user-feedback-responses.xlsx) (plain-text CSV also committed: [`user-feedback-responses.csv`](docs/planning/user-feedback-responses.csv))
 - **Full feedback documentation:** [`docs/planning/user-feedback.md`](docs/planning/user-feedback.md)
 
 ### Improvements Based on Feedback
 
-After reviewing the anonymized pilot feedback snapshot, the following iteration was completed:
+Every improvement below maps to a piece of pilot feedback and the commit that shipped it:
 
 | Feedback | Improvement | Commit |
 |----------|-------------|--------|
-| Users confused about which role (Issuer vs Employer) to pick after connecting wallet | Added contextual role guidance hints below the persona toggle | [`c1450bf`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/c1450bf) |
+| "Issuer vs Employer toggle was confusing at first" | Contextual role guidance hints below the persona toggle | [`c1450bf`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/c1450bf) |
+| "Not clear which role to pick after connecting wallet" | Fresh-state hint now shows what *both* roles do, so a new user can choose | [`09c9d45`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/09c9d45) |
+| "Would like to see transaction history in the dashboard" | Added a wallet-scoped "Activity involving your wallet" panel on `/app` | [`fa0c5d0`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/fa0c5d0) |
+| "Mobile support would be great for checking proofs on the go" | Mobile-first redesign, installable PWA, and WalletConnect mobile signing | [`145f6ad`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/145f6ad) |
+| "Would be nice to have a list of all credentials I've issued" | Clarified where issued credentials surface, with a link to full account history | [`eb181b8`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/commit/eb181b8) |
 
 ---
 
