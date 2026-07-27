@@ -39,11 +39,11 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // CSP is nonce-based and is applied from src/middleware.ts.
+        // CSP is nonce-based and is applied from src/proxy.ts.
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          // X-Frame-Options is emitted per-path from src/middleware.ts (DENY
+          // X-Frame-Options is emitted per-path from src/proxy.ts (DENY
           // everywhere except the embeddable /proof/<hash>/embed badge), so CSP
           // frame-ancestors and the legacy header agree. Keep it out of here.
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
