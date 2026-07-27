@@ -1366,7 +1366,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "h3",
-        "text": "Nonce-based CSP assembled in middleware"
+        "text": "Nonce-based CSP assembled in proxy"
       },
       {
         "type": "p",
@@ -1720,7 +1720,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The embed route is the single intentional framing exception: the middleware matches `/proof/{64-hex}/embed` and emits `frame-ancestors *` there so the verified badge can be embedded elsewhere, while every other route gets `frame-ancestors 'none'`. Browsers that support CSP Level 2 give `frame-ancestors` precedence over `X-Frame-Options`, which is how the embed route can be framed despite the global `DENY` header below."
+        "text": "The embed route is the single intentional framing exception: the proxy matches `/proof/{64-hex}/embed` and emits `frame-ancestors *` there so the verified badge can be embedded elsewhere, while every other route gets `frame-ancestors 'none'`. Browsers that support CSP Level 2 give `frame-ancestors` precedence over `X-Frame-Options`, which is how the embed route can be framed despite the global `DENY` header below."
       },
       {
         "type": "code",
@@ -1733,7 +1733,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "Static security headers are applied to every route from `next.config.ts`; the CSP itself is nonce-based and therefore applied from middleware instead."
+        "text": "Static security headers are applied to every route from `next.config.ts`; the CSP itself is nonce-based and therefore applied from the proxy instead."
       },
       {
         "type": "table",
