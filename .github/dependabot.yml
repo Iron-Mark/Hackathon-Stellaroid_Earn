@@ -1,0 +1,58 @@
+# Dependabot configuration.
+# Groups routine dependency updates into a small number of PRs against main,
+# instead of one PR per package. Security updates are delivered separately by
+# GitHub's Dependabot security-alerts feature and are not affected by this file.
+version: 2
+updates:
+  # Frontend Next.js app.
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    target-branch: "main"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    groups:
+      # One PR for the everyday minor/patch churn.
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      # Majors land in their own grouped PR so a breaking bump is easy to spot
+      # and review in isolation.
+      npm-major:
+        applies-to: version-updates
+        update-types:
+          - "major"
+
+  # Rust Soroban contract.
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    target-branch: "main"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+    groups:
+      cargo-all:
+        patterns:
+          - "*"
+
+  # GitHub Actions workflow pins.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    groups:
+      actions-all:
+        patterns:
+          - "*"
