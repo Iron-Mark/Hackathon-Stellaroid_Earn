@@ -24,7 +24,7 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com${isVercelPreview ? " https://vercel.live" : ""}`,
     // 'unsafe-inline' here is a deliberate, reviewed tradeoff for Tailwind v4 /
-    // Next 15 inline styles. It does NOT extend to scripts: script-src stays
+    // Next inline styles. It does NOT extend to scripts: script-src stays
     // locked to a per-request nonce + 'self'. Do not relax script-src "to match".
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
@@ -46,7 +46,10 @@ function buildContentSecurityPolicy(nonce: string, pathname: string) {
   ].join("; ");
 }
 
-export function middleware(request: NextRequest) {
+// Next 16 renamed the `middleware` file convention to `proxy` (same request-time
+// hook, now Node.js runtime by default). This runs on every non-static request
+// to attach a per-request CSP nonce and the per-path clickjacking header.
+export function proxy(request: NextRequest) {
   const nonce = createNonce();
   const pathname = request.nextUrl.pathname;
   const csp = buildContentSecurityPolicy(nonce, pathname);
