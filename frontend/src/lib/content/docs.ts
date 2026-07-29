@@ -1842,7 +1842,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "callout",
-        "text": "Honest scope note: all of these guards live in module memory. On serverless hosting (Vercel Fluid Compute) they are per-warm-instance, not globally shared. They are defense-in-depth that bounds abuse per instance and — paired with the shared short-TTL event cache — sharply cuts upstream RPC and indexer fan-out from connection floods. A hard global guarantee requires an edge rate limit (WAF/firewall rules) layered in front, which is deferred to production."
+        "text": "Honest scope note: all of these guards live in module memory. On serverless hosting (Vercel Fluid Compute) they are per-warm-instance, not globally shared, so the hard global ceiling has to come from the layer in front of them. Five Vercel edge rate-limit rules now sit ahead of the app, covering /api/events (which also covers /api/events/stream by prefix), /api/fee-bump, /api/pilot-lead, /api/mcp, and client error reporting. The in-memory guards remain as defense in depth: they bound abuse per instance and, paired with the shared short-TTL event cache, sharply cut upstream RPC and indexer fan-out from connection floods."
       },
       {
         "type": "h2",
@@ -1872,8 +1872,8 @@ export const docsPages: DocPage[] = [
       {
         "type": "ul",
         "items": [
-          "Testnet MVP, no audit yet: no formal third-party audit and no penetration test have been performed. Both are deferred until before any mainnet deployment.",
-          "Per-instance rate limits: every API abuse guard is in-memory and per-warm-instance. Traffic spread across serverless instances is only bounded per instance; platform-level (WAF/edge) rate limiting is managed in the Vercel dashboard outside this repo, so the in-memory guards are the per-instance backstop documented here.",
+          "Testnet MVP, no external audit yet: no formal third-party audit and no external penetration test have been performed. Both are deferred until before any mainnet deployment. An internal red-team review was run and its findings fixed, which is not a substitute for an independent audit.",
+          "In-app rate limits are per-instance: every abuse guard written in this repo is in-memory and per-warm-instance, so traffic spread across serverless instances is only bounded per instance. The global ceiling comes from Vercel edge rate-limit rules, which are configured in the Vercel dashboard rather than in this repository and therefore cannot be reviewed from this source tree.",
           "Single admin key: one admin address, set at init, gates issuer approval and suspension and triggers reward payouts. There is no multisig or role separation.",
           "Partial expiry enforcement: the contract can reject expired credentials, but the current issuer flow sets expires_at = 0, so no credential automatically expires yet.",
           "Source verification pending: the runbook records the deployed WASM hash, but contract-metadata and GitHub-attestation verification is incomplete — the deployment must not be described as source-verified.",
@@ -1882,7 +1882,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The underlying checklist lives in the repository at `docs/reference/security.md` and was last reviewed on 2026-07-02."
+        "text": "The underlying checklist lives in the repository at `docs/reference/security.md` and was last reviewed on 2026-07-29."
       }
     ],
     "faq": [
@@ -1896,7 +1896,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "Are the API rate limits enforced globally?",
-        "answer": "No, and the docs say so on purpose. The rate limits, stream concurrency slots, and fee-sponsorship spend budget are in-memory guards that are per-warm-instance on serverless hosting. They bound abuse per instance and cut upstream RPC fan-out, but a hard global guarantee requires an edge WAF or firewall rate limit, which is deferred to production."
+        "answer": "The guards in this repo are not global; the edge rules in front of them are. The rate limits, stream concurrency slots, and fee-sponsorship spend budget are in-memory and per-warm-instance on serverless hosting, so on their own they bound abuse per instance rather than globally. The hard global ceiling comes from five Vercel edge rate-limit rules that sit ahead of the app on the unauthenticated endpoints. Those rules are configured in the Vercel dashboard rather than in this repository, so they cannot be reviewed from this source tree."
       },
       {
         "question": "What personal data does the platform store?",
