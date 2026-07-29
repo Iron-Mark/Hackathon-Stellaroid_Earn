@@ -93,7 +93,7 @@ const stack = [
     ),
   },
   {
-    title: "Next.js 15 + React 19",
+    title: "Next.js 16 + React 19",
     desc: "App Router, server + client",
     icon: (
       <svg

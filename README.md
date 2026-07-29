@@ -8,7 +8,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
 [![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
 [![Contract CI](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml)
-[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
 
 ![Stellaroid Earn](images/github-social-card.png)
@@ -18,7 +18,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 | **Live demo** | [stellaroid.tech](https://stellaroid.tech/) |
 | **Contract (current)** | [`CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV) |
 | **Tx evidence** | [init](https://stellar.expert/explorer/testnet/tx/faf278d7c2e2c92faff965ee790e7a79b7188511671f175d3ed0ee7d0bf085e6) · [register](https://stellar.expert/explorer/testnet/tx/8c20a9443af1e7ea16d65b6292829a15d614858cadc6d11bef46ab246bb4a0e8) · [verify](https://stellar.expert/explorer/testnet/tx/67137aa8b3b887443be9bc2e0806a438a5c6a23beb8834cc32493a1341c82cb9) |
-| **Source verification** | Deployed WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`, built from committed source with `source_repo` + `home_domain` metadata embedded. Attestation runbook: [`docs/operations/contract-verification.md`](docs/operations/contract-verification.md). |
+| **Source verification** | Deployed WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`. Rebuilding the [`v3.0.0`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/releases/tag/v3.0.0) release tag reproduces it byte for byte, and the deployed bytecode records its own build toolchain (`rsver` 1.95.0, `rssdkver` 26.1.0, `cliver` 27.0.0) so you can check it without trusting this README. Verified weekly by [`contract-verification.yml`](.github/workflows/contract-verification.yml). Runbook: [`docs/operations/contract-verification.md`](docs/operations/contract-verification.md). |
 | **Submission** | Rise In · Stellar Smart Contract Bootcamp · Stellar PH Bootcamp 2026 |
 | **Result** | **Top 5 / 105 participants** · Score: 75.00 · [full journey](https://stellaroid.tech/journey) |
 
