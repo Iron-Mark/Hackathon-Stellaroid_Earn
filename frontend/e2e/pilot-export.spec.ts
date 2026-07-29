@@ -14,7 +14,7 @@ test("pilot intake page exposes issuer and employer paths", async ({ page }) => 
   ).toHaveAttribute("href", "#request");
   await expect(
     page.getByRole("link", { name: /book directly on linkedin/i }),
-  ).toHaveAttribute("href", /linkedin\.com\/in\/mark-siazon/);
+  ).toHaveAttribute("href", "https://www.linkedin.com/in/mark-siazon/");
   await expect(page.getByRole("link", { name: /review proof workflow/i })).toHaveAttribute(
     "href",
     "/proof",
