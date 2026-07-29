@@ -40,7 +40,7 @@ Sub-cent fees + 5-second finality + Freighter's smooth onboarding + native payme
 On-chain: SHA-256 hash, issuer address, graduate address, amount (in testnet XLM, no real-world value), status flags, timestamps. Off-chain: the deliverable file itself (user-held).
 
 **Q: What's the stack?**
-Next.js 15 (App Router) + React 19, Tailwind CSS v4 design tokens, `@stellar/stellar-sdk`, `@stellar/freighter-api`, and Rust + Soroban SDK for the contract.
+Next.js 16 (App Router) + React 19, Tailwind CSS v4 design tokens, `@stellar/stellar-sdk`, `@stellar/freighter-api`, and Rust + Soroban SDK for the contract.
 
 **Q: Is it mainnet-ready?**
 No. Testnet-only for the MVP. Mainnet readiness is a dedicated work item: contract audit, gas/fee review, error budget, rate limits on the RPC.

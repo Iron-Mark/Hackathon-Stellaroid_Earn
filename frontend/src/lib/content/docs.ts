@@ -28,7 +28,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "For developers, the system is deliberately small. The contract is Rust + `soroban-sdk`, deployed to Stellar testnet, with a 19-function public surface — a credential core plus a milestone-escrow extension — and typed contract errors. The frontend is Next.js 15 + React 19 using `@stellar/stellar-sdk`: read-only calls go through `simulateTransaction`, and writes are signed with Freighter or Albedo and submitted over Soroban RPC. Every state change emits a contract event that is auditable on Stellar Expert."
+        "text": "For developers, the system is deliberately small. The contract is Rust + `soroban-sdk`, deployed to Stellar testnet, with a 19-function public surface — a credential core plus a milestone-escrow extension — and typed contract errors. The frontend is Next.js 16 + React 19 using `@stellar/stellar-sdk`: read-only calls go through `simulateTransaction`, and writes are signed with Freighter or Albedo and submitted over Soroban RPC. Every state change emits a contract event that is auditable on Stellar Expert."
       },
       {
         "type": "p",
@@ -751,7 +751,7 @@ export const docsPages: DocPage[] = [
     "blocks": [
       {
         "type": "p",
-        "text": "The Stellaroid Earn frontend is a Next.js 15 (App Router) + React 19 app that uses `@stellar/stellar-sdk` to build and submit Soroban transactions, `@stellar/freighter-api` for the Freighter browser extension, and `@albedo-link/intent` for the Albedo web wallet. This page condenses the integration into its three layers and the code patterns you need to extend it."
+        "text": "The Stellaroid Earn frontend is a Next.js 16 (App Router) + React 19 app that uses `@stellar/stellar-sdk` to build and submit Soroban transactions, `@stellar/freighter-api` for the Freighter browser extension, and `@albedo-link/intent` for the Albedo web wallet. This page condenses the integration into its three layers and the code patterns you need to extend it."
       },
       {
         "type": "callout",
@@ -1118,7 +1118,7 @@ export const docsPages: DocPage[] = [
     "slug": "architecture",
     "title": "Architecture",
     "metaTitle": "Architecture — Next.js frontend, Soroban contract",
-    "metaDescription": "How Stellaroid Earn works: a Next.js 15 frontend on Vercel talking directly to a Soroban smart contract on Stellar testnet — no traditional backend.",
+    "metaDescription": "How Stellaroid Earn works: a Next.js 16 frontend on Vercel talking directly to a Soroban smart contract on Stellar testnet — no traditional backend.",
     "keywords": [
       "Stellaroid Earn architecture",
       "Soroban smart contract",
@@ -1130,7 +1130,7 @@ export const docsPages: DocPage[] = [
       "service worker"
     ],
     "navLabel": "Architecture",
-    "lede": "Stellaroid Earn is a Next.js 15 (App Router) frontend deployed on Vercel that talks directly to a Soroban smart contract on Stellar testnet. There is no traditional backend — the chain is the system of record.",
+    "lede": "Stellaroid Earn is a Next.js 16 (App Router) frontend deployed on Vercel that talks directly to a Soroban smart contract on Stellar testnet. There is no traditional backend — the chain is the system of record.",
     "blocks": [
       {
         "type": "h2",
@@ -1138,12 +1138,12 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The system has two deployed pieces: a Next.js 15 (App Router) + React 19 frontend on Vercel, and a Soroban smart contract (Rust, `soroban-sdk` 22.0.0, compiled to `wasm32v1-none`) on Stellar testnet. All state — issuer records, certificate records, payment links, admin config — lives in contract storage. Reads reach the chain through Soroban RPC `simulateTransaction`; writes are signed in the user's wallet and submitted through the same RPC. The only server-side code is Next.js itself: React Server Components render proof pages, and four API routes: GET /api/health, GET /api/events and its /stream variant (read-only public event aggregation), and POST /api/fee-bump — an optional, bearer-token-gated endpoint that signs fee-bump transactions server-side with a dedicated testnet sponsor key."
+        "text": "The system has two deployed pieces: a Next.js 16 (App Router) + React 19 frontend on Vercel, and a Soroban smart contract (Rust, `soroban-sdk` 26.1.0, compiled to `wasm32v1-none`) on Stellar testnet. All state — issuer records, certificate records, payment links, admin config — lives in contract storage. Reads reach the chain through Soroban RPC `simulateTransaction`; writes are signed in the user's wallet and submitted through the same RPC. The only server-side code is Next.js itself: React Server Components render proof pages, and four API routes: GET /api/health, GET /api/events and its /stream variant (read-only public event aggregation), and POST /api/fee-bump — an optional, bearer-token-gated endpoint that signs fee-bump transactions server-side with a dedicated testnet sponsor key."
       },
       {
         "type": "code",
         "lang": "text",
-        "text": "Users (issuer / student / employer)\n        |\n        v\nNext.js 15 frontend (Vercel)\n  config layer -> wallet layer (Freighter | Albedo) -> contract client\n        |                                  |\n        | reads: simulateTransaction      | writes: signTransaction -> sendTransaction\n        v                                  v\nSoroban RPC  --  Stellar testnet\n  stellaroid_earn contract\n    - Issuer Registry      (persistent storage)\n    - Certificate Store    (persistent storage)\n    - Payment Links        (persistent storage)\n    - Admin Config         (instance storage)\n  XLM Stellar Asset Contract (SAC) - native asset"
+        "text": "Users (issuer / student / employer)\n        |\n        v\nNext.js 16 frontend (Vercel)\n  config layer -> wallet layer (Freighter | Albedo) -> contract client\n        |                                  |\n        | reads: simulateTransaction      | writes: signTransaction -> sendTransaction\n        v                                  v\nSoroban RPC  --  Stellar testnet\n  stellaroid_earn contract\n    - Issuer Registry      (persistent storage)\n    - Certificate Store    (persistent storage)\n    - Payment Links        (persistent storage)\n    - Admin Config         (instance storage)\n  XLM Stellar Asset Contract (SAC) - native asset"
       },
       {
         "type": "p",
