@@ -6,9 +6,24 @@ name: Contract Source Verification
 # deployed and asserts the SHA-256 matches both the recorded hash and the
 # bytecode currently live on testnet.
 #
-# Reproducibility is toolchain-sensitive: the Rust and Stellar CLI versions
-# below are the ones the deployment was built with. Changing either can change
-# the output hash even when the source is identical, so they are pinned.
+# Two things about this build are not incidental and are pinned deliberately:
+#
+# 1. Toolchain. The Rust and Stellar CLI versions below are the ones the
+#    deployment recorded in the WASM's own metadata (rsver / rssdkver /
+#    cliver), readable by anyone with `stellar contract info meta`. Changing
+#    either changes the output hash even when the source is identical.
+#
+# 2. Runner OS. This job runs on Windows because the deployment was built on
+#    Windows, and the emitted WASM is host-dependent: an otherwise identical
+#    build on ubuntu-latest, same rustc and same CLI, produces
+#    b458aec6b4203f9e18853070cfad747844358947544ce91dd7c3550e591ed419 instead.
+#    Line endings were ruled out as the cause (an LF-normalised source tree
+#    still reproduces the recorded hash on Windows). Do not "simplify" this to
+#    ubuntu-latest; it will fail, and the failure is not a real regression.
+#
+# The verification itself is delegated to scripts/verify-contract-source.ps1 so
+# that CI runs exactly the command a human runs locally, rather than a parallel
+# reimplementation that can drift from it.
 
 on:
   push:
@@ -41,111 +56,80 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # The release tag whose source produced the deployed bytecode.
-  DEPLOYED_TAG: v3.0.0
-  # Manifest path as it existed AT THAT TAG. The contract has since moved to
-  # contracts/stellaroid_earn/, so this is deliberately not the current layout.
-  CONTRACT_MANIFEST: ./contract/Cargo.toml
-  # SHA-256 of the deployed WASM, recorded at deploy time (2026-07-09).
   EXPECTED_HASH: 1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f
   CONTRACT_ID: CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV
-  RPC_URL: https://soroban-testnet.stellar.org
-  NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
-  # Pinned to the toolchain the deployment was built with.
   RUST_VERSION: 1.95.0
   STELLAR_CLI_VERSION: 27.0.0
 
 jobs:
   verify:
-    name: Rebuild ${{ github.event.repository.name }} contract from its release tag
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    name: Rebuild the deployed contract and compare against testnet
+    runs-on: windows-latest
+    timeout-minutes: 45
 
     steps:
-      - name: Check out the deployed release tag
+      - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ env.DEPLOYED_TAG }}
+          # Full history and tags: the script rebuilds a release tag in a
+          # throwaway worktree, which a shallow clone cannot provide.
+          fetch-depth: 0
 
       - name: Setup Rust
         # Pinned to a commit SHA rather than the mutable `stable` branch ref, and
         # to an exact toolchain version, because a compiler change can alter the
-        # emitted WASM even when the source does not change.
+        # emitted WASM even when the source does not.
         uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable branch head, 2026-07-16
         with:
           toolchain: ${{ env.RUST_VERSION }}
           targets: wasm32v1-none
 
+      - name: Cache Cargo
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: contract-verify-cargo-${{ runner.os }}-${{ env.RUST_VERSION }}
+          restore-keys: |
+            contract-verify-cargo-${{ runner.os }}-
+
       - name: Install Stellar CLI ${{ env.STELLAR_CLI_VERSION }}
+        shell: pwsh
         run: |
-          set -euo pipefail
-          url="https://github.com/stellar/stellar-cli/releases/download/v${STELLAR_CLI_VERSION}/stellar-cli-${STELLAR_CLI_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
-          curl -sSfL "$url" -o /tmp/stellar-cli.tar.gz
-          tar -xzf /tmp/stellar-cli.tar.gz -C /tmp
-          sudo install -m 0755 /tmp/stellar "$(dirname "$(command -v cargo)")/stellar" 2>/dev/null \
-            || sudo install -m 0755 /tmp/stellar /usr/local/bin/stellar
-          stellar --version
+          $ErrorActionPreference = "Stop"
+          $version = $env:STELLAR_CLI_VERSION
+          $url = "https://github.com/stellar/stellar-cli/releases/download/v$version/stellar-cli-$version-x86_64-pc-windows-msvc.tar.gz"
+          $dest = Join-Path $env:RUNNER_TEMP "stellar-cli"
+          New-Item -ItemType Directory -Force -Path $dest | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile (Join-Path $env:RUNNER_TEMP "stellar-cli.tar.gz")
+          tar -xzf (Join-Path $env:RUNNER_TEMP "stellar-cli.tar.gz") -C $dest
+          echo $dest | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          & (Join-Path $dest "stellar.exe") --version
 
-      - name: Rebuild the contract from source
-        # --locked so the committed Cargo.lock governs transitive versions; a
-        # silent dependency bump is exactly what breaks reproducibility.
+      - name: Verify the deployed contract reproduces from source
+        shell: pwsh
         run: |
-          set -euo pipefail
-          mkdir -p /tmp/rebuild
-          stellar contract build \
-            --manifest-path "$CONTRACT_MANIFEST" \
-            --locked \
-            --meta source_repo=github:Iron-Mark/Hackathon-Stellaroid_Earn \
-            --meta home_domain=stellaroid.tech \
-            --out-dir /tmp/rebuild
-          ls -la /tmp/rebuild
-
-      - name: Assert the rebuild matches the recorded hash
-        run: |
-          set -euo pipefail
-          actual="$(sha256sum /tmp/rebuild/stellaroid_earn.wasm | cut -d' ' -f1)"
-          echo "expected: ${EXPECTED_HASH}"
-          echo "rebuilt:  ${actual}"
-          if [ "$actual" != "$EXPECTED_HASH" ]; then
-            echo "::error::Rebuild from ${DEPLOYED_TAG} does not reproduce the recorded deployed hash."
-            exit 1
-          fi
-          echo "Rebuild reproduces the recorded deployed hash."
-
-      - name: Fetch the live testnet bytecode and compare
-        run: |
-          set -euo pipefail
-          stellar contract fetch \
-            --id "$CONTRACT_ID" \
-            --rpc-url "$RPC_URL" \
-            --network-passphrase "$NETWORK_PASSPHRASE" \
-            --out-file /tmp/deployed.wasm
-          onchain="$(sha256sum /tmp/deployed.wasm | cut -d' ' -f1)"
-          rebuilt="$(sha256sum /tmp/rebuild/stellaroid_earn.wasm | cut -d' ' -f1)"
-          echo "on-chain: ${onchain}"
-          echo "rebuilt:  ${rebuilt}"
-          if [ "$onchain" != "$rebuilt" ]; then
-            echo "::error::Bytecode live on testnet does not match the rebuild from ${DEPLOYED_TAG}."
-            exit 1
-          fi
-          echo "Live testnet bytecode matches the rebuild."
-
-      - name: Show embedded source metadata
-        run: stellar contract info meta --wasm /tmp/deployed.wasm
+          ./scripts/verify-contract-source.ps1 `
+            -ContractId $env:CONTRACT_ID `
+            -ExpectedHash $env:EXPECTED_HASH `
+            -RequireSourceMatch
 
       - name: Summary
+        if: always()
+        shell: pwsh
         run: |
-          {
-            echo "### Contract source verification"
-            echo ""
-            echo "| Field | Value |"
-            echo "| --- | --- |"
-            echo "| Release tag | \`${DEPLOYED_TAG}\` |"
-            echo "| Contract | \`${CONTRACT_ID}\` |"
-            echo "| SHA-256 | \`${EXPECTED_HASH}\` |"
-            echo "| Rust | \`${RUST_VERSION}\` |"
-            echo "| Stellar CLI | \`${STELLAR_CLI_VERSION}\` |"
-            echo ""
-            echo "Rebuild from the release tag reproduces the recorded hash, and the"
-            echo "bytecode live on Stellar testnet matches that rebuild."
-          } >> "$GITHUB_STEP_SUMMARY"
+          @(
+            "### Contract source verification"
+            ""
+            "| Field | Value |"
+            "| --- | --- |"
+            "| Contract | ``$env:CONTRACT_ID`` |"
+            "| Expected SHA-256 | ``$env:EXPECTED_HASH`` |"
+            "| Rust | ``$env:RUST_VERSION`` |"
+            "| Stellar CLI | ``$env:STELLAR_CLI_VERSION`` |"
+            "| Runner | ``windows-latest`` (the platform the contract was built on) |"
+            ""
+            "Rebuilds the deployed release tag and compares the result against both"
+            "the recorded hash and the bytecode currently live on Stellar testnet."
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
