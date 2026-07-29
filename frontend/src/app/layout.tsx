@@ -156,15 +156,13 @@ const webSiteJsonLd = {
   // Unincorporated solo project: the publisher is the individual who builds and
   // controls it, not an organization.
   publisher: { "@type": "Person", name: SITE_AUTHOR_NAME, url: SITE_AUTHOR_URL },
-  // Proof lookup by hash: enables the sitelinks search box.
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: `${BASE_URL}/proof/{hash}`,
-    },
-    "query-input": "required name=hash",
-  },
+  // No SearchAction/potentialAction here on purpose. It used to declare a
+  // `/proof/{hash}` urlTemplate for the sitelinks search box, but Google has
+  // retired that feature, so the markup bought nothing and cost something:
+  // Googlebot fetched the template literally and Search Console has been
+  // reporting https://stellaroid.tech/proof/%7Bhash%7D as a permanently
+  // excluded URL. Proof pages are reached by their real hash, not by a
+  // template. Do not add it back.
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
