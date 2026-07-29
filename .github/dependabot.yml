@@ -14,6 +14,29 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
+    # Version-scoped holds. These are deliberately pinned to the exact blocked
+    # major line (not update-types: version-update:semver-major) so that a future
+    # TypeScript 8 or ESLint 11 still flows through normally once proposed.
+    # See MAINTENANCE.md -> "Held Dependency Majors" for the full rationale.
+    #
+    # CAVEAT: a versions: ignore also suppresses Dependabot SECURITY updates that
+    # resolve to a matching version, and automated security fixes are enabled on
+    # this repo. A CVE fixed only in typescript 7.x or eslint 10.x would therefore
+    # be masked. Accepted tradeoff, recorded here rather than left silent.
+    ignore:
+      # 2026-07-29: typescript-eslint 8.65.0 (bundled by eslint-config-next 16)
+      # declares SUPPORTED_TYPESCRIPT_VERSIONS = '>=4.8.4 <6.1.0' and rejects the
+      # TS 7.0 native compiler: "You are currently running a version of TypeScript
+      # which is not officially supported by @typescript-eslint/typescript-estree".
+      # Held at typescript ^6.0.3. Revisit when typescript-eslint ships TS 7 support.
+      - dependency-name: "typescript"
+        versions: ["7.x"]
+      # 2026-07-29: eslint-plugin-react 7.37.5 (bundled by eslint-config-next 16)
+      # still calls context.getFilename(), removed in eslint 10, from
+      # lib/util/version.js and lib/rules/jsx-filename-extension.js.
+      # Held at eslint ^9.39.5. Revisit when eslint-plugin-react ships an eslint 10 fix.
+      - dependency-name: "eslint"
+        versions: ["10.x"]
     groups:
       # One PR for the everyday minor/patch churn.
       npm-minor-patch:
