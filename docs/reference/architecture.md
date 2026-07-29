@@ -17,7 +17,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
         │              │              │
         ▼              ▼              ▼
 ┌──────────────────────────────────────────────────────────┐
-│              Frontend (Next.js 15 / React 19)            │
+│              Frontend (Next.js 16 / React 19)            │
 │  ┌────────────────┐  ┌────────────────┐                  │
 │  │  App Router     │  │  Components    │                  │
 │  │  /app (dash)    │  │  proof/        │                  │
@@ -62,7 +62,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 
 ### 1. Smart Contract (`contracts/stellaroid_earn/src/lib.rs`)
 
-**Language:** Rust (soroban-sdk 22.0.0)
+**Language:** Rust (soroban-sdk 26.1.0)
 **Target:** `wasm32v1-none`
 **Storage model:**
 - **Persistent storage**  - Issuer records, certificate records, payment links (TTL: 518,400 ledgers min / 1,036,800 max)
@@ -82,7 +82,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 
 ### 2. Frontend (`frontend/`)
 
-**Framework:** Next.js 15 (App Router) + React 19
+**Framework:** Next.js 16 (App Router) + React 19
 **Styling:** Tailwind CSS v4 with `@theme` design tokens
 
 **Read paths (2):**

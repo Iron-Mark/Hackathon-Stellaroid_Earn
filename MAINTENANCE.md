@@ -33,7 +33,7 @@ Proof sample checks:
 ```powershell
 Invoke-WebRequest -Uri "https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3" -Method Get -TimeoutSec 30
 Invoke-WebRequest -Uri "https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3/opengraph-image" -Method Get -TimeoutSec 30
-Invoke-WebRequest -Uri "https://stellar.expert/explorer/testnet/contract/CA7P5EPYKC2IW4PCMAH6NRBLHH3WP7AN6WWC3QDRWO4HLE47FAGO6TET" -Method Get -TimeoutSec 30
+Invoke-WebRequest -Uri "https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV" -Method Get -TimeoutSec 30
 ```
 
 ## Domain Continuity Check

@@ -443,7 +443,7 @@ export default function SlidesPage() {
                 variant: "purple" as const,
                 stroke: "#a78bfa",
                 title: "Frontend",
-                desc: "Next.js 15, React 19, installable PWA, lazy-loaded SDK (~260 KB first load), 8 wallets: Freighter + Albedo native, WalletConnect for mobile, 6 more via Stellar Wallets Kit",
+                desc: "Next.js 16, React 19, installable PWA, lazy-loaded SDK (~260 KB first load), 8 wallets: Freighter + Albedo native, WalletConnect for mobile, 6 more via Stellar Wallets Kit",
                 icon: (
                   <>
                     <rect x="3" y="3" width="18" height="18" rx="2" />
