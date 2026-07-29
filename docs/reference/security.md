@@ -51,6 +51,8 @@ smart-contract, frontend, infrastructure, and operational layers.
 | 3 | **CDN caching** | PASS | Dynamic proof routes use `revalidate=60` to reduce RPC load while keeping data fresh. |
 | 4 | **Crawl protection** | PASS | `robots.ts` disallows crawlers from spidering `/proof/[hash]` routes to prevent mass enumeration. |
 | 5 | **Dependency audit** | PASS | **No high or moderate advisory reaches shipped code.** The 2026-07-25 security sweep patched every runtime high/moderate that had surfaced (Next.js SSRF/DoS/cache-confusion; `sharp` libvips CVEs, forced by override so Next's bundled copy is covered; `postcss` override raised to 8.5.23; `fast-uri`, `hono`, and `@hono/node-server` overridden), and the subsequent framework-major bump (Next 16, stellar-sdk 16, zod 4) kept them clear. `npm audit` currently reports 9 high, but all 9 are a **single dev-only advisory** (`brace-expansion` DoS) reached exclusively through the ESLint toolchain (`minimatch` → `@eslint/config-array` / `eslint-config-next` plugins), which the `eslint-config-next 16` bump reintroduced. That code runs only during `npm run lint`, never in the built bundle or at runtime, and the exploit needs an attacker-controlled glob pattern that this repo's static, first-party lint config never supplies. It cannot be overridden to a patched line without breaking ESLint's `minimatch@3` (`TypeError: expand is not a function`), so it is accepted and tracked. Separately, 23 low-severity alerts all chain to a single unpatched advisory (`elliptic <=6.6.1`, "risky cryptographic primitive") reached only through Stellar Wallets Kit's bundled Trezor / HOT / NEAR wallet SDKs, which this app never executes. `elliptic 6.6.1` is the latest published version, so no non-breaking upstream fix exists; npm's only remedy is a breaking Stellar Wallets Kit downgrade. Accepted and tracked; revisit when either advisory ships a compatible patch. |
+| 6 | **Static analysis** | PASS | GitHub CodeQL code scanning runs on every push and pull request to `main` and `staging`, plus a weekly cron so newly published queries reach the default branch. `.github/workflows/codeql.yml` analyzes all three languages GitHub reports for this repo with the `security-extended` query suite: `javascript-typescript` (the Next.js frontend), `rust` (the Soroban contract), and `actions` (the workflow files themselves, for script injection via untrusted interpolation). The first full run reported **0 alerts** across all three. |
+| 7 | **Web Application Firewall (WAF)** | PASS | Five Vercel edge rate-limit rules are active in front of every unauthenticated endpoint: `/api/events` (100/60s per IP, which also covers `/api/events/stream` via prefix match), `/api/fee-bump` (30/60s, POST), `/api/pilot-lead` (10/600s, POST), `/api/mcp` (60/60s), and client error reporting (30/60s). These are enforced at the edge, ahead of the application. The in-process limiters in `lib/rate-limit.ts` remain as defense in depth, but are per-warm-instance on Fluid Compute rather than global, which is precisely why the edge rules exist. |
 
 ---
 
@@ -72,9 +74,8 @@ out of scope for this testnet MVP submission:
 
 - **Formal third-party audit**  - not applicable at this stage; planned before any mainnet deployment.
 - **Public fee sponsorship**  - intentionally disabled; sponsorship requires trusted server authorization.
-- **Web Application Firewall (WAF)**  - not configured; deferred to production.
-- **Penetration testing**  - not performed; deferred to production.
+- **Penetration testing**  - no external engagement; deferred to production. An internal multi-surface red-team review was run on 2026-07-07 and its findings were fixed (see the rate-limit, fee-bump, and checks-effects-interactions entries above).
 
 ---
 
-Last reviewed: 2026-07-27
+Last reviewed: 2026-07-29
