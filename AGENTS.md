@@ -60,7 +60,7 @@ The integration follows the flow documented in `docs/reference/freighter-integra
 - **Wallet layer** (`lib/` + `hooks/`) wraps `@stellar/freighter-api` — connection state, public key, network check, sign.
 - **Contract client** (`lib/`) builds transactions with `@stellar/stellar-sdk`: read-only calls via `simulateTransaction` using the read address; writes sign via Freighter and submit via Soroban RPC. Handles ScVal arg serialization, return-value decoding, and error normalization.
 - **UI components** are marked `"use client"` because Freighter is a browser-only API.
-- **Security** (`next.config.ts`): CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and HSTS on every route. `/proof/[hash]` pages validate the hash format before any RPC call and use `revalidate=60` for CDN caching. `robots.ts` blocks crawlers from spidering dynamic proof routes.
+- **Security** (`next.config.ts`): CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and HSTS on every route. `/proof/[hash]` pages validate the hash format before any RPC call and use `revalidate=60` for CDN caching. `robots.ts` keeps `/proof/[hash]/embed`, `/talent/*`, `/opportunity/*`, and `/api/` out of search; proof detail pages stay crawlable on purpose, for portfolio sharing.
 
 When editing the frontend, treat the integration guide as the canonical spec.
 
