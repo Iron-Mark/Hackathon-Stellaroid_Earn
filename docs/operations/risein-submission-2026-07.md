@@ -98,7 +98,7 @@ stellaroid.tech/status.
 ## Tech stack (one line)
 
 Rust + soroban-sdk 26.1 (19 public functions: credential registry + milestone
-escrow) · Next.js 15 + React 19 PWA · Freighter + Albedo wallets · native XLM
+escrow) · Next.js 16 + React 19 PWA · Freighter + Albedo wallets · native XLM
 via SAC · Vercel.
 
 ## Scope & verifiability

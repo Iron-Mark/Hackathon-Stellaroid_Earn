@@ -1,6 +1,6 @@
 # Stellaroid Earn — Frontend
 
-Next.js 15 (App Router) + React 19 dApp connecting to a Soroban certificate contract on Stellar testnet via Freighter.
+Next.js 16 (App Router) + React 19 dApp connecting to a Soroban certificate contract on Stellar testnet via Freighter.
 
 Built following [`../docs/reference/freighter-integration.md`](../docs/reference/freighter-integration.md).
 

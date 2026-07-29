@@ -18,14 +18,19 @@ const ALLOWED_SOURCES = new Set([
 // Strip every line-break form (CR/LF, NEL, U+2028/2029) plus all C0/C1
 // control characters so a crafted report can neither forge extra log lines
 // nor smuggle terminal escapes — CSI, OSC, and RIS sequences all start with
-// ESC (U+001B), which dies here. The stack keeps real newlines (multi-line
-// by nature) but each line is control-stripped and visibly indented.
+// ESC (U+001B), which dies here. The stack is folded onto a single line with
+// " | " frame separators rather than kept multi-line: one report is then
+// exactly one log row, so no attacker-supplied byte can ever begin a row.
 const LINE_BREAKS_RE = /[\r\n\u0085\u2028\u2029]+/g;
 const CONTROL_RE = /[\u0000-\u001f\u007f-\u009f]/g;
 
+function sanitizeForLog(value: string) {
+  return value.replace(LINE_BREAKS_RE, " ").replace(CONTROL_RE, "");
+}
+
 function field(value: unknown, max = 600) {
   if (typeof value !== "string") return "";
-  return value.slice(0, max).replace(LINE_BREAKS_RE, " ").replace(CONTROL_RE, "");
+  return sanitizeForLog(value.slice(0, max));
 }
 
 function stackField(value: unknown, max = 600) {
@@ -33,8 +38,9 @@ function stackField(value: unknown, max = 600) {
   return value
     .slice(0, max)
     .split(LINE_BREAKS_RE)
-    .map((line) => `    ${line.replace(CONTROL_RE, "")}`)
-    .join("\n");
+    .map((line) => sanitizeForLog(line).trim())
+    .filter(Boolean)
+    .join(" | ");
 }
 
 export async function POST(request: Request) {
@@ -77,8 +83,14 @@ export async function POST(request: Request) {
   const url = field(body.url, 200);
   const stack = stackField(body.stack);
 
+  const safeSource = sanitizeForLog(source);
+  const safeUrl = sanitizeForLog(url);
+  const safeDigest = sanitizeForLog(digest);
+  const safeMessage = sanitizeForLog(message);
+  const safeStack = sanitizeForLog(stack);
+
   console.error(
-    `[client-error] source=${source} url=${url}${digest ? ` digest=${digest}` : ""} message=${message}${stack ? `\n${stack}` : ""}`,
+    `[client-error] source=${safeSource} url=${safeUrl}${safeDigest ? ` digest=${safeDigest}` : ""} message=${safeMessage}${safeStack ? ` stack=${safeStack}` : ""}`,
   );
 
   return new NextResponse(null, { status: 204 });

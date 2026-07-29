@@ -1,0 +1,70 @@
+name: CodeQL
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+      - staging
+  schedule:
+    # Weekly re-scan so newly published queries reach the default branch even
+    # when the code itself has not changed.
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze ${{ matrix.language }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      # Required to upload results to the repository's code scanning dashboard.
+      security-events: write
+      contents: read
+      actions: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The frontend (Next.js) is the only internet-facing attack surface.
+          - language: javascript-typescript
+            build-mode: none
+          # The Soroban contract. Rust analysis is buildless, so no cargo
+          # toolchain or wasm target is needed here (contract-ci.yml still
+          # compiles and tests it).
+          - language: rust
+            build-mode: none
+          # Lints the workflows in this directory for supply-chain issues such
+          # as script injection via untrusted ${{ }} interpolation.
+          - language: actions
+            build-mode: none
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          # security-extended adds lower-severity and precision queries on top
+          # of the default suite.
+          queries: security-extended
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"

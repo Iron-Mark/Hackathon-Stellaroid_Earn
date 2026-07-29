@@ -28,7 +28,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "For developers, the system is deliberately small. The contract is Rust + `soroban-sdk`, deployed to Stellar testnet, with a 19-function public surface — a credential core plus a milestone-escrow extension — and typed contract errors. The frontend is Next.js 15 + React 19 using `@stellar/stellar-sdk`: read-only calls go through `simulateTransaction`, and writes are signed with Freighter or Albedo and submitted over Soroban RPC. Every state change emits a contract event that is auditable on Stellar Expert."
+        "text": "For developers, the system is deliberately small. The contract is Rust + `soroban-sdk`, deployed to Stellar testnet, with a 19-function public surface — a credential core plus a milestone-escrow extension — and typed contract errors. The frontend is Next.js 16 + React 19 using `@stellar/stellar-sdk`: read-only calls go through `simulateTransaction`, and writes are signed with Freighter or Albedo and submitted over Soroban RPC. Every state change emits a contract event that is auditable on Stellar Expert."
       },
       {
         "type": "p",
@@ -751,7 +751,7 @@ export const docsPages: DocPage[] = [
     "blocks": [
       {
         "type": "p",
-        "text": "The Stellaroid Earn frontend is a Next.js 15 (App Router) + React 19 app that uses `@stellar/stellar-sdk` to build and submit Soroban transactions, `@stellar/freighter-api` for the Freighter browser extension, and `@albedo-link/intent` for the Albedo web wallet. This page condenses the integration into its three layers and the code patterns you need to extend it."
+        "text": "The Stellaroid Earn frontend is a Next.js 16 (App Router) + React 19 app that uses `@stellar/stellar-sdk` to build and submit Soroban transactions, `@stellar/freighter-api` for the Freighter browser extension, and `@albedo-link/intent` for the Albedo web wallet. This page condenses the integration into its three layers and the code patterns you need to extend it."
       },
       {
         "type": "callout",
@@ -1118,7 +1118,7 @@ export const docsPages: DocPage[] = [
     "slug": "architecture",
     "title": "Architecture",
     "metaTitle": "Architecture — Next.js frontend, Soroban contract",
-    "metaDescription": "How Stellaroid Earn works: a Next.js 15 frontend on Vercel talking directly to a Soroban smart contract on Stellar testnet — no traditional backend.",
+    "metaDescription": "How Stellaroid Earn works: a Next.js 16 frontend on Vercel talking directly to a Soroban smart contract on Stellar testnet — no traditional backend.",
     "keywords": [
       "Stellaroid Earn architecture",
       "Soroban smart contract",
@@ -1130,7 +1130,7 @@ export const docsPages: DocPage[] = [
       "service worker"
     ],
     "navLabel": "Architecture",
-    "lede": "Stellaroid Earn is a Next.js 15 (App Router) frontend deployed on Vercel that talks directly to a Soroban smart contract on Stellar testnet. There is no traditional backend — the chain is the system of record.",
+    "lede": "Stellaroid Earn is a Next.js 16 (App Router) frontend deployed on Vercel that talks directly to a Soroban smart contract on Stellar testnet. There is no traditional backend — the chain is the system of record.",
     "blocks": [
       {
         "type": "h2",
@@ -1138,12 +1138,12 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The system has two deployed pieces: a Next.js 15 (App Router) + React 19 frontend on Vercel, and a Soroban smart contract (Rust, `soroban-sdk` 22.0.0, compiled to `wasm32v1-none`) on Stellar testnet. All state — issuer records, certificate records, payment links, admin config — lives in contract storage. Reads reach the chain through Soroban RPC `simulateTransaction`; writes are signed in the user's wallet and submitted through the same RPC. The only server-side code is Next.js itself: React Server Components render proof pages, and four API routes: GET /api/health, GET /api/events and its /stream variant (read-only public event aggregation), and POST /api/fee-bump — an optional, bearer-token-gated endpoint that signs fee-bump transactions server-side with a dedicated testnet sponsor key."
+        "text": "The system has two deployed pieces: a Next.js 16 (App Router) + React 19 frontend on Vercel, and a Soroban smart contract (Rust, `soroban-sdk` 26.1.0, compiled to `wasm32v1-none`) on Stellar testnet. All state — issuer records, certificate records, payment links, admin config — lives in contract storage. Reads reach the chain through Soroban RPC `simulateTransaction`; writes are signed in the user's wallet and submitted through the same RPC. The only server-side code is Next.js itself: React Server Components render proof pages, and four API routes: GET /api/health, GET /api/events and its /stream variant (read-only public event aggregation), and POST /api/fee-bump — an optional, bearer-token-gated endpoint that signs fee-bump transactions server-side with a dedicated testnet sponsor key."
       },
       {
         "type": "code",
         "lang": "text",
-        "text": "Users (issuer / student / employer)\n        |\n        v\nNext.js 15 frontend (Vercel)\n  config layer -> wallet layer (Freighter | Albedo) -> contract client\n        |                                  |\n        | reads: simulateTransaction      | writes: signTransaction -> sendTransaction\n        v                                  v\nSoroban RPC  --  Stellar testnet\n  stellaroid_earn contract\n    - Issuer Registry      (persistent storage)\n    - Certificate Store    (persistent storage)\n    - Payment Links        (persistent storage)\n    - Admin Config         (instance storage)\n  XLM Stellar Asset Contract (SAC) - native asset"
+        "text": "Users (issuer / student / employer)\n        |\n        v\nNext.js 16 frontend (Vercel)\n  config layer -> wallet layer (Freighter | Albedo) -> contract client\n        |                                  |\n        | reads: simulateTransaction      | writes: signTransaction -> sendTransaction\n        v                                  v\nSoroban RPC  --  Stellar testnet\n  stellaroid_earn contract\n    - Issuer Registry      (persistent storage)\n    - Certificate Store    (persistent storage)\n    - Payment Links        (persistent storage)\n    - Admin Config         (instance storage)\n  XLM Stellar Asset Contract (SAC) - native asset"
       },
       {
         "type": "p",
@@ -1842,7 +1842,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "callout",
-        "text": "Honest scope note: all of these guards live in module memory. On serverless hosting (Vercel Fluid Compute) they are per-warm-instance, not globally shared. They are defense-in-depth that bounds abuse per instance and — paired with the shared short-TTL event cache — sharply cuts upstream RPC and indexer fan-out from connection floods. A hard global guarantee requires an edge rate limit (WAF/firewall rules) layered in front, which is deferred to production."
+        "text": "Honest scope note: all of these guards live in module memory. On serverless hosting (Vercel Fluid Compute) they are per-warm-instance, not globally shared, so the hard global ceiling has to come from the layer in front of them. Five Vercel edge rate-limit rules now sit ahead of the app, covering /api/events (which also covers /api/events/stream by prefix), /api/fee-bump, /api/pilot-lead, /api/mcp, and client error reporting. The in-memory guards remain as defense in depth: they bound abuse per instance and, paired with the shared short-TTL event cache, sharply cut upstream RPC and indexer fan-out from connection floods."
       },
       {
         "type": "h2",
@@ -1872,8 +1872,8 @@ export const docsPages: DocPage[] = [
       {
         "type": "ul",
         "items": [
-          "Testnet MVP, no audit yet: no formal third-party audit and no penetration test have been performed. Both are deferred until before any mainnet deployment.",
-          "Per-instance rate limits: every API abuse guard is in-memory and per-warm-instance. Traffic spread across serverless instances is only bounded per instance; platform-level (WAF/edge) rate limiting is managed in the Vercel dashboard outside this repo, so the in-memory guards are the per-instance backstop documented here.",
+          "Testnet MVP, no external audit yet: no formal third-party audit and no external penetration test have been performed. Both are deferred until before any mainnet deployment. An internal red-team review was run and its findings fixed, which is not a substitute for an independent audit.",
+          "In-app rate limits are per-instance: every abuse guard written in this repo is in-memory and per-warm-instance, so traffic spread across serverless instances is only bounded per instance. The global ceiling comes from Vercel edge rate-limit rules, which are configured in the Vercel dashboard rather than in this repository and therefore cannot be reviewed from this source tree.",
           "Single admin key: one admin address, set at init, gates issuer approval and suspension and triggers reward payouts. There is no multisig or role separation.",
           "Partial expiry enforcement: the contract can reject expired credentials, but the current issuer flow sets expires_at = 0, so no credential automatically expires yet.",
           "Source verification pending: the runbook records the deployed WASM hash, but contract-metadata and GitHub-attestation verification is incomplete — the deployment must not be described as source-verified.",
@@ -1882,7 +1882,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The underlying checklist lives in the repository at `docs/reference/security.md` and was last reviewed on 2026-07-02."
+        "text": "The underlying checklist lives in the repository at `docs/reference/security.md` and was last reviewed on 2026-07-29."
       }
     ],
     "faq": [
@@ -1896,7 +1896,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "Are the API rate limits enforced globally?",
-        "answer": "No, and the docs say so on purpose. The rate limits, stream concurrency slots, and fee-sponsorship spend budget are in-memory guards that are per-warm-instance on serverless hosting. They bound abuse per instance and cut upstream RPC fan-out, but a hard global guarantee requires an edge WAF or firewall rate limit, which is deferred to production."
+        "answer": "The guards in this repo are not global; the edge rules in front of them are. The rate limits, stream concurrency slots, and fee-sponsorship spend budget are in-memory and per-warm-instance on serverless hosting, so on their own they bound abuse per instance rather than globally. The hard global ceiling comes from five Vercel edge rate-limit rules that sit ahead of the app on the unauthenticated endpoints. Those rules are configured in the Vercel dashboard rather than in this repository, so they cannot be reviewed from this source tree."
       },
       {
         "question": "What personal data does the platform store?",

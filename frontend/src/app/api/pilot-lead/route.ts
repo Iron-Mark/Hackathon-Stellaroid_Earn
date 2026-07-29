@@ -70,9 +70,12 @@ export async function POST(request: Request) {
   const lead = validation.lead;
   const { subject, text } = formatPilotLeadEmail(lead);
 
-  // Function-log copy as a delivery safety net (no secrets, user-submitted
-  // contact data only — disclosed in /privacy).
-  console.log(`[pilot-lead] ${subject} <${lead.email}>`);
+  // Function-log breadcrumb only. No user-submitted content is logged: the
+  // lead itself lives in the Resend email, and delivery failures are logged
+  // below with the Resend status. Keeping the submitted name and email out of
+  // the logs means the only copy is the one the sender intended, and it also
+  // removes the last path by which typed text could reach a log line.
+  console.log("[pilot-lead] accepted");
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
