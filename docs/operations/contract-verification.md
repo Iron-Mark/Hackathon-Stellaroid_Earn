@@ -56,7 +56,15 @@ The toolchain is not incidental to that result, and it does not have to be taken
 | `rssdkver` | soroban-sdk 26.1.0 |
 | `cliver` | Stellar CLI 27.0.0 |
 
-`.github/workflows/contract-verification.yml` pins exactly these versions, rebuilds the tag, and asserts the hash against both the recorded value and the bytecode currently live on testnet. It runs weekly and on demand, so the claim is continuously checked rather than asserted once.
+`.github/workflows/contract-verification.yml` pins exactly these versions, rebuilds the tag, and asserts the hash against both the recorded value and the bytecode currently live on testnet. It runs weekly and on demand, so the claim is continuously checked rather than asserted once. It delegates to `verify-contract-source.ps1` rather than reimplementing the checks, so CI runs the same command a human runs locally.
+
+### The build is host-dependent (verify on Windows)
+
+The deployment was built on Windows, and the emitted WASM depends on the build host. An otherwise identical rebuild on `ubuntu-latest`, same Rust 1.95.0 and same Stellar CLI 27.0.0, produces `b458aec6b4203f9e18853070cfad747844358947544ce91dd7c3550e591ed419` rather than the recorded hash. The CI job therefore runs on `windows-latest` deliberately; switching it to Linux will fail, and that failure would not indicate a problem with the contract.
+
+Line endings are *not* the cause, which is worth stating because `core.autocrlf` is enabled and this repo has no `.gitattributes`, so Windows checks the source out as CRLF and Linux as LF. Normalising the source tree to LF and rebuilding on Windows still reproduces the recorded hash, so the difference lies in the host toolchain rather than in the checked-out bytes. The absolute build path is not the cause either: builds from two different temporary directories produce the same hash.
+
+The practical rule for anyone reproducing this: use Windows, Rust 1.95.0, and Stellar CLI 27.0.0. That is a real limitation of this build rather than a property of Soroban, and it is recorded here instead of being left for someone to rediscover.
 
 **Verify against the release tag, not the default branch.** Deployed bytecode corresponds to the commit it was built from, and `main` has moved on since: the contract relocated from `contract/` to `contracts/stellaroid_earn/`, and `soroban-sdk` was bumped to 27.0.2 by a routine dependency update. Either change alone alters the emitted WASM, so a rebuild of `main` produces a different hash. That is expected drift in the source tree, not a defect in the deployed contract. The script therefore defaults to `-Ref v3.0.0`; pass `-Ref HEAD` to inspect the current tree, and expect a mismatch.
 
