@@ -1,7 +1,10 @@
 # Dependabot configuration.
 # Groups routine dependency updates into a small number of PRs against main,
 # instead of one PR per package. Security updates are delivered separately by
-# GitHub's Dependabot security-alerts feature and are not affected by this file.
+# GitHub's Dependabot security-alerts feature, and are mostly unaffected by this
+# file -- with one exception: the version-scoped `ignore:` rules below DO also
+# suppress security updates that resolve to a matching version. See the CAVEAT on
+# the /frontend entry and MAINTENANCE.md -> "Held Dependency Majors".
 version: 2
 updates:
   # Frontend Next.js app.
