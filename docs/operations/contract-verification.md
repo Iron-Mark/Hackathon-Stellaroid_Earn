@@ -43,7 +43,30 @@ The contract was redeployed on 2026-07-09 from committed source on `july-monthly
 - Built with `stellar contract build --meta source_repo=github:Iron-Mark/Hackathon-Stellaroid_Earn --meta home_domain=stellaroid.tech` (Stellar CLI 27.0.0, soroban-sdk 26.1.0, Rust 1.95.0). The workspace artifact lives at `target/wasm32v1-none/release/stellaroid_earn.wasm` and its SHA-256 matches the deployed hash.
 - `stellar contract info meta` on the deployed WASM resolves `source_repo` and `home_domain`, so build-attestation evidence can be linked once the matching GitHub release exists.
 - Deploy tx: `cf917d1615cedc0a2b84edd15daf52b7e43ade2df01ce057157ca1e82a6052ae`. Seed txs — init `faf278d7…85e6`, register_issuer `a7f38f78…7a28`, approve_issuer `6d090d9b…f695`, register_certificate `8c20a944…a0e8`, verify_certificate `67137aa8…2cb9`.
-- Remaining step for full source verification: publish the GitHub release/tag from the deploying commit so the release workflow generates the build attestation, then re-run this runbook with `-RequireSourceMatch`.
+
+## Reproduction Confirmed (2026-07-29)
+
+Rebuilding the **`v3.0.0` release tag** reproduces the deployed bytecode byte for byte: SHA-256 `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`, identical to the WASM fetched from testnet. `verify-contract-source.ps1 -RequireSourceMatch` exits 0.
+
+The toolchain is not incidental to that result, and it does not have to be taken on trust: the deployed WASM carries it in its own metadata, which any third party can read with `stellar contract info meta`.
+
+| Recorded in the deployed WASM | Value |
+| --- | --- |
+| `rsver` | Rust 1.95.0 |
+| `rssdkver` | soroban-sdk 26.1.0 |
+| `cliver` | Stellar CLI 27.0.0 |
+
+`.github/workflows/contract-verification.yml` pins exactly these versions, rebuilds the tag, and asserts the hash against both the recorded value and the bytecode currently live on testnet. It runs weekly and on demand, so the claim is continuously checked rather than asserted once. It delegates to `verify-contract-source.ps1` rather than reimplementing the checks, so CI runs the same command a human runs locally.
+
+### The build is host-dependent (verify on Windows)
+
+The deployment was built on Windows, and the emitted WASM depends on the build host. An otherwise identical rebuild on `ubuntu-latest`, same Rust 1.95.0 and same Stellar CLI 27.0.0, produces `b458aec6b4203f9e18853070cfad747844358947544ce91dd7c3550e591ed419` rather than the recorded hash. The CI job therefore runs on `windows-latest` deliberately; switching it to Linux will fail, and that failure would not indicate a problem with the contract.
+
+Line endings are *not* the cause, which is worth stating because `core.autocrlf` is enabled and this repo has no `.gitattributes`, so Windows checks the source out as CRLF and Linux as LF. Normalising the source tree to LF and rebuilding on Windows still reproduces the recorded hash, so the difference lies in the host toolchain rather than in the checked-out bytes. The absolute build path is not the cause either: builds from two different temporary directories produce the same hash.
+
+The practical rule for anyone reproducing this: use Windows, Rust 1.95.0, and Stellar CLI 27.0.0. That is a real limitation of this build rather than a property of Soroban, and it is recorded here instead of being left for someone to rediscover.
+
+**Verify against the release tag, not the default branch.** Deployed bytecode corresponds to the commit it was built from, and `main` has moved on since: the contract relocated from `contract/` to `contracts/stellaroid_earn/`, and `soroban-sdk` was bumped to 27.0.2 by a routine dependency update. Either change alone alters the emitted WASM, so a rebuild of `main` produces a different hash. That is expected drift in the source tree, not a defect in the deployed contract. The script therefore defaults to `-Ref v3.0.0`; pass `-Ref HEAD` to inspect the current tree, and expect a mismatch.
 
 The previous contract (`CDMUOHMARNVOJZM3IVOCJUPGBHDTHFBMZCCZXEZPQDVJGILH3NIKTTW3`, WASM `59ca403e…6f7f`) remains on testnet as historical evidence; its bytecode was never reproducible from committed source, which motivated this redeploy.
 

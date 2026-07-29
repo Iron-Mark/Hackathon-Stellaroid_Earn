@@ -1,0 +1,135 @@
+name: Contract Source Verification
+
+# Proves that the deployed testnet contract is byte-for-byte reproducible from
+# committed source. The deployed bytecode corresponds to a RELEASE TAG, not to
+# the moving default branch, so this rebuilds the tag that was actually
+# deployed and asserts the SHA-256 matches both the recorded hash and the
+# bytecode currently live on testnet.
+#
+# Two things about this build are not incidental and are pinned deliberately:
+#
+# 1. Toolchain. The Rust and Stellar CLI versions below are the ones the
+#    deployment recorded in the WASM's own metadata (rsver / rssdkver /
+#    cliver), readable by anyone with `stellar contract info meta`. Changing
+#    either changes the output hash even when the source is identical.
+#
+# 2. Runner OS. This job runs on Windows because the deployment was built on
+#    Windows, and the emitted WASM is host-dependent: an otherwise identical
+#    build on ubuntu-latest, same rustc and same CLI, produces
+#    b458aec6b4203f9e18853070cfad747844358947544ce91dd7c3550e591ed419 instead.
+#    Line endings were ruled out as the cause (an LF-normalised source tree
+#    still reproduces the recorded hash on Windows). Do not "simplify" this to
+#    ubuntu-latest; it will fail, and the failure is not a real regression.
+#
+# The verification itself is delegated to scripts/verify-contract-source.ps1 so
+# that CI runs exactly the command a human runs locally, rather than a parallel
+# reimplementation that can drift from it.
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - ".github/workflows/contract-verification.yml"
+      - "scripts/verify-contract-source.ps1"
+      - "docs/operations/contract-verification.md"
+  pull_request:
+    branches:
+      - main
+      - staging
+    paths:
+      - ".github/workflows/contract-verification.yml"
+      - "scripts/verify-contract-source.ps1"
+      - "docs/operations/contract-verification.md"
+  schedule:
+    # Weekly, so a contract that is replaced or archived on testnet surfaces
+    # here rather than in a reviewer's terminal.
+    - cron: "41 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-verification-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXPECTED_HASH: 1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f
+  CONTRACT_ID: CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV
+  RUST_VERSION: 1.95.0
+  STELLAR_CLI_VERSION: 27.0.0
+
+jobs:
+  verify:
+    name: Rebuild the deployed contract and compare against testnet
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Full history and tags: the script rebuilds a release tag in a
+          # throwaway worktree, which a shallow clone cannot provide.
+          fetch-depth: 0
+
+      - name: Setup Rust
+        # Pinned to a commit SHA rather than the mutable `stable` branch ref, and
+        # to an exact toolchain version, because a compiler change can alter the
+        # emitted WASM even when the source does not.
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable branch head, 2026-07-16
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: wasm32v1-none
+
+      - name: Cache Cargo
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: contract-verify-cargo-${{ runner.os }}-${{ env.RUST_VERSION }}
+          restore-keys: |
+            contract-verify-cargo-${{ runner.os }}-
+
+      - name: Install Stellar CLI ${{ env.STELLAR_CLI_VERSION }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = $env:STELLAR_CLI_VERSION
+          $url = "https://github.com/stellar/stellar-cli/releases/download/v$version/stellar-cli-$version-x86_64-pc-windows-msvc.tar.gz"
+          $dest = Join-Path $env:RUNNER_TEMP "stellar-cli"
+          New-Item -ItemType Directory -Force -Path $dest | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile (Join-Path $env:RUNNER_TEMP "stellar-cli.tar.gz")
+          tar -xzf (Join-Path $env:RUNNER_TEMP "stellar-cli.tar.gz") -C $dest
+          echo $dest | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          & (Join-Path $dest "stellar.exe") --version
+
+      - name: Verify the deployed contract reproduces from source
+        shell: pwsh
+        run: |
+          ./scripts/verify-contract-source.ps1 `
+            -ContractId $env:CONTRACT_ID `
+            -ExpectedHash $env:EXPECTED_HASH `
+            -RequireSourceMatch
+
+      - name: Summary
+        if: always()
+        shell: pwsh
+        run: |
+          @(
+            "### Contract source verification"
+            ""
+            "| Field | Value |"
+            "| --- | --- |"
+            "| Contract | ``$env:CONTRACT_ID`` |"
+            "| Expected SHA-256 | ``$env:EXPECTED_HASH`` |"
+            "| Rust | ``$env:RUST_VERSION`` |"
+            "| Stellar CLI | ``$env:STELLAR_CLI_VERSION`` |"
+            "| Runner | ``windows-latest`` (the platform the contract was built on) |"
+            ""
+            "Rebuilds the deployed release tag and compares the result against both"
+            "the recorded hash and the bytecode currently live on Stellar testnet."
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
