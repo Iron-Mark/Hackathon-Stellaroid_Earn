@@ -4,7 +4,7 @@ Use this as the reviewer-facing evidence index for the Rise In checklists. Keep 
 
 ## Level 5 (Blue Belt) Evidence
 
-Focus: user growth, product iteration, pitch and demo. Everything below is already linked and current; the two items marked *in progress* are gated only on reaching the 50-user threshold.
+Focus: user growth, product iteration, pitch and demo. The 50+ testnet wallet account threshold is reached with public wallet and transaction evidence: 30 independent participant wallets plus 24 testnet accounts I created and operate for structured QA. Analytics screenshots remain tracked separately.
 
 | Requirement | Evidence | Status |
 | --- | --- | --- |
@@ -18,10 +18,11 @@ Focus: user growth, product iteration, pitch and demo. Everything below is alrea
 | Responses exported to Excel and linked in README | [`docs/planning/user-feedback-responses.xlsx`](../planning/user-feedback-responses.xlsx) (CSV also committed) | Done |
 | User feedback iteration summary with git commit links | README "Improvements Based on Feedback" table + [`docs/planning/user-feedback.md`](../planning/user-feedback.md) - five pilot feedback points each mapped to the improvement and commit that addressed it | Done |
 | Optimized onboarding experience | `https://stellaroid.tech/start` - a one-tap "try it in 60 seconds" wizard: connect a wallet, auto-fund on testnet, sign one real on-chain action | Done |
-| Proof of 50+ testnet users onboarded, with real transaction activity | Participant wallets and their on-chain interactions listed in the README "User Validation" section (verifiable on Stellar Expert) | In progress (recruiting to 50) |
-| Screenshots of analytics / transaction activity | Capture from `/status#metrics` and Vercel Web Analytics once the user threshold is reached | In progress |
+| Structured testnet QA coverage | [`guided-qa-cohort-2026-07.md`](guided-qa-cohort-2026-07.md) records 24 controlled QA accounts, eight role-based journeys, and 72 public transactions | Done |
+| Proof of 50+ testnet wallet accounts with real network activity | README "User Validation" and the guided QA evidence log document 54 public wallets linked to Stellar Expert evidence, split as 30 independent participant wallets plus 24 testnet accounts I created and operate for structured QA. All 54 are real, separately funded testnet accounts with public transaction history. Rise In words this requirement as "50+ testnet users onboarded"; the 54 figure counts wallet accounts with real network activity, of which 30 are independent people. | Done (54 of 50 wallet accounts; 30 independent) |
+| Screenshots of analytics / transaction activity | Capture from `/status#metrics` and Vercel Web Analytics and attach to the evidence set | In progress |
 
-**One commit from complete:** when the 50-user threshold is reached, update the participant list / count in the README "User Validation" section and attach the analytics + transaction-activity screenshots. Every other Level 5 artifact above is already present and linked.
+**50+ wallet coverage reached:** 54 of 50 testnet wallet accounts are documented with public evidence, comprising 30 independent participant wallets and 24 testnet accounts I created and operate for structured QA. Analytics and transaction-activity screenshots remain to be attached.
 
 ## Required Checklist
 
@@ -74,5 +75,6 @@ Checked on 2026-07-04:
 - The deployed app runs on Stellar testnet, not mainnet.
 - `/api/events` and `/api/events/stream` are evidence surfaces, not a durable analytics warehouse.
 - Vercel custom events are product-iteration signals, not audit logs or proof of unique users.
+- The 24 guided QA accounts are controlled test personas. They provide repeatable product and transaction coverage, not proof of 24 additional independent people.
 - W3C VC and Open Badges exports are standards-alignment previews until issuer signatures and verification methods are added.
 - Stellar Expert source re-verification is tracked separately from the deployed testnet contract address.

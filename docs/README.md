@@ -15,6 +15,8 @@ This folder keeps the active documentation lean. Start with planning, then use r
 | Stellar/Freighter frontend integration | [reference/freighter-integration.md](reference/freighter-integration.md) |
 | Branches, deployment, release, and domains | [operations/release-and-deployment.md](operations/release-and-deployment.md) |
 | Demo readiness | [operations/demo-checklist.md](operations/demo-checklist.md) |
+| Guided testnet QA evidence | [operations/guided-qa-cohort-2026-07.md](operations/guided-qa-cohort-2026-07.md) |
+| Running a live participant session | [operations/guided-session-facilitation.md](operations/guided-session-facilitation.md) |
 
 ## Archives
 
