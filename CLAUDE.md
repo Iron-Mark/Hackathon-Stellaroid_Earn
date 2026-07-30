@@ -27,7 +27,7 @@ npm run lint      # next lint
 ```
 
 ### Stellar CLI (environment setup)
-This codespace already has: Rust 1.95, `wasm32v1-none` + `wasm32-unknown-unknown` targets, Stellar CLI 26.0.0 at `~/.local/bin/stellar`, and a funded testnet key aliased `my-key`.
+This codespace already has: Rust 1.95, `wasm32v1-none` + `wasm32-unknown-unknown` targets, Stellar CLI 27.0.0 at `~/.local/bin/stellar`, and a funded testnet key aliased `my-key`.
 
 ```bash
 export PATH="$PATH:$HOME/.local/bin"   # if stellar is not on PATH
@@ -45,7 +45,7 @@ stellar contract deploy \
   --network testnet
 ```
 
-## Stellar CLI v26 gotchas
+## Stellar CLI v26+ gotchas
 
 - `--global` flag is **removed** from `stellar keys generate` — global is the default. Use `--fund` to auto-fund at creation: `stellar keys generate my-key --network testnet --fund`.
 - Prefer the **prebuilt binary** from GitHub releases over `cargo install --locked stellar-cli` in constrained environments (the from-source build pulls hundreds of crates and can OOM in small containers).

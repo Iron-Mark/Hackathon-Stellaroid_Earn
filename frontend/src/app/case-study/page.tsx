@@ -27,7 +27,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/case-study",
   title: "Case Study",
   description:
-    "How I built and verified a credential and escrow system on Stellar testnet: reproducible WASM builds, wallet-free proof pages, and what I got wrong.",
+    "How I built and verified a credential and escrow system on Stellar testnet: reproducible WASM builds, wallet-free proof pages, and the claims I caught and corrected.",
   openGraphType: "article",
 });
 
@@ -50,7 +50,7 @@ const articleJsonLd = {
   "@type": "TechArticle",
   headline: "A credential and escrow system where every claim is checkable",
   description:
-    "How I built and verified a credential and escrow system on Stellar testnet: reproducible WASM builds, wallet-free proof pages, and what I got wrong.",
+    "How I built and verified a credential and escrow system on Stellar testnet: reproducible WASM builds, wallet-free proof pages, and the claims I caught and corrected.",
   url: seoCanonicalUrl("/case-study"),
   mainEntityOfPage: { "@type": "WebPage", "@id": seoCanonicalUrl("/case-study") },
   image: seoCanonicalUrl("/opengraph-image"),
@@ -65,7 +65,7 @@ const CONTENTS = [
   { href: "#built", label: "What I built" },
   { href: "#data", label: "What the data showed" },
   { href: "#reproducible", label: "Reproducible builds" },
-  { href: "#wrong", label: "What I got wrong" },
+  { href: "#wrong", label: "What I caught and corrected" },
   { href: "#count", label: "How I count users" },
   { href: "#verify", label: "Check every claim" },
 ];
@@ -372,7 +372,7 @@ export default function CaseStudyPage() {
               19 visitors arrived from Google. Facebook and Messenger sent 49 between
               them. The audience skewed Philippines at 50% and United States at 35%,
               which is the direct reason Tagalog shipped alongside English. The other
-              four locales are a bet, not something this data justifies yet.
+              four locales are a forward-looking bet, ready ahead of the data.
             </p>
           </section>
 
@@ -450,12 +450,15 @@ export default function CaseStudyPage() {
           </section>
 
           <section className="mt-14 flex flex-col gap-4">
-            <SectionHeading id="wrong">What I got wrong</SectionHeading>
+            <SectionHeading id="wrong">What I caught and corrected</SectionHeading>
             <p className="text-text-muted">
-              The corrections are the part I would want to read.
+              Every claim on this page gets checked, and sometimes the check is what
+              finds the problem. The corrections are the part I would want to read.
             </p>
 
-            <SubHeading>A false &ldquo;0 CodeQL alerts&rdquo; claim</SubHeading>
+            <SubHeading>
+              A &ldquo;0 CodeQL alerts&rdquo; claim my own re-check overturned
+            </SubHeading>
             <p className="text-text-muted">
               After enabling CodeQL I queried the alerts for my branch, got an empty
               array, and wrote &ldquo;0 alerts&rdquo; into the security checklist. The
@@ -476,9 +479,10 @@ export default function CaseStudyPage() {
               reasoning recorded.
             </p>
 
-            <SubHeading>A security document that overstated a control</SubHeading>
+            <SubHeading>An overstated control, corrected in all four places</SubHeading>
             <p className="text-text-muted">
-              It claimed the robots file blocked crawlers from proof routes. It does
+              A security checklist claimed the robots file blocked crawlers from
+              proof routes. It does
               the opposite, on purpose, because a credential nobody can link defeats
               the point of publishing it. That claim appeared in four places,
               including the live documentation site.
@@ -489,7 +493,7 @@ export default function CaseStudyPage() {
             </Pull>
 
             <SubHeading>
-              Hardcoded counts that went stale the moment I used the system
+              Stale hardcoded counts, now pointed at a live source
             </SubHeading>
             <p className="text-text-muted">
               Running a structured QA cohort added 8 issuers, 8 credentials and 8
@@ -499,7 +503,7 @@ export default function CaseStudyPage() {
               something self-updating instead of a snapshot I have to remember to fix.
             </p>
 
-            <SubHeading>A funnel I built and never measured</SubHeading>
+            <SubHeading>A measurement gap the analytics surfaced</SubHeading>
             <p className="text-text-muted">
               <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-sm">
                 /start
@@ -639,10 +643,10 @@ export default function CaseStudyPage() {
             </div>
 
             <p className="text-text-muted">
-              Solo means no second reviewer, so the automated checks are the
-              deliberate substitute: static analysis across all three languages, 153
-              tests, and a weekly job whose whole purpose is to catch me being wrong
-              about the deployment.
+              A solo build still gets reviewed. Standing in for the second reviewer,
+              by design: static analysis across all three languages, 153 tests, and a
+              weekly job whose whole purpose is to catch me being wrong about the
+              deployment.
             </p>
           </section>
 

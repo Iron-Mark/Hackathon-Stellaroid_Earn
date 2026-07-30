@@ -6,7 +6,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
-[![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
+[![Soroban SDK (deployed)](https://img.shields.io/badge/Soroban_SDK_(deployed)-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
 [![Contract CI](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
