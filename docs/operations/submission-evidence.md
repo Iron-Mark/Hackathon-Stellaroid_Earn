@@ -38,7 +38,7 @@ Focus: user growth, product iteration, pitch and demo. The 50+ testnet wallet ac
 | Transaction hash for contract interaction | README `Contract Deployment Evidence` table includes the deploy transaction and sample proof links |
 | Mobile responsive UI screenshot | [`images/mobile-proof-card.png`](../../images/mobile-proof-card.png) |
 | CI/CD pipeline running screenshot/link | Frontend CI workflow: `https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/frontend-ci.yml`; Contract CI workflow: `https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml` |
-| Test output with 3+ passing tests | Contract tests: `cargo test -p stellaroid_earn --locked` runs 12 tests. Frontend unit tests: `npm run test:unit` runs the `frontend/src/lib/*.test.ts` suite. |
+| Test output with 3+ passing tests | Contract tests: `cargo test -p stellaroid_earn --locked` runs 12 tests. Frontend unit tests: `npm run test:unit` covers `frontend/src/lib/**/*.test.ts` plus `frontend/src/app/**/*.test.ts`, 99 tests. End-to-end: `npm run test:e2e` runs 42 Playwright tests. |
 | Demo video link | [`demo/stellaroid-earn-demo.mp4`](../../demo/stellaroid-earn-demo.mp4) |
 | Pitch deck link | Integrated slide deck route: `https://stellaroid.tech/slides` |
 
