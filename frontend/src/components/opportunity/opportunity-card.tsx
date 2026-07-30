@@ -29,7 +29,7 @@ export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProp
   const [busy, setBusy] = useState<string | null>(null);
 
   // Match every other write surface (pay-form, verify-form, issuer-dashboard):
-  // only enable actions when connected AND on the expected network — a
+  // only enable actions when connected AND on the expected network, a
   // wrong-network signature is rejected by the wallet with a dead-end error.
   const canConnectAct =
     wallet.status === "connected" && wallet.isExpectedNetwork;
@@ -92,7 +92,7 @@ export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProp
   }
 
   return (
-    <article className="rounded-2xl border border-border bg-surface p-6 flex flex-col gap-5">
+    <article className="min-w-0 rounded-2xl border border-border bg-surface p-6 flex flex-col gap-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <p className="text-xs uppercase tracking-[0.16em] text-text-muted">
@@ -114,13 +114,17 @@ export function OpportunityCard({ opportunity: initialOpp }: OpportunityCardProp
           <span className="text-text-muted">Amount:</span>
           <span className="font-semibold text-text">{formatXlm(opp.amount)}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
           <span className="text-text-muted">Employer:</span>
-          <code className="font-mono text-xs text-text">{opp.employer}</code>
+          <code className="w-full break-all font-mono text-xs text-text sm:w-auto">
+            {opp.employer}
+          </code>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
           <span className="text-text-muted">Candidate:</span>
-          <code className="font-mono text-xs text-text">{opp.candidate}</code>
+          <code className="w-full break-all font-mono text-xs text-text sm:w-auto">
+            {opp.candidate}
+          </code>
         </div>
       </div>
 

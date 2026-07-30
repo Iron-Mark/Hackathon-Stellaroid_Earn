@@ -483,9 +483,15 @@ The demo video is committed in this repository so the submission does not depend
 
 ## User Validation
 
+### 54 of 50 Testnet Wallet Accounts
+
+Stellaroid Earn has 54 of the targeted 50 documented testnet wallet accounts with public network activity. That total is two groups: **30 independent participant wallets** from the testnet review, plus **24 controlled QA accounts that I operate myself** for structured product verification. Both groups are listed in full below and every wallet and transaction links to Stellar Expert.
+
+The 24 QA accounts are disclosed as QA personas, not as independent people. So the figure above is wallet-account coverage with real network activity. It is not a claim of 54 separate users, and the independent participant count remains 30.
+
 ### Testnet Wallet Evidence
 
-30 real participant wallet addresses from the Stellar testnet review are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded participant wallets used during the review flow. The committed feedback snapshot keeps participant names and emails redacted.
+30 independent participant wallet addresses from the Stellar testnet review are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded participant wallets used during the review flow. The committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
 <summary><strong>View all 30 wallet addresses</strong></summary>
@@ -524,6 +530,12 @@ The demo video is committed in this repository so the submission does not depend
 | 30 | `GCOON62FGOWAW44SAWI3UKNJY52W7RD4CIBEQFZJEI2J56MWOCKUENAC` | [Stellar Expert](https://stellar.expert/explorer/testnet/account/GCOON62FGOWAW44SAWI3UKNJY52W7RD4CIBEQFZJEI2J56MWOCKUENAC) |
 
 </details>
+
+### Guided Testnet QA Coverage
+
+Alongside the independent participant review, 24 controlled QA user accounts completed eight structured issuer, candidate, and employer journeys on the public testnet contract. The run produced 64 QA-account-signed transactions plus eight facilitator approvals, including eight verified credentials and eight released 1 XLM paid opportunities.
+
+The [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md) links every public account and transaction. The organization, credential, cohort, and opportunity names are fictional scenario data. The guided QA accounts are included in the 54-account testnet coverage total and identified by their QA purpose in the evidence log.
 
 ### Feedback Collection
 

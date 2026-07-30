@@ -12,10 +12,15 @@ export function ActionStep({
   state: FlowState;
   dispatch: (e: FlowEvent) => void;
 }) {
-  const { wallet } = useFreighterWallet();
+  const { wallet, refreshWallet } = useFreighterWallet();
+  // Re-guarded here and not only at the fund step: Freighter lets the user
+  // switch networks mid-flow, and a wrong-network signature comes back as a
+  // dead-end wallet error this screen cannot explain. Matches the gate every
+  // other write surface uses (pay-form, verify-form, opportunity-card).
+  const onExpectedNetwork = wallet.status === "connected" && wallet.isExpectedNetwork;
 
   async function run() {
-    if (!wallet.address) return;
+    if (!wallet.address || !onExpectedNetwork) return;
     dispatch({ type: "SUBMIT" });
     try {
       const res =
@@ -29,9 +34,10 @@ export function ActionStep({
   }
 
   const canSubmit =
-    state.action === "tip"
+    onExpectedNetwork &&
+    (state.action === "tip"
       ? state.tipXlm > 0
-      : state.issuerName.trim().length > 1 && state.issuerCategory.trim().length > 0;
+      : state.issuerName.trim().length > 1 && state.issuerCategory.trim().length > 0);
 
   return (
     <StepShell stepIndex={4} total={5} title="Pick one thing to do on-chain">
@@ -40,7 +46,27 @@ export function ActionStep({
           {state.error}
         </p>
       )}
-      <div className="flex flex-col gap-3">
+      {!onExpectedNetwork && (
+        <div className="flex flex-col items-start gap-2">
+          <p aria-live="polite" className="text-xs text-danger">
+            Your wallet is no longer on Stellar Testnet. Switch it back, then
+            re-check.
+          </p>
+          <button
+            type="button"
+            onClick={() => void refreshWallet()}
+            className="text-xs text-text-muted underline"
+          >
+            Re-check network
+          </button>
+        </div>
+      )}
+      {/* Grouped and labelled to match the tip-amount group below. Kept as
+          aria-pressed toggle buttons rather than converted to a radiogroup:
+          role="radio" would promise arrow-key navigation and a roving
+          tabindex that these buttons do not implement, which reads worse to a
+          screen reader than a labelled set of toggles. */}
+      <div className="flex flex-col gap-3" role="group" aria-label="What to do on-chain">
         <button
           type="button"
           onClick={() => dispatch({ type: "CHOOSE_ACTION", action: "issuer" })}
