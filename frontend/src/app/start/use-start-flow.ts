@@ -19,7 +19,12 @@ export type FlowEvent =
   | { type: "CONNECTED" }
   | { type: "FUNDED" }
   | { type: "CHOOSE_ACTION"; action: FlowAction }
-  | { type: "SET_FIELD"; key: "issuerName" | "issuerCategory" | "tipXlm"; value: string | number }
+  // Split by field type so the key and value stay correlated. A single
+  // `key: ... ; value: string | number` variant type-checked
+  // SET_FIELD("tipXlm", "abc"), which would put a string where the submit gate
+  // and stroop conversion both expect a number.
+  | { type: "SET_FIELD"; key: "issuerName" | "issuerCategory"; value: string }
+  | { type: "SET_FIELD"; key: "tipXlm"; value: number }
   | { type: "SUBMIT" }
   | { type: "SUCCESS"; hash: string }
   | { type: "ERROR"; message: string }
@@ -47,7 +52,12 @@ export function startReducer(state: FlowState, event: FlowEvent): FlowState {
     case "CHOOSE_ACTION":
       return { ...state, action: event.action, error: null };
     case "SET_FIELD":
-      return { ...state, [event.key]: event.value };
+      // Branch per field rather than spreading a computed key: a computed key
+      // over a union widens the value type back to string | number and loses
+      // the correlation the event type just established.
+      return event.key === "tipXlm"
+        ? { ...state, tipXlm: event.value }
+        : { ...state, [event.key]: event.value };
     case "SUBMIT":
       return { ...state, step: "signing", error: null };
     case "SUCCESS":
@@ -58,8 +68,14 @@ export function startReducer(state: FlowState, event: FlowEvent): FlowState {
       return { ...state, error: null };
     case "RESET":
       return { ...initialFlowState };
-    default:
+    default: {
+      // Exhaustiveness guard: every FlowEvent variant is handled above, so
+      // `event` is `never` here. Add a variant without a case and this stops
+      // compiling instead of silently falling through to a no-op.
+      const unhandled: never = event;
+      void unhandled;
       return state;
+    }
   }
 }
 

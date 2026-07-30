@@ -16,7 +16,19 @@ const FEEDBACK_FORM_BASE =
 const WALLET_ENTRY_ID = "entry.654213072";
 
 export function xlmToStroops(xlm: number): bigint {
-  return BigInt(Math.round(xlm * 10_000_000));
+  if (!Number.isFinite(xlm) || xlm < 0) {
+    throw new Error("Tip amount must be a non-negative finite number.");
+  }
+  // Go through the decimal string instead of multiplying by 1e7. The float
+  // multiply is only exact while xlm * 1e7 stays inside 2^53, so it drifts
+  // silently for large amounts, and Math.round past that point is meaningless.
+  // Padding the fraction to Stellar's 7 decimal places keeps every input the
+  // chips can produce exact, and toFixed does the one rounding to the nearest
+  // stroop instead of rounding twice. Note the input is still a double, so an
+  // amount above ~9e8 XLM cannot carry 7 decimals in the first place; this
+  // fixes the conversion, not the caller's choice of number.
+  const [whole, fraction = ""] = xlm.toFixed(7).split(".");
+  return BigInt(whole) * 10_000_000n + BigInt(fraction.padEnd(7, "0"));
 }
 
 export function explorerTxUrl(hash: string): string {
