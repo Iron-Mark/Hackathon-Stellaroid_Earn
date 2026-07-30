@@ -39,6 +39,7 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 - **Canonical live URL:** [`stellaroid.tech`](https://stellaroid.tech/)
 - **Operational status route:** [`/status`](https://stellaroid.tech/status)
 - **Pilot intake route:** [`/pilot`](https://stellaroid.tech/pilot)
+- **Case study (how it was built and verified):** [`/case-study`](https://stellaroid.tech/case-study)
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 

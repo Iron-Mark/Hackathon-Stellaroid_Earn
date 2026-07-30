@@ -103,6 +103,12 @@ export default function JourneyPage() {
             >
               Try it in 60 seconds
             </Link>
+            <Link
+              href="/case-study"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-5.5 py-3 text-[0.9375rem] font-semibold text-text no-underline transition-[transform,background] duration-150 hover:-translate-y-px hover:bg-surface motion-reduce:hover:translate-y-0 focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
+            >
+              Read the case study
+            </Link>
             <a
               href={SITE_REPOSITORY_URL}
               target="_blank"
