@@ -62,7 +62,7 @@ Stellaroid Earn is an on-chain credential trust platform built on Stellar testne
 
 ### 1. Smart Contract (`contracts/stellaroid_earn/src/lib.rs`)
 
-**Language:** Rust (soroban-sdk 26.1.0)
+**Language:** Rust (soroban-sdk 27.0.2 in the manifest, resolving to 27.0.3 in `Cargo.lock`). The contract currently deployed to testnet was built against 26.1.0, which is why rebuilding `main` does not reproduce the deployed WASM hash and verification targets the `v3.0.0` tag instead. See [`docs/operations/contract-verification.md`](../operations/contract-verification.md).
 **Target:** `wasm32v1-none`
 **Storage model:**
 - **Persistent storage**  - Issuer records, certificate records, payment links (TTL: 518,400 ledgers min / 1,036,800 max)
