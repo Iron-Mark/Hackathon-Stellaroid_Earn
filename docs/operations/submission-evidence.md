@@ -21,9 +21,52 @@ Focus: user growth, product iteration, pitch and demo. The 50+ testnet wallet ac
 | Structured testnet QA coverage | [`guided-qa-cohort-2026-07.md`](guided-qa-cohort-2026-07.md) records 24 controlled QA accounts, eight role-based journeys, and 72 public transactions | Done |
 | Proof of 50+ testnet wallet accounts with real network activity | README "User Validation" and the guided QA evidence log document 54 public wallets linked to Stellar Expert evidence, split as 30 independent participant wallets plus 24 testnet accounts I created and operate for structured QA. All 54 are real, separately funded testnet accounts with public transaction history. Rise In words this requirement as "50+ testnet users onboarded"; the 54 figure counts wallet accounts with real network activity, of which 30 are independent people. | Done (54 of 50 wallet accounts; 30 independent) |
 | Screenshots of transaction activity | [`images/status-onchain-metrics.png`](../../images/status-onchain-metrics.png) captured from the live `/status#metrics` panel: 360 indexed public contract events, the live event stream, and the recent-activity feed with a Stellar Expert link per event. [`images/opportunity-directory-escrows.png`](../../images/opportunity-directory-escrows.png) captured from `/opportunity`, showing all 25 escrows on the contract including all eight guided-QA paid trials by title. | Done |
-| Screenshots of product analytics | Vercel Web Analytics is behind the project dashboard, so this one is a manual capture. Everything else in this row's requirement is covered by the transaction-activity screenshots above. | In progress |
+| Product analytics | Vercel Web Analytics, production, trailing 12 months to 2026-07-30: **342 visitors, 1,615 page views, 56% bounce rate.** Figures transcribed in "Traffic and Audience" below. Dashboard screenshots are held and pending commit. | Data recorded; screenshots pending |
 
-**50+ wallet coverage reached:** 54 of 50 testnet wallet accounts are documented with public evidence, comprising 30 independent participant wallets and 24 testnet accounts I created and operate for structured QA. Transaction-activity screenshots are attached; the Vercel Web Analytics capture is the one item still outstanding.
+**50+ wallet coverage reached:** 54 of 50 testnet wallet accounts are documented with public evidence, comprising 30 independent participant wallets and 24 testnet accounts I created and operate for structured QA. Transaction-activity screenshots are attached, and the traffic figures below are recorded.
+
+## Traffic and Audience
+
+Source: Vercel Web Analytics, Production environment, trailing 12 months as of
+2026-07-30. Traffic begins in March 2026; every prior month is zero.
+
+| Month | Visitors | Page views | Bounce rate |
+| --- | --- | --- | --- |
+| Apr 2026 | 66 | 274 | 44% |
+| May 2026 | 111 | 699 | 64% |
+| Jun 2026 | 43 | 175 | 56% |
+| Jul 2026 | 122 | 467 | 56% |
+| **Total** | **342** | **1,615** | 56% |
+
+The monthly columns sum exactly to the dashboard totals (342 and 1,615), so the
+breakdown is complete rather than a sampled window.
+
+**Reading the bounce-rate delta honestly:** the dashboard shows `+56%` in red
+against the previous period. The previous 12-month window had no traffic at all,
+so that is a from-zero baseline artifact, not a regression in engagement.
+
+| Dimension | Top values |
+| --- | --- |
+| Pages (visitors) | `/` 302 · `/app` 77 · `/proof/c02ce160…` 48 · `/proof` 42 · `/about` 40 · `/employer` 32 · `/issuer` 26 |
+| Referrers (visitors) | Facebook family 49 (l.facebook 26, m.facebook 11, facebook 7, l.messenger 5) · google.com 19 · github.com 8 · vercel.com 6 |
+| Countries | Philippines 50% · United States 35% · Singapore 2% · Indonesia 1% · Canada 1% |
+| Devices | Desktop 67% · Mobile 31% · Tablet 2% |
+| Operating systems | Windows 39% · Android 19% · GNU/Linux 15% · iOS 14% · macOS 13% |
+| Hostnames (visitors) | stellaroid.tech 248 · stellaroid-earn-demo.vercel.app 95 · preview hosts 3 |
+
+Three things worth drawing out, because they bear on the product claims rather
+than being vanity numbers:
+
+- **90 visitors reached a proof page** (`/proof/c02ce160…` 48 plus `/proof` 42).
+  The public, wallet-free credential page is the core artifact, and it is the
+  second most visited area after the landing page.
+- **31% of traffic is mobile and 33% is Android or iOS**, which is the evidence
+  base for the mobile-first redesign and the PWA work rather than a guess.
+- **19 visitors arrived from organic Google search**, so the content and
+  structured-data work is being indexed and clicked, not just published.
+
+These are page-analytics figures. They measure reach, not wallet onboarding, and
+are separate from the testnet wallet-account evidence above.
 
 ## Required Checklist
 
