@@ -22,8 +22,9 @@ const MAX_XDR_LENGTH = 32_000;
 const MAX_INNER_FEE = 1_000_000;
 
 // Abuse limits so a leaked/shared bearer token cannot script an unbounded
-// sponsor-account drain. Both are per-warm-instance guards (see rate-limit.ts);
-// override via env, and pair with an edge rate limit for a hard global cap.
+// sponsor-account drain. Both are per-warm-instance guards (see rate-limit.ts)
+// and can be overridden via env; the hard global cap is the Vercel edge
+// rate-limit rule on /api/fee-bump (30 requests per 60s per IP, POST).
 const RATE_WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = clampEnvInt(
   process.env.FEE_SPONSOR_MAX_REQUESTS_PER_MIN,

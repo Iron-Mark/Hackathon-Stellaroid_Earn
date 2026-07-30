@@ -5,8 +5,11 @@
 // Fluid Compute) it is per-warm-instance, not globally shared. This is
 // defense-in-depth that bounds abuse per instance and — paired with the shared
 // short-TTL event cache in events.ts — sharply cuts upstream RPC/indexer
-// fan-out from connection floods. For a hard global guarantee, layer an edge
-// rate limit in front (Vercel WAF / Firewall rules).
+// fan-out from connection floods. The hard global ceiling is provided by five
+// Vercel edge rate-limit rules that sit in front of the app (/api/events, which
+// also covers /api/events/stream by prefix, /api/fee-bump, /api/pilot-lead,
+// /api/mcp, and client error reporting). Those rules live in the Vercel
+// dashboard, not in this repo, so they cannot be reviewed from this source tree.
 
 export function getClientId(headers: Headers): string {
   // Prefer x-real-ip: on Vercel it is the real connection IP and is NOT

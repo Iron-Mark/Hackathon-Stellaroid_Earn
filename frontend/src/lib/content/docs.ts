@@ -1856,7 +1856,7 @@ export const docsPages: DocPage[] = [
           "No accounts, passwords, or logins: public verification of a proof page requires no wallet and no sign-in; the only identifier in on-chain records is a public wallet address alongside a SHA-256 certificate hash.",
           "No private keys are stored in code, environment variables, or version control; all NEXT_PUBLIC_* variables in the client bundle are non-sensitive public config (RPC URL, network passphrase, contract ID).",
           "Admin key separation: the admin key used for contract deployment is separate from any personal wallet.",
-          "Crawl protection: robots.ts disallows crawlers from spidering /proof/{hash} routes to prevent mass enumeration of proof pages.",
+          "Crawl protection: robots.ts disallows /proof/*/embed, /talent/*, /opportunity/*, and /api/. Proof detail pages stay crawlable on purpose, because a public credential you cannot link or share defeats the point of publishing it, and a proof URL is a 64-hex SHA-256 rather than something you can guess your way through.",
           "RPC health monitoring: the app surfaces a visible error state when the Soroban RPC endpoint is unreachable, and /api/health responses are cached for 30 seconds.",
           "TLS termination and certificate renewal are fully managed by the hosting platform (Vercel), with a 2-year HSTS policy including subdomains and preload."
         ]
