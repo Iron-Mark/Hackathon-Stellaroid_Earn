@@ -35,9 +35,13 @@ Stellar testnet, all publicly auditable.
   RPC and the Stellar Expert indexer; /app shows the events involving your
   wallet.
 - **Source-verified contract**: redeployed from committed source with
-  `source_repo`/`home_domain` metadata embedded; the deployed WASM hash is
-  reproducible from the repo (`verify-contract-source.ps1 -RequireSourceMatch`
-  passes) and the release tag carries a GitHub build attestation.
+  `source_repo`/`home_domain` metadata embedded. Rebuilding the `v3.0.0`
+  release tag reproduces the deployed WASM byte for byte
+  (`verify-contract-source.ps1 -RequireSourceMatch` exits 0), and the deployed
+  bytecode records its own build toolchain (Rust 1.95.0, soroban-sdk 26.1.0,
+  Stellar CLI 27.0.0) so a third party can check it without trusting this repo.
+  A weekly CI job re-runs the rebuild and compares it against the bytecode live
+  on testnet.
 - **Startup posture**: on-site pilot intake form (rate-limited, delivered by
   email), /contact, honest /privacy (including the on-chain-data-is-permanent
   disclosure), RFC 9116 security.txt, first-party client-error telemetry.
@@ -58,11 +62,12 @@ Stellar testnet, all publicly auditable.
 The testnet contract is fully populated, and every one of the 19 public
 functions is exercised on-chain and publicly auditable on stellar.expert:
 
-- **6 issuers** in the trust registry across bootcamp, university, guild, and
-  employer categories — one suspended, exercising the moderation path.
-- **106 credentials** spanning every status: 75 verified, 21 pending, 5
+- **14 issuers** in the trust registry across bootcamp, university, guild,
+  platform, and employer categories, one suspended, exercising the moderation
+  path.
+- **114 credentials** spanning every status: 83 verified, 21 pending, 5
   revoked, 5 suspended.
-- **17 escrowed paid trials** covering every lifecycle state — draft, funded,
+- **25 escrowed paid trials** covering every lifecycle state: draft, funded,
   in-progress, submitted, released, and refunded.
 - **Direct XLM payments and admin rewards**, closing the proof-to-payment loop.
 
@@ -75,7 +80,7 @@ stellaroid.tech/status.
    chain, every step independently auditable on stellar.expert.
 2. https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3
    — the public verified proof page.
-3. https://stellaroid.tech/opportunity — 17 escrowed paid trials across every
+3. https://stellaroid.tech/opportunity — 25 escrowed paid trials across every
    lifecycle state, filterable by wallet role.
 4. https://stellaroid.tech/status — source-labelled on-chain event evidence.
 
@@ -86,11 +91,11 @@ stellaroid.tech/status.
 | Live app | https://stellaroid.tech |
 | Guided demo (no wallet) | https://stellaroid.tech/demo |
 | Contract (source-verified) | https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV |
-| Deployed WASM hash | `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f` (reproducible from committed source) |
+| Deployed WASM hash | `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f` (byte-for-byte reproducible by rebuilding the `v3.0.0` release tag; verified weekly in CI) |
 | Escrow release tx (25 XLM paid on-chain) | https://stellar.expert/explorer/testnet/tx/8b1b1f435f6c63b2e38102ae8a2cfa3ea72064245622c07fdb1258e0c55e5c4c |
-| Populated registry | 6 issuers · 106 credentials · 17 escrows · payments + rewards — all on the contract above |
+| Populated registry | 14 issuers · 114 credentials · 25 escrows · payments + rewards, all on the contract above |
 | Repository | https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn |
-| Contract CI / Frontend CI | green on main (cargo test 12/12 · build+lint+typecheck+54 unit+34 e2e) |
+| Contract CI / Frontend CI | green on main (cargo test 12/12 · build+lint+typecheck+99 unit+42 e2e) |
 | Developer docs | https://stellaroid.tech/docs |
 | MCP server (AI-agent access, read-only) | https://stellaroid.tech/api/mcp |
 | Pitch deck | https://stellaroid.tech/slides |

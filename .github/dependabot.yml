@@ -17,15 +17,22 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
-    # Version-scoped holds. These are deliberately pinned to the exact blocked
-    # major line (not update-types: version-update:semver-major) so that a future
-    # TypeScript 8 or ESLint 11 still flows through normally once proposed.
+    # Version-scoped holds. Each names the narrowest blocked range that actually
+    # breaks, rather than update-types: version-update:semver-major.
+    # The typescript and eslint holds therefore self-expire: they name one major
+    # line ("7.x", "10.x"), so a future TypeScript 8 or ESLint 11 flows through
+    # normally once proposed. The @modelcontextprotocol/sdk hold does NOT
+    # self-expire -- ">1.26.0" matches every future release, because every future
+    # release breaks the exact peer. It must be removed by hand once mcp-handler
+    # relaxes that peer; the monthly review in MAINTENANCE.md is the checkpoint.
     # See MAINTENANCE.md -> "Held Dependency Majors" for the full rationale.
     #
     # CAVEAT: a versions: ignore also suppresses Dependabot SECURITY updates that
     # resolve to a matching version, and automated security fixes are enabled on
-    # this repo. A CVE fixed only in typescript 7.x or eslint 10.x would therefore
-    # be masked. Accepted tradeoff, recorded here rather than left silent.
+    # this repo. A CVE fixed only in typescript 7.x, eslint 10.x, or
+    # @modelcontextprotocol/sdk >1.26.0 would therefore be masked. Accepted
+    # tradeoff, recorded here rather than left silent. Note the sdk hold is the
+    # sharpest of the three: it is a runtime dependency, not a devDependency.
     ignore:
       # 2026-07-29: typescript-eslint 8.65.0 (bundled by eslint-config-next 16)
       # declares SUPPORTED_TYPESCRIPT_VERSIONS = '>=4.8.4 <6.1.0' and rejects the
@@ -40,6 +47,17 @@ updates:
       # Held at eslint ^9.39.5. Revisit when eslint-plugin-react ships an eslint 10 fix.
       - dependency-name: "eslint"
         versions: ["10.x"]
+      # 2026-07-29: mcp-handler 1.1.0 declares an EXACT peer,
+      # "@modelcontextprotocol/sdk": "1.26.0", so ANY bump above 1.26.0 fails
+      # `npm ci` with: "ERESOLVE could not resolve / While resolving:
+      # mcp-handler@1.1.0 / Found: @modelcontextprotocol/sdk@1.30.0 / peer
+      # @modelcontextprotocol/sdk@"1.26.0" from mcp-handler@1.1.0" (that is #119).
+      # 1.1.0 is the LATEST mcp-handler and still hard-pins, so there is no
+      # upgrade path at all -- this is not a "wait for the next release" hold.
+      # Held at @modelcontextprotocol/sdk 1.26.0 (exact pin in package.json).
+      # Remove this entry the moment mcp-handler relaxes the peer to a range.
+      - dependency-name: "@modelcontextprotocol/sdk"
+        versions: [">1.26.0"]
     groups:
       # One PR for the everyday minor/patch churn.
       npm-minor-patch:

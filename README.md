@@ -6,7 +6,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-stellaroid--earn-F59E0B?style=for-the-badge&logo=vercel&logoColor=white)](https://stellaroid.tech/)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-7C3AED?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV)
-[![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
+[![Soroban SDK (deployed)](https://img.shields.io/badge/Soroban_SDK_(deployed)-26.1.0-3B82F6?style=for-the-badge)](https://docs.rs/soroban-sdk/26.1.0)
 [![Contract CI](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/actions/workflows/contract-ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
@@ -18,7 +18,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 | **Live demo** | [stellaroid.tech](https://stellaroid.tech/) |
 | **Contract (current)** | [`CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV) |
 | **Tx evidence** | [init](https://stellar.expert/explorer/testnet/tx/faf278d7c2e2c92faff965ee790e7a79b7188511671f175d3ed0ee7d0bf085e6) · [register](https://stellar.expert/explorer/testnet/tx/8c20a9443af1e7ea16d65b6292829a15d614858cadc6d11bef46ab246bb4a0e8) · [verify](https://stellar.expert/explorer/testnet/tx/67137aa8b3b887443be9bc2e0806a438a5c6a23beb8834cc32493a1341c82cb9) |
-| **Source verification** | Deployed WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`, built from committed source with `source_repo` + `home_domain` metadata embedded. Attestation runbook: [`docs/operations/contract-verification.md`](docs/operations/contract-verification.md). |
+| **Source verification** | Deployed WASM hash `1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f`. Rebuilding the [`v3.0.0`](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/releases/tag/v3.0.0) release tag reproduces it byte for byte, and the deployed bytecode records its own build toolchain (`rsver` 1.95.0, `rssdkver` 26.1.0, `cliver` 27.0.0) so you can check it without trusting this README. Verified weekly by [`contract-verification.yml`](.github/workflows/contract-verification.yml). Runbook: [`docs/operations/contract-verification.md`](docs/operations/contract-verification.md). |
 | **Submission** | Rise In · Stellar Smart Contract Bootcamp · Stellar PH Bootcamp 2026 |
 | **Result** | **Top 5 / 105 participants** · Score: 75.00 · [full journey](https://stellaroid.tech/journey) |
 
@@ -39,6 +39,7 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 - **Canonical live URL:** [`stellaroid.tech`](https://stellaroid.tech/)
 - **Operational status route:** [`/status`](https://stellaroid.tech/status)
 - **Pilot intake route:** [`/pilot`](https://stellaroid.tech/pilot)
+- **Case study (how it was built and verified):** [`/case-study`](https://stellaroid.tech/case-study)
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 
@@ -483,9 +484,15 @@ The demo video is committed in this repository so the submission does not depend
 
 ## User Validation
 
+### 54 of 50 Testnet Wallet Accounts
+
+Stellaroid Earn has 54 of the targeted 50 documented testnet wallet accounts with public network activity. That total is two groups: **30 independent participant wallets** from the testnet review, plus **24 controlled QA accounts that I operate myself** for structured product verification. Both groups are listed in full below and every wallet and transaction links to Stellar Expert.
+
+The 24 QA accounts are disclosed as QA personas, not as independent people. So the figure above is wallet-account coverage with real network activity. It is not a claim of 54 separate users, and the independent participant count remains 30.
+
 ### Testnet Wallet Evidence
 
-30 real participant wallet addresses from the Stellar testnet review are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded participant wallets used during the review flow. The committed feedback snapshot keeps participant names and emails redacted.
+30 independent participant wallet addresses from the Stellar testnet review are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded participant wallets used during the review flow. The committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
 <summary><strong>View all 30 wallet addresses</strong></summary>
@@ -524,6 +531,12 @@ The demo video is committed in this repository so the submission does not depend
 | 30 | `GCOON62FGOWAW44SAWI3UKNJY52W7RD4CIBEQFZJEI2J56MWOCKUENAC` | [Stellar Expert](https://stellar.expert/explorer/testnet/account/GCOON62FGOWAW44SAWI3UKNJY52W7RD4CIBEQFZJEI2J56MWOCKUENAC) |
 
 </details>
+
+### Guided Testnet QA Coverage
+
+Alongside the independent participant review, 24 controlled QA user accounts completed eight structured issuer, candidate, and employer journeys on the public testnet contract. The run produced 64 QA-account-signed transactions plus eight facilitator approvals, including eight verified credentials and eight released 1 XLM paid opportunities.
+
+The [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md) links every public account and transaction. The organization, credential, cohort, and opportunity names are fictional scenario data. The guided QA accounts are included in the 54-account testnet coverage total and identified by their QA purpose in the evidence log.
 
 ### Feedback Collection
 

@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <!-- Pixel art document + checkmark — 16×16, 2px block grid -->
-  <!-- Document outline with folded top-right corner -->
-  <rect x="2"  y="2" width="8"  height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- top edge (no fold) -->
-  <rect x="10" y="2" width="2"  height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- fold step 1 -->
-  <rect x="12" y="4" width="2"  height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- fold step 2 -->
-  <rect x="2"  y="2" width="2"  height="12" fill="#0F172A" shape-rendering="crispEdges"/><!-- left side -->
-  <rect x="12" y="6" width="2"  height="8"  fill="#0F172A" shape-rendering="crispEdges"/><!-- right side (below fold) -->
-  <rect x="2"  y="14" width="12" height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- bottom -->
-  <!-- Checkmark inside document -->
-  <rect x="4"  y="8"  width="2" height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- left arm -->
-  <rect x="6"  y="10" width="2" height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- bend -->
-  <rect x="8"  y="8"  width="2" height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- right arm -->
-  <rect x="10" y="6"  width="2" height="2" fill="#0F172A" shape-rendering="crispEdges"/><!-- right arm top -->
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="8" height="2" x="2" y="2" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="2" x="10" y="2" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="2" x="12" y="4" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="12" x="2" y="2" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="8" x="12" y="6" fill="#0F172A" shape-rendering="crispEdges"/><rect width="12" height="2" x="2" y="14" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="2" x="4" y="8" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="2" x="6" y="10" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="2" x="8" y="8" fill="#0F172A" shape-rendering="crispEdges"/><rect width="2" height="2" x="10" y="6" fill="#0F172A" shape-rendering="crispEdges"/></svg>

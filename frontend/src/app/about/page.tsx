@@ -1211,6 +1211,12 @@ export default function About() {
               >
                 See the journey
               </Link>
+              <Link
+                href="/case-study"
+                className="inline-flex items-center gap-2 px-5.5 py-3 rounded-md font-semibold text-[0.9375rem] no-underline text-text border border-border bg-transparent hover:bg-surface hover:-translate-y-px transition-[transform,background] duration-150 motion-reduce:hover:translate-y-0"
+              >
+                Read the case study
+              </Link>
             </div>
           </div>
         </main>

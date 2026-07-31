@@ -27,7 +27,7 @@ npm run lint      # next lint
 ```
 
 ### Stellar CLI (environment setup)
-This codespace already has: Rust 1.95, `wasm32v1-none` + `wasm32-unknown-unknown` targets, Stellar CLI 26.0.0 at `~/.local/bin/stellar`, and a funded testnet key aliased `my-key`.
+This codespace already has: Rust 1.95, `wasm32v1-none` + `wasm32-unknown-unknown` targets, Stellar CLI 27.0.0 at `~/.local/bin/stellar`, and a funded testnet key aliased `my-key`.
 
 ```bash
 export PATH="$PATH:$HOME/.local/bin"   # if stellar is not on PATH
@@ -45,7 +45,7 @@ stellar contract deploy \
   --network testnet
 ```
 
-## Stellar CLI v26 gotchas
+## Stellar CLI v26+ gotchas
 
 - `--global` flag is **removed** from `stellar keys generate` — global is the default. Use `--fund` to auto-fund at creation: `stellar keys generate my-key --network testnet --fund`.
 - Prefer the **prebuilt binary** from GitHub releases over `cargo install --locked stellar-cli` in constrained environments (the from-source build pulls hundreds of crates and can OOM in small containers).
@@ -58,7 +58,7 @@ The integration follows the flow documented in `docs/reference/freighter-integra
 - **Wallet layer** (`lib/` + `hooks/`) wraps `@stellar/freighter-api` — connection state, public key, network check, sign.
 - **Contract client** (`lib/`) builds transactions with `@stellar/stellar-sdk`: read-only calls via `simulateTransaction` using the read address; writes sign via Freighter and submit via Soroban RPC. Handles ScVal arg serialization, return-value decoding, and error normalization.
 - **UI components** are marked `"use client"` because Freighter is a browser-only API.
-- **Security** (`next.config.ts`): CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and HSTS on every route. `/proof/[hash]` pages validate the hash format before any RPC call and use `revalidate=60` for CDN caching. `robots.ts` blocks crawlers from spidering dynamic proof routes.
+- **Security** (`next.config.ts`): CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and HSTS on every route. `/proof/[hash]` pages validate the hash format before any RPC call and use `revalidate=60` for CDN caching. `robots.ts` keeps `/proof/[hash]/embed`, `/talent/*`, `/opportunity/*`, and `/api/` out of search; proof detail pages stay crawlable on purpose, for portfolio sharing.
 
 When editing the frontend, treat the integration guide as the canonical spec.
 

@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <!-- Pixel art pause bars — 16×16, 2px block grid -->
-  <rect x="3"  y="2" width="4" height="12" fill="#F59E0B" shape-rendering="crispEdges"/>
-  <rect x="10" y="2" width="4" height="12" fill="#F59E0B" shape-rendering="crispEdges"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="4" height="12" x="3" y="2" fill="#F59E0B" shape-rendering="crispEdges"/><rect width="4" height="12" x="10" y="2" fill="#F59E0B" shape-rendering="crispEdges"/></svg>
