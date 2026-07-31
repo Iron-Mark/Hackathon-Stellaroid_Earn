@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { OG_GRID_BG, OgLedgerLine, OgPixelCoin } from "./og-chrome";
 
 // Shared per-page Open Graph card. Keeps the brand frame (dark field + amber /
 // violet orbs) from the root opengraph-image while swapping in a page-specific
@@ -22,7 +23,7 @@ export function renderOgImage({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0F172A",
+          ...OG_GRID_BG,
           padding: "72px 80px",
           fontFamily: "sans-serif",
           color: "#F8FAFC",
@@ -58,8 +59,7 @@ export function renderOgImage({
             display: "flex",
           }}
         />
-
-        {/* Brand row */}
+        {/* Brand row: the real pixel coin, not a stand-in glyph */}
         <div
           style={{
             display: "flex",
@@ -68,22 +68,7 @@ export function renderOgImage({
             position: "relative",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              width: "56px",
-              height: "56px",
-              borderRadius: "12px",
-              background: "#F59E0B",
-              color: "#0F172A",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "34px",
-              fontWeight: 800,
-            }}
-          >
-            S
-          </div>
+          <OgPixelCoin size={56} />
           <span style={{ fontSize: "34px", fontWeight: 700, color: "#F8FAFC" }}>
             Stellaroid Earn
           </span>
@@ -138,6 +123,8 @@ export function renderOgImage({
             On-chain credential trust on Stellar testnet
           </span>
         </div>
+
+        <OgLedgerLine bottom={24} right={80} />
       </div>
     ),
     OG_SIZE,
