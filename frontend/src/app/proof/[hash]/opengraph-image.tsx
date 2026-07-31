@@ -4,6 +4,7 @@ import {
   type CertificateRecord,
 } from "@/lib/contract-read-server";
 import { getProofSocialMetadata, proofCanMakeVerifiedClaims } from "@/lib/proof-claims";
+import { OG_GRID_BG, OgLedgerLine, OgPixelCoin } from "@/lib/og-chrome";
 
 export const alt = "Stellaroid Earn | Proof status";
 export const size = { width: 1200, height: 630 };
@@ -39,14 +40,42 @@ export default async function OpengraphImage({ params }: Props) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        background:
-          "linear-gradient(135deg, #0F172A 0%, #1E293B 55%, #312E81 100%)",
+        ...OG_GRID_BG,
         padding: "72px",
         fontFamily: "sans-serif",
         color: "#F8FAFC",
         position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Family ground: same glow pair as every other card, replacing the
+          old one-off indigo gradient so proof shares match the brand frame. */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-120px",
+          left: "-80px",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(245,158,11,0.16) 0%, rgba(245,158,11,0.05) 40%, transparent 70%)",
+          display: "flex",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-140px",
+          right: "-100px",
+          width: "460px",
+          height: "460px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(139,92,246,0.18) 0%, rgba(139,92,246,0.05) 40%, transparent 70%)",
+          display: "flex",
+        }}
+      />
       <div
         style={{
           display: "flex",
@@ -56,78 +85,11 @@ export default async function OpengraphImage({ params }: Props) {
           fontWeight: 600,
           color: "#F59E0B",
           letterSpacing: "-0.02em",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            width: "48px",
-            height: "48px",
-          }}
-        >
-          <svg
-            viewBox="0 0 64 64"
-            width="48"
-            height="48"
-            style={{ imageRendering: "pixelated" }}
-          >
-            <rect x="20" y="4" width="24" height="4" fill="#78350F" />
-            <rect x="12" y="8" width="8" height="4" fill="#78350F" />
-            <rect x="20" y="8" width="24" height="4" fill="#B45309" />
-            <rect x="44" y="8" width="8" height="4" fill="#78350F" />
-            <rect x="8" y="12" width="4" height="4" fill="#78350F" />
-            <rect x="12" y="12" width="4" height="4" fill="#B45309" />
-            <rect x="16" y="12" width="12" height="4" fill="#FBBF24" />
-            <rect x="28" y="12" width="4" height="4" fill="#FEF3C7" />
-            <rect x="32" y="12" width="16" height="4" fill="#FBBF24" />
-            <rect x="48" y="12" width="4" height="4" fill="#B45309" />
-            <rect x="52" y="12" width="4" height="4" fill="#78350F" />
-            <rect x="8" y="16" width="4" height="4" fill="#78350F" />
-            <rect x="12" y="16" width="4" height="4" fill="#B45309" />
-            <rect x="16" y="16" width="4" height="4" fill="#FBBF24" />
-            <rect x="20" y="16" width="20" height="4" fill="#78350F" />
-            <rect x="40" y="16" width="8" height="4" fill="#FBBF24" />
-            <rect x="48" y="16" width="4" height="4" fill="#B45309" />
-            <rect x="52" y="16" width="4" height="4" fill="#78350F" />
-            <rect x="4" y="20" width="4" height="8" fill="#78350F" />
-            <rect x="8" y="20" width="4" height="8" fill="#B45309" />
-            <rect x="12" y="20" width="8" height="8" fill="#FBBF24" />
-            <rect x="20" y="20" width="4" height="8" fill="#78350F" />
-            <rect x="24" y="20" width="24" height="8" fill="#FBBF24" />
-            <rect x="48" y="20" width="8" height="8" fill="#B45309" />
-            <rect x="56" y="20" width="4" height="8" fill="#78350F" />
-            <rect x="4" y="28" width="4" height="4" fill="#78350F" />
-            <rect x="8" y="28" width="4" height="4" fill="#B45309" />
-            <rect x="12" y="28" width="8" height="4" fill="#FBBF24" />
-            <rect x="20" y="28" width="20" height="4" fill="#78350F" />
-            <rect x="40" y="28" width="8" height="4" fill="#FBBF24" />
-            <rect x="48" y="28" width="8" height="4" fill="#B45309" />
-            <rect x="56" y="28" width="4" height="4" fill="#78350F" />
-            <rect x="4" y="32" width="4" height="8" fill="#78350F" />
-            <rect x="8" y="32" width="4" height="8" fill="#B45309" />
-            <rect x="12" y="32" width="24" height="8" fill="#FBBF24" />
-            <rect x="36" y="32" width="4" height="8" fill="#78350F" />
-            <rect x="40" y="32" width="8" height="8" fill="#FBBF24" />
-            <rect x="48" y="32" width="8" height="8" fill="#B45309" />
-            <rect x="56" y="32" width="4" height="8" fill="#78350F" />
-            <rect x="8" y="40" width="4" height="4" fill="#78350F" />
-            <rect x="12" y="40" width="4" height="4" fill="#B45309" />
-            <rect x="16" y="40" width="4" height="4" fill="#FBBF24" />
-            <rect x="20" y="40" width="20" height="4" fill="#78350F" />
-            <rect x="40" y="40" width="8" height="4" fill="#FBBF24" />
-            <rect x="48" y="40" width="8" height="4" fill="#B45309" />
-            <rect x="56" y="40" width="4" height="4" fill="#78350F" />
-            <rect x="8" y="44" width="4" height="4" fill="#78350F" />
-            <rect x="12" y="44" width="4" height="4" fill="#B45309" />
-            <rect x="16" y="44" width="32" height="4" fill="#FBBF24" />
-            <rect x="48" y="44" width="4" height="4" fill="#B45309" />
-            <rect x="52" y="44" width="4" height="4" fill="#78350F" />
-            <rect x="8" y="48" width="8" height="4" fill="#78350F" />
-            <rect x="16" y="48" width="32" height="4" fill="#B45309" />
-            <rect x="48" y="48" width="8" height="4" fill="#78350F" />
-            <rect x="12" y="52" width="40" height="4" fill="#78350F" />
-          </svg>
-        </div>
+        <OgPixelCoin size={48} />
         STELLAROID EARN
       </div>
 
@@ -137,6 +99,8 @@ export default async function OpengraphImage({ params }: Props) {
           flexDirection: "column",
           marginTop: "48px",
           gap: "12px",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <div
@@ -173,6 +137,8 @@ export default async function OpengraphImage({ params }: Props) {
           flexDirection: "column",
           marginTop: "auto",
           gap: "16px",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <div
@@ -231,6 +197,8 @@ export default async function OpengraphImage({ params }: Props) {
         />
         {verified ? "VERIFIED · TESTNET" : social.title.toUpperCase()}
       </div>
+
+      <OgLedgerLine bottom={24} right={72} />
     </div>,
     { ...size },
   );
