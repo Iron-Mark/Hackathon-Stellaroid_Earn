@@ -499,7 +499,10 @@ The 24 QA accounts are disclosed as QA personas, not as independent people. So t
 30 independent participant wallet addresses from the Stellar testnet review are listed for public review. Each wallet address is verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet). Some wallets have direct contract interactions such as `register_issuer`; others are funded participant wallets used during the review flow. The committed feedback snapshot keeps participant names and emails redacted.
 
 <details>
-<summary><strong>View all 30 wallet addresses</strong></summary>
+<summary><strong>View all 30 independent participant wallet addresses</strong></summary>
+
+The 24 QA account addresses that complete the 54-account total are listed separately in the [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md), so each group stays checkable on its own.
+
 
 | # | Wallet Address | Verified On-Chain |
 |---|---------------|-------------------|
