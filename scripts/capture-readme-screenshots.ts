@@ -198,16 +198,20 @@ async function main() {
     if (browser) await browser.close();
   }
 
-  // 3. Convert social card SVG → PNG
-  const svgPath = path.join(IMAGES, "github-social-card.svg");
-  const pngPath = path.join(IMAGES, "github-social-card.png");
-  if (fs.existsSync(svgPath)) {
-    console.log("\nConverting github-social-card.svg → png...");
-    await sharp(svgPath)
-      .resize(1280, 640)
-      .png({ compressionLevel: 9 })
-      .toFile(pngPath);
-  }
+  // 3. The README banner is deliberately NOT regenerated here.
+  //
+  // This step used to rasterize the social-card SVG over
+  // github-social-card.png at 1280x640. Since the v3.2.0 campaign pass the
+  // banner is different artwork, rendered from HTML with the brand tokens and
+  // the real logo.svg at 2560x1280, so running that conversion would silently
+  // replace the current banner with the older design at half the resolution.
+  //
+  // Versioning of the banner is by filename: github-social-card-v1.svg is the
+  // archived original artwork and github-social-card-v2.png is the current
+  // one. github-social-card.png is the stable pointer that README.md and the
+  // GitHub social preview both consume, so it always mirrors the newest
+  // version and never has to be re-pointed. To cut a v3, render it from the
+  // campaign kit, commit it as -v3, and copy it over github-social-card.png.
 
   // 4. Compress all PNGs
   console.log("\nCompressing images...");
