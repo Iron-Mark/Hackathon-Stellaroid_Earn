@@ -80,6 +80,8 @@ The public entry flow is organized around three personas: **Issue**, **Verify**,
 
 **Why Stellar:** Sub-cent fees and 5-second finality make issuing credentials cheap enough that skipping it makes no sense. `simulateTransaction` lets anyone verify with zero wallet setup. Native XLM via SAC closes the loop from proof to payout on one chain.
 
+![From proof to payment: register, verify, read, fund, approve, release](images/proof-to-payment-flow.png)
+
 ---
 
 ## Feature Gallery
@@ -409,6 +411,8 @@ Stellaroid Earn keeps **fee bump transaction** support ([CAP-0015](https://stell
 - **Events stream:** [`/api/events/stream`](https://stellaroid.tech/api/events/stream) - short-lived Server-Sent Events stream for live demo refreshes without adding a database
 - **MCP server:** [`/api/mcp`](https://stellaroid.tech/api/mcp) - read-only remote Model Context Protocol endpoint (Streamable HTTP, no auth) so AI agents can verify credentials, inspect issuers, and browse escrowed paid trials; built on Vercel's `mcp-handler` + the official MCP TypeScript SDK
 - **Vercel Analytics:** Page analytics plus privacy-safe custom events for proof sharing, proof-pack downloads, employer handoff, shortlist saves, and escrow-start actions
+
+![On-chain metrics panel with indexed contract events and the live activity feed](images/status-onchain-metrics.png)
 
 ### Data Indexing
 
