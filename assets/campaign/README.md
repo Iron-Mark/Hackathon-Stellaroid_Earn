@@ -54,6 +54,14 @@ follow.
 | `story-general.png` | Instagram and Facebook stories, 2160x3840. Padded so the profile chip and reply bar do not cover the call to action |
 | `stellaroid-teaser.gif` | 14 seconds at 640px, cut from `demo/stellaroid-earn-demo.mp4`. Autoplays in Discord, which makes it the strongest opener there |
 
+## Copy
+
+[`social-copy.md`](social-copy.md) holds the ready-to-post text for each
+placement: three Discord variants (general, university, developer community),
+LinkedIn with its first comment, and the Instagram and Facebook caption. Each
+one already carries the testnet qualifier and the wallet-count split, so edit
+with care.
+
 ## Posting notes
 
 - **One image per message on Discord.** Several attachments collapse into a
