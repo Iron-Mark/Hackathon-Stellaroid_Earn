@@ -74,11 +74,38 @@ with care.
 
 ## Regenerating
 
-These were rendered from HTML with Playwright at `deviceScaleFactor: 2`, the
-same approach used for the Apple splash screens. The capture scripts were
-temporary and are not committed. To produce a new set, rebuild the boards from
-the tokens above rather than editing these PNGs, and keep the testnet chip and
-the identifier line on every board.
+The source is committed in [`template/`](template/). Every board here is
+rendered from `template/boards.html` by `template/capture.mjs`, which is why
+they share one visual language: one stylesheet, one set of tokens, one copy of
+the orbit and ledger treatments.
+
+```bash
+# all boards, plus the README banner into images/
+node assets/campaign/template/capture.mjs
+
+# or a single board
+node assets/campaign/template/capture.mjs sq-employer
+```
+
+Playwright resolves out of `frontend/node_modules`, so run `npm install` there
+first. Nothing else is required; the boards pull the real `logo.svg` and
+illustrations straight from `frontend/public`, so the artwork cannot drift from
+the product.
+
+Two layout guards run before any file is written, because both of these shipped
+as visible defects once: an accent phrase in a headline wrapping onto a second
+line, and an orbit ring or the ledger line overlapping copy. If a guard trips,
+fix the template rather than the guard.
+
+**Editing:** change `template/boards.html`, never these PNGs. To add a board,
+copy the closest existing one, give it an `id`, and add that id to the `BOARDS`
+list in `capture.mjs`. Keep the testnet chip and the identifier line on
+anything new.
+
+**A note on re-running:** the committed PNGs went through a lossless
+optimization pass after they were rendered, so regenerating produces visually
+identical files with different bytes. That is expected. Only commit regenerated
+boards if the design actually changed.
 
 The same assets are also attached to the
 [v3.2.0 release](https://github.com/Iron-Mark/Hackathon-Stellaroid_Earn/releases/tag/v3.2.0)

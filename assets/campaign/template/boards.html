@@ -1,0 +1,504 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Stellaroid Earn campaign boards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;600&family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  /* Tokens mirror frontend/src/styles/globals.css. If the product palette
+     changes, change it there first and copy the values across. */
+  :root{
+    --bg:#0F172A; --surface:#1E293B; --border:#334155;
+    --text:#F8FAFC; --muted:#94A3B8; --primary:#F59E0B; --primary-hi:#FBBF24;
+    --accent:#8B5CF6; --glow:#FEF3C7;
+    --ledger: "contract CAD6C24P...ISZCV \00b7 wasm 1b7479f1...4b9f";
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:#05070d;font-family:'Exo 2',sans-serif;color:var(--text)}
+
+  /* ---- shared ground -------------------------------------------------
+     The 44px graph grid rides in the element background rather than an
+     overlay, so nothing can paint on top of the artwork. Same reason the
+     Open Graph cards put it on the root element. */
+  .ground{
+    position:relative;overflow:hidden;margin:40px auto;
+    background:
+      linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px),
+      radial-gradient(1000px 600px at 22% 26%, rgba(245,158,11,.10), transparent 60%),
+      radial-gradient(820px 560px at 86% 84%, rgba(139,92,246,.10), transparent 60%),
+      linear-gradient(180deg,#111a2e 0%,var(--bg) 55%,#0b1222 100%);
+    background-size:44px 44px,44px 44px,auto,auto,auto;
+  }
+  .board{width:1600px;height:900px;display:flex;align-items:center}
+  .sq{width:1080px;height:1080px;display:flex;flex-direction:column;padding:84px 88px}
+  /* Story padding clears the IG/FB profile chip (~250px top) and reply bar
+     (~300px bottom). Do not reduce it. */
+  .story{width:1080px;height:1920px;display:flex;flex-direction:column;padding:280px 96px 340px}
+  /* The launch set predates the ledger grid and shipped without it. Kept that
+     way so re-running this template reproduces the published boards exactly
+     rather than quietly redesigning them. */
+  .launch{width:1280px;height:640px;
+    background:
+      radial-gradient(900px 500px at 22% 30%, rgba(245,158,11,.10), transparent 60%),
+      radial-gradient(700px 480px at 85% 80%, rgba(139,92,246,.10), transparent 60%),
+      var(--bg)}
+  .banner{width:1280px;height:640px;display:flex;align-items:center}
+
+  .deco{position:absolute;z-index:0}
+  .ground>*:not(.deco){position:relative;z-index:2}
+  .ghost{image-rendering:pixelated;opacity:.05}
+  .px{position:absolute;image-rendering:pixelated;z-index:1}
+  .s4{width:5px;height:5px}.s6{width:8px;height:8px}.s8{width:12px;height:12px}
+  .amber{background:var(--primary);opacity:.5}
+  .violet{background:var(--accent);opacity:.4}
+  .pale{background:var(--glow);opacity:.25}
+
+  /* ---- type ---- */
+  .brand{display:flex;align-items:center;gap:15px}
+  .brand img{width:52px;height:52px;image-rendering:pixelated}
+  .brand span{font-family:'Orbitron',sans-serif;font-weight:800;font-size:23px;letter-spacing:.13em;white-space:nowrap}
+  .brand b{color:var(--primary)}
+  .aud{font-family:'Share Tech Mono',monospace;font-size:19px;letter-spacing:.3em;
+    color:var(--primary);text-transform:uppercase;margin-bottom:22px}
+  .aud.v{color:var(--accent)}
+  h1{font-family:'Orbitron',sans-serif;font-weight:800;line-height:1.12}
+  /* inline-block keeps the accent phrase whole: it either fits the line or
+     drops entire, never splitting mid-phrase. capture.mjs asserts this. */
+  h1 span{color:var(--primary);display:inline-block;text-shadow:0 0 46px rgba(245,158,11,.35)}
+  h1 .v{color:var(--accent);text-shadow:0 0 46px rgba(139,92,246,.4)}
+  .sub{color:var(--muted);line-height:1.5}
+  .sub b{color:var(--text);font-weight:600}
+
+  /* Corners stepped like the pixel coin, not rounded like a generic UI kit. */
+  .btn{font-family:'JetBrains Mono',monospace;font-weight:700;color:#0F172A;
+    background:var(--primary);display:inline-block;
+    clip-path:polygon(0 12px,12px 12px,12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) calc(100% - 12px),calc(100% - 12px) 100%,0 100%)}
+  .site{font-family:'JetBrains Mono',monospace;color:var(--muted)}
+  .site b{color:var(--primary-hi)}
+  .chip{display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;
+    color:var(--muted);border:1px solid var(--border);background:rgba(30,41,59,.7)}
+  .chip i{background:var(--primary);font-style:normal}
+  .chip.ok i{background:#46c08a}
+  .chip b{color:var(--text)}
+  /* Real on-chain identifiers used as texture. Every board carries this. */
+  .ledgerline{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.08em;
+    color:rgba(148,163,184,.38);white-space:nowrap}
+  .ledgerline::before{content:var(--ledger)}
+
+  /* ---- orbit system ---- */
+  .artwrap{position:relative;display:flex;align-items:center;justify-content:center}
+  .artwrap img.subject{position:relative;z-index:3;image-rendering:pixelated;
+    filter:drop-shadow(0 24px 60px rgba(0,0,0,.55))}
+  .artglow{position:absolute;z-index:0;border-radius:50%}
+  .ring{position:absolute;z-index:1;border:1px solid rgba(245,158,11,.28);border-radius:50%}
+  .ring.v{border-color:rgba(139,92,246,.25)}
+  .sat{position:absolute;z-index:2;width:10px;height:10px;background:var(--primary-hi);
+    image-rendering:pixelated;box-shadow:0 0 14px rgba(251,191,36,.8)}
+  .sat.v{background:var(--accent);box-shadow:0 0 14px rgba(139,92,246,.8)}
+
+  /* ---- per-format sizing ---- */
+  .board .copy{flex:1;padding:0 0 0 120px;max-width:900px}
+  .board .brand{margin-bottom:56px}
+  .board h1{font-size:64px;margin-bottom:30px}
+  .board .sub{font-size:27px;max-width:34ch;margin-bottom:48px}
+  .board .cta{display:inline-flex;align-items:center;gap:14px}
+  .board .btn{font-size:22px;padding:18px 34px}
+  .board .site{font-size:20px}
+  .board .art{flex:1;display:flex;align-items:center;justify-content:center}
+  .board .chip{position:absolute;left:120px;bottom:52px;font-size:16px;padding:9px 16px}
+  .board .chip i{width:9px;height:9px}
+  .board .ledgerline{position:absolute;right:120px;bottom:58px}
+
+  .sq .brand{margin-bottom:58px}
+  .sq h1{font-size:66px;margin-bottom:26px}
+  .sq .sub{font-size:27px}
+  .sq .artband{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+  .sq .foot{display:flex;flex-direction:column;gap:22px}
+  .sq .cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .sq .btn{font-size:23px;padding:18px 32px}
+  .sq .site{font-size:21px}
+  .sq .chip{align-self:flex-start;font-size:16px;padding:9px 16px}
+  .sq .chip i{width:9px;height:9px}
+  .sq .ledgerline{position:absolute;right:88px;bottom:92px}
+
+  .story .brand{margin-bottom:90px}
+  .story .brand img{width:64px;height:64px}
+  .story .brand span{font-size:27px}
+  .story h1{font-size:84px;line-height:1.1;margin-bottom:34px}
+  .story .sub{font-size:34px;max-width:26ch}
+  .story .artband{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+  .story .foot{display:flex;flex-direction:column;gap:30px}
+  .story .btn{font-size:28px;padding:24px 42px}
+  .story .site{font-size:30px}
+  .story .chip{align-self:flex-start;font-size:19px;padding:11px 18px}
+  .story .chip i{width:10px;height:10px}
+
+  /* ---- launch set ---- */
+  .launch .inner{position:absolute;inset:0;padding:64px 96px;display:flex;flex-direction:column}
+  .launch .eyebrow{font-family:'Share Tech Mono',monospace;font-size:17px;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--primary)}
+  .launch h2{font-family:'Orbitron',sans-serif;font-weight:800;font-size:44px;margin:14px 0 34px}
+  .launch h2 span{color:var(--primary)}
+  #hero .inner{justify-content:center;padding:0 96px}
+  #hero .ver{font-family:'Orbitron',sans-serif;font-weight:900;font-size:118px;line-height:.95;
+    text-shadow:0 0 60px rgba(245,158,11,.25)}
+  #hero .ver em{font-style:normal;color:var(--primary)}
+  #hero .rel{font-family:'Orbitron',sans-serif;font-weight:600;font-size:29px;letter-spacing:.2em;
+    color:var(--muted);text-transform:uppercase;margin-top:18px}
+  #hero .tag{font-size:25px;margin-top:22px}
+  #hero .chips{display:flex;gap:14px;margin-top:34px}
+  #hero .chip{font-size:15px;padding:9px 16px}
+  #hero .chip i{width:8px;height:8px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1}
+  .stat{background:rgba(30,41,59,.75);border:1px solid var(--border);border-top:3px solid var(--primary);
+    padding:26px 28px;display:flex;flex-direction:column;justify-content:center}
+  .stat.v{border-top-color:var(--accent)}
+  .stat .n{font-family:'Orbitron',sans-serif;font-weight:800;font-size:46px}
+  .stat .n small{font-size:24px;color:var(--muted);font-weight:600}
+  .stat .l{font-size:18px;color:var(--muted);margin-top:10px;line-height:1.35}
+  .stat .l b{color:var(--text)}
+  .hashrow{margin-top:26px;display:flex;align-items:center;gap:16px}
+  .hash{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--primary-hi);
+    background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.35);padding:10px 18px}
+  .hashnote{font-size:16px;color:var(--muted)}
+  .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+  .step{background:rgba(30,41,59,.75);border:1px solid var(--border);padding:22px 18px 24px;position:relative}
+  .step::before{content:'';position:absolute;top:-1px;left:-1px;width:14px;height:14px;background:var(--primary)}
+  .step:nth-child(even)::before{background:var(--accent)}
+  .step .num{font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--primary);letter-spacing:.2em}
+  .step:nth-child(even) .num{color:var(--accent)}
+  .step .t{font-family:'Orbitron',sans-serif;font-weight:600;font-size:21px;margin:12px 0 10px}
+  .step .d{font-size:15.5px;color:var(--muted);line-height:1.45}
+  .launch .foot{margin-top:44px;display:flex;justify-content:space-between;align-items:center}
+  .launch .foot .chip{font-size:15px;padding:9px 16px}
+  .launch .foot .chip i{width:8px;height:8px}
+  .launch .site{font-size:16px}
+
+  /* ---- readme banner ---- */
+  .banner .copy{flex:0 0 620px;padding-left:80px}
+  .banner .brand{margin-bottom:30px}
+  .banner .brand span{font-size:21px}
+  .banner h1{font-size:41px;line-height:1.16;margin-bottom:20px}
+  .banner .sub{font-size:19px;max-width:36ch;margin-bottom:28px}
+  .banner .chips{display:flex;gap:12px;flex-wrap:wrap}
+  .banner .chip{font-size:14px;padding:8px 14px}
+  .banner .chip i{width:8px;height:8px}
+  .banner .art{flex:1;display:flex;align-items:center;justify-content:center}
+  .banner .site{position:absolute;left:96px;bottom:30px;font-size:15px}
+  .banner .ledgerline{position:absolute;right:96px;bottom:34px;font-size:12px}
+</style>
+</head>
+<body>
+
+<!-- ============ LAUNCH SET, 1280x640 ============ -->
+
+<div class="ground launch" id="v320-hero">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="620" height="620" style="right:-170px;bottom:-200px;position:absolute" alt="">
+  <div class="px s6 amber" style="left:150px;top:120px"></div>
+  <div class="px s4 pale" style="left:340px;top:80px"></div>
+  <div class="px s4 violet" style="left:520px;top:150px"></div>
+  <div class="inner">
+    <div class="brand" style="margin-bottom:34px"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+    <div class="ver">v3.2<em>.0</em></div>
+    <div class="rel">July Monthly Builder</div>
+    <div class="tag">Proof and payment on Stellar, in one flow.</div>
+    <div class="chips">
+      <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+      <span class="chip ok"><i></i>Submitted&nbsp;<b>Rise In Level 5</b></span>
+    </div>
+  </div>
+  <div class="art" style="position:absolute;right:150px;top:120px">
+    <div class="artwrap">
+      <div class="artglow" style="width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,.16),transparent 65%)"></div>
+      <img class="subject" src="../../../frontend/public/logo.svg" width="236" height="236" alt="">
+    </div>
+  </div>
+  <div class="site" style="position:absolute;right:96px;bottom:44px"><b>stellaroid.tech</b></div>
+</div>
+
+<div class="ground launch" id="v320-receipts">
+  <div class="px s4 amber" style="left:1120px;top:90px"></div>
+  <div class="px s6 violet" style="left:1180px;top:540px"></div>
+  <div class="inner">
+    <div class="eyebrow">v3.2.0 &middot; The receipts</div>
+    <h2>Every claim is <span>checkable</span></h2>
+    <div class="grid3">
+      <div class="stat"><div class="n">Top 5<small> / 105</small></div><div class="l">Stellar PH Bootcamp participants</div></div>
+      <div class="stat v"><div class="n">19</div><div class="l">Contract functions: registry, credentials, <b>escrow</b></div></div>
+      <div class="stat"><div class="n">153</div><div class="l">Tests green: 12 contract, 99 unit, 42 end to end</div></div>
+      <div class="stat v"><div class="n">72</div><div class="l">QA transactions on-chain, all resolve on <b>Stellar Expert</b></div></div>
+      <div class="stat"><div class="n">54</div><div class="l">Wallet accounts: <b>30 independent</b> + 24 QA operated</div></div>
+      <div class="stat v"><div class="n">6</div><div class="l">MCP tools for AI agents, read-only from chain</div></div>
+    </div>
+    <div class="hashrow">
+      <span class="hash">WASM 1b7479f1...4b9f</span>
+      <span class="hashnote">rebuilds byte for byte from tag v3.0.0, re-verified weekly against live testnet</span>
+    </div>
+  </div>
+</div>
+
+<div class="ground launch" id="v320-flow">
+  <div class="px s4 violet" style="left:1150px;top:80px"></div>
+  <div class="px s6 amber" style="left:80px;top:550px"></div>
+  <div class="inner">
+    <div class="eyebrow">v3.2.0 &middot; One flow</div>
+    <h2 style="margin-bottom:12px">From proof to <span>payment</span></h2>
+    <div class="sub" style="font-size:21px;margin-bottom:42px">A graduate's credential and their pay move through the same on-chain record.</div>
+    <div class="steps">
+      <div class="step"><div class="num">01</div><div class="t">Register</div><div class="d">Approved issuer anchors the credential hash</div></div>
+      <div class="step"><div class="num">02</div><div class="t">Verify</div><div class="d">Issuer marks it verified on chain</div></div>
+      <div class="step"><div class="num">03</div><div class="t">Read</div><div class="d">Anyone opens the proof page, no wallet</div></div>
+      <div class="step"><div class="num">04</div><div class="t">Fund</div><div class="d">Employer escrows testnet XLM against it</div></div>
+      <div class="step"><div class="num">05</div><div class="t">Approve</div><div class="d">Graduate submits, employer approves</div></div>
+      <div class="step"><div class="num">06</div><div class="t">Release</div><div class="d">Contract releases the escrow</div></div>
+    </div>
+    <div class="foot">
+      <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+      <span class="site"><b>stellaroid.tech</b>/demo</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LANDSCAPE 16:9, 1600x900 ============ -->
+
+<div class="ground board" id="m-general">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="760" height="760" style="right:-190px;bottom:-230px;position:absolute" alt="">
+  <div class="px s6 amber" style="left:1180px;top:120px"></div>
+  <div class="px s4 pale" style="left:1420px;top:640px"></div>
+  <div class="copy">
+    <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+    <h1>Proof and payment on Stellar, <span>in&nbsp;one&nbsp;flow</span></h1>
+    <div class="sub">A credential an employer can check in seconds, and an escrow that pays the graduate against that same record.</div>
+    <div class="cta"><span class="btn">Try it in 60 seconds</span><span class="site"><b>stellaroid.tech</b>/start</span></div>
+  </div>
+  <div class="art">
+    <div class="artwrap">
+      <div class="artglow" style="width:480px;height:480px;background:radial-gradient(circle,rgba(245,158,11,.18),transparent 65%)"></div>
+      <div class="ring" style="width:560px;height:210px;transform:rotate(-14deg)"></div>
+      <div class="ring v" style="width:470px;height:170px;transform:rotate(18deg)"></div>
+      <div class="sat" style="left:8%;top:34%"></div>
+      <div class="sat v" style="right:5%;bottom:30%"></div>
+      <img class="subject" src="../../../frontend/public/logo.svg" width="340" height="340" alt="">
+    </div>
+  </div>
+  <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  <div class="ledgerline"></div>
+</div>
+
+<div class="ground board" id="m-employer">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="760" height="760" style="right:-190px;top:-230px;position:absolute" alt="">
+  <div class="px s6 violet" style="left:1240px;top:110px"></div>
+  <div class="copy">
+    <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+    <div class="aud">For employers</div>
+    <h1>Check a credential <span>in&nbsp;seconds</span></h1>
+    <div class="sub">Open the graduate's public proof page and read the status straight from chain. <b>No wallet, no emails, no waiting on the issuer.</b></div>
+    <div class="cta"><span class="btn">See a live proof</span><span class="site"><b>stellaroid.tech</b>/demo</span></div>
+  </div>
+  <div class="art">
+    <div class="artwrap">
+      <div class="artglow" style="width:480px;height:480px;background:radial-gradient(circle,rgba(139,92,246,.16),transparent 65%)"></div>
+      <div class="ring v" style="width:640px;height:230px;transform:rotate(12deg)"></div>
+      <div class="sat v" style="left:6%;bottom:26%"></div>
+      <img class="subject" src="../../../frontend/public/illust/illust-lookup.svg" width="540" height="360" alt="">
+    </div>
+  </div>
+  <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  <div class="ledgerline"></div>
+</div>
+
+<div class="ground board" id="m-issuer">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="760" height="760" style="right:-190px;bottom:-230px;position:absolute" alt="">
+  <div class="px s6 amber" style="left:1200px;top:130px"></div>
+  <div class="copy">
+    <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+    <div class="aud v">For bootcamps</div>
+    <h1>Certificates worth <span class="v">more&nbsp;than&nbsp;a&nbsp;PDF</span></h1>
+    <div class="sub">Anchor each graduate's credential on Stellar. Anyone you send the link to can verify it, and your issuer standing is <b>public and on-chain</b>.</div>
+    <div class="cta"><span class="btn">Start a pilot</span><span class="site"><b>stellaroid.tech</b>/pilot</span></div>
+  </div>
+  <div class="art">
+    <div class="artwrap">
+      <div class="artglow" style="width:480px;height:480px;background:radial-gradient(circle,rgba(245,158,11,.16),transparent 65%)"></div>
+      <div class="ring" style="width:600px;height:220px;transform:rotate(-10deg)"></div>
+      <div class="sat" style="right:7%;top:30%"></div>
+      <img class="subject" src="../../../frontend/public/illust/illust-register.svg" width="450" height="360" alt="">
+    </div>
+  </div>
+  <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  <div class="ledgerline"></div>
+</div>
+
+<div class="ground board" id="m-graduate">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="760" height="760" style="right:-190px;top:-230px;position:absolute" alt="">
+  <div class="px s6 violet" style="left:1260px;top:150px"></div>
+  <div class="copy">
+    <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+    <div class="aud">For graduates</div>
+    <h1>Your skills, <span>provable&nbsp;and&nbsp;payable</span></h1>
+    <div class="sub">One link proves your credential is real. Paid trials release <b>testnet XLM through an escrow</b> tied to that same record, so the work and the proof travel together.</div>
+    <div class="cta"><span class="btn">Get your proof page</span><span class="site"><b>stellaroid.tech</b></span></div>
+  </div>
+  <div class="art">
+    <div class="artwrap">
+      <div class="artglow" style="width:480px;height:480px;background:radial-gradient(circle,rgba(245,158,11,.16),transparent 65%)"></div>
+      <div class="ring" style="width:600px;height:220px;transform:rotate(14deg)"></div>
+      <div class="sat" style="left:9%;top:28%"></div>
+      <img class="subject" src="../../../frontend/public/illust/illust-pay.svg" width="450" height="360" alt="">
+    </div>
+  </div>
+  <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  <div class="ledgerline"></div>
+</div>
+
+<!-- ============ SQUARES 1:1, 1080x1080 ============ -->
+
+<div class="ground sq" id="sq-general">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="640" height="640" style="right:-170px;bottom:-190px;position:absolute" alt="">
+  <div class="px s6 amber" style="left:880px;top:130px"></div>
+  <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+  <h1>Proof and payment on Stellar, <span>in&nbsp;one&nbsp;flow</span></h1>
+  <div class="sub">A credential an employer can check in seconds, and an escrow that pays the graduate against that same record.</div>
+  <div class="artband">
+    <div class="artwrap">
+      <div class="artglow" style="width:520px;height:520px;background:radial-gradient(circle,rgba(245,158,11,.18),transparent 65%)"></div>
+      <div class="ring" style="width:600px;height:225px;transform:rotate(-12deg)"></div>
+      <div class="ring v" style="width:500px;height:185px;transform:rotate(16deg)"></div>
+      <div class="sat" style="left:7%;top:33%"></div>
+      <div class="sat v" style="right:6%;bottom:28%"></div>
+      <img class="subject" src="../../../frontend/public/logo.svg" width="330" height="330" alt="">
+    </div>
+  </div>
+  <div class="foot">
+    <div class="cta"><span class="btn">Try it in 60 seconds</span><span class="site"><b>stellaroid.tech</b>/start</span></div>
+    <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  </div>
+  <div class="ledgerline"></div>
+</div>
+
+<div class="ground sq" id="sq-employer">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="640" height="640" style="right:-170px;top:-190px;position:absolute" alt="">
+  <div class="px s6 violet" style="left:900px;top:120px"></div>
+  <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+  <div class="aud">For employers</div>
+  <h1>Check a credential <span>in&nbsp;seconds</span></h1>
+  <div class="sub">Open the graduate's public proof page and read the status straight from chain. <b>No wallet, no emails.</b></div>
+  <div class="artband">
+    <div class="artwrap">
+      <div class="artglow" style="width:520px;height:520px;background:radial-gradient(circle,rgba(139,92,246,.16),transparent 65%)"></div>
+      <div class="ring v" style="width:640px;height:235px;transform:rotate(10deg)"></div>
+      <div class="sat v" style="left:6%;bottom:27%"></div>
+      <img class="subject" src="../../../frontend/public/illust/illust-lookup.svg" width="470" height="313" alt="">
+    </div>
+  </div>
+  <div class="foot">
+    <div class="cta"><span class="btn">See a live proof</span><span class="site"><b>stellaroid.tech</b>/demo</span></div>
+    <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  </div>
+  <div class="ledgerline"></div>
+</div>
+
+<div class="ground sq" id="sq-issuer">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="640" height="640" style="right:-170px;bottom:-190px;position:absolute" alt="">
+  <div class="px s6 amber" style="left:920px;top:140px"></div>
+  <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+  <div class="aud v">For bootcamps</div>
+  <h1>Certificates worth <span class="v">more&nbsp;than&nbsp;a&nbsp;PDF</span></h1>
+  <div class="sub">Anchor each graduate's credential on Stellar. Anyone with the link can verify it, and your issuer standing is <b>public and on-chain</b>.</div>
+  <div class="artband">
+    <div class="artwrap">
+      <div class="artglow" style="width:520px;height:520px;background:radial-gradient(circle,rgba(245,158,11,.16),transparent 65%)"></div>
+      <div class="ring" style="width:580px;height:215px;transform:rotate(-11deg)"></div>
+      <div class="sat" style="right:8%;top:31%"></div>
+      <img class="subject" src="../../../frontend/public/illust/illust-register.svg" width="390" height="312" alt="">
+    </div>
+  </div>
+  <div class="foot">
+    <div class="cta"><span class="btn">Start a pilot</span><span class="site"><b>stellaroid.tech</b>/pilot</span></div>
+    <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  </div>
+  <div class="ledgerline"></div>
+</div>
+
+<div class="ground sq" id="sq-graduate">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="640" height="640" style="right:-170px;top:-190px;position:absolute" alt="">
+  <div class="px s6 violet" style="left:890px;top:150px"></div>
+  <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+  <div class="aud">For graduates</div>
+  <h1>Your skills, <span>provable&nbsp;and&nbsp;payable</span></h1>
+  <div class="sub">One link proves your credential is real. Paid trials release <b>testnet XLM through an escrow</b> tied to that same record.</div>
+  <div class="artband">
+    <div class="artwrap">
+      <div class="artglow" style="width:520px;height:520px;background:radial-gradient(circle,rgba(245,158,11,.16),transparent 65%)"></div>
+      <div class="ring" style="width:580px;height:215px;transform:rotate(13deg)"></div>
+      <div class="sat" style="left:9%;top:29%"></div>
+      <img class="subject" src="../../../frontend/public/illust/illust-pay.svg" width="390" height="312" alt="">
+    </div>
+  </div>
+  <div class="foot">
+    <div class="cta"><span class="btn">Get your proof page</span><span class="site"><b>stellaroid.tech</b></span></div>
+    <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+  </div>
+  <div class="ledgerline"></div>
+</div>
+
+<!-- ============ STORY 9:16, 1080x1920 ============ -->
+
+<div class="ground story" id="story-general">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="700" height="700" style="right:-210px;top:-160px;position:absolute" alt="">
+  <div class="px s8 amber" style="left:900px;top:460px;opacity:.4"></div>
+  <div class="px s4 pale" style="left:140px;top:1560px"></div>
+  <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+  <h1>Proof and payment on Stellar, <span>in&nbsp;one&nbsp;flow</span></h1>
+  <div class="sub">A credential an employer can check in seconds, and an escrow that pays the graduate against that same record.</div>
+  <div class="artband">
+    <div class="artwrap">
+      <div class="artglow" style="width:460px;height:460px;background:radial-gradient(circle,rgba(245,158,11,.2),transparent 65%)"></div>
+      <div class="ring" style="width:540px;height:200px;transform:rotate(-12deg)"></div>
+      <div class="ring v" style="width:450px;height:165px;transform:rotate(15deg)"></div>
+      <div class="sat" style="left:6%;top:34%"></div>
+      <div class="sat v" style="right:5%;bottom:29%"></div>
+      <img class="subject" src="../../../frontend/public/logo.svg" width="300" height="300" alt="">
+    </div>
+  </div>
+  <div class="foot">
+    <div class="cta"><span class="btn">Try it in 60 seconds</span></div>
+    <span class="site"><b>stellaroid.tech</b>/start</span>
+    <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+    <span class="ledgerline"></span>
+  </div>
+</div>
+
+<!-- ============ README BANNER, 1280x640 ============ -->
+
+<div class="ground banner" id="readme-banner">
+  <img class="deco ghost" src="../../../frontend/public/logo.svg" width="620" height="620" style="right:-160px;bottom:-190px;position:absolute" alt="">
+  <div class="px s6 amber" style="left:960px;top:96px"></div>
+  <div class="px s4 pale" style="left:1180px;top:520px"></div>
+  <div class="copy">
+    <div class="brand"><img src="../../../frontend/public/logo.svg" alt=""><span>STELLAROID <b>EARN</b></span></div>
+    <h1>Proof and payment on Stellar, <span>in&nbsp;one&nbsp;flow</span></h1>
+    <div class="sub">Anchor a credential, verify it on a public page with no wallet, and release <b>escrowed testnet XLM</b> against the same record.</div>
+    <div class="chips">
+      <span class="chip"><i></i><b>Stellar Testnet</b>&nbsp;no real funds</span>
+      <span class="chip ok"><i></i><b>Reproducible</b>&nbsp;wasm from tag v3.0.0</span>
+    </div>
+  </div>
+  <div class="art">
+    <div class="artwrap">
+      <div class="artglow" style="width:400px;height:400px;background:radial-gradient(circle,rgba(245,158,11,.18),transparent 65%)"></div>
+      <div class="ring" style="width:470px;height:175px;transform:rotate(-14deg)"></div>
+      <div class="ring v" style="width:390px;height:145px;transform:rotate(17deg)"></div>
+      <div class="sat" style="left:7%;top:33%"></div>
+      <div class="sat v" style="right:6%;bottom:28%"></div>
+      <img class="subject" src="../../../frontend/public/logo.svg" width="270" height="270" alt="">
+    </div>
+  </div>
+  <div class="site"><b>stellaroid.tech</b></div>
+  <div class="ledgerline"></div>
+</div>
+
+</body>
+</html>
