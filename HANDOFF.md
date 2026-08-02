@@ -69,7 +69,7 @@ Banner versioning is by filename:
 
 To cut a v3: render from the campaign kit, commit it as `-v3`, then copy it over `images/github-social-card.png`. Do **not** regenerate the banner from the SVG; `scripts/capture-readme-screenshots.ts` explains why.
 
-**On the v3.2.0 release** (not in the git tree, to keep clone weight down): the full campaign kit, 13 assets covering landscape boards, squares, a story format, launch boards, and a GIF teaser.
+**In `assets/campaign/`**: the full campaign kit, 13 boards covering launch, landscape, square, story, and a GIF teaser, with a README explaining each set and the posting rules. Committed so the kit is not dependent on the release page surviving. The same files are also attached to the v3.2.0 release for download without cloning.
 
 ---
 
