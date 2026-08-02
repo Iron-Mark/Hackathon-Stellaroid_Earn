@@ -41,6 +41,7 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 - **Pilot intake route:** [`/pilot`](https://stellaroid.tech/pilot)
 - **Case study (how it was built and verified):** [`/case-study`](https://stellaroid.tech/case-study)
 - **Handoff (repo state, invariants, what remains):** [`HANDOFF.md`](HANDOFF.md)
+- **Campaign and launch graphics:** [`assets/campaign/`](assets/campaign/)
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 
