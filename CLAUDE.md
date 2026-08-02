@@ -69,3 +69,7 @@ When editing the frontend, treat the integration guide as the canonical spec.
 - Don't deploy to mainnet from examples — all flows target **testnet**.
 - Don't add `Co-Authored-By: Claude` (or any Claude co-author trailer) to commits, PRs, or other `gh` actions. Commits and PRs should be authored solely by the user.
 - Don't use the deprecated `soroban contract ...` CLI in examples or docs — use `stellar contract ...` (Stellar CLI v21+).
+
+## Standing decisions
+
+Kept in one place to avoid drift: see the **Standing decisions** section of [`AGENTS.md`](AGENTS.md) for the settled calls on the 54-account split, first-person-singular voice, copy rules, seeded exhibit #1, international SEO, `/start` language scope, and MCP dependencies. [`HANDOFF.md`](HANDOFF.md) covers repository state and invariants.
