@@ -39,7 +39,7 @@ git checkout main && git pull
 gh pr create --base staging --head main --title "chore: sync staging with main"
 ```
 
-**Branches.** Exactly five exist on the remote: `main`, `staging`, and the `july` / `june` / `april` monthly builders. **`june` and `april` are read-only archives, never sync them.** Delete feature branches after merge.
+**Branches.** Six exist on the remote. `main` and `staging` are live, `july-monthly-builder` tracks them, and `june` / `april` monthly builders are **read-only archives, never sync them**. `docs-onchain-user-verification` holds planning notes that were deliberately kept off `main`; leave it alone. Delete feature branches after merge.
 
 **Testnet only.** Every deployment, transaction, and money claim in this project is Stellar testnet with no monetary value. Never remove that qualifier from copy, and never deploy to mainnet.
 
