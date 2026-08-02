@@ -29,7 +29,7 @@ npm run lint      # next lint
 ### Stellar CLI (environment setup)
 Do not assume the local shell has Rust, Cargo, Stellar CLI, or a funded key on PATH. Verify the active runtime first.
 
-Known project baseline from the original codespace was Rust 1.95, `wasm32v1-none` + `wasm32-unknown-unknown` targets, Stellar CLI 26.0.0 at `~/.local/bin/stellar`, and a funded testnet key aliased `my-key`, but local Windows checkouts may differ.
+Known project baseline from the original codespace was Rust 1.95, `wasm32v1-none` + `wasm32-unknown-unknown` targets, Stellar CLI 27.0.0 at `~/.local/bin/stellar`, and a funded testnet key aliased `my-key`, but local Windows checkouts may differ.
 
 ```bash
 export PATH="$PATH:$HOME/.local/bin"   # if stellar is not on PATH
@@ -47,7 +47,7 @@ stellar contract deploy \
   --network testnet
 ```
 
-## Stellar CLI v26 gotchas
+## Stellar CLI v26+ gotchas
 
 - `--global` flag is **removed** from `stellar keys generate` — global is the default. Use `--fund` to auto-fund at creation: `stellar keys generate my-key --network testnet --fund`.
 - Prefer the **prebuilt binary** from GitHub releases over `cargo install --locked stellar-cli` in constrained environments (the from-source build pulls hundreds of crates and can OOM in small containers).
@@ -71,3 +71,17 @@ When editing the frontend, treat the integration guide as the canonical spec.
 - Don't deploy to mainnet from examples — all flows target **testnet**.
 - Don't add `Co-Authored-By: Codex` (or any Codex co-author trailer) to commits, PRs, or other `gh` actions. Commits and PRs should be authored solely by the user.
 - Don't use the deprecated `soroban contract ...` CLI in examples or docs — use `stellar contract ...` (Stellar CLI v21+).
+
+## Standing decisions
+
+Settled calls with reasons, so they are not re-litigated. Each was decided once and costs real time to reopen.
+
+- **The 54 testnet wallet accounts are 30 independent participants plus 24 QA accounts the author operates.** State that split beside the figure every time it appears, never the bare 54. The combined count is the author's decision and is not open for debate; what is required is that the split travels with it.
+- **Write in first person singular.** This is a one-person build, so submission, pitch, and case-study copy says "I", never "we".
+- **Copy rules:** no em dashes anywhere, "graduate" rather than "student", and every money reference qualified as Stellar testnet with no monetary value.
+- **Never modify seeded demo exhibit #1.** A live demo surface reads it. Exhibit #0 is the released example; #1 must stay funded.
+- **Path-based i18n and hreflang routing were evaluated and rejected on 2026-07-20** as net-negative for a testnet demo. Do not re-propose international SEO.
+- **`/start` is intentionally English-only,** along with outreach copy pointing at it. Do not localize one without the other.
+- **Community Stellar MCP repositories are not official.** Only first-party dependencies belong in the MCP server.
+
+See [`HANDOFF.md`](HANDOFF.md) for repository state, branch invariants, and the traps that have already cost a debugging cycle.
