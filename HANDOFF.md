@@ -55,6 +55,7 @@ gh pr create --base staging --head main --title "chore: sync staging with main"
 4. **Do not let generic `HEAD /api/mcp` requests enter the MCP GET transport.** Keep the route's explicit `204` HEAD handler; otherwise platform probes can hold a function open until Vercel times it out.
 5. **Satori (the Open Graph image renderer) paints absolutely positioned pattern elements *above* later siblings.** Background patterns must go on the root element, never as an overlay div. Documented in `frontend/src/lib/og-chrome.tsx`.
 6. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, reset to the remote rather than merging.
+7. **Dependabot lockfiles require the npm version pinned in `frontend-ci.yml`.** Older npm releases can reject the bot's optional peer layout as out of sync before any project check runs. Keep the workflow's exact npm pin aligned with locally verified lockfile generation.
 
 ---
 
