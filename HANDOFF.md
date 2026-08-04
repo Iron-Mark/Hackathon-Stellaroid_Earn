@@ -54,6 +54,7 @@ gh pr create --base staging --head main --title "chore: sync staging with main"
 3. **A red weekly CI run after a quiet period is usually drift, not a regression.** The weekly contract verification runs on **`windows-latest` deliberately**: the build is host-dependent and the deploy happened on Windows. Do not "simplify" it to Ubuntu; it will fail and that failure is not a bug.
 4. **Satori (the Open Graph image renderer) paints absolutely positioned pattern elements *above* later siblings.** Background patterns must go on the root element, never as an overlay div. Documented in `frontend/src/lib/og-chrome.tsx`.
 5. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, reset to the remote rather than merging.
+6. **Dependabot lockfiles require the npm version pinned in `frontend-ci.yml`.** Older npm releases can reject the bot's optional peer layout as out of sync before any project check runs. Keep the workflow's exact npm pin aligned with locally verified lockfile generation.
 
 ---
 
