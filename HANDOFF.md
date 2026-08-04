@@ -52,9 +52,10 @@ gh pr create --base staging --head main --title "chore: sync staging with main"
 1. **`gh` silently switches to the work account.** Pushes then fail with `403`. Fix: `gh auth switch --user Iron-Mark`.
 2. **A contract release workflow publishes a tag right after any manual release and steals the "Latest" badge**, so visitors land on a build artifact instead of the product release. Fix: `gh release edit v3.2.0 --latest`.
 3. **A red weekly CI run after a quiet period is usually drift, not a regression.** The weekly contract verification runs on **`windows-latest` deliberately**: the build is host-dependent and the deploy happened on Windows. Do not "simplify" it to Ubuntu; it will fail and that failure is not a bug.
-4. **Satori (the Open Graph image renderer) paints absolutely positioned pattern elements *above* later siblings.** Background patterns must go on the root element, never as an overlay div. Documented in `frontend/src/lib/og-chrome.tsx`.
-5. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, reset to the remote rather than merging.
-6. **Dependabot lockfiles require the npm version pinned in `frontend-ci.yml`.** Older npm releases can reject the bot's optional peer layout as out of sync before any project check runs. Keep the workflow's exact npm pin aligned with locally verified lockfile generation.
+4. **Do not let generic `HEAD /api/mcp` requests enter the MCP GET transport.** Keep the route's explicit `204` HEAD handler; otherwise platform probes can hold a function open until Vercel times it out.
+5. **Satori (the Open Graph image renderer) paints absolutely positioned pattern elements *above* later siblings.** Background patterns must go on the root element, never as an overlay div. Documented in `frontend/src/lib/og-chrome.tsx`.
+6. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, reset to the remote rather than merging.
+7. **Dependabot lockfiles require the npm version pinned in `frontend-ci.yml`.** Older npm releases can reject the bot's optional peer layout as out of sync before any project check runs. Keep the workflow's exact npm pin aligned with locally verified lockfile generation.
 
 ---
 
@@ -102,7 +103,7 @@ Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit,
 Read in this order:
 
 1. `README.md` — what the product is, with the flow diagram
-2. `AGENTS.md` or `CLAUDE.md` — repository conventions and commands
+2. `AGENTS.md` — repository conventions and commands (`CLAUDE.md` is a compatibility pointer)
 3. `docs/operations/submission-evidence.md` — the reviewer-facing evidence index
 4. `docs/reference/security.md` — every security control and every alert ever triaged
 5. `docs/operations/contract-verification.md` — how to reproduce the deployed WASM yourself

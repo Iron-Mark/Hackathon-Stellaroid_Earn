@@ -31,6 +31,8 @@ organic usage. Everything stays on Stellar **testnet**.
 
 - Route: `frontend/src/app/api/[transport]/route.ts` via `createMcpHandler`
   (basePath `/api`) → endpoint **`https://stellaroid.tech/api/mcp`**.
+  An explicit `HEAD /api/mcp` handler returns `204` without entering the
+  streamable transport, keeping platform and uptime probes fast.
   Static `/api/*` routes (events, health, fee-bump, pilot-lead, client-error)
   take precedence over the dynamic segment, so nothing is shadowed.
 - Tool handlers call the **existing server read layer**
