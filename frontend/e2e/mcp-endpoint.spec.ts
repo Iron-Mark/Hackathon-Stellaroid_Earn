@@ -257,3 +257,11 @@ test("GET is answered without consuming the tool surface", async ({ request }) =
   });
   expect(response.status()).toBe(405);
 });
+
+test("HEAD probe returns without opening the MCP transport", async ({ request }) => {
+  const response = await request.head("/api/mcp");
+
+  expect(response.status()).toBe(204);
+  expect(response.headers()["allow"]).toBe("GET, POST, DELETE, HEAD");
+  expect(response.headers()["cache-control"]).toBe("no-store");
+});

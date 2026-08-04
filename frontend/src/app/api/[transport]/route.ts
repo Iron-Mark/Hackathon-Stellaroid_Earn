@@ -384,4 +384,14 @@ async function mcpEntry(request: Request): Promise<Response> {
   );
 }
 
+export function HEAD(): Response {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      Allow: "GET, POST, DELETE, HEAD",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
 export { mcpEntry as GET, mcpEntry as POST, mcpEntry as DELETE };
