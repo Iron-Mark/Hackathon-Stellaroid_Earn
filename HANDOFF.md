@@ -101,7 +101,7 @@ Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit,
 Read in this order:
 
 1. `README.md` — what the product is, with the flow diagram
-2. `AGENTS.md` or `CLAUDE.md` — repository conventions and commands
+2. `AGENTS.md` — repository conventions and commands (`CLAUDE.md` is a compatibility pointer)
 3. `docs/operations/submission-evidence.md` — the reviewer-facing evidence index
 4. `docs/reference/security.md` — every security control and every alert ever triaged
 5. `docs/operations/contract-verification.md` — how to reproduce the deployed WASM yourself
