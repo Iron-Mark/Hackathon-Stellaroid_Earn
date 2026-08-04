@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-02**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-04**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,7 +8,7 @@ State of this repository as of **2026-08-02**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-02:
+Verified against the remote on 2026-08-04:
 
 | Check | State |
 | --- | --- |
@@ -17,6 +17,7 @@ Verified against the remote on 2026-08-02:
 | Working tree | clean |
 | CodeQL open alerts | 0 |
 | Dependabot open alerts | 0 |
+| npm audit | 0 moderate/high; 23 low findings in the wallet kit's transitive `elliptic` chain |
 | Tests | 12 contract, 99 frontend unit, 42 end-to-end, all green |
 | Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200 |
 | Latest release | `v3.2.0`, 13 campaign assets attached |
@@ -49,13 +50,15 @@ gh pr create --base staging --head main --title "chore: sync staging with main"
 
 ## Traps that will recur
 
-1. **`gh` silently switches to the work account.** Pushes then fail with `403`. Fix: `gh auth switch --user Iron-Mark`.
+1. **An ambient `GH_TOKEN` can silently select the work account even after `gh auth switch`.** Before personal-repository mutations, verify `gh api user --jq .login`. In PowerShell, pin the stored personal credential for that process with `$env:GH_TOKEN = gh auth token --hostname github.com --user Iron-Mark`; never print the token.
 2. **A contract release workflow publishes a tag right after any manual release and steals the "Latest" badge**, so visitors land on a build artifact instead of the product release. Fix: `gh release edit v3.2.0 --latest`.
 3. **A red weekly CI run after a quiet period is usually drift, not a regression.** The weekly contract verification runs on **`windows-latest` deliberately**: the build is host-dependent and the deploy happened on Windows. Do not "simplify" it to Ubuntu; it will fail and that failure is not a bug.
 4. **Do not let generic `HEAD /api/mcp` requests enter the MCP GET transport.** Keep the route's explicit `204` HEAD handler; otherwise platform probes can hold a function open until Vercel times it out.
 5. **Satori (the Open Graph image renderer) paints absolutely positioned pattern elements *above* later siblings.** Background patterns must go on the root element, never as an overlay div. Documented in `frontend/src/lib/og-chrome.tsx`.
 6. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, reset to the remote rather than merging.
 7. **Dependabot lockfiles require the npm version pinned in `frontend-ci.yml`.** Older npm releases can reject the bot's optional peer layout as out of sync before any project check runs. Keep the workflow's exact npm pin aligned with locally verified lockfile generation.
+8. **A nested Trezor package has a Unix-only install command (`yarn setup || true`) that fails under Windows `cmd.exe`.** Linux CI runs the normal `npm ci` successfully. For a clean local Windows verification install, use `npm ci --ignore-scripts`, then run lint, unit tests, build, and Playwright explicitly.
+9. **Keep both `brace-expansion` override lines patched.** `minimatch@3` requires `brace-expansion` 1.1.18 or newer and `minimatch@10` requires 5.0.9 or newer. Removing either override reopens a high-severity denial-of-service advisory.
 
 ---
 
