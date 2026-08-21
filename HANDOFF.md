@@ -74,7 +74,7 @@ Banner versioning is by filename:
 
 To cut a v3: render from the campaign kit, commit it as `-v3`, then copy it over `images/github-social-card.png`. Do **not** regenerate the banner from the SVG; `scripts/capture-readme-screenshots.ts` explains why.
 
-**In `assets/campaign/`**: the full campaign kit, 13 boards covering launch, landscape, square, story, and a GIF teaser, with a README explaining each set and the posting rules. Committed so the kit is not dependent on the release page surviving. The same files are also attached to the v3.2.0 release for download without cloning.
+**In `assets/campaign/`**: the full campaign kit, 13 boards covering launch, landscape, square, story, a GIF teaser, and the 2-minute live-site promotional walkthrough (`stellaroid-promotional-demo.mp4` plus `promo-*.png` stills), with a README explaining each set and the posting rules. Committed so the kit is not dependent on the release page surviving. The same files are also attached to the v3.2.0 release for download without cloning.
 
 ---
 
