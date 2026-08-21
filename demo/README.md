@@ -15,7 +15,8 @@ This folder is the demo hub for judges, sponsors, employers, and early design pa
 | [`FAQ.md`](./FAQ.md) | Technical and business questions judges ask | reference |
 | [`PRESS_KIT.md`](./PRESS_KIT.md) | Taglines, boilerplate copy, social blurbs, hashtags | reference |
 | [`stellaroid-earn-demo.mp4`](./stellaroid-earn-demo.mp4) | Original 68-second demo cut (source of the Discord teaser GIF) | 70 sec |
-| [`../assets/campaign/stellaroid-promotional-demo.mp4`](../assets/campaign/stellaroid-promotional-demo.mp4) | 2-minute live-site promotional walkthrough (2026-08) | 2 min |
+| [`../assets/campaign/stellaroid-promotional-demo.mp4`](../assets/campaign/stellaroid-promotional-demo.mp4) | 2-minute live-site promotional walkthrough with voice-over (2026-08) | 2 min |
+| [`walkthroughs/`](./walkthroughs/) | Phase 2 and 3 QA recordings (issuer/pilot/proof/employer, register-verify-pay, start-flow) | reference |
 
 ## The 10-second pitch
 

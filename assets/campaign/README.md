@@ -53,7 +53,7 @@ follow.
 | --- | --- |
 | `story-general.png` | Instagram and Facebook stories, 2160x3840. Padded so the profile chip and reply bar do not cover the call to action |
 | `stellaroid-teaser.gif` | 14 seconds at 640px, cut from `demo/stellaroid-earn-demo.mp4`. Autoplays in Discord, which makes it the strongest opener there |
-| `stellaroid-promotional-demo.mp4` | 2-minute live-site walkthrough of stellaroid.tech: title card, landing, wallet-less `/demo` tour, verified proof, employer handoff, opportunity directory, close card. Stellar Testnet, no real funds. Recorded 2026-08. Not generated from `template/` |
+| `stellaroid-promotional-demo.mp4` | 2-minute live-site walkthrough of stellaroid.tech, with neural voice-over: title card, landing, wallet-less `/demo` tour, verified proof, employer handoff, opportunity directory, close card. Stellar Testnet, no real funds. Recorded 2026-08. Voice-over script in [`voiceover/`](voiceover/). Not generated from `template/` |
 
 ## Promotional stills (2026-08 live cut)
 
