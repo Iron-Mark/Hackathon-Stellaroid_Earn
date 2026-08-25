@@ -36,11 +36,11 @@ Lighthouse performance (mobile, simulated throttling — same methodology as Pag
 
 - Live app: https://stellaroid.tech
 - Staging app: https://beta.stellaroid.tech
-- August showcase: https://v4.stellaroid.tech (pending Vercel git-branch mapping and `v4` CNAME)
+- August showcase: https://v4.stellaroid.tech (parked side-note blocker: Vercel git-branch mapping and `v4` CNAME)
 - July showcase (archive): https://v3.stellaroid.tech
 - Status page: https://stellaroid.tech/status
 - Beta status page: https://beta.stellaroid.tech/status
-- August status page: https://v4.stellaroid.tech/status (pending the same v4 mapping)
+- August status page: https://v4.stellaroid.tech/status (parked side-note blocker, same v4 mapping)
 - July status page (archive): https://v3.stellaroid.tech/status
 - Events API: https://stellaroid.tech/api/events
 - Events stream: https://stellaroid.tech/api/events/stream

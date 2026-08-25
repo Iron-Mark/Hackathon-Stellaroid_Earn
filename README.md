@@ -56,7 +56,7 @@ Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain
 | **v3** | July | [`v3.stellaroid.tech`](https://v3.stellaroid.tech) |
 | **v4** | August (current) | [`v4.stellaroid.tech`](https://v4.stellaroid.tech) |
 
-`stellaroid.tech` always serves the latest production build (`main`). The April source lives on the `april-bootcamp-and-monthly-builder` branch; June, July, and August on `june-monthly-builder`, `july-monthly-builder`, and `august-monthly-builder`. July is a read-only archive. August is the live monthly-builder branch. The v4 showcase domain still needs the Vercel git-branch mapping and the `v4` CNAME (same target as `v3`).
+`stellaroid.tech` always serves the latest production build (`main`). The April source lives on the `april-bootcamp-and-monthly-builder` branch; June, July, and August on `june-monthly-builder`, `july-monthly-builder`, and `august-monthly-builder`. July is a read-only archive. August is the live monthly-builder branch. The v4 showcase domain is a parked side-note blocker (Vercel git-branch mapping and `v4` CNAME, same target as `v3`).
 
 ### July v3.2 product surface
 

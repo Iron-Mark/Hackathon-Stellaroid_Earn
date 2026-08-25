@@ -20,7 +20,7 @@ Verified against the remote on 2026-08-25:
 | Dependabot open alerts | 0 |
 | npm audit | 0 moderate/high; 23 low findings in the wallet kit's transitive `elliptic` chain |
 | Tests | 12 contract, 99 frontend unit, 42 end-to-end, all green |
-| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200. `v4.` pending DNS and Vercel mapping |
+| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200. `v4.` is a parked side-note blocker |
 | Latest release | `v3.2.0`, 13 campaign assets attached |
 
 The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycle is closed. Do not reopen its work items.
@@ -81,13 +81,16 @@ To cut a v3: render from the campaign kit, commit it as `-v3`, then copy it over
 
 ## What remains
 
-The product is parked. The August monthly-builder roll still has host-side steps this repository cannot perform. Everything else below is a choice, not a dependency.
+The product is parked. Host-side DNS for `v4` is a side-note blocker and does not block other work.
 
-### August monthly-builder host steps
+### Side-note blocker (add later)
 
 - [ ] Map `v4.stellaroid.tech` to `august-monthly-builder` in Vercel and add the `v4` CNAME at the DNS host (same target as `v3`).
+
+### After the August docs PR merges
+
 - [ ] Lock `july-monthly-builder` as a read-only archive, the same GitHub lock used for `june-monthly-builder`.
-- [ ] After the docs PR merges to `main`, fast-forward `august-monthly-builder` from `main`.
+- [ ] Fast-forward `august-monthly-builder` from `main`.
 
 ### Distribution, the only items with real upside
 
