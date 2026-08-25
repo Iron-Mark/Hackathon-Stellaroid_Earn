@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-04**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-25**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,18 +8,19 @@ State of this repository as of **2026-08-04**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-04:
+Verified against the remote on 2026-08-25:
 
 | Check | State |
 | --- | --- |
-| Open pull requests | none |
-| `main` vs `staging` vs `july-monthly-builder` | tree-identical |
+| Open pull requests | campaign assets (#183), Cloud Agent env (#182), and Dependabot |
+| `main` vs `august-monthly-builder` | tree-identical (august seeded from `main` on 2026-08-25) |
+| `staging` and `july-monthly-builder` | lag `main`; do not sync july, it is a read-only archive |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
 | Dependabot open alerts | 0 |
 | npm audit | 0 moderate/high; 23 low findings in the wallet kit's transitive `elliptic` chain |
 | Tests | 12 contract, 99 frontend unit, 42 end-to-end, all green |
-| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200 |
+| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200. `v4.` pending DNS and Vercel mapping |
 | Latest release | `v3.2.0`, 13 campaign assets attached |
 
 The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycle is closed. Do not reopen its work items.
@@ -28,19 +29,19 @@ The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycl
 
 ## Invariants to preserve
 
-**Branch parity.** `main`, `staging`, and `july-monthly-builder` must stay tree-identical. After any PR merges to `main`:
+**Branch parity.** `main`, `staging`, and `august-monthly-builder` must stay tree-identical. After any PR merges to `main`:
 
 ```bash
-git checkout july-monthly-builder
-git reset --hard origin/july-monthly-builder
+git checkout august-monthly-builder
+git reset --hard origin/august-monthly-builder
 git merge origin/main --no-edit
-git push origin july-monthly-builder
+git push origin august-monthly-builder
 
 git checkout main && git pull
 gh pr create --base staging --head main --title "chore: sync staging with main"
 ```
 
-**Branches.** Six exist on the remote. `main` and `staging` are live, `july-monthly-builder` tracks them, and `june` / `april` monthly builders are **read-only archives, never sync them**. `docs-onchain-user-verification` holds planning notes that were deliberately kept off `main`; leave it alone. Delete feature branches after merge.
+**Branches.** `main` and `staging` are live. `august-monthly-builder` tracks them. `july-monthly-builder`, `june-monthly-builder`, and the April archive (`april-bootcamp-and-monthly-builder`) are **read-only archives, never sync them**. Delete feature branches after merge.
 
 **Testnet only.** Every deployment, transaction, and money claim in this project is Stellar testnet with no monetary value. Never remove that qualifier from copy, and never deploy to mainnet.
 

@@ -31,6 +31,12 @@ $expected = @(
     Public = $true
   },
   @{
+    Domain = "v4.stellaroid.tech"
+    Branch = "august-monthly-builder"
+    TitleContains = "Stellaroid Earn"
+    Public = $true
+  },
+  @{
     Domain = "v3.stellaroid.tech"
     Branch = "july-monthly-builder"
     TitleContains = "Stellaroid Earn"

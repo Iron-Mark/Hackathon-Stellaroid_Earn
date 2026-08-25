@@ -8,6 +8,8 @@ const joinedPrograms = [
   "april-bootcamp",
   "april-monthly-builder",
   "june-monthly-builder",
+  "july-monthly-builder",
+  "august-monthly-builder",
 ];
 
 export function FooterProgramLink({ year }: { year: number }) {
