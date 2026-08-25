@@ -33,7 +33,7 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
   const hashInput = page.getByLabel("Certificate hash (64 hex)").first();
   await expect(studentWalletInput).toHaveValue(/^G[A-Z0-9]{55}$/);
   await expect(hashInput).toHaveValue(/^[0-9a-f]{64}$/);
-  await expect(page.getByLabel("Valid until (optional)")).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Valid until (optional)" })).toBeVisible();
   const studentWallet = (await studentWalletInput.inputValue()).trim();
   const certHash = (await hashInput.inputValue()).trim();
 
