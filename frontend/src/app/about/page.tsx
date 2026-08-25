@@ -413,8 +413,12 @@ const fnGroups = [
         desc: "Admin suspends an issuer from future issue / verify operations.",
       },
       {
+        sig: "refresh_issuer(actor, issuer)",
+        desc: "Issuer or admin bumps the record TTL and stores a refresh date. Hidden in the app until the live WASM returns registered_at.",
+      },
+      {
         sig: "register_certificate(issuer, student, cert_hash, title, cohort, metadata_uri)",
-        desc: "Binds hash plus minimal proof metadata to a student wallet; rejects duplicates; emits cert_reg.",
+        desc: "Binds hash plus minimal proof metadata to a graduate wallet; rejects duplicates; emits cert_reg.",
       },
       {
         sig: "verify_certificate(verifier, cert_hash)",
@@ -427,6 +431,14 @@ const fnGroups = [
       {
         sig: "suspend_certificate(actor, cert_hash)",
         desc: "Temporarily suspends a credential without deleting its audit trail.",
+      },
+      {
+        sig: "set_credential_expiry(actor, cert_hash, expires_at)",
+        desc: "Set or clear a validity window. Zero means no expiry. Optional after register_certificate so the live v3.0.0 ABI stays compatible.",
+      },
+      {
+        sig: "renew_certificate(actor, cert_hash, expires_at)",
+        desc: "Extend the window and restore Issued or Verified after expiry. Revoked and suspended records stay blocked.",
       },
       {
         sig: "reward_student(student, cert_hash, amount)",

@@ -180,10 +180,20 @@ function detailForKind(
       return "Issuer approved";
     case "iss_susp":
       return "Issuer suspended";
+    case "iss_rfr":
+      return "Issuer refresh date updated";
     case "cert_reg":
       return hashHex ? `Proof ${hashHex.slice(0, 10)}… registered` : "Certificate registered";
     case "cert_ver":
       return hashHex ? `Proof ${hashHex.slice(0, 10)}… verified` : "Certificate verified";
+    case "cert_exp":
+      return hashHex
+        ? `Proof ${hashHex.slice(0, 10)}… validity window updated`
+        : "Credential validity window updated";
+    case "cert_ren":
+      return hashHex
+        ? `Proof ${hashHex.slice(0, 10)}… renewed`
+        : "Credential renewed";
     case "reward":
       return amountEventDetail(payload, "reward");
     case "payment":
@@ -236,8 +246,11 @@ function buildRecentActivityItem({
     iss_reg: "Issuer",
     iss_appr: "Approved",
     iss_susp: "Suspended",
+    iss_rfr: "Refreshed",
     cert_reg: "Registered",
     cert_ver: "Verified",
+    cert_exp: "Expiry",
+    cert_ren: "Renewed",
     reward: "Reward",
     payment: "Payment",
     opp_crt: "Escrow",

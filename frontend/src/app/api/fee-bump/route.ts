@@ -62,6 +62,9 @@ const ALLOWED_METHODS = new Set([
   "approve_milestone",
   "release_payment",
   "refund_opportunity",
+  "refresh_issuer",
+  "set_credential_expiry",
+  "renew_certificate",
 ]);
 
 function validateInnerTransaction(innerTx: Transaction, sponsorPublicKey: string) {

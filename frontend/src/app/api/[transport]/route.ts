@@ -141,7 +141,7 @@ const handler = createMcpHandler(
 
     server.tool(
       "get_issuer",
-      "Look up an issuer in the Stellaroid Earn on-chain trust registry by Stellar address. Returns approval status (pending/approved/suspended), name, category, and website.",
+      "Look up an issuer in the Stellaroid Earn on-chain trust registry by Stellar address. Returns approval status (pending/approved/suspended), name, category, website, and register/refresh dates when the contract supplies them.",
       {
         address: z
           .string()
@@ -170,6 +170,8 @@ const handler = createMcpHandler(
           category: sanitize(issuer.category),
           status: issuer.status,
           trusted: issuer.status === "approved",
+          registeredAt: issuer.registeredAt || null,
+          refreshedAt: issuer.refreshedAt || null,
           explorerUrl: explorerContractUrl(),
         });
       }),
