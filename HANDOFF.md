@@ -41,7 +41,7 @@ git checkout main && git pull
 gh pr create --base staging --head main --title "chore: sync staging with main"
 ```
 
-**Branches.** `main` and `staging` are live. `august-monthly-builder` tracks them. `july-monthly-builder`, `june-monthly-builder`, and the April archive (`april-bootcamp-and-monthly-builder`) are **read-only archives, never sync them**. Delete feature branches after merge.
+**Branches.** `main` and `staging` are live. `august-monthly-builder` tracks them. `july-monthly-builder`, `june-monthly-builder`, and the April archive (`april-bootcamp-and-monthly-builder`) are **read-only archives, never sync them**. `docs-onchain-user-verification` holds planning notes that were deliberately kept off `main`; leave it alone. Delete feature branches after merge.
 
 **Testnet only.** Every deployment, transaction, and money claim in this project is Stellar testnet with no monetary value. Never remove that qualifier from copy, and never deploy to mainnet.
 
@@ -81,7 +81,13 @@ To cut a v3: render from the campaign kit, commit it as `-v3`, then copy it over
 
 ## What remains
 
-Nothing is blocked and nothing is half-finished. Everything below is a choice, not a dependency.
+The product is parked. The August monthly-builder roll still has host-side steps this repository cannot perform. Everything else below is a choice, not a dependency.
+
+### August monthly-builder host steps
+
+- [ ] Map `v4.stellaroid.tech` to `august-monthly-builder` in Vercel and add the `v4` CNAME at the DNS host (same target as `v3`).
+- [ ] Lock `july-monthly-builder` as a read-only archive, the same GitHub lock used for `june-monthly-builder`.
+- [ ] After the docs PR merges to `main`, fast-forward `august-monthly-builder` from `main`.
 
 ### Distribution, the only items with real upside
 
