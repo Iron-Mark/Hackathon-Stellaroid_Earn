@@ -52,16 +52,20 @@ jobs:
           toolchain: stable
           targets: wasm32v1-none
 
+      # Registry and git only. Caching `target/` made one Linux key ~740 MB and
+      # GitHub stores a copy per ref, which is how Contract CI reached multiple
+      # gigabytes. The weekly Windows verifier already caches crates this way
+      # (~21 MB). Rebuilding this small WASM is cheaper than storing `target/`.
+      # New key prefix so runners do not restore the bloated `contract-cargo-*` entries.
       - name: Cache Cargo
         uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            target
-          key: contract-cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'contracts/stellaroid_earn/Cargo.toml') }}
+          key: contract-crates-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'contracts/stellaroid_earn/Cargo.toml') }}
           restore-keys: |
-            contract-cargo-${{ runner.os }}-
+            contract-crates-${{ runner.os }}-
 
       - name: Run contract tests
         run: cargo test -p stellaroid_earn --locked

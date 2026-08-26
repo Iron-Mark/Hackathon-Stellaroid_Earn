@@ -5,10 +5,22 @@ on:
     branches:
       - main
       - staging
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - "images/**"
+      - "assets/**"
+      - "demo/**"
   pull_request:
     branches:
       - main
       - staging
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - "images/**"
+      - "assets/**"
+      - "demo/**"
   schedule:
     # Weekly re-scan so newly published queries reach the default branch even
     # when the code itself has not changed.
