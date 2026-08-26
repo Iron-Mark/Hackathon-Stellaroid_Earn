@@ -12,7 +12,10 @@ export type ProductAnalyticsEvent =
   | "employer_handoff_loaded"
   | "employer_candidate_saved"
   | "employer_escrow_create_started"
-  | "employer_escrow_fund_started";
+  | "employer_escrow_fund_started"
+  | "issuer_batch_previewed"
+  | "issuer_batch_sign_started"
+  | "issuer_batch_sign_finished";
 
 export type ProductAnalyticsProperties = Record<string, AnalyticsValue>;
 

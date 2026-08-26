@@ -437,6 +437,9 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         >
           Register Certificate
         </Button>
+        <Button type="button" variant="ghost" href="/issuer/batch">
+          Issue a cohort from CSV
+        </Button>
       </div>
     </form>
   );
