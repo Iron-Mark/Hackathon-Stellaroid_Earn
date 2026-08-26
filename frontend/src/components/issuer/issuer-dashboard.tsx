@@ -418,8 +418,8 @@ export function IssuerDashboard() {
                 </Button>
               )}
               {canIssue ? (
-                <Button variant="secondary" className="w-full whitespace-normal text-center" href="/app">
-                  Open app flow
+                <Button variant="secondary" className="w-full whitespace-normal text-center" href="/issuer/batch">
+                  Batch issue from CSV
                 </Button>
               ) : (
                 <Button variant="ghost" className="w-full whitespace-normal text-center" disabled>

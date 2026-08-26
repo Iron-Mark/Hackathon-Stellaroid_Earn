@@ -52,7 +52,7 @@ Open http://localhost:3000 with [Freighter](https://www.freighter.app/) installe
 
 ## Pro-Research Backlog (2026-06-11)
 
-- [ ] Batch issuance: CSV preview, validation, duplicate/hash checks, and signing queue
+- [x] Batch issuance: CSV preview, validation, duplicate/hash checks, and signing queue (`/issuer/batch`). Each ready row still calls live `register_certificate`; no new contract deploy.
 - [x] Expiration/renewal workflow: issuer refresh dates, optional validity window after `register_certificate`, proof-page overlay for elapsed `expires_at`, and renew/set writes. Live `v3.0.0` WASM still omits the new methods until a new contract ID is deployed. Reminder emails / reissue UX remain later work.
 - [ ] Admin trust model: org admin, reviewer, viewer, support roles, and audit logs
 - [ ] Branded proof pages: issuer logo, policy links, custom OG variants, optional issuer domain mapping
