@@ -3,11 +3,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { DEMO_AUTOFILL_EVENT, DemoAutofillDetail } from "@/components/demo/demo-autofill-button";
 import { Button, Input, useToast } from "@/components/ui";
-import { humanizeError } from "@/lib/errors";
+import { humanizeError, isMissingContractMethod } from "@/lib/errors";
 import { bytesToHex } from "@/lib/hex";
 import { withTimeout } from "@/lib/with-timeout";
-import { registerCertificate } from "@/lib/contract-client";
+import { registerCertificate, setCredentialExpiry } from "@/lib/contract-client";
 import { appConfig, hasRequiredConfig } from "@/lib/config";
+import { dateInputToUnixSeconds } from "@/lib/format";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
 
 export interface RegisterFormProps {
@@ -74,6 +75,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
   const [credentialTitle, setCredentialTitle] = useState("");
   const [cohort, setCohort] = useState("");
   const [metadataUri, setMetadataUri] = useState("");
+  const [expiresDate, setExpiresDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -184,6 +186,17 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
     if (!canSubmit || !wallet.address) return;
 
+    const expiresAt = dateInputToUnixSeconds(expiresDate);
+    if (expiresDate.trim() && expiresAt <= Math.floor(Date.now() / 1000)) {
+      toast({
+        title: "Invalid expiry",
+        detail: "Pick a future validity date, or leave the field empty for no expiry.",
+        tone: "warning",
+      });
+      setAdvancedOpen(true);
+      return;
+    }
+
     setSubmitting(true);
     try {
       const result = await withTimeout(
@@ -206,6 +219,38 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
             }
           : undefined,
       });
+
+      if (expiresAt > 0) {
+        try {
+          const expiryResult = await withTimeout(
+            setCredentialExpiry(wallet.address, certHash.trim(), expiresAt),
+            15000,
+            "set_credential_expiry",
+          );
+          toast({
+            title: "Validity window saved",
+            detail: "This credential now has an on-chain expiry date.",
+            tone: "success",
+            action: expiryResult?.hash
+              ? {
+                  label: "View on stellar.expert \u2197",
+                  href: `${appConfig.explorerUrl}/tx/${expiryResult.hash}`,
+                }
+              : undefined,
+          });
+        } catch (expiryErr) {
+          toast({
+            title: isMissingContractMethod(expiryErr)
+              ? "Registered without a validity window"
+              : "Expiry was not saved",
+            detail: isMissingContractMethod(expiryErr)
+              ? "The credential is on-chain. The live contract does not expose set_credential_expiry yet."
+              : humanizeError(expiryErr).detail,
+            tone: "warning",
+          });
+        }
+      }
+
       onSuccess?.(certHash.trim(), studentAddr.trim(), txHash, credentialTitle.trim());
     } catch (e) {
       const h = humanizeError(e);
@@ -409,6 +454,15 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                   placeholder="https://example.com/proofs/maria.json"
                   autoComplete="off"
                   spellCheck={false}
+                  className="bg-black/20 border-white/8 shadow-[inset_0_2px_6px_rgba(0,0,0,0.3)]"
+                />
+                <Input
+                  type="date"
+                  label="Valid until (optional)"
+                  value={expiresDate}
+                  onChange={(e) => setExpiresDate(e.target.value)}
+                  tooltip="UTC calendar date stored after register_certificate via set_credential_expiry. Leave empty for no expiry."
+                  helper="Leave blank for no expiry. If the live contract does not support this write yet, registration still succeeds."
                   className="bg-black/20 border-white/8 shadow-[inset_0_2px_6px_rgba(0,0,0,0.3)]"
                 />
                 <div className="rounded-lg border border-border bg-surface-2/70 px-3 py-2 text-[12px] leading-relaxed text-text-muted">

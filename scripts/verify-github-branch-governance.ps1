@@ -9,9 +9,9 @@ Set-StrictMode -Version Latest
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $protectedIntegrationBranches = @("main", "staging")
 $syncedBranches = @("main", "staging")
-$activeMonthlyBuilderBranches = @("july-monthly-builder")
-$lockedArchiveBranches = @("april-bootcamp", "april-monthly-builder", "june-monthly-builder")
-$monthlyBuilderBranches = @($activeMonthlyBuilderBranches + @("june-monthly-builder", "april-monthly-builder"))
+$activeMonthlyBuilderBranches = @("august-monthly-builder")
+$lockedArchiveBranches = @("april-bootcamp", "april-monthly-builder", "june-monthly-builder", "july-monthly-builder")
+$monthlyBuilderBranches = @($activeMonthlyBuilderBranches + @("july-monthly-builder", "june-monthly-builder", "april-monthly-builder"))
 $legacyBranchesExpectedAbsent = @("dev", "dev-archive-before-staging", "old-ver", "mark-siazon")
 $monthlyPattern = "refs/heads/*-monthly-builder"
 $failures = New-Object System.Collections.Generic.List[string]
@@ -264,7 +264,7 @@ if ($syncedBranches | Where-Object { -not $branchShas.ContainsKey($_) }) {
     if ($LASTEXITCODE -ne 0) {
       Add-Failure "$branch does not contain main@$mainSha"
     } else {
-      Add-Pass "$branch contains main@$mainSha and may be ahead for active July work"
+      Add-Pass "$branch contains main@$mainSha and may be ahead for active August work"
     }
   }
 }

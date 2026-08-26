@@ -38,6 +38,10 @@ export type IssuerRecord = {
   website: string;
   category: string;
   status: IssuerStatus;
+  /** Unix seconds. 0 when the live v3.0.0 ABI omits the field. */
+  registeredAt: number;
+  /** Unix seconds. 0 when the live v3.0.0 ABI omits the field. */
+  refreshedAt: number;
 };
 
 export type ProofEvidenceLink = {

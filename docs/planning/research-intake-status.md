@@ -32,7 +32,7 @@ Do not expand into marketplace, NFT, broad AI, or mainnet payment scope before i
 | Avoid marketplace, NFT, premature mainnet scope | Implemented | Roadmap keeps NFT/mainnet/marketplace out of active scope until pilot evidence exists. |
 | Batch credential issuance | Implemented | `/issuer/batch` previews CSV rows, validates graduate wallets and SHA-256 hashes, blocks in-file duplicates, checks `get_certificate`, and signs a one-tx-per-row `register_certificate` queue against live v3.0.0. |
 | Revocation and suspension UX | Implemented, needs richer reason taxonomy later | Contract supports revoke/suspend, dashboard action buttons exist, and proof pages render revoked/suspended status banners. Reason taxonomy remains backlog. |
-| Expiration and renewal flow | Accepted backlog | Contract has `expires_at` and UI status handling. Actual issuer renewal workflow remains future work because current issuance sets `expires_at = 0`. |
+| Expiration and renewal flow | Partial | Contract source now stores issuer `registered_at` / `refreshed_at`, `set_credential_expiry`, and `renew_certificate`. The issuer UI can set a validity date after `register_certificate` and refresh issuer dates when the WASM returns them. Live tag `v3.0.0` still issues `expires_at = 0` and has no refresh method until a new deploy. Reminder state and reissue UX remain backlog. |
 | Employer export pack | Implemented | `/proof/[hash]/export` returns a recruiter-safe JSON proof pack with status, issuer, timestamps, metadata, proof URL, explorer links, verification breakdown checks, issuer-trust evidence, and an unsigned standards-alignment preview. |
 | Issuer pilot and employer integration request flows | Implemented | `/pilot` provides issuer pilot and employer integration paths with explicit testnet boundary. |
 | Role-based admin model | Accepted backlog | Future org admin, reviewer, viewer, and support roles are documented here and in roadmap; not implemented in testnet MVP. |
@@ -52,7 +52,7 @@ Do not expand into marketplace, NFT, broad AI, or mainnet payment scope before i
 
 These are accepted product backlog items, not open pro-research intake tasks:
 
-- Expiration and renewal: issuer-defined validity windows, renewal reminder state, reissue workflow, and proof-page copy for expired/renewed credentials.
+- Expiration and renewal: reminder state, reissue workflow, and proof-page copy polish after a new contract ID is deployed. Issuer-defined validity windows and issuer refresh dates are in source.
 - Admin and trust: org admin, reviewer, viewer, support roles, reviewer evidence, issuer domain verification, and audit-log surfaces.
 - Analytics: durable proof history, verification requests, issuer conversion to pilot, funnel reporting, and audit-grade action history beyond Vercel page/custom events.
 - Branded proof pages: issuer logos, policy links, custom OG variants, optional issuer domain mapping.

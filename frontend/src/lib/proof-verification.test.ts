@@ -15,6 +15,8 @@ const issuer: IssuerRecord = {
   website: "https://stellaroid.tech/issuer/stellar-ph",
   category: "Bootcamp",
   status: "approved",
+  registeredAt: 0,
+  refreshedAt: 0,
 };
 
 test("proof verification breakdown marks verified approved issuers as employer-ready", () => {

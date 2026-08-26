@@ -2,19 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import { DEMO_AUTOFILL_EVENT, DemoAutofillDetail } from "@/components/demo/demo-autofill-button";
-import { Button, Badge, Skeleton, useToast } from "@/components/ui";
+import { Button, Badge, Skeleton, Input, useToast } from "@/components/ui";
 import { HashInput } from "@/components/actions/hash-input";
-import { humanizeError } from "@/lib/errors";
+import { humanizeError, isMissingContractMethod } from "@/lib/errors";
 import { withTimeout } from "@/lib/with-timeout";
 import {
   getCertificate,
   verifyCertificate,
   revokeCertificate,
   suspendCertificate,
+  setCredentialExpiry,
+  renewCertificate,
   CertificateRecord,
 } from "@/lib/contract-client";
 import { appConfig, hasRequiredConfig } from "@/lib/config";
-import { shortenAddress } from "@/lib/format";
+import { dateInputToUnixSeconds, formatUnixDate, shortenAddress } from "@/lib/format";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
 import type { CertificateStatus } from "@/lib/types";
 
@@ -74,6 +76,11 @@ function statusTone(status: CertificateStatus): "success" | "accent" | "warning"
 }
 
 type LifecycleAction = "verify" | "suspend" | "revoke";
+type PendingAction = LifecycleAction | "expiry" | "renew";
+
+function onChainStatus(record: CertificateRecord): CertificateStatus {
+  return record.rawStatus ?? record.status;
+}
 
 function actionTitle(action: LifecycleAction) {
   switch (action) {
@@ -120,9 +127,10 @@ export function VerifyForm({
 
   const [certHash, setCertHash] = useState(initialHash ?? "");
   const [hashTouched, setHashTouched] = useState(false);
-  const [pendingAction, setPendingAction] = useState<LifecycleAction | null>(null);
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const [lookup, setLookup] = useState<LookupState>({ status: "idle" });
   const [hashEditing, setHashEditing] = useState(!initialHash);
+  const [expiresDate, setExpiresDate] = useState("");
 
   const normalizedHash = certHash.trim().replace(/^0x/i, "").toLowerCase();
   const configured = hasRequiredConfig();
@@ -199,29 +207,36 @@ export function VerifyForm({
 
   const canLookup = configured && hashOk && currentLookup.status !== "loading";
   const mutating = pendingAction !== null;
+  const foundRecord =
+    currentLookup.status === "found" ? currentLookup.record : null;
+  const foundOnChain = foundRecord ? onChainStatus(foundRecord) : null;
   const canVerify =
     allowTrustedActions &&
     configured &&
     walletConnected &&
     !mutating &&
-    currentLookup.status === "found" &&
-    currentLookup.record.status === "issued";
+    foundRecord?.status === "issued";
   const canSuspend =
     allowTrustedActions &&
     configured &&
     walletConnected &&
     !mutating &&
-    currentLookup.status === "found" &&
-    (currentLookup.record.status === "issued" ||
-      currentLookup.record.status === "verified");
+    (foundOnChain === "issued" || foundOnChain === "verified");
   const canRevoke =
     allowTrustedActions &&
     configured &&
     walletConnected &&
     !mutating &&
-    currentLookup.status === "found" &&
-    currentLookup.record.status !== "revoked" &&
-    currentLookup.record.status !== "expired";
+    foundOnChain !== null &&
+    foundOnChain !== "revoked";
+  const canWriteExpiry =
+    allowTrustedActions &&
+    configured &&
+    walletConnected &&
+    !mutating &&
+    foundOnChain !== null &&
+    foundOnChain !== "revoked" &&
+    foundOnChain !== "suspended";
 
   async function resolveLookup(noisy: boolean) {
     if (!configured || !hashOk) return null;
@@ -287,24 +302,21 @@ export function VerifyForm({
 
     if (
       action === "suspend" &&
-      record.status !== "issued" &&
-      record.status !== "verified"
+      onChainStatus(record) !== "issued" &&
+      onChainStatus(record) !== "verified"
     ) {
       toast({
         title: "Status blocks suspension",
-        detail: `This credential is ${statusLabel(record.status).toLowerCase()}, so it cannot be suspended right now.`,
+        detail: `This credential is ${statusLabel(onChainStatus(record)).toLowerCase()}, so it cannot be suspended right now.`,
         tone: "warning",
       });
       return;
     }
 
-    if (
-      action === "revoke" &&
-      (record.status === "revoked" || record.status === "expired")
-    ) {
+    if (action === "revoke" && onChainStatus(record) === "revoked") {
       toast({
         title: "Status blocks revocation",
-        detail: `This credential is ${statusLabel(record.status).toLowerCase()}, so revocation is not available right now.`,
+        detail: `This credential is ${statusLabel(onChainStatus(record)).toLowerCase()}, so revocation is not available right now.`,
         tone: "warning",
       });
       return;
@@ -375,6 +387,63 @@ export function VerifyForm({
     }
   }
 
+  async function handleValidityWrite(action: "expiry" | "renew") {
+    if (!wallet.address || !walletConnected || !foundRecord) return;
+    const expiresAt = dateInputToUnixSeconds(expiresDate);
+    if (expiresAt <= Math.floor(Date.now() / 1000)) {
+      toast({
+        title: "Invalid expiry",
+        detail: "Pick a future validity date before saving or renewing.",
+        tone: "warning",
+      });
+      return;
+    }
+
+    setPendingAction(action);
+    try {
+      const result = await withTimeout(
+        action === "renew"
+          ? renewCertificate(wallet.address, normalizedHash, expiresAt)
+          : setCredentialExpiry(wallet.address, normalizedHash, expiresAt),
+        15000,
+        action === "renew" ? "renew_certificate" : "set_credential_expiry",
+      );
+      const refreshed = await getCertificate(normalizedHash);
+      if (refreshed) {
+        setLookup({ status: "found", hash: normalizedHash, record: refreshed });
+        onStatusChange?.(normalizedHash, refreshed.status, result?.hash, refreshed);
+      }
+      toast({
+        title: action === "renew" ? "Credential renewed" : "Validity window saved",
+        detail:
+          action === "renew"
+            ? "The credential is active again with a new expiry date."
+            : "This credential now has an on-chain expiry date.",
+        tone: "success",
+        action: result?.hash
+          ? {
+              label: "View on stellar.expert \u2197",
+              href: `${appConfig.explorerUrl}/tx/${result.hash}`,
+            }
+          : undefined,
+      });
+    } catch (e) {
+      if (isMissingContractMethod(e)) {
+        toast({
+          title: "Validity write not available yet",
+          detail:
+            "The live contract does not expose this method. The credential record is unchanged.",
+          tone: "warning",
+        });
+      } else {
+        const h = humanizeError(e);
+        toast({ title: h.title, detail: h.detail, tone: "danger" });
+      }
+    } finally {
+      setPendingAction(null);
+    }
+  }
+
   const formHint = (() => {
     if (!configured) return "Set the contract configuration first before verifying on-chain.";
     if (!certHash.trim()) return "Paste a certificate hash. The app will check chain state before enabling trusted verification.";
@@ -393,7 +462,9 @@ export function VerifyForm({
         ? "This credential is suspended. Approved issuers or the admin can still revoke it."
         : "This credential is suspended. Resolve issuer status before trying again.";
     if (currentLookup.status === "found" && currentLookup.record.status === "expired")
-      return "This credential is expired and no longer eligible for verification-based actions.";
+      return allowTrustedActions
+        ? "This credential is past its validity window. An approved issuer can renew it below."
+        : "This credential is expired and no longer eligible for verification-based actions.";
     if (currentLookup.status === "found" && !walletConnected)
       return allowTrustedActions
         ? "Hash found. Connect Freighter on Stellar testnet with an approved issuer or admin wallet to manage it."
@@ -546,6 +617,43 @@ export function VerifyForm({
             <div className="flex gap-2 items-center text-sm flex-wrap">
               <span className="text-text-muted min-w-[56px]">Cohort</span>
               <span className="text-text break-all">{currentLookup.record.cohort}</span>
+            </div>
+          ) : null}
+          <div className="flex gap-2 items-center text-sm flex-wrap">
+            <span className="text-text-muted min-w-[56px]">Expires</span>
+            <span className="text-text">
+              {formatUnixDate(currentLookup.record.expiresAt)}
+            </span>
+          </div>
+          {allowTrustedActions && canWriteExpiry ? (
+            <div className="mt-2 flex flex-col gap-3 border-t border-border pt-3">
+              <Input
+                type="date"
+                label="New valid-until date"
+                value={expiresDate}
+                onChange={(e) => setExpiresDate(e.target.value)}
+                helper="UTC calendar date. Required for set or renew."
+              />
+              <div className="flex flex-wrap gap-2 max-sm:flex-col [&>*]:max-sm:w-full">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => void handleValidityWrite("expiry")}
+                  disabled={!canWriteExpiry || currentLookup.record.status === "expired"}
+                  loading={pendingAction === "expiry"}
+                >
+                  Set validity
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => void handleValidityWrite("renew")}
+                  disabled={!canWriteExpiry}
+                  loading={pendingAction === "renew"}
+                >
+                  Renew credential
+                </Button>
+              </div>
             </div>
           ) : null}
         </div>

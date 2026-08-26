@@ -39,6 +39,28 @@ export function normalizeStatusKey(value: unknown): string {
   return "";
 }
 
+/**
+ * Display overlay for a validity window that has already elapsed.
+ * Soroban rolls back storage on `Err`, so a past `expires_at` is not persisted
+ * as `Expired` in the same invoke that rejects payment. Proof pages overlay it.
+ */
+export function overlayExpiredCertificateStatus(
+  status: CertificateStatus,
+  expiresAt: number,
+  nowSeconds = Math.floor(Date.now() / 1000),
+): CertificateStatus {
+  if (
+    expiresAt > 0 &&
+    expiresAt <= nowSeconds &&
+    status !== "revoked" &&
+    status !== "suspended" &&
+    status !== "unknown"
+  ) {
+    return "expired";
+  }
+  return status;
+}
+
 export function normalizeCertificateStatus(value: unknown): CertificateStatus {
   switch (normalizeStatusKey(value)) {
     case "verified":

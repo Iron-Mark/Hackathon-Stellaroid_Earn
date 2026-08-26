@@ -35,4 +35,5 @@ test("issuer dashboard shows the trust-state ladder", async ({ page }) => {
     "href",
     "/issuer/batch",
   );
+  await expect(page.getByRole("button", { name: "Refresh issuer dates" })).toHaveCount(0);
 });

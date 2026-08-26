@@ -19,6 +19,7 @@ import {
   normalizeCertificateStatus,
   normalizeIssuerStatus,
   normalizeOpportunityStatus,
+  overlayExpiredCertificateStatus,
 } from "@/lib/contract-status";
 import type {
   CertificateStatus,
@@ -44,6 +45,8 @@ export type CertificateRecord = {
   cohort: string;
   metadataUri: string;
   status: CertificateStatus;
+  /** On-chain status before the expires_at display overlay. */
+  rawStatus?: CertificateStatus;
   issuedAt: number;
   verifiedAt: number;
   expiresAt: number;
@@ -139,7 +142,9 @@ function normalizeAddress(value: unknown): string {
 function normalizeCertificate(value: unknown): CertificateRecord | null {
   if (value == null) return null;
   const record = value as Record<string, unknown>;
-  const status = normalizeCertificateStatus(record.status);
+  const rawStatus = normalizeCertificateStatus(record.status);
+  const expiresAt = normalizeTimestamp(record.expires_at);
+  const status = overlayExpiredCertificateStatus(rawStatus, expiresAt);
   return {
     owner: normalizeAddress(record.owner),
     issuer: normalizeAddress(record.issuer),
@@ -147,9 +152,10 @@ function normalizeCertificate(value: unknown): CertificateRecord | null {
     cohort: normalizeString(record.cohort),
     metadataUri: normalizeString(record.metadata_uri),
     status,
+    rawStatus,
     issuedAt: normalizeTimestamp(record.issued_at),
     verifiedAt: normalizeTimestamp(record.verified_at),
-    expiresAt: normalizeTimestamp(record.expires_at),
+    expiresAt,
     verified: status === "verified",
   };
 }
@@ -163,6 +169,8 @@ function normalizeIssuer(value: unknown): IssuerRecord | null {
     website: normalizeString(record.website),
     category: normalizeString(record.category),
     status: normalizeIssuerStatus(record.status),
+    registeredAt: normalizeTimestamp(record.registered_at),
+    refreshedAt: normalizeTimestamp(record.refreshed_at),
   };
 }
 
