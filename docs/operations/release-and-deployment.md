@@ -23,15 +23,15 @@ Do not create additional Vercel projects for branch showcase domains.
 ## Branch Flow
 
 ```text
-feature branch -> july-monthly-builder -> staging -> main
+feature branch -> august-monthly-builder -> staging -> main
 ```
 
 - `main`: production-ready source of truth.
 - `staging`: integration branch before promotion to `main`.
-- `july-monthly-builder`: active monthly-builder branch, seeded from the June production release.
-- `june-monthly-builder`, `april-monthly-builder`, and `april-bootcamp`: historical snapshots, read-only unless recovery is explicitly needed.
+- `august-monthly-builder`: active monthly-builder branch, seeded from `main` on 2026-08-25 when the July cycle closed.
+- `july-monthly-builder`, `june-monthly-builder`, `april-monthly-builder`, and `april-bootcamp`: historical snapshots, read-only unless recovery is explicitly needed.
 
-Open feature PRs against `july-monthly-builder`. Promote `july-monthly-builder` to `staging`, then `staging` to `main`, by PR after local verification and one meaningful CI pass when frontend code changed.
+Open feature PRs against `august-monthly-builder`. Promote `august-monthly-builder` to `staging`, then `staging` to `main`, by PR after local verification and one meaningful CI pass when frontend code changed.
 
 ## CI and Local Checks
 
@@ -57,16 +57,17 @@ Contract CI is path-filtered. Push and PR CI run on `main`, `staging`, and `*-mo
 | --- | --- | --- |
 | `stellaroid.tech` | `main` | Production-ready site |
 | `beta.stellaroid.tech` | `staging` | Integration preview |
-| `v3.stellaroid.tech` | `july-monthly-builder` | Active July monthly-builder showcase |
+| `v4.stellaroid.tech` | `august-monthly-builder` | Active August monthly-builder showcase |
+| `v3.stellaroid.tech` | `july-monthly-builder` | Archived July monthly-builder showcase |
 | `v2.stellaroid.tech` | `june-monthly-builder` | Archived June monthly-builder showcase |
 | `v1.stellaroid.tech` | `april-monthly-builder` | Archived monthly-builder showcase |
 | `v0.stellaroid.tech` | `april-bootcamp` | Archived bootcamp showcase |
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect permanently to `https://stellaroid.tech/`.
 
-`v3.stellaroid.tech` is the active July showcase domain. Keep it mapped to `july-monthly-builder` until the next monthly archive handoff.
+`v4.stellaroid.tech` is the active August showcase domain. Mapping it to `august-monthly-builder` in Vercel and adding the `v4` CNAME is a parked side-note blocker and does not block other work. Keep `v3.stellaroid.tech` mapped to `july-monthly-builder` as the frozen July snapshot.
 
-If `v3.stellaroid.tech` fails the HTTPS verifier with a DNS resolution error, first confirm the `v3` CNAME exists at the external DNS host. After adding the record, some recursive resolvers can temporarily keep the previous NXDOMAIN response while Vercel and other resolvers already see the CNAME.
+If `v4.stellaroid.tech` fails the HTTPS verifier with a DNS resolution error, first confirm the `v4` CNAME exists at the external DNS host. After adding the record, some recursive resolvers can temporarily keep the previous NXDOMAIN response while Vercel and other resolvers already see the CNAME.
 
 The apex domain uses third-party nameservers, not Vercel nameservers. Manage subdomain records at the external DNS host:
 
@@ -76,6 +77,7 @@ The apex domain uses third-party nameservers, not Vercel nameservers. Manage sub
 | `v1` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 | `v2` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 | `v3` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
+| `v4` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 | `beta` | `CNAME` | `82586c23ca506f63.vercel-dns-017.com` |
 
 Do not include `https://` in DNS values. Branch showcase domains are public; Vercel SSO deployment protection should remain disabled unless the showcase URLs are intentionally made private.

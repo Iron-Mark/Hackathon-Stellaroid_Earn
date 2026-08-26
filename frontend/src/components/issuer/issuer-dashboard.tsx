@@ -8,9 +8,10 @@ import { WalletConnectButton } from "@/components/wallet/wallet-connect-button";
 import { NetworkBanner } from "@/components/app/network-banner";
 import { WalletEmptyState } from "@/components/app/wallet-empty-state";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
-import { approveIssuer, getIssuer, suspendIssuer } from "@/lib/contract-client";
+import { approveIssuer, getIssuer, refreshIssuer, suspendIssuer } from "@/lib/contract-client";
 import { appConfig } from "@/lib/config";
-import { humanizeError } from "@/lib/errors";
+import { humanizeError, isMissingContractMethod } from "@/lib/errors";
+import { formatUnixDate } from "@/lib/format";
 import { withTimeout } from "@/lib/with-timeout";
 import { getAllIssuers } from "@/lib/issuer-registry";
 import { ExternalLink } from "lucide-react";
@@ -93,6 +94,32 @@ function getIssuerFlowSteps(issuer: IssuerRecord | null) {
   }>;
 }
 
+function IssuerDateFields({
+  registeredAt,
+  refreshedAt,
+}: {
+  registeredAt: number;
+  refreshedAt: number;
+}) {
+  if (registeredAt <= 0 && refreshedAt <= 0) return null;
+  return (
+    <>
+      <div>
+        <span className="block text-xs uppercase tracking-[0.14em] text-text-muted/70">
+          Registered
+        </span>
+        <span className="text-text">{formatUnixDate(registeredAt)}</span>
+      </div>
+      <div>
+        <span className="block text-xs uppercase tracking-[0.14em] text-text-muted/70">
+          Last refreshed
+        </span>
+        <span className="text-text">{formatUnixDate(refreshedAt)}</span>
+      </div>
+    </>
+  );
+}
+
 export function IssuerDashboard() {
   const { wallet, isMobileBrowser, hasWebWallet } = useFreighterWallet();
   const { toast } = useToast();
@@ -102,6 +129,7 @@ export function IssuerDashboard() {
   const [targetRecord, setTargetRecord] = useState<IssuerRecord | null>(null);
   const [targetLookupBusy, setTargetLookupBusy] = useState(false);
   const [adminBusy, setAdminBusy] = useState<"approve" | "suspend" | null>(null);
+  const [refreshBusy, setRefreshBusy] = useState(false);
 
   const showWalletEmptyState =
     !hasWebWallet && (isMobileBrowser || wallet.status === "unsupported");
@@ -115,6 +143,7 @@ export function IssuerDashboard() {
     wallet.address.trim().toUpperCase() === configuredAdmin;
   const issuerFlowSteps = getIssuerFlowSteps(issuer);
   const canIssue = issuer?.status === "approved";
+  const canRefreshIssuer = Boolean(issuer && issuer.registeredAt > 0);
 
   useEffect(() => {
     let cancelled = false;
@@ -217,6 +246,46 @@ export function IssuerDashboard() {
     }
   }
 
+  async function handleRefreshIssuer() {
+    if (!wallet.address || !issuer || issuer.registeredAt <= 0) return;
+
+    setRefreshBusy(true);
+    try {
+      const result = await withTimeout(
+        refreshIssuer(wallet.address, issuer.address),
+        15000,
+        "refresh_issuer",
+      );
+      toast({
+        title: "Issuer refreshed",
+        detail: "Refresh date updated and storage TTL extended.",
+        tone: "success",
+        action: result?.hash
+          ? {
+              label: <>View on stellar.expert <ExternalLink className="inline w-3 h-3 ml-1" /></>,
+              href: `${appConfig.explorerUrl}/tx/${result.hash}`,
+            }
+          : undefined,
+      });
+      const updated = await getIssuer(wallet.address);
+      setIssuer(updated);
+    } catch (e) {
+      if (isMissingContractMethod(e)) {
+        toast({
+          title: "Refresh not available yet",
+          detail:
+            "The live contract does not expose refresh_issuer. The profile is unchanged.",
+          tone: "warning",
+        });
+      } else {
+        const h = humanizeError(e);
+        toast({ title: h.title, detail: h.detail, tone: "danger" });
+      }
+    } finally {
+      setRefreshBusy(false);
+    }
+  }
+
   return (
     <AppShell rpcPill={<RpcStatusPill />} walletButton={<WalletConnectButton />}>
       <div className="flex flex-col gap-6">
@@ -301,6 +370,10 @@ export function IssuerDashboard() {
                       {issuer.status}
                     </Badge>
                   </div>
+                  <IssuerDateFields
+                    registeredAt={issuer.registeredAt}
+                    refreshedAt={issuer.refreshedAt}
+                  />
                 </div>
               ) : (
                 <div className="mt-4 flex min-w-0 flex-col items-center gap-4 rounded-xl border border-dashed border-border/60 bg-bg/50 px-4 py-8 text-center sm:px-6">
@@ -345,14 +418,24 @@ export function IssuerDashboard() {
                 </Button>
               )}
               {canIssue ? (
-                <Button variant="secondary" className="w-full whitespace-normal text-center" href="/app">
-                  Open app flow
+                <Button variant="secondary" className="w-full whitespace-normal text-center" href="/issuer/batch">
+                  Batch issue from CSV
                 </Button>
               ) : (
                 <Button variant="ghost" className="w-full whitespace-normal text-center" disabled>
                   App writes locked until approval
                 </Button>
               )}
+              {canRefreshIssuer ? (
+                <Button
+                  variant="secondary"
+                  className="w-full whitespace-normal text-center"
+                  onClick={() => void handleRefreshIssuer()}
+                  loading={refreshBusy}
+                >
+                  Refresh issuer dates
+                </Button>
+              ) : null}
             </div>
             <div className="mt-5 rounded-xl border border-border bg-bg/60 p-4">
               <p className="text-xs uppercase tracking-[0.14em] text-text-muted/70">
@@ -476,6 +559,14 @@ export function IssuerDashboard() {
                     <p className="mt-1 text-sm text-text-muted">
                       {targetRecord.website || "No website"} · {targetRecord.category || "Uncategorized"}
                     </p>
+                    {targetRecord.registeredAt > 0 ? (
+                      <p className="mt-1 text-sm text-text-muted">
+                        Registered {formatUnixDate(targetRecord.registeredAt)}
+                        {targetRecord.refreshedAt > 0
+                          ? `. Last refreshed ${formatUnixDate(targetRecord.refreshedAt)}`
+                          : ""}
+                      </p>
+                    ) : null}
                   </div>
                   <Badge tone={statusTone(targetRecord.status)} dot>
                     {targetRecord.status}

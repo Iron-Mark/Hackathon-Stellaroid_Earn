@@ -26,6 +26,11 @@ $expected = @(
     Kind = "worktree"
   },
   @{
+    Domain = "v4.stellaroid.tech"
+    Branch = "august-monthly-builder"
+    Kind = "worktree"
+  },
+  @{
     Domain = "v3.stellaroid.tech"
     Branch = "july-monthly-builder"
     Kind = "worktree"

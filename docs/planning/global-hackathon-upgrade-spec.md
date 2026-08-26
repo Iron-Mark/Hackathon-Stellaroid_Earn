@@ -116,7 +116,7 @@ Acceptance criteria:
 
 ## Lower-Priority Enhancements
 
-- CSV batch issuance preview and signing queue.
+- CSV batch issuance preview and signing queue (implemented at `/issuer/batch`).
 - Issuer domain verification / DNS or website proof.
 - Revocation reason taxonomy.
 - First-party event read model/database.

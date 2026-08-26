@@ -28,7 +28,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "For developers, the system is deliberately small. The contract is Rust + `soroban-sdk`, deployed to Stellar testnet, with a 19-function public surface — a credential core plus a milestone-escrow extension — and typed contract errors. The frontend is Next.js 16 + React 19 using `@stellar/stellar-sdk`: read-only calls go through `simulateTransaction`, and writes are signed with Freighter or Albedo and submitted over Soroban RPC. Every state change emits a contract event that is auditable on Stellar Expert."
+        "text": "For developers, the system is deliberately small. The contract is Rust + `soroban-sdk`, deployed to Stellar testnet. Live tag v3.0.0 has a 19-function public surface, a credential core plus a milestone-escrow extension, and typed contract errors. Repository source adds issuer refresh dates and credential expiry writes without changing `register_certificate`. The frontend is Next.js 16 + React 19 using `@stellar/stellar-sdk`: read-only calls go through `simulateTransaction`, and writes are signed with Freighter or Albedo and submitted over Soroban RPC. Every state change emits a contract event that is auditable on Stellar Expert."
       },
       {
         "type": "p",
@@ -73,7 +73,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "These three functions sit on a 19-function surface: an issuer trust layer (`register_issuer` → `approve_issuer`, plus `suspend_issuer`), credential lifecycle controls (`revoke_certificate`, `suspend_certificate`), an admin-initiated `reward_student` payment, read-only lookups (`get_certificate`, `get_issuer`), and a seven-function milestone-escrow extension for funded paid trials (`create_opportunity` through `get_opportunity`). A revoked credential blocks downstream payments on-chain. The full reference, including error codes and the status lifecycle, is in /docs/contract."
+        "text": "These three functions sit on a 19-function live surface (tag v3.0.0): an issuer trust layer (`register_issuer` → `approve_issuer`, plus `suspend_issuer`), credential lifecycle controls (`revoke_certificate`, `suspend_certificate`), an admin-initiated `reward_student` payment, read-only lookups (`get_certificate`, `get_issuer`), and a seven-function milestone-escrow extension for funded paid trials (`create_opportunity` through `get_opportunity`). Repository source adds issuer refresh dates and credential expiry writes. A revoked credential blocks downstream payments on-chain. The full reference, including error codes and the status lifecycle, is in /docs/contract."
       },
       {
         "type": "h2",
@@ -118,7 +118,15 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The dashboard at https://stellaroid.tech/app has two roles. As an issuer, you register a certificate hash for a student wallet and then approve it (`verify_certificate`). As an employer, you paste a verified hash and an amount to send a credential-linked XLM payment. Note the trust gate: issuer registration enters a Pending queue on-chain, and only admin-approved issuers can register or verify credentials — suspended issuers are blocked at the contract level."
+        "text": "The dashboard at https://stellaroid.tech/app has two roles. As an issuer, you register a certificate hash for a student wallet and then approve it (`verify_certificate`). As an employer, you paste a verified hash and an amount to send a credential-linked XLM payment. Note the trust gate: issuer registration enters a Pending queue on-chain, and only admin-approved issuers can register or verify credentials; suspended issuers are blocked at the contract level."
+      },
+      {
+        "type": "h3",
+        "text": "5. Batch a cohort from CSV"
+      },
+      {
+        "type": "p",
+        "text": "Approved issuers can open `/issuer/batch`, preview a CSV of graduate wallets and SHA-256 hashes, then sign a queue. Each ready row calls `register_certificate` on the live v3.0.0 testnet contract. Duplicate hashes in the file are blocked before signing; hashes already on-chain are skipped. Freighter signs one transaction per graduate. The live contract ABI is unchanged, so this path works without a new deploy."
       },
       {
         "type": "h2",
@@ -194,7 +202,7 @@ export const docsPages: DocPage[] = [
     "slug": "contract",
     "title": "Contract reference",
     "metaTitle": "Soroban contract reference — functions, errors, events",
-    "metaDescription": "Reference for the Stellaroid Earn Soroban contract on Stellar testnet: all 19 public functions, 17 error codes, events, the credential lifecycle, and CLI examples.",
+    "metaDescription": "Reference for the Stellaroid Earn Soroban contract on Stellar testnet: live tag v3.0.0 (19 functions, 17 errors) and repository source that adds issuer refresh dates plus credential expiry writes.",
     "keywords": [
       "soroban contract reference",
       "stellar testnet",
@@ -205,11 +213,11 @@ export const docsPages: DocPage[] = [
       "soroban events"
     ],
     "navLabel": "Contract reference",
-    "lede": "Complete reference for the Stellaroid Earn Soroban contract — all 19 public functions with auth requirements, the full error table, emitted events, the credential status lifecycle, and how to invoke it from the Stellar CLI. Everything here runs on Stellar testnet.",
+    "lede": "Complete reference for the Stellaroid Earn Soroban contract. Live testnet tag v3.0.0 still has 19 public functions and 17 errors. Repository source adds issuer refresh dates, credential expiry writes, and error 18. Everything here runs on Stellar testnet.",
     "blocks": [
       {
         "type": "p",
-        "text": "The Stellaroid Earn contract is written in Rust with `soroban-sdk` and deployed to Stellar testnet. It exposes 19 public functions: a one-shot `init`, nine credential-surface write functions covering issuer trust, credential lifecycle, and payment, two read functions, and a seven-function milestone-escrow extension for funded paid trials (documented below). The frontend invokes it through `@stellar/stellar-sdk` — writes are signed by the connected wallet and submitted over Soroban RPC; reads run as free simulations."
+        "text": "The Stellaroid Earn contract is written in Rust with `soroban-sdk` and deployed to Stellar testnet. Live tag `v3.0.0` exposes 19 public functions. This repository's contract source adds `refresh_issuer`, `set_credential_expiry`, and `renew_certificate` (22 functions) plus error 18 `InvalidExpiry`. The frontend keeps those writes optional so the live site stays usable until a new contract ID is deployed."
       },
       {
         "type": "callout",
@@ -218,6 +226,10 @@ export const docsPages: DocPage[] = [
       {
         "type": "h2",
         "text": "Function surface"
+      },
+      {
+        "type": "callout",
+        "text": "Live testnet WASM (tag v3.0.0, contract CAD6C24P…) is still 19 functions and 17 errors. Repository source adds refresh_issuer, set_credential_expiry, and renew_certificate. The app hides issuer refresh until get_issuer returns a nonzero registered_at, and treats expiry writes as optional so a missing method does not fail register_certificate."
       },
       {
         "type": "p",
@@ -257,6 +269,12 @@ export const docsPages: DocPage[] = [
             "Admin only"
           ],
           [
+            "refresh_issuer",
+            "`refresh_issuer(actor, issuer)`",
+            "Issuer or admin stores a refresh date and extends persistent TTL. Emits `iss_rfr`. Live v3.0.0 WASM does not include this method.",
+            "Issuer (self) or admin"
+          ],
+          [
             "register_certificate",
             "`register_certificate(issuer, student, cert_hash, title, cohort, metadata_uri)`",
             "Binds the hash plus minimal proof metadata to a student wallet; rejects duplicates; emits `cert_reg`.",
@@ -279,6 +297,18 @@ export const docsPages: DocPage[] = [
             "`suspend_certificate(actor, cert_hash)`",
             "Temporarily suspends a credential without deleting its audit trail.",
             "Authorized actor"
+          ],
+          [
+            "set_credential_expiry",
+            "`set_credential_expiry(actor, cert_hash, expires_at)`",
+            "Set or clear a validity window. Zero means no expiry. Rejects revoked, suspended, and already-elapsed records. Emits `cert_exp`.",
+            "Issuing organization or admin"
+          ],
+          [
+            "renew_certificate",
+            "`renew_certificate(actor, cert_hash, expires_at)`",
+            "Extend the window and restore Issued or Verified after expiry. Revoked and suspended records stay blocked. Emits `cert_ren`.",
+            "Issuing organization or admin"
           ],
           [
             "reward_student",
@@ -339,7 +369,7 @@ export const docsPages: DocPage[] = [
           ],
           [
             "expired",
-            "Credential expired and must be reissued or renewed (error 12)."
+            "Past a nonzero `expires_at` window. On-chain status may still say Issued or Verified until `renew_certificate` runs; proof pages overlay Expired. Use `renew_certificate` rather than reissuing the hash."
           ]
         ]
       },
@@ -353,7 +383,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "All 12 contract errors, as surfaced to callers and normalized by the frontend error layer."
+        "text": "Live tag v3.0.0 defines 17 contract errors. Repository source adds error 18 `InvalidExpiry`. Callers and the frontend error layer map them as follows."
       },
       {
         "type": "table",
@@ -422,6 +452,11 @@ export const docsPages: DocPage[] = [
             "12",
             "CredentialExpired",
             "Credential expired and must be reissued or renewed."
+          ],
+          [
+            "18",
+            "InvalidExpiry",
+            "Expiry must be 0 (no window) or a future unix timestamp. Source only. Live v3.0.0 does not define this code."
           ]
         ]
       },
@@ -462,6 +497,11 @@ export const docsPages: DocPage[] = [
             "Issuer suspended."
           ],
           [
+            "`iss_rfr`",
+            "`refresh_issuer`",
+            "Issuer refresh date updated. Source only until a new deploy."
+          ],
+          [
             "`cert_reg`",
             "`register_certificate`",
             "Certificate registered; payload carries the certificate hash."
@@ -480,6 +520,16 @@ export const docsPages: DocPage[] = [
             "cert_sup",
             "suspend_certificate",
             "Credential suspended; payload is the certificate hash. Not decoded by the app's activity feed — inspect it on stellar.expert."
+          ],
+          [
+            "`cert_exp`",
+            "`set_credential_expiry`",
+            "Validity window updated; payload carries the certificate hash."
+          ],
+          [
+            "`cert_ren`",
+            "`renew_certificate`",
+            "Credential renewed; payload carries the certificate hash."
           ],
           [
             "`reward`",
@@ -545,7 +595,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The contract ships with twelve tests in `contract/src/test.rs` (`t1`–`t12`). Together they cover the happy path, the issuer trust layer, revocation gating, event emission, and the escrow lifecycle."
+        "text": "The contract ships with fifteen tests in `contracts/stellaroid_earn/src/test.rs` (`t1`–`t15`). Together they cover the happy path, the issuer trust layer, revocation gating, event emission, escrow lifecycle, issuer refresh dates, and credential expiry or renewal."
       },
       {
         "type": "table",
@@ -601,6 +651,18 @@ export const docsPages: DocPage[] = [
           [
             "`t12_employer_can_refund_submitted_opportunity`",
             "The employer can still exit and recover escrow after a milestone is submitted but before approval."
+          ],
+          [
+            "`t13_issuer_refresh_dates`",
+            "Issuer records store register and refresh timestamps, and only the issuer or admin can bump them."
+          ],
+          [
+            "`t14_credential_expiry_and_renewal`",
+            "A future expiry window persists, blocks payment after it elapses, and renew restores Verified access."
+          ],
+          [
+            "`t15_revoked_credential_blocks_expiry_writes`",
+            "Revoked credentials cannot have expiry set or be renewed."
           ]
         ]
       },
@@ -610,7 +672,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "Beyond the credential core, the contract includes a milestone-escrow extension that lets an employer fund a paid trial tied to a verified credential. The escrowed amount is held by the contract and released as milestones are approved. These seven functions complete the 19-function public surface."
+        "text": "These seven functions complete the live 19-function public surface. Repository source sits on top of that with the three refresh and expiry writes documented above."
       },
       {
         "type": "table",
@@ -1028,11 +1090,19 @@ export const docsPages: DocPage[] = [
       {
         "type": "code",
         "lang": "ts",
-        "text": "import { signTransaction as signWithWallet } from \"@/lib/wallet\";\n\n// 1. Build the invocation against the source account's sequence number\nconst transaction = await buildTransaction(sourceAddress, method, args);\n\n// 2. Prepare: RPC simulation attaches the Soroban footprint and resource fee\nconst prepared = await server.prepareTransaction(transaction);\n\n// 3. Sign with the active wallet (Freighter popup or Albedo redirect)\nconst signedXdr = await signWithWallet(prepared.toXDR(), sourceAddress);\nconst signed = TransactionBuilder.fromXDR(\n  signedXdr,\n  getExpectedNetworkPassphrase(),\n);\n\n// 4. Submit\nconst sendResponse = await server.sendTransaction(signed);\n\n// 5. Poll until confirmed or failed\nconst final = await server.pollTransaction(sendResponse.hash, {\n  attempts: 20,\n  sleepStrategy: () => 1200, // 1.2 s between polls\n});"
+        "text": "import { signTransaction as signWithWallet } from \"@/lib/wallet\";\n\n// 1. Build the invocation against the source account's sequence number\nconst transaction = await buildTransaction(sourceAddress, method, args);\n\n// 2. Prepare: RPC simulation attaches the Soroban footprint and resource fee\nconst prepared = await server.prepareTransaction(transaction);\n\n// 3. Sign with the active wallet (Freighter popup or Albedo redirect)\nconst signedXdr = await signWithWallet(prepared.toXdr(), sourceAddress);\nconst signed = TransactionBuilder.fromXdr(\n  signedXdr,\n  getExpectedNetworkPassphrase(),\n);\n\n// 4. Submit\nconst sendResponse = await server.sendTransaction(signed);\n\n// 5. Poll until confirmed or failed\nconst final = await server.pollTransaction(sendResponse.hash, {\n  attempts: 20,\n  sleepStrategy: () => 1200, // 1.2 s between polls\n});"
       },
       {
         "type": "p",
         "text": "The production client accepts both `PENDING` and `DUPLICATE` submission statuses, and treats a `FAILED` or `NOT_FOUND` poll result as an error surfaced through a normalizer that maps Soroban's numeric error codes (`#1`, `#2`, ...) to human-readable messages matching the contract's Rust `contracterror` enum."
+      },
+      {
+        "type": "h2",
+        "text": "Batch issuance"
+      },
+      {
+        "type": "p",
+        "text": "`/issuer/batch` is a client-side CSV preview and signing queue on top of the live `register_certificate` ABI. Parsing, row validation, and in-file duplicate detection happen before any RPC call. Unique valid hashes are then checked with `get_certificate`. Ready rows are signed one at a time so Freighter can prompt per graduate. The live tag v3.0.0 contract is not upgraded; batching is a frontend queue, not a new contract method."
       },
       {
         "type": "h2",
@@ -1147,7 +1217,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "Access control is enforced in the contract, not the frontend: `init`, `approve_issuer`, `suspend_issuer`, and `reward_student` are admin-only; `register_certificate`, `verify_certificate`, `revoke_certificate`, and `suspend_certificate` require an approved issuer; `register_issuer`, `link_payment`, `get_certificate`, and `get_issuer` are public. Failures surface as a typed `#[contracterror]` enum with 17 variants."
+        "text": "Access control is enforced in the contract, not the frontend: `init`, `approve_issuer`, `suspend_issuer`, and `reward_student` are admin-only; `register_certificate`, `verify_certificate`, `revoke_certificate`, and `suspend_certificate` require an approved issuer; `refresh_issuer`, `set_credential_expiry`, and `renew_certificate` require the issuer or admin and exist in repository source; `register_issuer`, `link_payment`, `get_certificate`, and `get_issuer` are public. Failures surface as a typed `#[contracterror]` enum with 17 variants on live v3.0.0 and 18 in source."
       },
       {
         "type": "h2",
@@ -1249,7 +1319,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "Emitted events (`init`, `iss_reg`, `iss_appr`, `iss_susp`, `cert_reg`, `cert_ver`, `reward`, `payment`) are surfaced as public evidence via `/api/events`, a short-lived Server-Sent Events stream at `/api/events/stream`, and `/status#metrics`. Because RPC event retention only covers recent ledgers, the frontend supplements `getEvents` with Stellar Expert's public contract-event index and labels each item by source (`rpc`, `stellar_expert`, or `e2e`). This is display-grade evidence, not an audit-grade analytics store."
+        "text": "Emitted events (`init`, `iss_reg`, `iss_appr`, `iss_susp`, `iss_rfr`, `cert_reg`, `cert_ver`, `cert_exp`, `cert_ren`, `reward`, `payment`) are surfaced as public evidence via `/api/events`, a short-lived Server-Sent Events stream at `/api/events/stream`, and `/status#metrics`. Because RPC event retention only covers recent ledgers, the frontend supplements `getEvents` with Stellar Expert's public contract-event index and labels each item by source (`rpc`, `stellar_expert`, or `e2e`). This is display-grade evidence, not an audit-grade analytics store."
       },
       {
         "type": "h2",
@@ -1534,7 +1604,7 @@ export const docsPages: DocPage[] = [
           ],
           [
             "Expiry enforcement (partial)",
-            "ensure_not_expired() rejects records with a nonzero expired timestamp before verification or payment. The current issuer flow sets expires_at = 0, so there is no automatic expiry transition yet."
+            "ensure_not_expired() rejects records with a nonzero expired timestamp before verification or payment. Issuers can now set a window with set_credential_expiry after register_certificate. Live v3.0.0 WASM still always stores expires_at = 0 until a new contract ID is deployed."
           ],
           [
             "Storage TTL",
@@ -1556,7 +1626,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The contract defines a typed `#[contracterror]` enum (17 variants in total per the security checklist). The frontend's `humanizeError()` maps every code to safe, non-leaking copy — no raw `ScVal` or `HostError` ever reaches the UI. The twelve credential-layer codes surfaced in the app are:"
+        "text": "The contract defines a typed `#[contracterror]` enum (17 variants on live v3.0.0, 18 in repository source). The frontend's `humanizeError()` maps every code to safe, non-leaking copy, including source-only `InvalidExpiry` (#18). No raw `ScVal` or `HostError` ever reaches the UI. The credential-layer codes surfaced in the app are:"
       },
       {
         "type": "table",
@@ -1638,6 +1708,12 @@ export const docsPages: DocPage[] = [
             "CredentialExpired",
             "state",
             "Credential expired and must be reissued or renewed."
+          ],
+          [
+            "18",
+            "InvalidExpiry",
+            "input",
+            "Expiry must be 0 or a future unix timestamp. Source only."
           ]
         ]
       },
@@ -1835,7 +1911,7 @@ export const docsPages: DocPage[] = [
           "Bearer token must match the configured sponsor token.",
           "Submitted XDR is capped at 32,000 characters.",
           "The inner transaction must contain exactly one operation, and it must be a Soroban invokeHostFunction contract call.",
-          "The invoked contract must match the configured contract ID, and the method must be on a 13-entry allowlist (register_issuer, register_certificate, verify_certificate, revoke_certificate, suspend_certificate, reward_student, link_payment, create_opportunity, fund_opportunity, submit_milestone, approve_milestone, release_payment, refund_opportunity).",
+          "The invoked contract must match the configured contract ID, and the method must be on a 16-entry allowlist (register_issuer, register_certificate, verify_certificate, revoke_certificate, suspend_certificate, reward_student, link_payment, create_opportunity, fund_opportunity, submit_milestone, approve_milestone, release_payment, refund_opportunity, refresh_issuer, set_credential_expiry, renew_certificate).",
           "The inner fee is capped at 1,000,000 stroops (0.1 XLM), the network passphrase must match the expected network, the transaction must already carry the user's signature, and the sponsor cannot sponsor its own source account.",
           "Abuse ceilings: a per-instance rate limit (default 30 requests/min, override via FEE_SPONSOR_MAX_REQUESTS_PER_MIN) and a rolling spend budget across all callers (default 200,000,000 stroops — 20 XLM — per minute, override via FEE_SPONSOR_MAX_STROOPS_PER_MIN), so a leaked or shared token cannot script an unbounded sponsor-account drain."
         ]
@@ -1875,7 +1951,7 @@ export const docsPages: DocPage[] = [
           "Testnet MVP, no external audit yet: no formal third-party audit and no external penetration test have been performed. Both are deferred until before any mainnet deployment. An internal red-team review was run and its findings fixed, which is not a substitute for an independent audit.",
           "In-app rate limits are per-instance: every abuse guard written in this repo is in-memory and per-warm-instance, so traffic spread across serverless instances is only bounded per instance. The global ceiling comes from Vercel edge rate-limit rules, which are configured in the Vercel dashboard rather than in this repository and therefore cannot be reviewed from this source tree.",
           "Single admin key: one admin address, set at init, gates issuer approval and suspension and triggers reward payouts. There is no multisig or role separation.",
-          "Partial expiry enforcement: the contract can reject expired credentials, but the current issuer flow sets expires_at = 0, so no credential automatically expires yet.",
+          "Partial expiry enforcement on live v3.0.0: issuance still stores expires_at = 0. Repository source adds set_credential_expiry and renew_certificate, and the app will call them when an issuer picks a date. Those writes no-op against the live WASM until a new contract ID is deployed.",
           "Source verification pending: the runbook records the deployed WASM hash, but contract-metadata and GitHub-attestation verification is incomplete — the deployment must not be described as source-verified.",
           "Public fee sponsorship intentionally disabled: sponsored transactions require a trusted server-held bearer token."
         ]

@@ -14,9 +14,9 @@ smart-contract, frontend, infrastructure, and operational layers.
 | 2 | **Issuer gating** | PASS | `register_certificate` and `verify_certificate` reject callers that do not hold approved issuer status. |
 | 3 | **Duplicate prevention** | PASS | Re-submitting an existing certificate hash returns `AlreadyExists`; no silent overwrites. |
 | 4 | **Credential lifecycle guards** | PASS | `verify` only transitions a cert from `Issued`; `revoke`/`suspend` check caller authorization before mutating state. |
-| 5 | **Expiry enforcement** | PARTIAL | `ensure_not_expired()` rejects records with a nonzero expired timestamp before verification/payment; the current issuer flow sets new credentials to `expires_at = 0`, so there is no automatic expiry transition yet. |
+| 5 | **Expiry enforcement** | PARTIAL | `ensure_not_expired()` rejects records with a nonzero expired timestamp before verification/payment. Repository source adds `set_credential_expiry` and `renew_certificate`; the issuer flow can set a window after `register_certificate`. Live tag `v3.0.0` still stores `expires_at = 0` until a new contract ID is deployed. Proof pages overlay Expired when a window has elapsed because returning `Err` rolls back storage. |
 | 6 | **Payment authorization** | PASS | Token transfer only executes when `cert.owner == student` (the submitting address). |
-| 7 | **Typed errors** | PASS | `#[contracterror]` enum with 17 variants; frontend `humanizeError()` maps each code to safe, user-facing copy. |
+| 7 | **Typed errors** | PASS | `#[contracterror]` enum with 17 variants on live `v3.0.0` and 18 in repository source (`InvalidExpiry`). Frontend `humanizeError()` maps each code to safe, user-facing copy. |
 | 8 | **TTL management** | PASS | Storage TTL set to 518,400–1,036,800 ledgers; entries are extended on access to prevent premature archival. |
 | 9 | **Re-entrancy** | N/A | Soroban's single-contract execution model makes cross-contract re-entrancy impossible by design. |
 | 10 | **Unbounded iteration** | PASS | All storage reads/writes are O(1) keyed lookups; opportunity milestone counts are capped at 24 and UI render paths clamp defensively. |

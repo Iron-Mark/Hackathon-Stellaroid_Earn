@@ -53,6 +53,20 @@ follow.
 | --- | --- |
 | `story-general.png` | Instagram and Facebook stories, 2160x3840. Padded so the profile chip and reply bar do not cover the call to action |
 | `stellaroid-teaser.gif` | 14 seconds at 640px, cut from `demo/stellaroid-earn-demo.mp4`. Autoplays in Discord, which makes it the strongest opener there |
+| `stellaroid-promotional-demo.mp4` | 2-minute live-site walkthrough of stellaroid.tech, with neural voice-over: title card, landing, wallet-less `/demo` tour, verified proof, employer handoff, opportunity directory, close card. Stellar Testnet, no real funds. Recorded 2026-08. Voice-over script in [`voiceover/`](voiceover/). Not generated from `template/` |
+
+## Promotional stills (2026-08 live cut)
+
+Frames from `stellaroid-promotional-demo.mp4`, cropped to drop desktop chrome. Use as Discord thread replies or slide inserts. They are live-site captures, not design-system boards.
+
+| File | Frame |
+| --- | --- |
+| `promo-title.png` | Title card: Verify credentials. Settle payment in one flow. |
+| `promo-landing.png` | Live landing, persona cards, REGISTER / VERIFY / PAY |
+| `promo-demo-tour.png` | Wallet-less guided demo, first three exhibits |
+| `promo-proof.png` | Verified public proof, recruiter actions, Fund paid trial |
+| `promo-employer.png` | Employer Review before funding checklist |
+| `promo-end.png` | Close card: Bind the hash. Pay the wallet. Prove the work. |
 
 ## Copy
 

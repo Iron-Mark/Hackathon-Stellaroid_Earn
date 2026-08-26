@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-04**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-26**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,18 +8,20 @@ State of this repository as of **2026-08-04**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-04:
+Verified against the remote on 2026-08-26:
 
 | Check | State |
 | --- | --- |
-| Open pull requests | none |
-| `main` vs `staging` vs `july-monthly-builder` | tree-identical |
+| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193) |
+| `main` vs `august-monthly-builder` | tree-identical at `5b17f05` (August fast-forwarded from `main` on 2026-08-26) |
+| `staging` | lags `main`; open a `main` to `staging` sync PR after this file lands |
+| `july-monthly-builder` | frozen read-only archive at `baeec6fb`; never sync it |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
 | Dependabot open alerts | 0 |
 | npm audit | 0 moderate/high; 23 low findings in the wallet kit's transitive `elliptic` chain |
 | Tests | 12 contract, 99 frontend unit, 42 end-to-end, all green |
-| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200 |
+| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200. `v4.` is a parked side-note blocker |
 | Latest release | `v3.2.0`, 13 campaign assets attached |
 
 The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycle is closed. Do not reopen its work items.
@@ -28,19 +30,19 @@ The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycl
 
 ## Invariants to preserve
 
-**Branch parity.** `main`, `staging`, and `july-monthly-builder` must stay tree-identical. After any PR merges to `main`:
+**Branch parity.** `main`, `staging`, and `august-monthly-builder` must stay tree-identical. After any PR merges to `main`:
 
 ```bash
-git checkout july-monthly-builder
-git reset --hard origin/july-monthly-builder
+git checkout august-monthly-builder
+git reset --hard origin/august-monthly-builder
 git merge origin/main --no-edit
-git push origin july-monthly-builder
+git push origin august-monthly-builder
 
 git checkout main && git pull
 gh pr create --base staging --head main --title "chore: sync staging with main"
 ```
 
-**Branches.** Six exist on the remote. `main` and `staging` are live, `july-monthly-builder` tracks them, and `june` / `april` monthly builders are **read-only archives, never sync them**. `docs-onchain-user-verification` holds planning notes that were deliberately kept off `main`; leave it alone. Delete feature branches after merge.
+**Branches.** `main` and `staging` are live. `august-monthly-builder` tracks them. `july-monthly-builder`, `june-monthly-builder`, and the April archive (`april-bootcamp-and-monthly-builder`) are **read-only archives, never sync them**. `docs-onchain-user-verification` holds planning notes that were deliberately kept off `main`; leave it alone. Delete feature branches after merge.
 
 **Testnet only.** Every deployment, transaction, and money claim in this project is Stellar testnet with no monetary value. Never remove that qualifier from copy, and never deploy to mainnet.
 
@@ -74,13 +76,24 @@ Banner versioning is by filename:
 
 To cut a v3: render from the campaign kit, commit it as `-v3`, then copy it over `images/github-social-card.png`. Do **not** regenerate the banner from the SVG; `scripts/capture-readme-screenshots.ts` explains why.
 
-**In `assets/campaign/`**: the full campaign kit, 13 boards covering launch, landscape, square, story, and a GIF teaser, with a README explaining each set and the posting rules. Committed so the kit is not dependent on the release page surviving. The same files are also attached to the v3.2.0 release for download without cloning.
+**In `assets/campaign/`**: the full campaign kit, 13 boards covering launch, landscape, square, story, a GIF teaser, and the 2-minute live-site promotional walkthrough with voice-over (`stellaroid-promotional-demo.mp4` plus `promo-*.png` stills), with a README explaining each set and the posting rules. Committed so the kit is not dependent on the release page surviving. The same files are also attached to the v3.2.0 release for download without cloning.
+
+**In `demo/walkthroughs/`**: Phase 2 and 3 QA recordings from the 2026-08 pass. Not for posting. The posting cut is the campaign mp4.
 
 ---
 
 ## What remains
 
-Nothing is blocked and nothing is half-finished. Everything below is a choice, not a dependency.
+The product is parked. Host-side DNS for `v4` is a side-note blocker and does not block other work.
+
+### Side-note blocker (add later)
+
+- [ ] Map `v4.stellaroid.tech` to `august-monthly-builder` in Vercel and add the `v4` CNAME at the DNS host (same target as `v3`).
+
+### After the August docs PR merges
+
+- [x] Lock `july-monthly-builder` as a read-only archive, the same GitHub lock used for `june-monthly-builder`.
+- [x] Fast-forward `august-monthly-builder` from `main`.
 
 ### Distribution, the only items with real upside
 
@@ -97,7 +110,7 @@ Both gaps are **disclosed honestly already**, including in the public case study
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, and the repository parking pass are all done.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, and the repository parking pass are all done. July is a locked read-only archive. `august-monthly-builder` matches `main` at `5b17f05`. Leftover PRs #183 and #182 were closed as superseded by #191.
 
 ---
 

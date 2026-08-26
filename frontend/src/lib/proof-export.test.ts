@@ -26,6 +26,8 @@ const issuer: IssuerRecord = {
   website: "https://stellaroid.tech/issuer/stellar-ph",
   category: "Bootcamp",
   status: "approved",
+  registeredAt: 0,
+  refreshedAt: 0,
 };
 
 const proofMetadata: ProofMetadata = {

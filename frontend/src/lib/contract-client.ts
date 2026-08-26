@@ -11,6 +11,7 @@ import { signTransaction as signWithWallet } from "@/lib/wallet";
 import {
   normalizeCertificateStatus,
   normalizeIssuerStatus,
+  overlayExpiredCertificateStatus,
 } from "@/lib/contract-status";
 import {
   opportunityIdToBigInt,
@@ -129,7 +130,7 @@ function buildE2ECertificate(
     status,
     issued_at: normalizeTimestamp(current?.issued_at) || 0,
     verified_at: status === "Verified" ? Date.now() : 0,
-    expires_at: 0,
+    expires_at: normalizeTimestamp(current?.expires_at) || 0,
   };
 }
 
@@ -389,7 +390,7 @@ async function prepareTransactionWithFallback(
           source: invokeOp.source,
           func: invokeOp.func,
           auth: rawAuth.map((entry) =>
-            sdk.xdr.SorobanAuthorizationEntry.fromXDR(entry, "base64"),
+            sdk.xdr.SorobanAuthorizationEntry.fromXdr(entry, "base64"),
           ),
         }),
       );
@@ -432,7 +433,7 @@ async function simulateRead<T>(
       throw new Error(`Simulation for ${method} returned no value.`);
     }
 
-    const rawScVal = sdk.xdr.ScVal.fromXDR(rawResultXdr, "base64");
+    const rawScVal = sdk.xdr.ScVal.fromXdr(rawResultXdr, "base64");
     return transform(sdk.scValToNative(rawScVal));
   }
 
@@ -472,11 +473,11 @@ async function signAndSubmit<T>(
   );
 
   const signedXdr = await signWithWallet(
-    preparedTransaction.toXDR(),
+    preparedTransaction.toXdr(),
     sourceAddress,
   );
 
-  const signedTransaction = sdk.TransactionBuilder.fromXDR(
+  const signedTransaction = sdk.TransactionBuilder.fromXdr(
     signedXdr,
     getExpectedNetworkPassphrase(),
   );
@@ -501,7 +502,7 @@ async function signAndSubmit<T>(
     }
 
     // SDK parser can also fail in sendTransaction when decoding errorResultXdr.
-    const rawSend = await sendTransactionRaw(signedTransaction.toXDR());
+    const rawSend = await sendTransactionRaw(signedTransaction.toXdr());
 
     if (!rawSend.hash) {
       throw new Error("Transaction submission did not return a hash.");
@@ -639,6 +640,8 @@ function normalizeError(error: unknown): string {
     return "This action is not allowed in the opportunity's current status.";
   if (/#17\b|PaymentLocked/i.test(message))
     return "Payment is locked in escrow.";
+  if (/#18\b|InvalidExpiry/i.test(message))
+    return "Expiry must be empty or a future unix timestamp.";
   return message;
 }
 
@@ -651,6 +654,8 @@ export type CertificateRecord = {
   cohort: string;
   metadataUri: string;
   status: CertificateStatus;
+  /** On-chain status before the expires_at display overlay. */
+  rawStatus?: CertificateStatus;
   issuedAt: number;
   verifiedAt: number;
   expiresAt: number;
@@ -666,13 +671,17 @@ function normalizeIssuer(value: unknown): IssuerRecord | null {
     website: normalizeString(record.website),
     category: normalizeString(record.category),
     status: normalizeIssuerStatus(record.status),
+    registeredAt: normalizeTimestamp(record.registered_at),
+    refreshedAt: normalizeTimestamp(record.refreshed_at),
   };
 }
 
 function normalizeCertificate(value: unknown): CertificateRecord | null {
   if (value == null) return null;
   const record = value as Record<string, unknown>;
-  const status = normalizeCertificateStatus(record.status);
+  const rawStatus = normalizeCertificateStatus(record.status);
+  const expiresAt = normalizeTimestamp(record.expires_at);
+  const status = overlayExpiredCertificateStatus(rawStatus, expiresAt);
   return {
     owner: normalizeAddress(record.owner),
     issuer: normalizeAddress(record.issuer),
@@ -680,9 +689,10 @@ function normalizeCertificate(value: unknown): CertificateRecord | null {
     cohort: normalizeString(record.cohort),
     metadataUri: normalizeString(record.metadata_uri),
     status,
+    rawStatus,
     issuedAt: normalizeTimestamp(record.issued_at),
     verifiedAt: normalizeTimestamp(record.verified_at),
-    expiresAt: normalizeTimestamp(record.expires_at),
+    expiresAt,
     verified: status === "verified",
   };
 }
@@ -732,6 +742,17 @@ export async function suspendIssuer(admin: string, issuer: string) {
   );
 }
 
+export async function refreshIssuer(actor: string, issuer: string) {
+  return signAndSubmit(
+    actor,
+    "refresh_issuer",
+    [
+      { value: actor, type: "address" },
+      { value: issuer, type: "address" },
+    ],
+  );
+}
+
 export async function getIssuer(issuer: string) {
   if (appConfig.e2eMode) {
     return {
@@ -740,6 +761,8 @@ export async function getIssuer(issuer: string) {
       website: "https://stellaroid.tech",
       category: "bootcamp",
       status: "approved" as const,
+      registeredAt: 0,
+      refreshedAt: 0,
     };
   }
 
@@ -851,6 +874,74 @@ export async function suspendCertificate(actor: string, certHashHex: string) {
     [
       { value: actor, type: "address" },
       { value: hexToBytes32(certHashHex), type: "bytes32" },
+    ],
+  );
+}
+
+export async function setCredentialExpiry(
+  actor: string,
+  certHashHex: string,
+  expiresAt: number,
+) {
+  if (appConfig.e2eMode) {
+    const current = getE2ECertificate(certHashHex);
+    if (current) {
+      setE2ECertificate(certHashHex, { ...current, expires_at: expiresAt });
+    }
+    return {
+      hash: `e2e-set_credential_expiry-${actor.slice(0, 6)}`,
+      result: undefined,
+    };
+  }
+
+  return signAndSubmit(
+    actor,
+    "set_credential_expiry",
+    [
+      { value: actor, type: "address" },
+      { value: hexToBytes32(certHashHex), type: "bytes32" },
+      { value: expiresAt, type: "u64" },
+    ],
+  );
+}
+
+export async function renewCertificate(
+  actor: string,
+  certHashHex: string,
+  expiresAt: number,
+) {
+  if (appConfig.e2eMode) {
+    const current = getE2ECertificate(certHashHex);
+    if (current) {
+      const restored =
+        normalizeCertificateStatus(current.status) === "expired" ||
+        overlayExpiredCertificateStatus(
+          normalizeCertificateStatus(current.status),
+          normalizeTimestamp(current.expires_at),
+        ) === "expired"
+          ? normalizeTimestamp(current.verified_at)
+            ? "Verified"
+            : "Issued"
+          : current.status;
+      setE2ECertificate(certHashHex, {
+        ...current,
+        status: restored,
+        expires_at: expiresAt,
+      });
+    }
+    return {
+      hash: `e2e-renew_certificate-${actor.slice(0, 6)}`,
+      result: undefined,
+    };
+  }
+
+  return signAndSubmit(
+    actor,
+    "renew_certificate",
+    [
+      { value: actor, type: "address" },
+      { value: hexToBytes32(certHashHex), type: "bytes32" },
+      { value: expiresAt, type: "u64" },
     ],
   );
 }

@@ -511,10 +511,10 @@ async function signAndSubmit<T>(
 
   // Step 3: Sign via Freighter
   const signedXdr = await signWithFreighter(
-    preparedTransaction.toXDR(),
+    preparedTransaction.toXdr(),
     sourceAddress
   );
-  const signedTransaction = TransactionBuilder.fromXDR(
+  const signedTransaction = TransactionBuilder.fromXdr(
     signedXdr,
     getExpectedNetworkPassphrase()
   );
@@ -899,7 +899,7 @@ User submits transfer form
       → buildTransaction(wallet.address, "transfer", args)
       → server.prepareTransaction(tx) [RPC adds footprint + fees]
       → signWithFreighter(xdr, address) [Freighter popup shown]
-      → TransactionBuilder.fromXDR(signedXdr)
+      → TransactionBuilder.fromXdr(signedXdr)
       → server.sendTransaction(signedTx) [broadcast]
       → server.pollTransaction(hash) [wait for confirmation]
     → returns { hash, result }

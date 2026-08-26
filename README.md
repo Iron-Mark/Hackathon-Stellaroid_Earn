@@ -53,9 +53,10 @@ Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain
 |---|---|---|
 | **v1** | April | [`v1.stellaroid.tech`](https://v1.stellaroid.tech) |
 | **v2** | June | [`v2.stellaroid.tech`](https://v2.stellaroid.tech) |
-| **v3** | July (current) | [`v3.stellaroid.tech`](https://v3.stellaroid.tech) |
+| **v3** | July | [`v3.stellaroid.tech`](https://v3.stellaroid.tech) |
+| **v4** | August (current) | [`v4.stellaroid.tech`](https://v4.stellaroid.tech) |
 
-`stellaroid.tech` always serves the latest production build (`main`). The April source lives on the `april-bootcamp-and-monthly-builder` branch; June and July on `june-monthly-builder` and `july-monthly-builder`.
+`stellaroid.tech` always serves the latest production build (`main`). The April source lives on the `april-bootcamp-and-monthly-builder` branch; June, July, and August on `june-monthly-builder`, `july-monthly-builder`, and `august-monthly-builder`. July is a read-only archive. August is the live monthly-builder branch. The v4 showcase domain is a parked side-note blocker (Vercel git-branch mapping and `v4` CNAME, same target as `v3`).
 
 ### July v3.2 product surface
 
@@ -66,7 +67,7 @@ Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain
 - **Performance pass** - the multi-megabyte stellar-sdk is lazy-loaded out of every route's First Load JS (`/app` dropped 483 → ~260 KB gzipped), the brand typefaces (Orbitron/Exo 2) are self-hosted via `next/font`, and first-party client-error telemetry reports runtime failures to server logs with no third-party service.
 - **Installable PWA** - manifest with maskable icons, service worker (network-first pages, offline fallback, per-deploy cache versioning; verification pages are never served from cache), iOS splash screens. Add it to a phone home screen from the live site.
 - **Mobile-first redesign** - app-style bottom navigation with a More sheet, auto-hiding header, bottom-sheet dialogs, full safe-area/notch handling.
-- **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (all 19 functions, 17 error codes, 16 events), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
+- **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (live tag v3.0.0: 19 functions, 17 error codes; source adds refresh/expiry writes), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
 - **Content engine** - audience landing pages for [bootcamps](https://stellaroid.tech/verify-bootcamp-certificate), [employers](https://stellaroid.tech/verify-candidate-credentials), and [graduate payouts](https://stellaroid.tech/instant-payouts), plus a [guides library](https://stellaroid.tech/guides) and a [verifiable-credentials glossary](https://stellaroid.tech/glossary) - all with FAQPage/HowTo/DefinedTermSet structured data and an [`llms.txt`](https://stellaroid.tech/llms.txt).
 - **Multi-wallet signing** - Freighter and Albedo natively, WalletConnect for mobile wallets (LOBSTR, xBull, Hana, Freighter mobile), and on desktop xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use. WalletConnect activates when a Reown project id is configured.
 
@@ -211,8 +212,8 @@ const tx = new sdk.TransactionBuilder(account, {
   .setTimeout(30)
   .build();
 
-const signedXdr = await wallet.sign(tx.toXDR());        // Freighter / Albedo / Stellar Wallets Kit
-const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXDR(signedXdr, passphrase));
+const signedXdr = await wallet.sign(tx.toXdr());        // Freighter / Albedo / Stellar Wallets Kit
+const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXdr(signedXdr, passphrase));
 const result = await server.pollTransaction(sent.hash);
 ```
 
@@ -313,6 +314,8 @@ Every action in the demo flow is a real transaction on Stellar testnet. Click an
 |---|---|---|
 | [`c02ce160…aea3`](https://stellaroid.tech/proof/c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3) | Stellar PH Bootcamp 2026 | Verified |
 
+Live testnet contract [`CAD6C24P…`](https://stellar.expert/explorer/testnet/contract/CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV) is tag `v3.0.0` (19 functions). The three refresh and expiry writes exist in this source tree and stay unused against that WASM until a new deploy.
+
 ### Contract Functions
 
 | Function | Caller | Description |
@@ -321,11 +324,14 @@ Every action in the demo flow is a real transaction on Stellar testnet. Click an
 | `register_issuer(address, name, website, category)` | Anyone | Submit issuer application (Pending status) |
 | `approve_issuer(admin, issuer)` | Admin | Approve an issuer to register credentials |
 | `suspend_issuer(admin, issuer)` | Admin | Suspend a misbehaving issuer |
+| `refresh_issuer(actor, issuer)` | Issuer or admin | Store a refresh date and extend issuer TTL (source only until a new deploy) |
 | `get_issuer(issuer)` | Anyone | Read issuer record and status |
 | `register_certificate(issuer, student, cert_hash, title, cohort, metadata_uri)` | Approved issuer | Register a credential hash for a graduate |
 | `verify_certificate(issuer, cert_hash)` | Admin or issuer | Mark a credential Verified |
 | `revoke_certificate(issuer, cert_hash)` | Admin or issuer | Permanently revoke a credential |
 | `suspend_certificate(issuer, cert_hash)` | Admin or issuer | Temporarily suspend a credential |
+| `set_credential_expiry(actor, cert_hash, expires_at)` | Issuer or admin | Set or clear a validity window (source only until a new deploy) |
+| `renew_certificate(actor, cert_hash, expires_at)` | Issuer or admin | Renew an elapsed window and restore Issued or Verified (source only until a new deploy) |
 | `reward_student(student, cert_hash, amount)` | Admin | Admin-initiated XLM payment to a graduate |
 | `link_payment(employer, student, cert_hash, amount)` | Employer | Employer pays graduate in XLM, linked to credential |
 | `get_certificate(cert_hash)` | Anyone | Read full credential record and status |
@@ -343,17 +349,17 @@ Every action in the demo flow is a real transaction on Stellar testnet. Click an
 Issued --> Verified  (issuer or admin calls verify_certificate)
        --> Revoked   (issuer or admin calls revoke_certificate)
        --> Suspended (issuer or admin calls suspend_certificate)
-       --> Expired   (reserved status; new credentials currently use expires_at = 0 unless a future issuer flow sets expiry)
+       --> Expired   (past a nonzero expires_at window; renew_certificate restores Issued or Verified)
 ```
 
 ---
 
 ## Tests
 
-Contract tests cover the trust layer, access control, revocation, opportunity escrow, milestone caps, and events:
+Contract tests cover the trust layer, access control, revocation, opportunity escrow, milestone caps, issuer refresh dates, credential expiry, and events:
 
 ```
-running 12 tests
+running 15 tests
 test test::t1_happy_path_with_approved_issuer ... ok
 test test::t2_unapproved_issuer_cannot_issue ... ok
 test test::t3_suspended_issuer_cannot_issue ... ok
@@ -361,7 +367,7 @@ test test::t4_wrong_approved_issuer_cannot_verify ... ok
 test test::t5_revoked_credential_blocks_payment ... ok
 test test::t6_issuer_events_emit ... ok
 
-test result: ok. 12 passed; 0 failed; 0 ignored
+test result: ok. 15 passed; 0 failed; 0 ignored
 ```
 
 | Test | What it verifies |
@@ -375,6 +381,9 @@ test result: ok. 12 passed; 0 failed; 0 ignored
 | t7-t10 | Opportunity create, fund, submit, approve, release, refund, and invalid transition behavior |
 | t11 | Opportunity milestone count is capped to prevent unbounded work/rendering |
 | t12 | Employer can refund after candidate submission to avoid escrow lock |
+| t13 | Issuer records carry register and refresh dates; only issuer or admin can refresh |
+| t14 | Credential expiry blocks payment after the window; renew restores Verified access |
+| t15 | Revoked credentials cannot have expiry set or be renewed |
 
 ---
 

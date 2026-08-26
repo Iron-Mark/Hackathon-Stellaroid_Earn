@@ -31,6 +31,7 @@ const routes: SitemapRoute[] = [
   { path: "/case-study", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-07-30" },
   { path: "/issuer", changeFrequency: "monthly", priority: 0.7 },
   { path: "/issuer/register", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/issuer/batch", changeFrequency: "monthly", priority: 0.5 },
   { path: "/employer", changeFrequency: "monthly", priority: 0.6 },
   { path: "/pilot", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.4 },

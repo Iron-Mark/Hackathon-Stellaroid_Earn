@@ -42,6 +42,43 @@ export function shortenAddress(address: string | null, size = 6): string {
   return `${address.slice(0, size)}...${address.slice(-size)}`;
 }
 
+export function formatUnixDate(unixSeconds: number, emptyLabel = "Not set"): string {
+  if (!Number.isFinite(unixSeconds) || unixSeconds <= 0) return emptyLabel;
+  const date = new Date(unixSeconds * 1000);
+  if (Number.isNaN(date.getTime())) return emptyLabel;
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+}
+
+/** Convert a YYYY-MM-DD date input to a UTC end-of-day unix timestamp, or 0. */
+export function dateInputToUnixSeconds(value: string): number {
+  const trimmed = value.trim();
+  if (!trimmed) return 0;
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
+  if (!match) return 0;
+  const millis = Date.UTC(
+    Number(match[1]),
+    Number(match[2]) - 1,
+    Number(match[3]),
+    23,
+    59,
+    59,
+  );
+  if (Number.isNaN(millis)) return 0;
+  return Math.floor(millis / 1000);
+}
+
+export function unixSecondsToDateInput(unixSeconds: number): string {
+  if (!Number.isFinite(unixSeconds) || unixSeconds <= 0) return "";
+  const date = new Date(unixSeconds * 1000);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
 export function formatRelativeTime(iso: string) {
   const diffMs = Date.now() - new Date(iso).getTime();
   const diffMinutes = Math.max(1, Math.round(diffMs / 60000));

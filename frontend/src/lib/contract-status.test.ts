@@ -5,6 +5,7 @@ import {
   normalizeIssuerStatus,
   normalizeOpportunityStatus,
   normalizeStatusKey,
+  overlayExpiredCertificateStatus,
 } from "./contract-status.ts";
 
 // The regression this module exists to prevent: scValToNative returns a unit
@@ -56,4 +57,31 @@ test("opportunity status maps correctly from the array shape", () => {
   assert.equal(normalizeOpportunityStatus(["Released"]), "released");
   assert.equal(normalizeOpportunityStatus(["Refunded"]), "refunded");
   assert.equal(normalizeOpportunityStatus(["Draft"]), "draft");
+});
+
+test("overlayExpiredCertificateStatus treats a past window as expired", () => {
+  assert.equal(
+    overlayExpiredCertificateStatus("verified", 1_700_000_000, 1_700_000_100),
+    "expired",
+  );
+  assert.equal(
+    overlayExpiredCertificateStatus("issued", 1_700_000_000, 1_700_000_100),
+    "expired",
+  );
+  assert.equal(
+    overlayExpiredCertificateStatus("revoked", 1_700_000_000, 1_700_000_100),
+    "revoked",
+  );
+  assert.equal(
+    overlayExpiredCertificateStatus("suspended", 1_700_000_000, 1_700_000_100),
+    "suspended",
+  );
+  assert.equal(
+    overlayExpiredCertificateStatus("verified", 0, 1_700_000_100),
+    "verified",
+  );
+  assert.equal(
+    overlayExpiredCertificateStatus("verified", 1_700_000_200, 1_700_000_100),
+    "verified",
+  );
 });
