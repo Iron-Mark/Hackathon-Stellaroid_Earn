@@ -16,7 +16,7 @@ const MIXED_CSV = [
 async function connectIssuer(page: import("@playwright/test").Page) {
   await page.goto("/issuer/batch");
   await page.getByRole("button", { name: "Connect Freighter", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Copy wallet address" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Disconnect wallet" })).toBeVisible();
 }
 
 test("CSV preview validates rows, catches in-file duplicates, and signs the ready queue", async ({
@@ -30,9 +30,9 @@ test("CSV preview validates rows, catches in-file duplicates, and signs the read
   await page.getByLabel("Or paste CSV").fill(MIXED_CSV);
   await page.getByRole("button", { name: "Preview pasted CSV" }).click();
 
-  await expect(page.getByText("2 ready")).toBeVisible();
-  await expect(page.getByText("1 in-file duplicates")).toBeVisible();
-  await expect(page.getByText("3 blocked")).toBeVisible();
+  await expect(page.getByText("2 ready", { exact: true })).toBeVisible();
+  await expect(page.getByText("1 in-file duplicates", { exact: true })).toBeVisible();
+  await expect(page.getByText("3 blocked", { exact: true })).toBeVisible();
   await expect(page.getByText("Same hash appears earlier in this CSV")).toBeVisible();
   await expect(page.getByText("Graduate wallet must be a 56-character G address")).toBeVisible();
   await expect(page.getByText("Hash must be 64 hexadecimal characters")).toBeVisible();
@@ -42,7 +42,7 @@ test("CSV preview validates rows, catches in-file duplicates, and signs the read
   await signButton.click();
 
   await expect(page.getByText("Batch signing finished")).toBeVisible();
-  await expect(page.getByText("2 registered")).toBeVisible();
+  await expect(page.getByText("2 registered.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Open proof" })).toHaveCount(2);
   await expect(page.getByRole("link", { name: "Open proof" }).first()).toHaveAttribute(
     "href",
@@ -66,14 +66,14 @@ test("a second preview of issued hashes is skipped as already on-chain", async (
   });
   await expect(page.getByRole("button", { name: "Sign 2 ready rows" })).toBeEnabled();
   await page.getByRole("button", { name: "Sign 2 ready rows" }).click();
-  await expect(page.getByText("2 registered")).toBeVisible();
+  await expect(page.getByText("2 registered.")).toBeVisible();
 
   await page.getByLabel("CSV file").setInputFiles({
     name: "cohort-again.csv",
     mimeType: "text/csv",
     buffer: Buffer.from(issuedCsv),
   });
-  await expect(page.getByText("2 on-chain")).toBeVisible();
+  await expect(page.getByText("2 on-chain", { exact: true })).toBeVisible();
   await expect(page.getByText("Already on-chain").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Sign 0 ready rows" })).toBeDisabled();
 });
