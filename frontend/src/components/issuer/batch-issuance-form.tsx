@@ -83,6 +83,7 @@ export function BatchIssuanceForm() {
     wallet.status === "connected" && !!wallet.address && wallet.isExpectedNetwork;
   const summary = summarizeBatch(queue);
   const queueCounts = summarizeQueue(queue);
+  const blockedCount = queue.filter((row) => row.queueStatus === "blocked").length;
   const canSign =
     hasRequiredConfig() &&
     walletConnected &&
@@ -422,9 +423,9 @@ export function BatchIssuanceForm() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge tone="success">{summary.ready} ready</Badge>
+            <Badge tone="success">{queueCounts.ready} ready</Badge>
             <Badge tone="warning">{summary.duplicateInFile} in-file duplicates</Badge>
-            <Badge tone="danger">{summary.blocked} blocked</Badge>
+            <Badge tone="danger">{blockedCount} blocked</Badge>
             {summary.onChain > 0 ? (
               <Badge tone="warning">{summary.onChain} on-chain</Badge>
             ) : null}

@@ -43,6 +43,8 @@ test("CSV preview validates rows, catches in-file duplicates, and signs the read
 
   await expect(page.getByText("Batch signing finished")).toBeVisible();
   await expect(page.getByText("2 registered.")).toBeVisible();
+  await expect(page.getByText("3 blocked", { exact: true })).toBeVisible();
+  await expect(page.getByText("2 on-chain", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open proof" })).toHaveCount(2);
   await expect(page.getByRole("link", { name: "Open proof" }).first()).toHaveAttribute(
     "href",
