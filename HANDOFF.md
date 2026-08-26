@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-25**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-26**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,13 +8,14 @@ State of this repository as of **2026-08-25**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-25:
+Verified against the remote on 2026-08-26:
 
 | Check | State |
 | --- | --- |
-| Open pull requests | campaign assets (#183), Cloud Agent env (#182), and Dependabot |
-| `main` vs `august-monthly-builder` | tree-identical (august seeded from `main` on 2026-08-25) |
-| `staging` and `july-monthly-builder` | lag `main`; do not sync july, it is a read-only archive |
+| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193) |
+| `main` vs `august-monthly-builder` | tree-identical at `5b17f05` (August fast-forwarded from `main` on 2026-08-26) |
+| `staging` | lags `main`; open a `main` to `staging` sync PR after this file lands |
+| `july-monthly-builder` | frozen read-only archive at `baeec6fb`; never sync it |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
 | Dependabot open alerts | 0 |
@@ -91,8 +92,8 @@ The product is parked. Host-side DNS for `v4` is a side-note blocker and does no
 
 ### After the August docs PR merges
 
-- [ ] Lock `july-monthly-builder` as a read-only archive, the same GitHub lock used for `june-monthly-builder`.
-- [ ] Fast-forward `august-monthly-builder` from `main`.
+- [x] Lock `july-monthly-builder` as a read-only archive, the same GitHub lock used for `june-monthly-builder`.
+- [x] Fast-forward `august-monthly-builder` from `main`.
 
 ### Distribution, the only items with real upside
 
@@ -109,7 +110,7 @@ Both gaps are **disclosed honestly already**, including in the public case study
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, and the repository parking pass are all done.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, and the repository parking pass are all done. July is a locked read-only archive. `august-monthly-builder` matches `main` at `5b17f05`. Leftover PRs #183 and #182 were closed as superseded by #191.
 
 ---
 
