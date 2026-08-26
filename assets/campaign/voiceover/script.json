@@ -1,0 +1,48 @@
+{
+  "voice": "en-US-AndrewNeural",
+  "rate": "-8%",
+  "pitch": "-2Hz",
+  "notes": "First person, graduate not student, Stellar testnet with no real funds. No em dashes. Timed to assets/campaign/stellaroid-promotional-demo.mp4 (122s live-site cut).",
+  "segments": [
+    {
+      "id": "01-title",
+      "start_ms": 800,
+      "text": "Maria lost a job she earned. Not to a better candidate. To a three-week email thread."
+    },
+    {
+      "id": "02-landing",
+      "start_ms": 14000,
+      "text": "I built Stellaroid Earn so a bootcamp graduate's credential is anchored on Stellar. An employer checks it in seconds, no wallet needed. Payment releases against that same record. Everything you are about to see is Stellar testnet. No real funds."
+    },
+    {
+      "id": "03-demo",
+      "start_ms": 35500,
+      "text": "This tour uses real seeded testnet data. A bootcamp anchors the certificate hash. An approved issuer verifies it. An employer escrows a paid trial. Then the graduate gets paid from that same on-chain record."
+    },
+    {
+      "id": "04-proof",
+      "start_ms": 56000,
+      "text": "A recruiter does not need a wallet. They open a public proof URL, read the on-chain status, and check the issuer. Hash, contract, trust evidence, all on one page."
+    },
+    {
+      "id": "05-proof-cta",
+      "start_ms": 76000,
+      "text": "This credential is verified on-chain. Recruiter actions carry the hash and the graduate's wallet into a paid trial, without retyping a thing."
+    },
+    {
+      "id": "06-employer",
+      "start_ms": 97000,
+      "text": "The employer checklist confirms the hash, the issuer, and the candidate wallet before any escrow is locked."
+    },
+    {
+      "id": "07-opportunity",
+      "start_ms": 108500,
+      "text": "Every paid trial on this contract is publicly auditable. Testnet XLM, no monetary value."
+    },
+    {
+      "id": "08-end",
+      "start_ms": 117800,
+      "text": "Bind the hash. Pay the wallet. Prove the work."
+    }
+  ]
+}
