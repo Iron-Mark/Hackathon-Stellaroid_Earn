@@ -390,7 +390,7 @@ async function prepareTransactionWithFallback(
           source: invokeOp.source,
           func: invokeOp.func,
           auth: rawAuth.map((entry) =>
-            sdk.xdr.SorobanAuthorizationEntry.fromXDR(entry, "base64"),
+            sdk.xdr.SorobanAuthorizationEntry.fromXdr(entry, "base64"),
           ),
         }),
       );
@@ -433,7 +433,7 @@ async function simulateRead<T>(
       throw new Error(`Simulation for ${method} returned no value.`);
     }
 
-    const rawScVal = sdk.xdr.ScVal.fromXDR(rawResultXdr, "base64");
+    const rawScVal = sdk.xdr.ScVal.fromXdr(rawResultXdr, "base64");
     return transform(sdk.scValToNative(rawScVal));
   }
 
@@ -473,11 +473,11 @@ async function signAndSubmit<T>(
   );
 
   const signedXdr = await signWithWallet(
-    preparedTransaction.toXDR(),
+    preparedTransaction.toXdr(),
     sourceAddress,
   );
 
-  const signedTransaction = sdk.TransactionBuilder.fromXDR(
+  const signedTransaction = sdk.TransactionBuilder.fromXdr(
     signedXdr,
     getExpectedNetworkPassphrase(),
   );
@@ -502,7 +502,7 @@ async function signAndSubmit<T>(
     }
 
     // SDK parser can also fail in sendTransaction when decoding errorResultXdr.
-    const rawSend = await sendTransactionRaw(signedTransaction.toXDR());
+    const rawSend = await sendTransactionRaw(signedTransaction.toXdr());
 
     if (!rawSend.hash) {
       throw new Error("Transaction submission did not return a hash.");

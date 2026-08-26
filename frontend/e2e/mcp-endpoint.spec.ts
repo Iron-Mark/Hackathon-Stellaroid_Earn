@@ -37,8 +37,13 @@ async function mcpPost(
   });
 }
 
-// Streamable HTTP frames JSON-RPC responses as SSE `data:` lines.
+// Streamable HTTP may frame JSON-RPC as SSE `data:` lines or as a JSON body.
 function parseFrames(body: string): JsonRpcResult[] {
+  const trimmed = body.trim();
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    const parsed = JSON.parse(trimmed) as JsonRpcResult | JsonRpcResult[];
+    return Array.isArray(parsed) ? parsed : [parsed];
+  }
   return body
     .split("\n")
     .filter((line) => line.startsWith("data: "))

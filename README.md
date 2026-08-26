@@ -212,8 +212,8 @@ const tx = new sdk.TransactionBuilder(account, {
   .setTimeout(30)
   .build();
 
-const signedXdr = await wallet.sign(tx.toXDR());        // Freighter / Albedo / Stellar Wallets Kit
-const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXDR(signedXdr, passphrase));
+const signedXdr = await wallet.sign(tx.toXdr());        // Freighter / Albedo / Stellar Wallets Kit
+const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXdr(signedXdr, passphrase));
 const result = await server.pollTransaction(sent.hash);
 ```
 

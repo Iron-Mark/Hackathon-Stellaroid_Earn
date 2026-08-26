@@ -90,28 +90,24 @@ function validateInnerTransaction(innerTx: Transaction, sponsorPublicKey: string
   }
 
   const hostFunction = op.func;
-  if (hostFunction.switch().name !== "hostFunctionTypeInvokeContract") {
+  if (hostFunction.type !== "hostFunctionTypeInvokeContract") {
     throw new Error("Fee sponsorship only supports contract function calls.");
   }
-  const invokeArgs = hostFunction.value() as unknown as {
-    _attributes?: {
-      contractAddress?: {
-        contractId?: () => Buffer;
-      };
-      functionName?: string;
-    };
-  };
-  const attrs = invokeArgs._attributes ?? {};
+  const invokeArgs = hostFunction.invokeContract;
   const configuredContract = appConfig.contractId
     ? Buffer.from(StrKey.decodeContract(appConfig.contractId)).toString("hex")
     : "";
-  const txContract = attrs.contractAddress?.contractId
-    ? Buffer.from(attrs.contractAddress.contractId()).toString("hex")
-    : "";
+  const txContract =
+    invokeArgs.contractAddress.type === "scAddressTypeContract"
+      ? Buffer.from(invokeArgs.contractAddress.contractId.toBytes()).toString(
+          "hex",
+        )
+      : "";
+  const functionName = invokeArgs.functionName.toString();
   if (!configuredContract || txContract !== configuredContract) {
     throw new Error("Signed transaction does not target the configured contract.");
   }
-  if (!attrs.functionName || !ALLOWED_METHODS.has(attrs.functionName)) {
+  if (!functionName || !ALLOWED_METHODS.has(functionName)) {
     throw new Error("Contract method is not eligible for fee sponsorship.");
   }
 }
@@ -156,7 +152,7 @@ export async function POST(request: Request) {
   try {
     const sponsorKeypair = Keypair.fromSecret(SPONSOR_SECRET);
     const sponsorPublicKey = sponsorKeypair.publicKey();
-    const innerTx = TransactionBuilder.fromXDR(
+    const innerTx = TransactionBuilder.fromXdr(
       shape.signedXdr,
       NETWORK_PASSPHRASE,
     ) as Transaction;
@@ -184,7 +180,7 @@ export async function POST(request: Request) {
 
     feeBumpTx.sign(sponsorKeypair);
 
-    return NextResponse.json({ feeBumpXdr: feeBumpTx.toXDR() });
+    return NextResponse.json({ feeBumpXdr: feeBumpTx.toXdr() });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Fee bump failed.";
     return NextResponse.json({ error: message }, { status: 422 });
