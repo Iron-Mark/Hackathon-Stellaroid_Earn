@@ -187,6 +187,8 @@ test("get_issuer reports the approved fixture issuer as trusted", async ({ reque
   expect(payload.data.found).toBe(true);
   expect(payload.data.status).toBe("approved");
   expect(payload.data.trusted).toBe(true);
+  expect(payload.data.registeredAt).toBeNull();
+  expect(payload.data.refreshedAt).toBeNull();
 });
 
 test("get_contract_info declares the read-only testnet posture", async ({ request }) => {

@@ -99,6 +99,21 @@ export function humanizeError(err: unknown): HumanError {
       };
     }
 
+    // InvalidExpiry (#18) must run before includes("#8") because "#18"
+    // contains the substring "#8", and before the generic "invalid" catch.
+    if (
+      message.includes("invalidexpiry") ||
+      message.includes("invalid expiry") ||
+      message.includes("#18")
+    ) {
+      return {
+        title: "Invalid expiry",
+        detail:
+          "Pick a future validity date, or leave the field empty for no expiry.",
+        recoverable: true,
+      };
+    }
+
     // Unauthorized / auth / #3
     if (
       message.includes("unauthorized") ||
@@ -336,4 +351,18 @@ export function humanizeError(err: unknown): HumanError {
       recoverable: true,
     };
   }
+}
+
+/** True when the live WASM has no such host function (v3.0.0 vs newer source). */
+export function isMissingContractMethod(err: unknown): boolean {
+  const message = (err instanceof Error ? err.message : String(err)).toLowerCase();
+  return (
+    message.includes("unknown function") ||
+    message.includes("no such function") ||
+    message.includes("function not found") ||
+    message.includes("invalid function name") ||
+    message.includes("wasm, invalidaction") ||
+    message.includes("wasm invalidaction") ||
+    /error\(wasm,\s*invalidaction\)/.test(message)
+  );
 }

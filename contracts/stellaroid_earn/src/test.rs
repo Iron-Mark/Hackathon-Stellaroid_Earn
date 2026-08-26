@@ -2,7 +2,7 @@
 use super::*;
 use soroban_sdk::{
     symbol_short,
-    testutils::{Address as _, Events},
+    testutils::{Address as _, Events, Ledger},
     token, vec, Address, BytesN, Env, IntoVal, String,
 };
 
@@ -488,4 +488,123 @@ fn t12_employer_can_refund_submitted_opportunity() {
 
     let employer_balance = token::Client::new(&ctx.env, &ctx.token_addr).balance(&employer);
     assert_eq!(employer_balance, 700);
+}
+
+// T13: Issuer records carry register and refresh dates, and refresh_issuer updates them.
+#[test]
+fn t13_issuer_refresh_dates() {
+    let ctx = setup();
+    ctx.env.mock_all_auths();
+    ctx.env.ledger().set_timestamp(1_700_000_000);
+    ctx.client.init(&ctx.admin, &ctx.token_addr);
+
+    let issuer = Address::generate(&ctx.env);
+    register_issuer(&ctx, &issuer);
+
+    let record = ctx.client.get_issuer(&issuer).unwrap();
+    assert_eq!(record.registered_at, 1_700_000_000);
+    assert_eq!(record.refreshed_at, 1_700_000_000);
+
+    ctx.env.ledger().set_timestamp(1_700_000_500);
+    ctx.client.refresh_issuer(&issuer, &issuer);
+    let refreshed = ctx.client.get_issuer(&issuer).unwrap();
+    assert_eq!(refreshed.registered_at, 1_700_000_000);
+    assert_eq!(refreshed.refreshed_at, 1_700_000_500);
+
+    let stranger = Address::generate(&ctx.env);
+    let err = ctx
+        .client
+        .try_refresh_issuer(&stranger, &issuer)
+        .err()
+        .unwrap()
+        .unwrap();
+    assert_eq!(err, Error::Unauthorized);
+}
+
+// T14: Expiry writes persist, block verification/payment after the window, and renew restores access.
+#[test]
+fn t14_credential_expiry_and_renewal() {
+    let ctx = setup();
+    ctx.env.mock_all_auths();
+    ctx.env.ledger().set_timestamp(1_700_000_000);
+    ctx.client.init(&ctx.admin, &ctx.token_addr);
+
+    let issuer = Address::generate(&ctx.env);
+    let student = Address::generate(&ctx.env);
+    let employer = Address::generate(&ctx.env);
+    let hash = BytesN::from_array(&ctx.env, &[14u8; 32]);
+
+    register_issuer(&ctx, &issuer);
+    approve_issuer(&ctx, &issuer);
+    register_certificate(&ctx, &issuer, &student, &hash);
+
+    let past = ctx
+        .client
+        .try_set_credential_expiry(&issuer, &hash, &1_699_999_000)
+        .err()
+        .unwrap()
+        .unwrap();
+    assert_eq!(past, Error::InvalidExpiry);
+
+    ctx.client
+        .set_credential_expiry(&issuer, &hash, &1_700_000_100);
+    let cert = ctx.client.get_certificate(&hash).unwrap();
+    assert_eq!(cert.expires_at, 1_700_000_100);
+
+    ctx.client.verify_certificate(&issuer, &hash);
+    ctx.env.ledger().set_timestamp(1_700_000_200);
+
+    let err = ctx
+        .client
+        .try_link_payment(&employer, &student, &hash, &100)
+        .err()
+        .unwrap()
+        .unwrap();
+    assert_eq!(err, Error::CredentialExpired);
+
+    ctx.client
+        .renew_certificate(&issuer, &hash, &1_700_000_400);
+    let renewed = ctx.client.get_certificate(&hash).unwrap();
+    assert_eq!(renewed.status, CredentialStatus::Verified);
+    assert_eq!(renewed.expires_at, 1_700_000_400);
+
+    ctx.token_admin.mint(&employer, &100);
+    ctx.client.link_payment(&employer, &student, &hash, &100);
+    let balance = token::Client::new(&ctx.env, &ctx.token_addr).balance(&student);
+    assert_eq!(balance, 100);
+}
+
+// T15: Revoked credentials cannot have expiry set or be renewed.
+#[test]
+fn t15_revoked_credential_blocks_expiry_writes() {
+    let ctx = setup();
+    ctx.env.mock_all_auths();
+    ctx.env.ledger().set_timestamp(1_700_000_000);
+    ctx.client.init(&ctx.admin, &ctx.token_addr);
+
+    let issuer = Address::generate(&ctx.env);
+    let student = Address::generate(&ctx.env);
+    let hash = BytesN::from_array(&ctx.env, &[15u8; 32]);
+
+    register_issuer(&ctx, &issuer);
+    approve_issuer(&ctx, &issuer);
+    register_certificate(&ctx, &issuer, &student, &hash);
+    ctx.client.verify_certificate(&issuer, &hash);
+    ctx.client.revoke_certificate(&issuer, &hash);
+
+    let err = ctx
+        .client
+        .try_set_credential_expiry(&issuer, &hash, &1_700_000_500)
+        .err()
+        .unwrap()
+        .unwrap();
+    assert_eq!(err, Error::CredentialRevoked);
+
+    let err = ctx
+        .client
+        .try_renew_certificate(&issuer, &hash, &1_700_000_500)
+        .err()
+        .unwrap()
+        .unwrap();
+    assert_eq!(err, Error::CredentialRevoked);
 }

@@ -1,7 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CopyButton } from "@/components/ui/copy-button";
-import { shortenAddress } from "@/lib/format";
+import { shortenAddress, formatUnixDate } from "@/lib/format";
 import { buildIssuerTrustEvidence } from "@/lib/proof-verification";
 import { isSafeExternalHttpUrl } from "@/lib/security";
 import type { IssuerRecord } from "@/lib/types";
@@ -90,6 +90,26 @@ export function IssuerTrustCard({ issuer }: IssuerTrustCardProps) {
             <Badge tone="accent">{issuer.category || "uncategorized"}</Badge>
           </dd>
         </div>
+        {issuer.registeredAt > 0 ? (
+          <div>
+            <dt className="text-[0.6875rem] uppercase tracking-[0.14em] text-text-muted">
+              Registered
+            </dt>
+            <dd className="mt-1 text-[0.8125rem] text-text">
+              {formatUnixDate(issuer.registeredAt)}
+            </dd>
+          </div>
+        ) : null}
+        {issuer.refreshedAt > 0 ? (
+          <div>
+            <dt className="text-[0.6875rem] uppercase tracking-[0.14em] text-text-muted">
+              Last refreshed
+            </dt>
+            <dd className="mt-1 text-[0.8125rem] text-text">
+              {formatUnixDate(issuer.refreshedAt)}
+            </dd>
+          </div>
+        ) : null}
         <div className="sm:col-span-2">
           <dt className="text-[0.6875rem] uppercase tracking-[0.14em] text-text-muted">
             Website evidence

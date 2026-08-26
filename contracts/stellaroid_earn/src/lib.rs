@@ -56,6 +56,8 @@ pub struct Issuer {
     pub website: String,
     pub category: String,
     pub status: IssuerStatus,
+    pub registered_at: u64,
+    pub refreshed_at: u64,
 }
 
 #[contracttype]
@@ -109,6 +111,7 @@ pub enum Error {
     InvalidMilestone = 15,
     InvalidOpportunityStatus = 16,
     PaymentLocked = 17,
+    InvalidExpiry = 18,
 }
 
 // ~30d / ~60d in testnet ledgers — keeps certificates alive through a bootcamp demo window.
@@ -150,12 +153,15 @@ impl StellaroidEarn {
             return Err(Error::AlreadyExists);
         }
 
+        let now = env.ledger().timestamp();
         let record = Issuer {
             address: issuer.clone(),
             name,
             website,
             category,
             status: IssuerStatus::Pending,
+            registered_at: now,
+            refreshed_at: now,
         };
         env.storage().persistent().set(&key, &record);
         env.storage()
@@ -190,6 +196,24 @@ impl StellaroidEarn {
             .persistent()
             .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
         env.events().publish((symbol_short!("iss_susp"),), issuer);
+        Ok(())
+    }
+
+    /// Issuer or admin bumps the persistent TTL and records a refresh date.
+    pub fn refresh_issuer(env: Env, actor: Address, issuer: Address) -> Result<(), Error> {
+        actor.require_auth();
+        if actor != issuer && actor != get_admin(&env)? {
+            return Err(Error::Unauthorized);
+        }
+
+        let key = DataKey::Issuer(issuer.clone());
+        let mut record = load_issuer(&env, &issuer)?;
+        record.refreshed_at = env.ledger().timestamp();
+        env.storage().persistent().set(&key, &record);
+        env.storage()
+            .persistent()
+            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
+        env.events().publish((symbol_short!("iss_rfr"),), issuer);
         Ok(())
     }
 
@@ -306,6 +330,78 @@ impl StellaroidEarn {
         Ok(())
     }
 
+    /// Set or clear a credential validity window. `expires_at = 0` means no expiry.
+    /// Does not revive an already-expired record; use `renew_certificate` for that.
+    pub fn set_credential_expiry(
+        env: Env,
+        actor: Address,
+        cert_hash: BytesN<32>,
+        expires_at: u64,
+    ) -> Result<(), Error> {
+        actor.require_auth();
+
+        let key = DataKey::Cert(cert_hash.clone());
+        let mut cert = load_credential(&env, &cert_hash)?;
+        authorize_credential_actor(&env, &actor, &cert)?;
+        if cert.status == CredentialStatus::Revoked {
+            return Err(Error::CredentialRevoked);
+        }
+        if cert.status == CredentialStatus::Suspended {
+            return Err(Error::InvalidStatus);
+        }
+        ensure_future_expiry(&env, expires_at)?;
+        if is_past_expiry(&env, &cert) {
+            return Err(Error::CredentialExpired);
+        }
+
+        cert.expires_at = expires_at;
+        env.storage().persistent().set(&key, &cert);
+        env.storage()
+            .persistent()
+            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
+        env.events()
+            .publish((symbol_short!("cert_exp"), cert.owner), cert_hash);
+        Ok(())
+    }
+
+    /// Renew a credential's validity window. Restores Expired records to Verified
+    /// when they were previously verified, otherwise back to Issued.
+    pub fn renew_certificate(
+        env: Env,
+        actor: Address,
+        cert_hash: BytesN<32>,
+        expires_at: u64,
+    ) -> Result<(), Error> {
+        actor.require_auth();
+
+        let key = DataKey::Cert(cert_hash.clone());
+        let mut cert = load_credential(&env, &cert_hash)?;
+        authorize_credential_actor(&env, &actor, &cert)?;
+        if cert.status == CredentialStatus::Revoked {
+            return Err(Error::CredentialRevoked);
+        }
+        if cert.status == CredentialStatus::Suspended {
+            return Err(Error::InvalidStatus);
+        }
+        ensure_future_expiry(&env, expires_at)?;
+
+        if cert.status == CredentialStatus::Expired || is_past_expiry(&env, &cert) {
+            cert.status = if cert.verified_at != 0 {
+                CredentialStatus::Verified
+            } else {
+                CredentialStatus::Issued
+            };
+        }
+        cert.expires_at = expires_at;
+        env.storage().persistent().set(&key, &cert);
+        env.storage()
+            .persistent()
+            .extend_ttl(&key, TTL_THRESHOLD, TTL_EXTEND);
+        env.events()
+            .publish((symbol_short!("cert_ren"), cert.owner), cert_hash);
+        Ok(())
+    }
+
     /// Admin-triggered XLM/SAC reward to a student whose cert is registered.
     /// The token client handles the actual transfer; we only gate + emit.
     pub fn reward_student(
@@ -324,7 +420,7 @@ impl StellaroidEarn {
             .ok_or(Error::NotInitialized)?;
         admin.require_auth();
 
-        let key = DataKey::Cert(cert_hash);
+        let key = DataKey::Cert(cert_hash.clone());
         let cert: Credential = env.storage().persistent().get(&key).ok_or(Error::NotFound)?;
         ensure_payable(&env, &cert, &student)?;
 
@@ -357,7 +453,7 @@ impl StellaroidEarn {
         let cert: Credential = env
             .storage()
             .persistent()
-            .get(&DataKey::Cert(cert_hash))
+            .get(&DataKey::Cert(cert_hash.clone()))
             .ok_or(Error::NotFound)?;
         ensure_payable(&env, &cert, &student)?;
 
@@ -693,8 +789,19 @@ fn authorize_credential_actor(
     Err(Error::Unauthorized)
 }
 
+fn is_past_expiry(env: &Env, cert: &Credential) -> bool {
+    cert.expires_at != 0 && cert.expires_at <= env.ledger().timestamp()
+}
+
+fn ensure_future_expiry(env: &Env, expires_at: u64) -> Result<(), Error> {
+    if expires_at != 0 && expires_at <= env.ledger().timestamp() {
+        return Err(Error::InvalidExpiry);
+    }
+    Ok(())
+}
+
 fn ensure_not_expired(env: &Env, cert: &Credential) -> Result<(), Error> {
-    if cert.expires_at != 0 && cert.expires_at <= env.ledger().timestamp() {
+    if is_past_expiry(env, cert) {
         return Err(Error::CredentialExpired);
     }
     Ok(())
