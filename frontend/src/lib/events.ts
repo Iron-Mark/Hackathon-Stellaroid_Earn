@@ -65,7 +65,7 @@ export type RecentActivityItem = {
 const STELLAR_ADDRESS_RE = /^[GC][A-Z2-7]{55}$/;
 
 function decodeScVal(base64: string) {
-  return xdr.ScVal.fromXDR(base64, "base64");
+  return xdr.ScVal.fromXdr(base64, "base64");
 }
 
 function decodeScValToNative(base64: string) {

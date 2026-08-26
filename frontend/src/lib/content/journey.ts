@@ -376,7 +376,7 @@ export const journeyCredits: JourneyCreditGroup[] = [
         href: "https://lucide.dev/",
       },
       {
-        name: "@modelcontextprotocol/sdk",
+        name: "@modelcontextprotocol/server",
         role: "Powers the read-only endpoint that lets AI agents verify a credential",
         license: "MIT",
         href: "https://github.com/modelcontextprotocol/typescript-sdk",

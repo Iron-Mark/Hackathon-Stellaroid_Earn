@@ -8,9 +8,9 @@
 // token-audience/confused-deputy attack surface), no secrets reachable from
 // any handler, no write path.
 //
-// First-party dependencies only: Vercel's mcp-handler + the official
-// @modelcontextprotocol/sdk (pinned >=1.26.0 for the Origin-validation
-// advisory) + zod. See docs/superpowers/specs/2026-07-20-mcp-server-design.md.
+// First-party dependencies only: Vercel's mcp-handler 2.x + the official
+// @modelcontextprotocol/server (SDK v2) + zod. See
+// docs/superpowers/specs/2026-07-20-mcp-server-design.md.
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
 import { StrKey } from "@stellar/stellar-sdk";
@@ -102,10 +102,15 @@ function explorerContractUrl() {
 
 const handler = createMcpHandler(
   (server) => {
-    server.tool(
+    server.registerTool(
       "verify_credential",
-      "Verify a Stellaroid Earn credential by its SHA-256 certificate hash. Returns the on-chain status (issued/verified/revoked/suspended/expired), issuer, timestamps, and public audit links. Runs on Stellar testnet.",
-      { hash: z.string().regex(HASH_RE, "64-char hex SHA-256 hash") },
+      {
+        description:
+          "Verify a Stellaroid Earn credential by its SHA-256 certificate hash. Returns the on-chain status (issued/verified/revoked/suspended/expired), issuer, timestamps, and public audit links. Runs on Stellar testnet.",
+        inputSchema: z.object({
+          hash: z.string().regex(HASH_RE, "64-char hex SHA-256 hash"),
+        }),
+      },
       guarded(async ({ hash }: { hash: string }) => {
         const certHash = hash.toLowerCase();
         const cert = await getCertificateServer(certHash);
@@ -139,16 +144,19 @@ const handler = createMcpHandler(
       }),
     );
 
-    server.tool(
+    server.registerTool(
       "get_issuer",
-      "Look up an issuer in the Stellaroid Earn on-chain trust registry by Stellar address. Returns approval status (pending/approved/suspended), name, category, website, and register/refresh dates when the contract supplies them.",
       {
-        address: z
-          .string()
-          .regex(ADDRESS_RE, "Stellar G... account address")
-          .refine((value) => StrKey.isValidEd25519PublicKey(value), {
-            message: "Invalid Stellar address (checksum failed)",
-          }),
+        description:
+          "Look up an issuer in the Stellaroid Earn on-chain trust registry by Stellar address. Returns approval status (pending/approved/suspended), name, category, website, and register/refresh dates when the contract supplies them.",
+        inputSchema: z.object({
+          address: z
+            .string()
+            .regex(ADDRESS_RE, "Stellar G... account address")
+            .refine((value) => StrKey.isValidEd25519PublicKey(value), {
+              message: "Invalid Stellar address (checksum failed)",
+            }),
+        }),
       },
       guarded(async ({ address }: { address: string }) => {
         const issuer = await getIssuerServer(address);
@@ -177,10 +185,15 @@ const handler = createMcpHandler(
       }),
     );
 
-    server.tool(
+    server.registerTool(
       "list_opportunities",
-      "List escrowed paid trials (opportunities) on the Stellaroid Earn contract, newest first. Each ties an employer's escrowed XLM to a candidate's verified credential and moves draft -> funded -> submitted -> released/refunded.",
-      { limit: z.number().int().min(1).max(25).default(10) },
+      {
+        description:
+          "List escrowed paid trials (opportunities) on the Stellaroid Earn contract, newest first. Each ties an employer's escrowed XLM to a candidate's verified credential and moves draft -> funded -> submitted -> released/refunded.",
+        inputSchema: z.object({
+          limit: z.number().int().min(1).max(25).default(10),
+        }),
+      },
       guarded(async ({ limit }: { limit: number }) => {
         const records = await listOpportunitiesServer(limit);
         return ok({
@@ -203,10 +216,15 @@ const handler = createMcpHandler(
       }),
     );
 
-    server.tool(
+    server.registerTool(
       "get_opportunity",
-      "Fetch one escrowed paid trial by its numeric ID, including its escrow status, milestone progress, and the credential hash it is bound to.",
-      { id: z.number().int().min(0).max(100000) },
+      {
+        description:
+          "Fetch one escrowed paid trial by its numeric ID, including its escrow status, milestone progress, and the credential hash it is bound to.",
+        inputSchema: z.object({
+          id: z.number().int().min(0).max(100000),
+        }),
+      },
       guarded(async ({ id }: { id: number }) => {
         const record = await getOpportunityServer(id);
         if (!record) {
@@ -236,10 +254,15 @@ const handler = createMcpHandler(
       }),
     );
 
-    server.tool(
+    server.registerTool(
       "recent_events",
-      "Decoded recent contract events (credential registrations/verifications, escrow lifecycle, payments) from the Stellaroid Earn contract, deduplicated across Soroban RPC and the Stellar Expert indexer.",
-      { limit: z.number().int().min(1).max(20).default(5) },
+      {
+        description:
+          "Decoded recent contract events (credential registrations/verifications, escrow lifecycle, payments) from the Stellaroid Earn contract, deduplicated across Soroban RPC and the Stellar Expert indexer.",
+        inputSchema: z.object({
+          limit: z.number().int().min(1).max(20).default(5),
+        }),
+      },
       guarded(async ({ limit }: { limit: number }) => {
         const events = await getRecentEventsCached(appConfig.contractId, limit);
         return ok({
@@ -261,10 +284,13 @@ const handler = createMcpHandler(
       }),
     );
 
-    server.tool(
+    server.registerTool(
       "get_contract_info",
-      "Static facts about the Stellaroid Earn Soroban contract: contract ID, network, and public audit/documentation links. Use this first to orient.",
-      {},
+      {
+        description:
+          "Static facts about the Stellaroid Earn Soroban contract: contract ID, network, and public audit/documentation links. Use this first to orient.",
+        inputSchema: z.object({}),
+      },
       guarded(async () => {
         return ok({
           name: "Stellaroid Earn",
@@ -285,10 +311,6 @@ const handler = createMcpHandler(
   },
   {
     serverInfo: { name: "stellaroid-earn", version: "1.1.0" },
-  },
-  {
-    basePath: "/api",
-    disableSse: true,
   },
 );
 

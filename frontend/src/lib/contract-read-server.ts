@@ -248,7 +248,7 @@ export async function getCertificateServer(certHashHex: string) {
       throw new Error("Simulation for get_certificate returned no value.");
     }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
+    const rawScVal = xdr.ScVal.fromXdr(rawResultXdr, "base64");
     return normalizeCertificate(scValToNative(rawScVal));
   }
 }
@@ -310,7 +310,7 @@ export async function getIssuerServer(issuer: string) {
       throw new Error("Simulation for get_issuer returned no value.");
     }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
+    const rawScVal = xdr.ScVal.fromXdr(rawResultXdr, "base64");
     return normalizeIssuer(scValToNative(rawScVal));
   }
 }
@@ -405,7 +405,7 @@ export async function getOpportunityServer(oppId: OpportunityIdInput) {
       throw new Error("Simulation for get_opportunity returned no value.");
     }
 
-    const rawScVal = xdr.ScVal.fromXDR(rawResultXdr, "base64");
+    const rawScVal = xdr.ScVal.fromXdr(rawResultXdr, "base64");
     return normalizeOpportunity(scValToNative(rawScVal));
   }
 }

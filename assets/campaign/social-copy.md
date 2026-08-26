@@ -18,9 +18,10 @@ Boards referenced here live alongside this file. See
 
 ## Discord, general or Stellar community
 
-Attach `stellaroid-teaser.gif`. Only the first link is bare so Discord renders
-a single embed card; the rest are wrapped in angle brackets to suppress extra
-previews.
+Attach `stellaroid-teaser.gif` as the autoplay opener, or
+`stellaroid-promotional-demo.mp4` when you want the 2-minute live-site
+walkthrough. Only the first link is bare so Discord renders a single embed
+card; the rest are wrapped in angle brackets to suppress extra previews.
 
 ```
 **Stellaroid Earn: proof and payment on Stellar, in one flow**

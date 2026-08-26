@@ -1,0 +1,11 @@
+{
+  "name": "Stellaroid Earn",
+  "install": "cd frontend && npx -y npm@11.11.0 ci && npx playwright install --with-deps chromium && cd .. && rustup toolchain install stable --profile minimal && rustup default stable && rustup target add wasm32v1-none && cargo fetch --locked",
+  "terminals": [
+    {
+      "name": "frontend-dev",
+      "command": "cd frontend && npm run dev"
+    }
+  ],
+  "ports": [3000]
+}

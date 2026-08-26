@@ -2,8 +2,7 @@
 // Streamable HTTP transport), not raw curl. Usage:
 //   node scripts/mcp-client-smoke.mjs [endpoint-url]
 // Defaults to production. Exits non-zero on any failure.
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 
 const ENDPOINT = process.argv[2] ?? "https://stellaroid.tech/api/mcp";
 const SAMPLE_HASH =

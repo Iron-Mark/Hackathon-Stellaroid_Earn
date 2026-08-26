@@ -32,7 +32,7 @@ license; this list is not exhaustive of transitive dependencies.
   Apache License 2.0.
 - **@creit.tech/stellar-wallets-kit** — Copyright Creit Tech. MIT License.
 - **mcp-handler** — MIT License.
-- **@modelcontextprotocol/sdk** — Copyright Anthropic, PBC. MIT License.
+- **@modelcontextprotocol/server** — Copyright Anthropic, PBC. MIT License.
 - **next**, **react**, **react-dom** — Copyright Vercel, Inc. and Meta
   Platforms, Inc. MIT License.
 

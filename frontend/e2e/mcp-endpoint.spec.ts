@@ -37,8 +37,13 @@ async function mcpPost(
   });
 }
 
-// Streamable HTTP frames JSON-RPC responses as SSE `data:` lines.
+// Streamable HTTP may frame JSON-RPC as SSE `data:` lines or as a JSON body.
 function parseFrames(body: string): JsonRpcResult[] {
+  const trimmed = body.trim();
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    const parsed = JSON.parse(trimmed) as JsonRpcResult | JsonRpcResult[];
+    return Array.isArray(parsed) ? parsed : [parsed];
+  }
   return body
     .split("\n")
     .filter((line) => line.startsWith("data: "))
@@ -118,8 +123,11 @@ test("verify_credential rejects a malformed hash at the schema layer", async ({ 
     4,
   );
   expect(rpc.result?.isError).toBe(true);
-  // Assert the JSON-RPC error code, not SDK prose, to stay upgrade-proof.
-  expect(rpc.result?.content?.[0]?.text).toContain("-32602");
+  // mcp-handler 2 returns a tool-level validation error instead of embedding
+  // JSON-RPC -32602 in the content text. Assert the field failed validation.
+  const text = String(rpc.result?.content?.[0]?.text ?? "");
+  expect(text).toMatch(/hash/i);
+  expect(text).toMatch(/invalid|validation/i);
 });
 
 test("get_opportunity returns the fixture's exact hex certHash (byte-branch revert detector)", async ({ request }) => {

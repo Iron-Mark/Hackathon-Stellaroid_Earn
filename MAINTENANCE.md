@@ -73,15 +73,14 @@ The Vercel fallback alias may still exist for recovery checks, but it should not
 
 ## Held Dependency Majors
 
-Three frontend dependencies are deliberately held back because the surrounding ecosystem cannot support them yet. All three holds are encoded as version-scoped `ignore` entries on the `/frontend` npm entry in [`.github/dependabot.yml`](.github/dependabot.yml), so Dependabot stops re-proposing them. Without the holds the grouped PR fails CI, which is what happened in #108 (majors) and #119 (minor/patch).
-
-The section title is historical — the first two holds were majors. The `@modelcontextprotocol/sdk` hold added 2026-07-29 is a *minor* bump that is equally unmergeable, so "held dependency" is the accurate reading.
+Two frontend dependencies are deliberately held back because the surrounding ecosystem cannot support them yet. Both holds are encoded as version-scoped `ignore` entries on the `/frontend` npm entry in [`.github/dependabot.yml`](.github/dependabot.yml), so Dependabot stops re-proposing them. Without the holds the grouped PR fails CI, which is what happened in #108 (majors) and #119 (minor/patch).
 
 | Package | Held at | Blocked version | Blocker |
 | --- | --- | --- | --- |
 | `typescript` | `^6.0.3` | `7.x` | `typescript-eslint` 8.65.0, bundled by `eslint-config-next` 16, does not support the TS 7.0 native compiler |
 | `eslint` | `^9.39.5` | `10.x` | `eslint-plugin-react` 7.37.5, bundled by `eslint-config-next` 16, still calls the removed `context.getFilename()` |
-| `@modelcontextprotocol/sdk` | `1.26.0` (exact) | `>1.26.0` | `mcp-handler` 1.1.0, the latest release, declares an exact peer on `@modelcontextprotocol/sdk@1.26.0` |
+
+The `@modelcontextprotocol/sdk` hold added 2026-07-29 is gone. `mcp-handler` 2.x peers on `@modelcontextprotocol/server` ^2 instead of an exact SDK 1.26.0 pin, so that ignore was removed when the npm-major migration landed.
 
 ### TypeScript 7.x
 
@@ -111,53 +110,24 @@ The guard throws when its unsupported-version behavior is `error` and warns othe
 
 Because the helper in `lib/util/version.js` is shared, the breakage is not limited to a single rule.
 
-### `@modelcontextprotocol/sdk` above 1.26.0
-
-`mcp-handler` 1.1.0 declares an **exact** peer, not a range:
-
-```
-"peerDependencies": { "next": ">=13.0.0", "@modelcontextprotocol/sdk": "1.26.0" }
-```
-
-So any bump off 1.26.0 fails `npm ci` outright. Dependabot #119 proposed 1.26.0 -> 1.30.0 and the install step failed with:
-
-```
-npm error code ERESOLVE
-npm error ERESOLVE could not resolve
-npm error While resolving: mcp-handler@1.1.0
-npm error Found: @modelcontextprotocol/sdk@1.30.0
-npm error Could not resolve dependency:
-npm error peer @modelcontextprotocol/sdk@"1.26.0" from mcp-handler@1.1.0
-```
-
-This hold differs from the other two in an important way: **there is no upgrade path to wait for.** 1.1.0 is the newest `mcp-handler` (published line: 1.0.5, 1.0.6, 1.0.7, 1.1.0) and it still hard-pins the exact peer, so no combination of currently published versions satisfies a bump. Bumping the SDK requires `mcp-handler` to relax the peer first.
-
-Verify the blocker is still real before touching the hold:
-
-```powershell
-npm view mcp-handler version
-npm view mcp-handler@1.1.0 peerDependencies
-```
-
 ### Why version-scoped, not `update-types`
 
-The ignores name the narrowest range that actually breaks (`versions: ["7.x"]`, `versions: ["10.x"]`, `versions: [">1.26.0"]`) rather than using `update-types: [version-update:semver-major]`. A blanket major ignore would also suppress a future TypeScript 8 or ESLint 11 that may well be fine, and would not have caught #119 at all — that was a *minor* bump inside the `npm-minor-patch` group, which no major-scoped rule would touch.
+The ignores name the narrowest range that actually breaks (`versions: ["7.x"]`, `versions: ["10.x"]`) rather than using `update-types: [version-update:semver-major]`. A blanket major ignore would also suppress a future TypeScript 8 or ESLint 11 that may well be fine, and would not have caught #119 at all — that was a *minor* bump inside the `npm-minor-patch` group, which no major-scoped rule would touch.
 
-One consequence worth being explicit about: the `typescript` and `eslint` holds self-expire, because they name a single major line. The `@modelcontextprotocol/sdk` hold does not — `>1.26.0` matches every future release, since every future release breaks the exact peer. It has to be removed by hand, and the monthly review below is the checkpoint that catches it.
+The `typescript` and `eslint` holds self-expire, because they name a single major line.
 
 ### Known tradeoff: security updates are also suppressed
 
-A `versions:` ignore suppresses **all** Dependabot updates matching that range, including security updates — and automated security fixes are enabled on this repo. A CVE fixed only in `typescript` 7.x, `eslint` 10.x, or `@modelcontextprotocol/sdk` above 1.26.0 would therefore not raise a PR. This is an accepted tradeoff, recorded here and in `.github/dependabot.yml` rather than left silent. Check advisories for all three manually during the monthly review while the holds stand.
+A `versions:` ignore suppresses **all** Dependabot updates matching that range, including security updates — and automated security fixes are enabled on this repo. A CVE fixed only in `typescript` 7.x or `eslint` 10.x would therefore not raise a PR. This is an accepted tradeoff, recorded here and in `.github/dependabot.yml` rather than left silent. Check advisories for both manually during the monthly review while the holds stand.
 
-The three are not equally exposed. `typescript` and `eslint` are `devDependencies`, which limits but does not eliminate the risk. `@modelcontextprotocol/sdk` is a **runtime `dependency`**, and its hold covers every version above 1.26.0 rather than one major line, so it is the sharpest of the three: an SDK advisory fixed in any later release would be silently suppressed. If that happens, the fix is not to widen the ignore — it is to unblock or replace `mcp-handler`, since the exact peer is what pins the SDK in the first place.
+Both remaining holds are `devDependencies`.
 
-### Revisit (noted 2026-07-29)
+### Revisit (noted 2026-07-29, MCP hold dropped 2026-08-26)
 
 Re-test and remove the corresponding `ignore` entry when the upstream unblocks:
 
 - `typescript-eslint` ships TypeScript 7 support (watch its `SUPPORTED_TYPESCRIPT_VERSIONS` range).
 - `eslint-plugin-react` ships an ESLint 10 compatible release that drops `context.getFilename()`.
-- `mcp-handler` relaxes its exact `@modelcontextprotocol/sdk@1.26.0` peer to a range, or ships a release that supports a newer SDK.
 
 Verify with `npm run lint` and `npm run build` in `frontend/` before dropping a hold.
 
@@ -170,5 +140,5 @@ Answer these in a short issue or note:
 - Are issuer pending/approved/locked states clear?
 - Can the employer flow still start from a proof page?
 - Do `www.stellaroid.tech` and `earn.stellaroid.tech` still redirect to the apex URL?
-- Can any of the three holds in "Held Dependency Majors" be unblocked yet, and are there open advisories against `typescript` 7.x, `eslint` 10.x, or `@modelcontextprotocol/sdk` above 1.26.0 that the version-scoped ignores would be hiding? Check `npm view mcp-handler@latest peerDependencies` for the SDK one specifically — it will not clear itself.
+- Can either remaining hold in "Held Dependency Majors" be unblocked yet, and are there open advisories against `typescript` 7.x or `eslint` 10.x that the version-scoped ignores would be hiding?
 - What is the next single feature that makes this more useful to a real issuer or employer?
