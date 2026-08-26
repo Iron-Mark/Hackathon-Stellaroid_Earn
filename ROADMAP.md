@@ -28,6 +28,7 @@ Stellaroid Earn is no longer just a bootcamp submission. The project should stay
 - Turn candidate pages into honest talent passports: linked proof pages can attach one known proof, but wallet-wide credential discovery still waits for an indexer.
 - Keep `/status` current for demo health, contract ID, proof links, and domain state.
 - Document a pilot workflow for one real issuer and a small batch of graduates.
+- Keep `/issuer/batch` healthy for CSV preview, duplicate hash checks, and a one-signature-per-row testnet queue.
 
 ## Phase 3 - Pilot With Real Users
 

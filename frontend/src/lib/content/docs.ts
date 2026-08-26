@@ -118,7 +118,15 @@ export const docsPages: DocPage[] = [
       },
       {
         "type": "p",
-        "text": "The dashboard at https://stellaroid.tech/app has two roles. As an issuer, you register a certificate hash for a student wallet and then approve it (`verify_certificate`). As an employer, you paste a verified hash and an amount to send a credential-linked XLM payment. Note the trust gate: issuer registration enters a Pending queue on-chain, and only admin-approved issuers can register or verify credentials — suspended issuers are blocked at the contract level."
+        "text": "The dashboard at https://stellaroid.tech/app has two roles. As an issuer, you register a certificate hash for a student wallet and then approve it (`verify_certificate`). As an employer, you paste a verified hash and an amount to send a credential-linked XLM payment. Note the trust gate: issuer registration enters a Pending queue on-chain, and only admin-approved issuers can register or verify credentials; suspended issuers are blocked at the contract level."
+      },
+      {
+        "type": "h3",
+        "text": "5. Batch a cohort from CSV"
+      },
+      {
+        "type": "p",
+        "text": "Approved issuers can open `/issuer/batch`, preview a CSV of graduate wallets and SHA-256 hashes, then sign a queue. Each ready row calls `register_certificate` on the live v3.0.0 testnet contract. Duplicate hashes in the file are blocked before signing; hashes already on-chain are skipped. Freighter signs one transaction per graduate. The live contract ABI is unchanged, so this path works without a new deploy."
       },
       {
         "type": "h2",
@@ -1033,6 +1041,14 @@ export const docsPages: DocPage[] = [
       {
         "type": "p",
         "text": "The production client accepts both `PENDING` and `DUPLICATE` submission statuses, and treats a `FAILED` or `NOT_FOUND` poll result as an error surfaced through a normalizer that maps Soroban's numeric error codes (`#1`, `#2`, ...) to human-readable messages matching the contract's Rust `contracterror` enum."
+      },
+      {
+        "type": "h2",
+        "text": "Batch issuance"
+      },
+      {
+        "type": "p",
+        "text": "`/issuer/batch` is a client-side CSV preview and signing queue on top of the live `register_certificate` ABI. Parsing, row validation, and in-file duplicate detection happen before any RPC call. Unique valid hashes are then checked with `get_certificate`. Ready rows are signed one at a time so Freighter can prompt per graduate. The live tag v3.0.0 contract is not upgraded; batching is a frontend queue, not a new contract method."
       },
       {
         "type": "h2",

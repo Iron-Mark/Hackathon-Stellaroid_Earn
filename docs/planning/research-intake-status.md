@@ -30,7 +30,7 @@ Do not expand into marketplace, NFT, broad AI, or mainnet payment scope before i
 | --- | --- | --- |
 | Keep credential proof loop as active scope | Implemented | Roadmap and this intake keep proof-loop-first scope. |
 | Avoid marketplace, NFT, premature mainnet scope | Implemented | Roadmap keeps NFT/mainnet/marketplace out of active scope until pilot evidence exists. |
-| Batch credential issuance | Accepted backlog | Track as issuer pilot requirement: CSV preview, validation, and signing queue after one issuer pilot. |
+| Batch credential issuance | Implemented | `/issuer/batch` previews CSV rows, validates graduate wallets and SHA-256 hashes, blocks in-file duplicates, checks `get_certificate`, and signs a one-tx-per-row `register_certificate` queue against live v3.0.0. |
 | Revocation and suspension UX | Implemented, needs richer reason taxonomy later | Contract supports revoke/suspend, dashboard action buttons exist, and proof pages render revoked/suspended status banners. Reason taxonomy remains backlog. |
 | Expiration and renewal flow | Accepted backlog | Contract has `expires_at` and UI status handling. Actual issuer renewal workflow remains future work because current issuance sets `expires_at = 0`. |
 | Employer export pack | Implemented | `/proof/[hash]/export` returns a recruiter-safe JSON proof pack with status, issuer, timestamps, metadata, proof URL, explorer links, verification breakdown checks, issuer-trust evidence, and an unsigned standards-alignment preview. |
@@ -52,7 +52,6 @@ Do not expand into marketplace, NFT, broad AI, or mainnet payment scope before i
 
 These are accepted product backlog items, not open pro-research intake tasks:
 
-- Batch issuance: CSV import, row validation, duplicate/hash checks, signing queue, preview before issue.
 - Expiration and renewal: issuer-defined validity windows, renewal reminder state, reissue workflow, and proof-page copy for expired/renewed credentials.
 - Admin and trust: org admin, reviewer, viewer, support roles, reviewer evidence, issuer domain verification, and audit-log surfaces.
 - Analytics: durable proof history, verification requests, issuer conversion to pilot, funnel reporting, and audit-grade action history beyond Vercel page/custom events.

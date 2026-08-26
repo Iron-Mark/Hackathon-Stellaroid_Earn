@@ -52,7 +52,7 @@ Open http://localhost:3000 with [Freighter](https://www.freighter.app/) installe
 
 ## Pro-Research Backlog (2026-06-11)
 
-- [ ] Batch issuance: CSV preview, validation, duplicate/hash checks, and signing queue
+- [x] Batch issuance: CSV preview, validation, duplicate/hash checks, and signing queue (`/issuer/batch`). Each ready row still calls live `register_certificate`; no new contract deploy.
 - [ ] Expiration/renewal workflow beyond current `expires_at` display handling
 - [ ] Admin trust model: org admin, reviewer, viewer, support roles, and audit logs
 - [ ] Branded proof pages: issuer logo, policy links, custom OG variants, optional issuer domain mapping
