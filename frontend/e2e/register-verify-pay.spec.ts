@@ -29,6 +29,11 @@ test("register, verify, pay, and open the proof page", async ({ page }) => {
 
   await page.getByRole("button", { name: "Autofill form inputs" }).click();
 
+  await expect(page.getByRole("link", { name: "Issue a cohort from CSV" })).toHaveAttribute(
+    "href",
+    "/issuer/batch",
+  );
+
   const studentWalletInput = page.getByLabel("Student wallet (G...)").first();
   const hashInput = page.getByLabel("Certificate hash (64 hex)").first();
   await expect(studentWalletInput).toHaveValue(/^G[A-Z0-9]{55}$/);
