@@ -41,7 +41,7 @@ The bootcamp/event submission is complete. Stellaroid Earn is now maintained as 
 - **Pilot intake route:** [`/pilot`](https://stellaroid.tech/pilot)
 - **Case study (how it was built and verified):** [`/case-study`](https://stellaroid.tech/case-study)
 - **Handoff (repo state, invariants, what remains):** [`HANDOFF.md`](HANDOFF.md)
-- **Campaign and launch graphics:** [`assets/campaign/`](assets/campaign/)
+- **Campaign and launch graphics:** [`assets/campaign/`](assets/campaign/), including the 2-minute promotional walkthrough [`stellaroid-promotional-demo.mp4`](assets/campaign/stellaroid-promotional-demo.mp4)
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect to the canonical apex URL.
 
@@ -483,11 +483,15 @@ stellaroid-earn/
 
 ## Demo Video
 
-[`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
+**Campaign cut (2026-08):** [`assets/campaign/stellaroid-promotional-demo.mp4`](assets/campaign/stellaroid-promotional-demo.mp4)
+
+> Two-minute live-site walkthrough of stellaroid.tech with voice-over: landing, wallet-less `/demo` tour, verified proof, employer handoff, and the opportunity directory. Stellar testnet, no real funds.
+
+**Submission cut:** [`demo/stellaroid-earn-demo.mp4`](demo/stellaroid-earn-demo.mp4)
 
 > Full walkthrough: landing page → about → app dashboard (wallet connect) → issuer console → verified proof page → on-chain evidence on Stellar Expert.
 
-The demo video is committed in this repository so the submission does not depend on an expiring external upload URL.
+Both videos are committed in this repository so the links do not depend on an expiring external upload URL.
 
 **Demo Day slides:** [`/slides`](https://stellaroid.tech/slides) (integrated into the app, arrow keys to navigate)
 
