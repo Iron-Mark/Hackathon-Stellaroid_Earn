@@ -4,7 +4,7 @@ Use this as the reviewer-facing evidence index for the Rise In checklists. Keep 
 
 ## Level 5 (Blue Belt) Evidence
 
-Focus: user growth, product iteration, pitch and demo. The 50+ testnet wallet account threshold is reached with public wallet and transaction evidence: 30 independent participant wallets plus 24 testnet accounts I created and operate for structured QA. Analytics screenshots remain tracked separately.
+Focus: user growth, product iteration, pitch and demo. The 50+ testnet wallet account threshold is reached with public wallet and transaction evidence: 30 independent participant wallets plus 24 testnet accounts I created and operate for structured QA. Analytics snapshot boards are in `images/`.
 
 | Requirement | Evidence | Status |
 | --- | --- | --- |
@@ -20,47 +20,46 @@ Focus: user growth, product iteration, pitch and demo. The 50+ testnet wallet ac
 | Optimized onboarding experience | `https://stellaroid.tech/start` - a one-tap "try it in 60 seconds" wizard: connect a wallet, auto-fund on testnet, sign one real on-chain action | Done |
 | Structured testnet QA coverage | [`guided-qa-cohort-2026-07.md`](guided-qa-cohort-2026-07.md) records 24 controlled QA accounts, eight role-based journeys, and 72 public transactions | Done |
 | Proof of 50+ testnet wallet accounts with real network activity | README "User Validation" and the guided QA evidence log document 54 public wallets linked to Stellar Expert evidence, split as 30 independent participant wallets plus 24 testnet accounts I created and operate for structured QA. All 54 are real, separately funded testnet accounts with public transaction history. Rise In words this requirement as "50+ testnet users onboarded"; the 54 figure counts wallet accounts with real network activity, of which 30 are independent people. | Done (54 of 50 wallet accounts; 30 independent) |
-| Screenshots of transaction activity | [`images/status-onchain-metrics.png`](../../images/status-onchain-metrics.png) captured from the live `/status#metrics` panel: 360 indexed public contract events, the live event stream, and the recent-activity feed with a Stellar Expert link per event. [`images/opportunity-directory-escrows.png`](../../images/opportunity-directory-escrows.png) captured from `/opportunity`, showing all 25 escrows on the contract including all eight guided-QA paid trials by title. | Done |
-| Product analytics | Vercel Web Analytics, production, trailing 12 months to 2026-07-30: **342 visitors, 1,615 page views, 56% bounce rate.** Figures transcribed in "Traffic and Audience" below. Dashboard screenshots are held and pending commit. | Data recorded; screenshots pending |
+| Screenshots of transaction activity | [`images/status-onchain-metrics.png`](../../images/status-onchain-metrics.png) recaptured from the live `/status#metrics` panel on 2026-08-27: 361 indexed public contract events, Payments tile 1, and a recent-activity row for 1 testnet XLM (`link_payment` tx [`7173ace8…48c7`](https://stellar.expert/explorer/testnet/tx/7173ace84a571b862b5a8684aa6342dfd8cb9ba4f1ab8381111bb08216d348c7), no monetary value). [`images/opportunity-directory-escrows.png`](../../images/opportunity-directory-escrows.png) captured from `/opportunity`, showing all 25 escrows on the contract including all eight guided-QA paid trials by title. | Done |
+| Product analytics | Vercel Web Analytics API, production, trailing 12 months to 2026-08-27: **382 visitors, 1,682 page views.** Figures transcribed in "Traffic and Audience" below. Snapshot boards: [overview](../../images/vercel-web-analytics-overview.png), [pages](../../images/vercel-web-analytics-pages.png), [referrers](../../images/vercel-web-analytics-referrers.png), [geo and devices](../../images/vercel-web-analytics-geo-devices.png). The Vercel dashboard UI was not captured (login required). Bounce rate is not in the API; the 30 July 2026 dashboard read was 56%. | Done (API snapshot) |
 
 **50+ wallet coverage reached:** 54 of 50 testnet wallet accounts are documented with public evidence, comprising 30 independent participant wallets and 24 testnet accounts I created and operate for structured QA. Transaction-activity screenshots are attached, and the traffic figures below are recorded.
 
 ## Traffic and Audience
 
-Source: Vercel Web Analytics, Production environment, trailing 12 months as of
-2026-07-30. Traffic begins in March 2026; every prior month is zero.
+Source: Vercel Web Analytics API, Production environment, trailing 12 months as
+of 2026-08-27. Traffic begins in April 2026; March and every prior month are
+zero. These boards are API snapshots, not screenshots of the Vercel dashboard
+UI. A 30 July 2026 dashboard read was 342 visitors, 1,615 page views, and 56%
+bounce rate; monthly bounce is not returned by the API used for this recapture.
 
-| Month | Visitors | Page views | Bounce rate |
-| --- | --- | --- | --- |
-| Apr 2026 | 66 | 274 | 44% |
-| May 2026 | 111 | 699 | 64% |
-| Jun 2026 | 43 | 175 | 56% |
-| Jul 2026 | 122 | 467 | 56% |
-| **Total** | **342** | **1,615** | 56% |
+| Month | Visitors | Page views |
+| --- | --- | --- |
+| Apr 2026 | 66 | 274 |
+| May 2026 | 111 | 699 |
+| Jun 2026 | 44 | 176 |
+| Jul 2026 | 123 | 480 |
+| Aug 2026 | 38 | 53 |
+| **Total** | **382** | **1,682** |
 
-The monthly columns sum exactly to the dashboard totals (342 and 1,615), so the
+The monthly columns sum exactly to the API totals (382 and 1,682), so the
 breakdown is complete rather than a sampled window.
-
-**Reading the bounce-rate delta honestly:** the dashboard shows `+56%` in red
-against the previous period. The previous 12-month window had no traffic at all,
-so that is a from-zero baseline artifact, not a regression in engagement.
 
 | Dimension | Top values |
 | --- | --- |
-| Pages (visitors) | `/` 302 · `/app` 77 · `/proof/c02ce160…` 48 · `/proof` 42 · `/about` 40 · `/employer` 32 · `/issuer` 26 |
+| Pages (visitors) | `/` 329 · `/app` 77 · `/proof/c02ce160…` 49 · `/proof` 44 · `/about` 41 · `/employer` 35 · `/issuer/register` 29 · `/issuer` 27 |
 | Referrers (visitors) | Facebook family 49 (l.facebook 26, m.facebook 11, facebook 7, l.messenger 5) · google.com 19 · github.com 8 · vercel.com 6 |
-| Countries | Philippines 50% · United States 35% · Singapore 2% · Indonesia 1% · Canada 1% |
-| Devices | Desktop 67% · Mobile 31% · Tablet 2% |
-| Operating systems | Windows 39% · Android 19% · GNU/Linux 15% · iOS 14% · macOS 13% |
-| Hostnames (visitors) | stellaroid.tech 248 · stellaroid-earn-demo.vercel.app 95 · preview hosts 3 |
+| Countries | Philippines 46% · United States 36% · Singapore 2% · Germany 2% · Canada 1% · Indonesia 1% |
+| Devices | Desktop 70% · Mobile 28% · Tablet 2% |
+| Operating systems | Windows 43% · Android 17% · GNU/Linux 15% · iOS 13% · macOS 12% |
 
 Three things worth drawing out, because they bear on the product claims rather
 than being vanity numbers:
 
-- **90 visitors reached a proof page** (`/proof/c02ce160…` 48 plus `/proof` 42).
+- **93 visitors reached a proof page** (`/proof/c02ce160…` 49 plus `/proof` 44).
   The public, wallet-free credential page is the core artifact, and it is the
   second most visited area after the landing page.
-- **31% of traffic is mobile and 33% is Android or iOS**, which is the evidence
+- **28% of traffic is mobile and 30% is Android or iOS**, which is the evidence
   base for the mobile-first redesign and the PWA work rather than a guess.
 - **19 visitors arrived from organic Google search**, so the content and
   structured-data work is being indexed and clicked, not just published.
