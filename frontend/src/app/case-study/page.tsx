@@ -14,12 +14,14 @@ import {
   SITE_REPOSITORY_URL,
 } from "@/lib/seo";
 
-// Traffic figures below are a dated snapshot from Vercel Web Analytics
-// (production, April to July 2026), transcribed 2026-07-30. They are
-// deliberately NOT live reads: the case study describes what the data showed at
-// the time decisions were made. On-chain counts carry their as-of date inline
-// and point readers at /status for current values.
+// Traffic figures below are a dated snapshot from the Vercel Web Analytics
+// API (production, April to August 2026), transcribed 2026-08-27. They are
+// deliberately NOT live reads: the case study describes what the data showed
+// at capture time. An earlier dashboard read on 2026-07-30 was 342 visitors
+// and 1,615 page views. On-chain counts carry their as-of date inline and
+// point readers at /status for current values.
 const PUBLISHED = "2026-07-30";
+const FIGURES_AS_OF = "2026-08-27";
 const DEPLOYED_WASM_HASH =
   "1b7479f1ca0f12846bbfdd8f0681670692e29e1f20618150912f010b7caf4b9f";
 
@@ -55,7 +57,7 @@ const articleJsonLd = {
   mainEntityOfPage: { "@type": "WebPage", "@id": seoCanonicalUrl("/case-study") },
   image: seoCanonicalUrl("/opengraph-image"),
   datePublished: PUBLISHED,
-  dateModified: PUBLISHED,
+  dateModified: FIGURES_AS_OF,
   author: { "@type": "Person", name: SITE_AUTHOR_NAME, url: SITE_AUTHOR_URL },
 };
 
@@ -73,8 +75,9 @@ const CONTENTS = [
 const TRAFFIC = [
   { month: "April 2026", visitors: "66", views: "274" },
   { month: "May 2026", visitors: "111", views: "699" },
-  { month: "June 2026", visitors: "43", views: "175" },
-  { month: "July 2026", visitors: "122", views: "467" },
+  { month: "June 2026", visitors: "44", views: "176" },
+  { month: "July 2026", visitors: "123", views: "480" },
+  { month: "August 2026", visitors: "38", views: "53" },
 ];
 
 const FLOW = [
@@ -135,6 +138,8 @@ export default function CaseStudyPage() {
               <span>Stellaroid Earn</span>
               <span>Stellar testnet</span>
               <span>Published 30 July 2026</span>
+              <span aria-hidden="true">·</span>
+              <span>Figures refreshed 27 August 2026</span>
             </p>
 
             <nav
@@ -170,12 +175,12 @@ export default function CaseStudyPage() {
             <p className="text-lg leading-relaxed text-text">
               I built a system that anchors a training credential on Stellar and
               releases payment against it, then put it in front of real people. In the
-              four months from April to July 2026,{" "}
+              five months from April to August 2026,{" "}
               <strong>
-                48 visitors opened one specific public credential page and 42 opened
+                49 visitors opened one specific public credential page and 44 opened
                 the proof index
               </strong>
-              , second only to the landing page at 302 visitors.
+              , second only to the landing page at 329 visitors.
             </p>
             <p className="text-text-muted">
               The whole premise rests on one bet: a credential is only worth anchoring
@@ -303,7 +308,7 @@ export default function CaseStudyPage() {
             <div className="overflow-x-auto rounded-xl border border-border bg-surface">
               <table className="w-full border-collapse text-sm">
                 <caption className="p-4 pb-2 text-left font-mono text-[0.65rem] uppercase tracking-[0.14em] text-text-muted">
-                  Traffic, April to July 2026
+                  Traffic, April to August 2026
                 </caption>
                 <thead>
                   <tr className="border-t border-border">
@@ -333,10 +338,10 @@ export default function CaseStudyPage() {
                   <tr className="border-t border-border font-semibold">
                     <td className="px-4 py-2.5 text-text">Total</td>
                     <td className="px-4 py-2.5 text-right font-mono tabular-nums text-primary">
-                      342
+                      382
                     </td>
                     <td className="px-4 py-2.5 text-right font-mono tabular-nums text-primary">
-                      1,615
+                      1,682
                     </td>
                   </tr>
                 </tbody>
@@ -345,13 +350,13 @@ export default function CaseStudyPage() {
 
             <p className="text-text-muted">
               One visitor can open several pages, so the per-page figures below do not
-              sum to 342.
+              sum to 382.
             </p>
 
             <SubHeading>Proof pages were the draw</SubHeading>
             <p className="text-text-muted">
-              48 visitors on one specific credential page, 42 on the proof index,
-              against 302 for the landing page.
+              49 visitors on one specific credential page, 44 on the proof index,
+              against 329 for the landing page.
             </p>
             <Pull>
               I stopped treating proof pages as an output and started treating them as
@@ -361,7 +366,7 @@ export default function CaseStudyPage() {
 
             <SubHeading>A third of traffic was mobile</SubHeading>
             <p className="text-text-muted">
-              31% mobile and 2% tablet, which lines up with the 33% running Android or
+              28% mobile and 2% tablet, which lines up with the 30% running Android or
               iOS. I had been building desktop first. That number is why the app got
               app-style bottom navigation, bottom-sheet dialogs, safe-area handling
               for notches, and became an installable progressive web app.
@@ -370,7 +375,7 @@ export default function CaseStudyPage() {
             <SubHeading>Where the traffic came from</SubHeading>
             <p className="text-text-muted">
               19 visitors arrived from Google. Facebook and Messenger sent 49 between
-              them. The audience skewed Philippines at 50% and United States at 35%,
+              them. The audience skewed Philippines at 46% and United States at 36%,
               which is the direct reason Tagalog shipped alongside English. The other
               four locales are a forward-looking bet, ready ahead of the data.
             </p>
@@ -708,10 +713,10 @@ export default function CaseStudyPage() {
               </li>
             </ul>
             <p className="mt-8 text-xs text-text-muted">
-              Traffic figures cover April to July 2026 from Vercel Web Analytics,
-              production environment. On-chain counts are accurate as of 30 July 2026
-              and change as the contract is used; the live status page is the current
-              source. Stellaroid Earn runs on Stellar testnet only.
+              Traffic figures cover April to August 2026 from the Vercel Web Analytics
+              API, production environment, as of 27 August 2026. On-chain counts change
+              as the contract is used; the live status page is the current source.
+              Stellaroid Earn runs on Stellar testnet only.
             </p>
           </footer>
         </main>

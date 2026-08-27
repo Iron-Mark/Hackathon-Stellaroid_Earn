@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-26**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-27**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,13 +8,13 @@ State of this repository as of **2026-08-26**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-26:
+Verified against the remote on 2026-08-27:
 
 | Check | State |
 | --- | --- |
-| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193) |
-| `main` vs `august-monthly-builder` | tree-identical at `5b17f05` (August fast-forwarded from `main` on 2026-08-26) |
-| `staging` | lags `main`; open a `main` to `staging` sync PR after this file lands |
+| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193), staging sync (#197). Evidence polish lands on its own PR. |
+| `main` vs `august-monthly-builder` | tree-identical at `990c6fb` before this polish; fast-forward August again after the polish PR merges |
+| `staging` | lags `main`; #197 is the open `main` to `staging` sync for the CI trim. Open a fresh sync after this polish merges. |
 | `july-monthly-builder` | frozen read-only archive at `baeec6fb`; never sync it |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
@@ -103,14 +103,12 @@ The product is parked. Host-side DNS for `v4` is a side-note blocker and does no
 
 ### Evidence polish, optional and cosmetic
 
-- [ ] One manual `link_payment` from a fresh funded wallet. Until then the `PAYMENTS` tile on `/status` reads 0, and the committed metrics screenshot shows it.
-- [ ] Save the Vercel Web Analytics dashboard screenshots into `images/` and link them from `docs/operations/submission-evidence.md`, where that row currently reads "screenshots pending". The figures themselves are already transcribed there.
-
-Both gaps are **disclosed honestly already**, including in the public case study, so skipping them costs nothing in credibility.
+- [x] One manual `link_payment` from a fresh Friendbot-funded testnet wallet (not a QA key, not `demo-employer`). 1 testnet XLM (`10000000` stroops, no monetary value) to the sample verified credential owner `GALGZZRXRB5SIBGT62OZDA7BMPC4YUZDECHVHGWOAMXIMNLTZGFGTLMN` against hash `c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3`. Tx `7173ace84a571b862b5a8684aa6342dfd8cb9ba4f1ab8381111bb08216d348c7` (ledger 4353114). The live `/status#metrics` Payments tile reads 1. Recaptured as `images/status-onchain-metrics.png`. Do not touch opportunity #1.
+- [x] Vercel Web Analytics recapture for production, trailing 12 months as of 2026-08-27: **382 visitors, 1,682 page views**. Monthly bounce rate is not in the analytics API; the 30 July 2026 dashboard read was 56%. The Vercel dashboard UI requires a login this environment does not have, so the committed boards are API snapshots, labelled as such, not dashboard chrome: `images/vercel-web-analytics-overview.png`, `images/vercel-web-analytics-pages.png`, `images/vercel-web-analytics-referrers.png`, `images/vercel-web-analytics-geo-devices.png`. Linked from `docs/operations/submission-evidence.md`.
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, and the repository parking pass are all done. July is a locked read-only archive. `august-monthly-builder` matches `main` at `5b17f05`. Leftover PRs #183 and #182 were closed as superseded by #191.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, and the August analytics API snapshot are all done. July is a locked read-only archive. Leftover PRs #183 and #182 were closed as superseded by #191. After this polish merges, fast-forward `august-monthly-builder` from `main` and open a new staging sync. Never sync July.
 
 ---
 

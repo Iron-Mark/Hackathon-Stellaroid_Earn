@@ -120,7 +120,9 @@ https://stellar.expert/explorer/testnet/contract/<CONTRACT_ID>
   - `init` → https://stellar.expert/explorer/testnet/tx/c7de2d61cfd1f51cfb255379775dd928604d264d6b5bb3775dc75cdd7c4b5721
   - `register_certificate` → https://stellar.expert/explorer/testnet/tx/1e8078e36333023c46f11a0bd990f97b62bd13ae086597de6a3db8e66d4b3a22 (emits `cert_reg`)
   - `verify_certificate` → https://stellar.expert/explorer/testnet/tx/2215e08ecc935b6f31d5c335c3aaea3e3742f07ef993d8ca947d1711ad5199d9 (emits `cert_ver`, returns `true`)
-  - `link_payment` (100 XLM) → https://stellar.expert/explorer/testnet/tx/5bed652b3725a6826cd4a99e8c750cdd2dc4625f7e3a4a82661680ada50cb435 (emits `payment` + SAC `transfer`)
+  - `link_payment` (100 testnet XLM) → https://stellar.expert/explorer/testnet/tx/5bed652b3725a6826cd4a99e8c750cdd2dc4625f7e3a4a82661680ada50cb435 (emits `payment` + SAC `transfer`)
+- **Current contract `link_payment` (2026-08-27, 1 testnet XLM, no monetary value, sample verified credential `c02ce160…aea3`):**
+  https://stellar.expert/explorer/testnet/tx/7173ace84a571b862b5a8684aa6342dfd8cb9ba4f1ab8381111bb08216d348c7
 - **Verified events:** `init`, `cert_reg`, `cert_ver`, `payment` — all visible on the contract's Events tab on stellar.expert.
 - **Historical rubric self-check for the pre-trust-layer demo:**
   - [x] Contract deployed + verified on stellar.expert
