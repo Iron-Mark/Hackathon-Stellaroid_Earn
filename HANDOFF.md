@@ -8,13 +8,13 @@ State of this repository as of **2026-08-27**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-27:
+Verified against the remote on 2026-08-27 after the evidence polish landed:
 
 | Check | State |
 | --- | --- |
-| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193), staging sync (#197). Evidence polish lands on its own PR. |
-| `main` vs `august-monthly-builder` | tree-identical at `990c6fb` before this polish; fast-forward August again after the polish PR merges |
-| `staging` | lags `main`; #197 is the open `main` to `staging` sync for the CI trim. Open a fresh sync after this polish merges. |
+| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193) |
+| `main` vs `august-monthly-builder` | tree-identical at `026daba` (#198 squash-merged, August fast-forwarded) |
+| `staging` | tree-identical with `main` at squash `dad348e` (#197) |
 | `july-monthly-builder` | frozen read-only archive at `baeec6fb`; never sync it |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
@@ -108,7 +108,7 @@ The product is parked. Host-side DNS for `v4` is a side-note blocker and does no
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, and the August analytics API snapshot are all done. July is a locked read-only archive. Leftover PRs #183 and #182 were closed as superseded by #191. After this polish merges, fast-forward `august-monthly-builder` from `main` and open a new staging sync. Never sync July.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, and the August analytics API snapshot are all done. #198 is on `main` at `026daba`. `august-monthly-builder` was fast-forwarded to match. #197 synced `staging`. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
 
 ---
 
