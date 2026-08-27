@@ -40,6 +40,22 @@ show funds sitting in the contract. Seeded 2026-07-10.
 
 Do **not** approve/release/refund exhibit B — its value is being live.
 
+## Direct `link_payment` evidence (2026-08-27)
+
+One testnet XLM (`10000000` stroops, no monetary value) from a fresh
+Friendbot-funded employer wallet, not `demo-employer` and not one of the 24 QA
+keys, to the sample credential owner above. Opportunity #1 was not touched.
+
+| Field | Value |
+| --- | --- |
+| Employer | `GASY7N4RT2AJBPO43MYLMPU5K2NT7VFHMPNIOPAWZ4HVRREMCTK7O4XT` |
+| Amount | 1 testnet XLM |
+| Tx | [`7173ace84a571b862b5a8684aa6342dfd8cb9ba4f1ab8381111bb08216d348c7`](https://stellar.expert/explorer/testnet/tx/7173ace84a571b862b5a8684aa6342dfd8cb9ba4f1ab8381111bb08216d348c7) |
+| Ledger | 4353114 |
+
+This is what moves the `/status#metrics` Payments tile. Escrow `release_payment`
+events are counted separately as `pay_rel`.
+
 ## Frontend wiring
 
 - `frontend/src/lib/config.ts` — `demoOpportunityReleasedId` (default `"0"`) and
