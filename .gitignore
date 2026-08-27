@@ -22,6 +22,7 @@ docs-new/_credentials/
 testnet-accounts.json
 testnet-accounts-batch2.json
 admin-key.json
+qa-aug-*.toml
 
 # OS / editor
 .DS_Store
