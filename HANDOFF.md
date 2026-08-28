@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-27**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-28**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,13 +8,13 @@ State of this repository as of **2026-08-27**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-27 after the evidence polish landed:
+Verified against the remote on 2026-08-28 after #202 landed and lockstep finished:
 
 | Check | State |
 | --- | --- |
-| Open pull requests | Dependabot npm-minor-patch (#192), ImgBot (#193) |
-| `main` vs `august-monthly-builder` | tree-identical at `026daba` (#198 squash-merged, August fast-forwarded) |
-| `staging` | tree-identical with `main` at squash `dad348e` (#197) |
+| Open pull requests | none. Dependabot #192 and ImgBot #193 were closed unmerged |
+| `main` vs `august-monthly-builder` | tree-identical at `78a676f` (#201 and #202 on `main`, August fast-forwarded) |
+| `staging` | tree-identical with `main` at `3df58f1` (#203). `staging` is protected, so sync through a PR. Squash of `main` into `staging` goes dirty because `staging` keeps merge-commit history |
 | `july-monthly-builder` | frozen read-only archive at `baeec6fb`; never sync it |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
@@ -109,7 +109,7 @@ The product is parked. Host-side DNS for `v4` is a side-note blocker and does no
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, and the August analytics API snapshot are all done. #198 is on `main` at `026daba`. `august-monthly-builder` was fast-forwarded to match. #197 synced `staging`. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, the August analytics API snapshot, the README campaign walkthrough (#201), and the August QA wave (#202) are all done. #202 is on `main` at `78a676f`. Combined coverage is 62 testnet wallet accounts (30 independent participants plus 32 QA accounts I operate). `august-monthly-builder` was fast-forwarded to match. #203 synced `staging`. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
 
 ---
 
