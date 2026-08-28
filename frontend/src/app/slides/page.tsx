@@ -540,8 +540,8 @@ export default function SlidesPage() {
                 ),
               },
               {
-                num: "54",
-                label: "Testnet Wallets (30 independent)",
+                num: "62",
+                label: "Testnet Wallets (30 independent + 32 QA)",
                 icon: (
                   <>
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />

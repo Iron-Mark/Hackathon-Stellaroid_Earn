@@ -16,6 +16,7 @@ This folder keeps the active documentation lean. Start with planning, then use r
 | Branches, deployment, release, and domains | [operations/release-and-deployment.md](operations/release-and-deployment.md) |
 | Demo readiness | [operations/demo-checklist.md](operations/demo-checklist.md) |
 | Guided testnet QA evidence | [operations/guided-qa-cohort-2026-07.md](operations/guided-qa-cohort-2026-07.md) |
+| August 2026 QA wave (8 additional accounts I operate) | [operations/guided-qa-wave-2026-08.md](operations/guided-qa-wave-2026-08.md) |
 | Running a live participant session | [operations/guided-session-facilitation.md](operations/guided-session-facilitation.md) |
 
 ## Archives
