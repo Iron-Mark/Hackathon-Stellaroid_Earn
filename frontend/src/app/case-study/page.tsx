@@ -528,22 +528,25 @@ export default function CaseStudyPage() {
               where that rule earns its keep.
             </p>
             <p className="text-text-muted">
-              The testnet coverage spans 54 wallet accounts, and the split travels
+              The testnet coverage spans 62 wallet accounts, and the split travels
               with the figure everywhere it appears: 30 independent participants from
-              the public review, plus 24 accounts I created and operate myself for
-              structured QA across eight role-based flows. All 54 are real, separately
-              funded testnet accounts with public transaction history, and the two
-              groups prove different things. The 30 show real people chose to use it.
-              The 24 show the full issuer, graduate and employer path holds up under
-              repeatable, scripted exercise.
+              the public review, plus 32 accounts I created and operate myself for
+              structured QA (24 from the July eight-team pass, plus 8 from the August
+              wave). All 62 are real, separately funded testnet accounts with public
+              transaction history, and the two groups prove different things. The 30
+              show real people chose to use it. The 24 July QA accounts show the full
+              issuer, graduate and employer path holds up under repeatable, scripted
+              exercise. The 8 August accounts I operate are an extra public-transaction
+              pass, not eight more independent people.
             </p>
             <Pull>
               I would rather hand someone a smaller number they can trust than a
               larger one that collapses when they check.
             </Pull>
             <p className="text-text-muted">
-              Every one of the 30 participant wallets and all 72 QA transactions
-              resolve on Horizon right now.
+              Every one of the 30 participant wallets and all 72 July QA transactions
+              resolve on Horizon right now, as do the 8 August QA-wave transactions
+              logged in the operations docs.
             </p>
           </section>
 

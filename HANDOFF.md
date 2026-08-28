@@ -105,6 +105,7 @@ The product is parked. Host-side DNS for `v4` is a side-note blocker and does no
 
 - [x] One manual `link_payment` from a fresh Friendbot-funded testnet wallet (not a QA key, not `demo-employer`). 1 testnet XLM (`10000000` stroops, no monetary value) to the sample verified credential owner `GALGZZRXRB5SIBGT62OZDA7BMPC4YUZDECHVHGWOAMXIMNLTZGFGTLMN` against hash `c02ce1602d5bbb6ddfe93c6603d7f4e3dae3b2fb571ea4e70669ccd5a359aea3`. Tx `7173ace84a571b862b5a8684aa6342dfd8cb9ba4f1ab8381111bb08216d348c7` (ledger 4353114). The live `/status#metrics` Payments tile reads 1. Recaptured as `images/status-onchain-metrics.png`. Do not touch opportunity #1.
 - [x] Vercel Web Analytics recapture for production, trailing 12 months as of 2026-08-27: **382 visitors, 1,682 page views**. Monthly bounce rate is not in the analytics API; the 30 July 2026 dashboard read was 56%. The Vercel dashboard UI requires a login this environment does not have, so the committed boards are API snapshots, labelled as such, not dashboard chrome: `images/vercel-web-analytics-overview.png`, `images/vercel-web-analytics-pages.png`, `images/vercel-web-analytics-referrers.png`, `images/vercel-web-analytics-geo-devices.png`. Linked from `docs/operations/submission-evidence.md`.
+- [x] August 2026 QA wave: 8 Friendbot-funded Stellar testnet wallets I operate (`qa-aug-01` through `qa-aug-08`), each with a real public transaction. Logged in `docs/operations/guided-qa-wave-2026-08.md`. Combined wallet figure is now 62 testnet wallet accounts (30 independent participants plus 32 QA accounts I operate). Opportunity `#1` was not touched.
 
 ### Completed
 
@@ -123,4 +124,4 @@ Read in this order:
 5. `docs/operations/contract-verification.md` — how to reproduce the deployed WASM yourself
 6. `stellaroid.tech/case-study` — how the system was built, verified, and corrected
 
-**One standing rule that governs all writing here:** every claim must be checkable, and where a number needs context it carries that context inline rather than in a footnote. The testnet wallet figure of 54 always appears beside its split of 30 independent participants plus 24 QA accounts operated by the author. Preserve that pattern in anything you write.
+**One standing rule that governs all writing here:** every claim must be checkable, and where a number needs context it carries that context inline rather than in a footnote. The testnet wallet figure of 62 always appears beside its split of 30 independent participants plus 32 QA accounts I operate. A prior snapshot was 54 (30 independent plus 24 QA). Preserve that pattern in anything you write.

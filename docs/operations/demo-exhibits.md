@@ -43,8 +43,8 @@ Do **not** approve/release/refund exhibit B — its value is being live.
 ## Direct `link_payment` evidence (2026-08-27)
 
 One testnet XLM (`10000000` stroops, no monetary value) from a fresh
-Friendbot-funded employer wallet, not `demo-employer` and not one of the 24 QA
-keys, to the sample credential owner above. Opportunity #1 was not touched.
+Friendbot-funded employer wallet, not `demo-employer` and not one of the QA
+keys I operate, to the sample credential owner above. Opportunity #1 was not touched.
 
 | Field | Value |
 | --- | --- |

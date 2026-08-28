@@ -6,10 +6,10 @@ figure here is drawn from committed evidence: the registry counts from
 `docs/operations/submission-evidence.md`, and the wallet split from the README.
 If those change, update these before posting.
 
-Two rules the copy already follows and that any edit must keep. The 54 wallet
-figure always appears beside its split of 30 independent participants plus 24
-QA accounts operated by the author, never bare. Rise In Level 5 is described as
-submitted, never as won.
+Two rules the copy already follows and that any edit must keep. The 62 wallet
+figure always appears beside its split of 30 independent participants plus 32
+QA accounts I operate, never bare. A prior snapshot was 54 (30 independent plus
+24 QA). Rise In Level 5 is described as submitted, never as won.
 
 Boards referenced here live alongside this file. See
 [`README.md`](README.md) for which asset goes with which placement.
@@ -41,7 +41,7 @@ Wallet-less guided tour on real seeded testnet data, works on your phone. Or sig
 
 **The receipts:**
 - Top 5 of 105 participants, Stellar PH Bootcamp
-- 54 documented testnet wallet accounts: 30 independent participants plus 24 QA accounts I operate, split stated wherever the number appears
+- 62 documented testnet wallet accounts: 30 independent participants plus 32 QA accounts I operate, split stated wherever the number appears
 - Every claim links out: contract ID, WASM hash, and all transactions resolve on Stellar Expert
 
 Full case study, including what I caught and corrected along the way: <https://stellaroid.tech/case-study>
@@ -71,7 +71,7 @@ Guided tour on real testnet data, works on your phone. Or sign one real transact
 **Where it is at, four months in:**
 - Live on testnet with 14 issuers, 114 credentials, and 25 escrowed paid trials on the contract
 - 342 visitors across 5 countries, and the public proof page is the second most visited part of the site
-- 54 documented testnet wallets: 30 independent participants plus 24 QA accounts I run
+- 62 documented testnet wallets: 30 independent participants plus 32 QA accounts I run
 - Top 5 of 105 in the Stellar PH Bootcamp, and submitted for Rise In Level 5
 
 **What is inside:** Soroban contract in Rust with 19 functions, Next.js 16 and React 19 frontend, 8 wallets behind one interface, 153 tests, CI on every push.

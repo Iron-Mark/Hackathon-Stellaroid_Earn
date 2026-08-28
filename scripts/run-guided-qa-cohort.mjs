@@ -255,7 +255,7 @@ function renderReport(state) {
     "",
     "## Interpretation Boundary",
     "",
-    "These accounts provide repeatable QA and public transaction evidence and are included in the completed total of 54 of 50 testnet wallet accounts. Their controlled QA purpose remains disclosed, and no synthetic feedback responses were submitted.",
+    "These accounts provide repeatable QA and public transaction evidence. When this log was written they completed a combined total of 54 of 50 testnet wallet accounts (30 independent participants plus these 24 QA accounts). The current combined total is 62 (30 independent participants plus 32 QA accounts I operate), after the [August 2026 QA wave](guided-qa-wave-2026-08.md). Their controlled QA purpose remains disclosed, and no synthetic feedback responses were submitted.",
     "",
   );
   return lines.join("\n");
