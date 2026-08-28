@@ -76,7 +76,7 @@ When editing the frontend, treat the integration guide as the canonical spec.
 
 Settled calls with reasons, so they are not re-litigated. Each was decided once and costs real time to reopen.
 
-- **The 54 testnet wallet accounts are 30 independent participants plus 24 QA accounts the author operates.** State that split beside the figure every time it appears, never the bare 54. The combined count is the author's decision and is not open for debate; what is required is that the split travels with it.
+- **The 62 testnet wallet accounts are 30 independent participants plus 32 QA accounts I operate.** State that split beside the figure every time it appears, never the bare 62. A prior snapshot was 54 (30 independent plus 24 QA). The combined count is my decision and is not open for debate; what is required is that the split travels with it.
 - **Write in first person singular.** This is a one-person build, so submission, pitch, and case-study copy says "I", never "we".
 - **Copy rules:** no em dashes anywhere, "graduate" rather than "student", and every money reference qualified as Stellar testnet with no monetary value.
 - **Never modify seeded demo exhibit #1.** A live demo surface reads it. Exhibit #0 is the released example; #1 must stay funded.

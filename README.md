@@ -503,11 +503,11 @@ Both videos are committed in this repository so the links do not depend on an ex
 
 ## User Validation
 
-### 54 of 50 Testnet Wallet Accounts
+### 62 of 50 Testnet Wallet Accounts
 
-Stellaroid Earn has 54 of the targeted 50 documented testnet wallet accounts with public network activity. That total is two groups: **30 independent participant wallets** from the testnet review, plus **24 controlled QA accounts that I operate myself** for structured product verification. Both groups are listed in full below and every wallet and transaction links to Stellar Expert.
+Stellaroid Earn has 62 of the targeted 50 documented testnet wallet accounts with public network activity. That total is two groups: **30 independent participant wallets** from the testnet review, plus **32 controlled QA accounts that I operate myself** for structured product verification (24 from the July guided cohort, plus 8 from the August QA wave). Both groups are listed in full below and every wallet and transaction links to Stellar Expert.
 
-The 24 QA accounts are disclosed as QA personas, not as independent people. So the figure above is wallet-account coverage with real network activity. It is not a claim of 54 separate users, and the independent participant count remains 30.
+The 32 QA accounts are disclosed as QA personas, not as independent people. So the figure above is wallet-account coverage with real network activity. It is not a claim of 62 separate users, and the independent participant count remains 30. A prior snapshot of this figure was 54 (30 independent plus 24 QA).
 
 ### Testnet Wallet Evidence
 
@@ -516,7 +516,7 @@ The 24 QA accounts are disclosed as QA personas, not as independent people. So t
 <details>
 <summary><strong>View all 30 independent participant wallet addresses</strong></summary>
 
-The 24 QA account addresses that complete the 54-account total are listed separately in the [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md), so each group stays checkable on its own.
+The 32 QA account addresses that complete the 62-account total are listed separately in the [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md) (24 July accounts) and the [August 2026 QA wave log](docs/operations/guided-qa-wave-2026-08.md) (8 additional accounts I operate), so each group stays checkable on its own.
 
 
 | # | Wallet Address | Verified On-Chain |
@@ -556,9 +556,9 @@ The 24 QA account addresses that complete the 54-account total are listed separa
 
 ### Guided Testnet QA Coverage
 
-Alongside the independent participant review, 24 controlled QA user accounts completed eight structured issuer, candidate, and employer journeys on the public testnet contract. The run produced 64 QA-account-signed transactions plus eight facilitator approvals, including eight verified credentials and eight released 1 XLM paid opportunities.
+Alongside the independent participant review, 24 controlled QA accounts I operate completed eight structured issuer, graduate, and employer journeys on the public testnet contract. The run produced 64 QA-account-signed transactions plus eight facilitator approvals, including eight verified credentials and eight released 1 testnet XLM paid opportunities (no monetary value).
 
-The [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md) links every public account and transaction. The organization, credential, cohort, and opportunity names are fictional scenario data. The guided QA accounts are included in the 54-account testnet coverage total and identified by their QA purpose in the evidence log.
+The [guided QA evidence log](docs/operations/guided-qa-cohort-2026-07.md) links every July public account and transaction. In August 2026 I added 8 more QA accounts I operate, logged in [guided-qa-wave-2026-08.md](docs/operations/guided-qa-wave-2026-08.md). Those 8 are not independent participants. Combined QA coverage is 32 accounts I operate. The organization, credential, cohort, and opportunity names are fictional scenario data. All 32 QA accounts are included in the 62-account testnet coverage total and identified by their QA purpose in the evidence logs.
 
 ### Feedback Collection
 
