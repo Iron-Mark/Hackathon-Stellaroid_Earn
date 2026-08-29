@@ -1,6 +1,6 @@
 # Handoff
 
-State of this repository as of **2026-08-28**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository as of **2026-08-29**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
@@ -8,20 +8,20 @@ State of this repository as of **2026-08-28**, written so anyone picking it up c
 
 ## Current state
 
-Verified against the remote on 2026-08-28 after #202 landed and lockstep finished:
+Verified against the remote on 2026-08-29 after the `v4` mapping, DNS, and branch-parity checks finished:
 
 | Check | State |
 | --- | --- |
 | Open pull requests | none. Dependabot #192 and ImgBot #193 were closed unmerged |
-| `main` vs `august-monthly-builder` | tree-identical at `78a676f` (#201 and #202 on `main`, August fast-forwarded) |
-| `staging` | tree-identical with `main` at `3df58f1` (#203). `staging` is protected, so sync through a PR. Squash of `main` into `staging` goes dirty because `staging` keeps merge-commit history |
+| `main` vs `august-monthly-builder` | tree-identical; verified from remote tree hashes on 2026-08-29 |
+| `staging` | tree-identical with `main`. `staging` is protected, so sync through a PR. Squash of `main` into `staging` goes dirty because `staging` keeps merge-commit history |
 | `july-monthly-builder` | frozen read-only archive at `baeec6fb`; never sync it |
 | Working tree | clean |
 | CodeQL open alerts | 0 |
 | Dependabot open alerts | 0 |
 | npm audit | 0 moderate/high; 23 low findings in the wallet kit's transitive `elliptic` chain |
 | Tests | 12 contract, 99 frontend unit, 42 end-to-end, all green |
-| Production routes | `stellaroid.tech`, `beta.`, `v3.` all 200. `v4.` is a parked side-note blocker |
+| Production routes | `stellaroid.tech`, `beta.`, `v3.`, and `v4.` all 200 |
 | Latest release | `v3.2.0`, 13 campaign assets attached |
 
 The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycle is closed. Do not reopen its work items.
@@ -84,11 +84,11 @@ To cut a v3: render from the campaign kit, commit it as `-v3`, then copy it over
 
 ## What remains
 
-The product is parked. Host-side DNS for `v4` is a side-note blocker and does not block other work.
+The product is parked. Infrastructure closeout is complete. Only the distribution items below remain.
 
-### Side-note blocker (add later)
+### Infrastructure closeout
 
-- [ ] Map `v4.stellaroid.tech` to `august-monthly-builder` in Vercel and add the `v4` CNAME at the DNS host (same target as `v3`).
+- [x] Map `v4.stellaroid.tech` to `august-monthly-builder` in Vercel and add the `v4` CNAME at the DNS host (same target as `v3`). Both public DNS resolvers and the `/` and `/status` routes were verified on 2026-08-29.
 
 ### After the August docs PR merges
 
@@ -109,7 +109,7 @@ The product is parked. Host-side DNS for `v4` is a side-note blocker and does no
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, the August analytics API snapshot, the README campaign walkthrough (#201), and the August QA wave (#202) are all done. #202 is on `main` at `78a676f`. Combined coverage is 62 testnet wallet accounts (30 independent participants plus 32 QA accounts I operate). `august-monthly-builder` was fast-forwarded to match. #203 synced `staging`. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, the August analytics API snapshot, the README campaign walkthrough (#201), the August QA wave (#202), and the `v4` showcase mapping and DNS closeout are all done. Combined coverage is 62 testnet wallet accounts (30 independent participants plus 32 QA accounts I operate). `main`, `staging`, and `august-monthly-builder` are tree-identical after promotion. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
 
 ---
 
