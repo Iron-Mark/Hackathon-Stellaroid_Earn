@@ -74,9 +74,9 @@ Frames from `stellaroid-promotional-demo.mp4`, cropped to drop desktop chrome. U
 placement: three Discord variants (general, university, developer community),
 LinkedIn with its first comment, and the Instagram and Facebook caption. Each
 one already carries the testnet qualifier and the wallet-count split, so edit
-with care. The receipts board template (`v320-receipts`) now reads 62 wallet
-accounts (30 independent plus 32 QA I operate). Re-run `capture.mjs` before
-posting that board if the committed PNG still shows the prior 54 snapshot.
+with care. The receipts board (`v320-receipts.png` and its template) shows 62
+wallet accounts (30 independent plus 32 QA I operate). A prior snapshot of
+that board was 54 (30 independent plus 24 QA).
 
 ## Posting notes
 
