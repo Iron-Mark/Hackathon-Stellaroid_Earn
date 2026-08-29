@@ -65,7 +65,7 @@ Contract CI is path-filtered. Push and PR CI run on `main`, `staging`, and `*-mo
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect permanently to `https://stellaroid.tech/`.
 
-`v4.stellaroid.tech` is the active August showcase domain. Mapping it to `august-monthly-builder` in Vercel and adding the `v4` CNAME is a parked side-note blocker and does not block other work. Keep `v3.stellaroid.tech` mapped to `july-monthly-builder` as the frozen July snapshot.
+`v4.stellaroid.tech` is the active August showcase domain. It is mapped to `august-monthly-builder` in Vercel, and its external DNS CNAME was verified on 2026-08-29. Keep `v3.stellaroid.tech` mapped to `july-monthly-builder` as the frozen July snapshot.
 
 If `v4.stellaroid.tech` fails the HTTPS verifier with a DNS resolution error, first confirm the `v4` CNAME exists at the external DNS host. After adding the record, some recursive resolvers can temporarily keep the previous NXDOMAIN response while Vercel and other resolvers already see the CNAME.
 
