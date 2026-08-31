@@ -50,7 +50,7 @@ $expected = @(
   },
   @{
     Domain = "v0.stellaroid.tech"
-    Branch = "april-bootcamp"
+    Branch = "april-bootcamp-and-monthly-builder"
     TitleContains = "Stellar PH Bootcamp Archive"
     Public = $true
   }
