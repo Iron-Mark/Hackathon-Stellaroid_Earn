@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Stellar PH Bootcamp Archive",
   description: "Static archive showcase for the April Stellar PH Bootcamp branch.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

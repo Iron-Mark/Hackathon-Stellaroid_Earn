@@ -42,7 +42,7 @@ $expected = @(
   },
   @{
     Domain = "v0.stellaroid.tech"
-    Branch = "april-bootcamp"
+    Branch = "april-bootcamp-and-monthly-builder"
     Kind = "template"
   }
 )
@@ -336,6 +336,10 @@ function Invoke-VercelDeploy {
       $deploymentUrl = Get-JsonProperty $deployJson "url"
       if ([string]::IsNullOrWhiteSpace($deploymentUrl)) {
         $deploymentUrl = Get-JsonProperty $deployJson "deploymentUrl"
+      }
+      if ([string]::IsNullOrWhiteSpace($deploymentUrl)) {
+        $deployment = Get-JsonProperty $deployJson "deployment"
+        $deploymentUrl = Get-JsonProperty $deployment "url"
       }
     } catch {
       if ($deployText -match "(https?://)?([A-Za-z0-9.-]+\.vercel\.app)") {

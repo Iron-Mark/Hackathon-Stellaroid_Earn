@@ -10,8 +10,9 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $protectedIntegrationBranches = @("main", "staging")
 $syncedBranches = @("main", "staging")
 $activeMonthlyBuilderBranches = @("august-monthly-builder")
-$lockedArchiveBranches = @("april-bootcamp", "april-monthly-builder", "june-monthly-builder", "july-monthly-builder")
-$monthlyBuilderBranches = @($activeMonthlyBuilderBranches + @("july-monthly-builder", "june-monthly-builder", "april-monthly-builder"))
+$archiveBranches = @("april-bootcamp-and-monthly-builder", "june-monthly-builder", "july-monthly-builder")
+$lockedArchiveBranches = @("june-monthly-builder", "july-monthly-builder")
+$monthlyBuilderBranches = @($activeMonthlyBuilderBranches + $archiveBranches)
 $legacyBranchesExpectedAbsent = @("dev", "dev-archive-before-staging", "old-ver", "mark-siazon")
 $monthlyPattern = "refs/heads/*-monthly-builder"
 $failures = New-Object System.Collections.Generic.List[string]
@@ -71,7 +72,7 @@ function Get-RemoteBranchShas {
   $branchNames = @(
     $syncedBranches
     $activeMonthlyBuilderBranches
-    $lockedArchiveBranches
+    $archiveBranches
     $legacyBranchesExpectedAbsent
   ) | ForEach-Object { $_ } | Sort-Object -Unique
 
@@ -216,7 +217,7 @@ Add-Pass "Git found"
 Write-Section "Remote Branches"
 $branchShas = Get-RemoteBranchShas
 
-foreach ($branch in (($syncedBranches + $activeMonthlyBuilderBranches + $lockedArchiveBranches) | Sort-Object -Unique)) {
+foreach ($branch in (($syncedBranches + $activeMonthlyBuilderBranches + $archiveBranches) | Sort-Object -Unique)) {
   if (-not $branchShas.ContainsKey($branch)) {
     Add-Failure "Missing remote branch $branch"
   } else {

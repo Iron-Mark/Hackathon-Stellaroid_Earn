@@ -29,7 +29,7 @@ feature branch -> august-monthly-builder -> staging -> main
 - `main`: production-ready source of truth.
 - `staging`: integration branch before promotion to `main`.
 - `august-monthly-builder`: active monthly-builder branch, seeded from `main` on 2026-08-25 when the July cycle closed.
-- `july-monthly-builder`, `june-monthly-builder`, `april-monthly-builder`, and `april-bootcamp`: historical snapshots, read-only unless recovery is explicitly needed.
+- `july-monthly-builder`, `june-monthly-builder`, and `april-bootcamp-and-monthly-builder`: historical snapshots, read-only unless recovery is explicitly needed.
 
 Open feature PRs against `august-monthly-builder`. Promote `august-monthly-builder` to `staging`, then `staging` to `main`, by PR after local verification and one meaningful CI pass when frontend code changed.
 
@@ -61,7 +61,7 @@ Contract CI is path-filtered. Push and PR CI run on `main`, `staging`, and `*-mo
 | `v3.stellaroid.tech` | `july-monthly-builder` | Archived July monthly-builder showcase |
 | `v2.stellaroid.tech` | `june-monthly-builder` | Archived June monthly-builder showcase |
 | `v1.stellaroid.tech` | `april-monthly-builder` | Archived monthly-builder showcase |
-| `v0.stellaroid.tech` | `april-bootcamp` | Archived bootcamp showcase |
+| `v0.stellaroid.tech` | `april-bootcamp-and-monthly-builder` | Archived bootcamp showcase |
 
 `www.stellaroid.tech` and `earn.stellaroid.tech` redirect permanently to `https://stellaroid.tech/`.
 
@@ -155,7 +155,7 @@ Limit repair to one domain when possible:
 powershell -ExecutionPolicy Bypass -File .\scripts\repair-vercel-branch-deployments.ps1 -OnlyDomain beta.stellaroid.tech -Deploy
 ```
 
-The script deploys from temporary directories only. It does not commit, push, unlock archive branches, or create Vercel projects. `v0.stellaroid.tech` is a special static archive showcase generated from `scripts/templates/v0-archive-showcase/` because `april-bootcamp` does not contain the current `frontend/` root.
+The script deploys from temporary directories only. It does not commit, push, unlock archive branches, or create Vercel projects. `v0.stellaroid.tech` is a special static archive showcase generated from `scripts/templates/v0-archive-showcase/` because `april-bootcamp-and-monthly-builder` does not contain the current `frontend/` root.
 
 ## Promotion Steps
 

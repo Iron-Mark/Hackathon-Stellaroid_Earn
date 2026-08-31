@@ -3,7 +3,7 @@ import { archiveData } from "./archive-data";
 const repoBase = `https://github.com/${archiveData.sourceRepo}`;
 const branchUrl = `${repoBase}/tree/${archiveData.branch}`;
 const readmeUrl = `${branchUrl}/README.md`;
-const setupUrl = `${branchUrl}/STELLAR_FREIGHTER_INTEGRATION_GUIDE.md`;
+const setupUrl = `${branchUrl}/setup/STELLAR_FREIGHTER_INTEGRATION_GUIDE.md`;
 
 export default function Page() {
   const shortCommit = archiveData.commit.slice(0, 12);
@@ -17,7 +17,7 @@ export default function Page() {
           A preserved showcase for the April bootcamp branch. This page is generated
           from a repo-controlled template so the locked archive branch can stay read-only.
         </p>
-        <div className="actions" aria-label="Archive links">
+        <div className="actions" role="group" aria-label="Archive links">
           <a href={branchUrl}>Open archive branch</a>
           <a href={readmeUrl}>Read participant guide</a>
         </div>
