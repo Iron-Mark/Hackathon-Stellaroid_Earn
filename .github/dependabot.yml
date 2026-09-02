@@ -14,7 +14,9 @@ updates:
       interval: "weekly"
       day: "monday"
     target-branch: "main"
-    open-pull-requests-limit: 5
+    # This repository is parked. Suppress routine version-update PRs while
+    # leaving Dependabot security updates available through repository settings.
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
     # Version-scoped holds. Each names the narrowest blocked range that actually
@@ -62,7 +64,7 @@ updates:
       interval: "weekly"
       day: "monday"
     target-branch: "main"
-    open-pull-requests-limit: 3
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
     groups:
@@ -77,6 +79,7 @@ updates:
       interval: "weekly"
       day: "monday"
     target-branch: "main"
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
     groups:
