@@ -58,7 +58,8 @@
     "fast-uri": "^3.1.6",
     "browserslist": "^4.28.8",
     "qs": "^6.16.0",
-    "hono": "^4.13.0",
+    "smol-toml": "^1.7.1",
+    "hono": "^4.13.7",
     "@hono/node-server": "^2.0.5",
     "jayson": {
       "uuid": "^11.1.1"
