@@ -59,6 +59,8 @@
     "browserslist": "^4.28.8",
     "qs": "^6.16.0",
     "smol-toml": "^1.7.1",
+    "stream-json": "^3.6.0",
+    "undici": "^7.29.1",
     "hono": "^4.13.7",
     "@hono/node-server": "^2.0.5",
     "jayson": {
