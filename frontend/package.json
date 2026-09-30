@@ -55,7 +55,7 @@
     "postcss": "8.5.23",
     "protobufjs": "^7.6.3",
     "sharp": "^0.35.4",
-    "fast-uri": "^3.1.6",
+    "fast-uri": "^3.1.8",
     "browserslist": "^4.28.8",
     "qs": "^6.16.0",
     "smol-toml": "^1.7.1",
@@ -67,10 +67,10 @@
       "uuid": "^11.1.1"
     },
     "minimatch@3": {
-      "brace-expansion": "^1.1.18"
+      "brace-expansion": "^1.1.21"
     },
     "minimatch@10": {
-      "brace-expansion": "^5.0.9"
+      "brace-expansion": "^5.0.12"
     },
     "postcss-selector-parser": "^7.1.5"
   }
