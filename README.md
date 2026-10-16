@@ -28,7 +28,7 @@ Issue, verify, and pay graduates on Stellar testnet: Soroban smart contract, 8 s
 
 ## Project Status
 
-The bootcamp/event submission is complete. Stellaroid Earn is now maintained as a living Stellar credential proof project.
+The bootcamp/event submission is complete and the project is parked. Maintenance keeps the existing Stellar testnet demo and evidence available; product development is not active.
 
 - **Roadmap:** [`ROADMAP.md`](ROADMAP.md)
 - **Maintenance checks:** [`MAINTENANCE.md`](MAINTENANCE.md)
@@ -437,13 +437,13 @@ This remains a lightweight serverless evidence layer, not a full analytics wareh
 
 | Component | Version |
 |---|---|
-| Soroban SDK | 26.1.0 |
+| Soroban SDK | 26.1.0 deployed (`v3.0.0`); current manifest ^27.0.2, locked 27.0.6 |
 | Stellar CLI | 26+ |
-| Next.js | 15 (App Router) |
+| Next.js | 16.3.8 (App Router) |
 | React | 19 |
-| @stellar/stellar-sdk | latest |
-| @stellar/freighter-api | latest |
-| @albedo-link/intent | latest |
+| @stellar/stellar-sdk | ^17.0.0 |
+| @stellar/freighter-api | ^6.0.1 |
+| @albedo-link/intent | ^0.13.0 |
 | Tailwind CSS | v4 |
 | PWA | manifest + service worker + iOS splash set |
 
