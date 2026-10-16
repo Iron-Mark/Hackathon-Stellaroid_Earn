@@ -1,12 +1,24 @@
 # Handoff
 
-State of this repository as of **2026-08-29**, written so anyone picking it up cold, human or agent, on any machine or account, knows where things stand without needing chat history.
+State of this repository refreshed on **2026-10-17**, with the August closeout preserved below so anyone picking it up cold can distinguish current checks from historical evidence.
 
 **The project is finished and parked.** Do not restart build work here. Read this file before proposing changes.
 
 ---
 
-## Current state
+## Maintenance check (2026-10-17)
+
+The canonical Windows repository is `C:\Codes Local\Hackathons (Workspace)\Hackathon-Stellaroid_Earn`. The project remains parked and the submitted cycle remains closed.
+
+- At the start of this maintenance pass, `main` matched `origin/main` at `c1c7476`; `staging` and `august-monthly-builder` each differed from `main` in two files. These are pre-publication observations; verify current branch parity from the remote refs after publishing and synchronizing the checkpoint.
+- Local checks passed: 120 frontend unit tests, 15 contract tests, five QA-tooling tests, ESLint, TypeScript, and all 45 Playwright end-to-end tests (zero failures or retries).
+- The initial production build failed because installed dependencies contained files filled with NUL bytes (194 in the initial scan, 340 in the expanded scan). Reinstalling 818 packages from the existing lockfile with npm 11.11.0 and `npm ci --ignore-scripts` repaired the installed tree. The full scan found zero wholly NUL-filled files among 95,707 files and all 1,752 package JSON files parsed. Source manifests and lockfiles stayed unchanged. The production build passed with 49 pages; existing Satori `z-index` warnings remain.
+- Dependency audit after recovery: five high findings in development tooling through `braces` ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)); 14 low findings through `elliptic` ([GHSA-848j-6mx2-7j84](https://github.com/advisories/GHSA-848j-6mx2-7j84)). The production audit reported zero critical, high, or moderate findings and 14 low findings. Recovery restored installed files without upgrading dependency versions.
+- Local browser verification reuses existing Chromium 156.0.8078.4 through an ignored, machine-local override: from `frontend`, run `npm run test:e2e -- --config '../output/playwright/repo-health.config.ts' --workers=1`. The exact bundled browser revision 1243 was absent, so this run does not establish parity with Playwright's bundled Chromium; no browser binary was installed.
+- Public home and `/status` routes on the apex, `beta`, `v3`, and `v4` returned HTTP 200. `/api/mcp` HEAD returned 204. The sample proof and testnet contract read succeeded; desktop and mobile smoke checks found no page errors or horizontal overflow.
+- Current wallet evidence remains 62 testnet wallet accounts: 30 independent participant wallets plus 32 QA accounts operated by the project owner. Testnet assets have no monetary value.
+
+## Historical closeout (2026-08-29)
 
 Verified against the remote on 2026-08-29 after the `v4` mapping, DNS, and branch-parity checks finished:
 
@@ -30,17 +42,7 @@ The Rise In Level 5 (Blue Belt) cycle was **submitted on 2026-07-31**. That cycl
 
 ## Invariants to preserve
 
-**Branch parity.** `main`, `staging`, and `august-monthly-builder` must stay tree-identical. After any PR merges to `main`:
-
-```bash
-git checkout august-monthly-builder
-git reset --hard origin/august-monthly-builder
-git merge origin/main --no-edit
-git push origin august-monthly-builder
-
-git checkout main && git pull
-gh pr create --base staging --head main --title "chore: sync staging with main"
-```
+**Branch parity.** The intended state is for `main`, `staging`, and `august-monthly-builder` to stay tree-identical. The October check found two files of drift from PRs #230 and #231. A read-only merge check found that merging `main` into either branch would be conflict-free. Before any authorized synchronization, inspect the branch diff and preserve local changes and stashes. Use a separate worktree or a clean branch and a normal merge, then review and test the result. `staging` is protected and requires a PR with a merge commit rather than a squash. Obtain explicit authorization before any commit or push; never use a hard reset as a routine synchronization step.
 
 **Branches.** `main` and `staging` are live. `august-monthly-builder` tracks them. `july-monthly-builder`, `june-monthly-builder`, and the April archive (`april-bootcamp-and-monthly-builder`) are **read-only archives, never sync them**. `docs-onchain-user-verification` holds planning notes that were deliberately kept off `main`; leave it alone. Delete feature branches after merge.
 
@@ -57,7 +59,7 @@ gh pr create --base staging --head main --title "chore: sync staging with main"
 3. **A red weekly CI run after a quiet period is usually drift, not a regression.** The weekly contract verification runs on **`windows-latest` deliberately**: the build is host-dependent and the deploy happened on Windows. Do not "simplify" it to Ubuntu; it will fail and that failure is not a bug.
 4. **Do not let generic `HEAD /api/mcp` requests enter the MCP GET transport.** Keep the route's explicit `204` HEAD handler; otherwise platform probes can hold a function open until Vercel times it out.
 5. **Satori (the Open Graph image renderer) paints absolutely positioned pattern elements *above* later siblings.** Background patterns must go on the root element, never as an overlay div. Documented in `frontend/src/lib/og-chrome.tsx`.
-6. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, reset to the remote rather than merging.
+6. **`main`'s history was rebased once** (2026-07-30). If a stale local clone conflicts on every file, inspect its divergence and preserve local branches, stashes, and working changes before reconciliation. Use a separate clean worktree to inspect the remote state; do not discard local work with a hard reset.
 7. **Dependabot lockfiles require the npm version pinned in `frontend-ci.yml`.** Older npm releases can reject the bot's optional peer layout as out of sync before any project check runs. Keep the workflow's exact npm pin aligned with locally verified lockfile generation.
 8. **A nested Trezor package has a Unix-only install command (`yarn setup || true`) that fails under Windows `cmd.exe`.** Linux CI runs the normal `npm ci` successfully. For a clean local Windows verification install, use `npm ci --ignore-scripts`, then run lint, unit tests, build, and Playwright explicitly.
 9. **Keep both `brace-expansion` override lines patched.** `minimatch@3` requires `brace-expansion` 1.1.18 or newer and `minimatch@10` requires 5.0.9 or newer. Removing either override reopens a high-severity denial-of-service advisory.
@@ -110,7 +112,7 @@ The product is parked. Infrastructure closeout is complete. Only the distributio
 
 ### Completed
 
-Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, the August analytics API snapshot, the README campaign walkthrough (#201), the August QA wave (#202), and the `v4` showcase mapping and DNS closeout are all done. Combined coverage is 62 testnet wallet accounts (30 independent participants plus 32 QA accounts I operate). `main`, `staging`, and `august-monthly-builder` are tree-identical after promotion. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
+Submission, `v3.2.0` release, the case study at `/case-study`, the campaign kit, unified Open Graph cards, README visuals, the banner archive scheme, the GitHub social preview upload, the repository parking pass, the live `link_payment` evidence recapture, the August analytics API snapshot, the README campaign walkthrough (#201), the August QA wave (#202), and the `v4` showcase mapping and DNS closeout are all done. Combined coverage is 62 testnet wallet accounts (30 independent participants plus 32 QA accounts I operate). `main`, `staging`, and `august-monthly-builder` were tree-identical after the August promotion; the October maintenance check above records subsequent drift. July is a locked read-only archive at `baeec6fb`. Leftover PRs #183 and #182 were closed as superseded by #191. Never sync July.
 
 ---
 
