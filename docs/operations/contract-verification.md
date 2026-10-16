@@ -16,6 +16,8 @@ This runbook separates three different claims:
 | Source repo | `github:Iron-Mark/Hackathon-Stellaroid_Earn` |
 | Home domain | `stellaroid.tech` |
 
+The 2026-10-17 maintenance check confirmed that the contract is present on testnet and the sample credential remains verified. That read check does not replace the release-tag reproduction procedure below.
+
 ## Verification Commands
 
 Install Stellar CLI if needed:
@@ -79,7 +81,7 @@ For a future source-verifiable deployment:
 
 ```powershell
 stellar contract build `
-  --manifest-path .\contract\Cargo.toml `
+  --manifest-path .\contracts\stellaroid_earn\Cargo.toml `
   --locked `
   --meta source_repo=github:Iron-Mark/Hackathon-Stellaroid_Earn `
   --meta home_domain=stellaroid.tech
