@@ -1,19 +1,19 @@
 # Stellaroid Earn Roadmap
 
-Stellaroid Earn is no longer just a bootcamp submission. The project should stay alive as a small, credible credential verification product on Stellar testnet first, with a path to real issuer pilots later.
+The bootcamp submission is closed and the project is parked. This roadmap preserves possible future work; it is not an active delivery commitment. Maintenance keeps the existing Stellar testnet demo and evidence available.
 
 ## Current Position
 
 - Canonical live demo: https://stellaroid.tech/
 - Fallback demo: https://stellaroid-earn-demo.vercel.app/
 - Current verified contract: `CAD6C24POQGRYXMBNBEGVDHUROF5ZC37XRDC6NCVILTXWMYJIBMISZCV`
-- Domain state: `stellaroid.tech` is the canonical host; `www` and `earn` should redirect to the apex.
+- Domain state: `stellaroid.tech` is the canonical host; `www` and `earn` redirect to the apex. The `v4` mapping and DNS closeout finished on 2026-08-29.
 - Product wedge: public credential proof pages plus issuer trust and employer-to-graduate payment flow.
 - Pro-research intake: `docs/planning/research-intake-status.md`
 
 ## Phase 1 - Keep It Reliable
 
-- Keep the fallback Vercel demo healthy until `stellaroid.tech` is DNS-ready.
+- Keep the canonical domain healthy; retain the fallback Vercel alias for recovery checks. DNS setup is complete.
 - Run the weekly maintenance checks in `MAINTENANCE.md`.
 - Keep Playwright E2E green for register, approve, pay, and public proof.
 - Keep docs clear that all examples run on Stellar testnet.
