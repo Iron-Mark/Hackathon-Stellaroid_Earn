@@ -1,0 +1,10 @@
+{
+  "name": "@stellaroid/next-lint-glob",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Directory glob adapter for the pinned Next.js ESLint plugin",
+  "main": "index.cjs",
+  "dependencies": {
+    "tinyglobby": "0.2.17"
+  }
+}
