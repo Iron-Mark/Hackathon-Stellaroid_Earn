@@ -132,7 +132,7 @@ function connectedSnapshot(address: string): WalletSnapshot {
     status: "connected",
     address,
     // The wallet signs for the exact chain we request on every call, so there
-    // is no wrong-network state to surface (same as Albedo and the kit).
+    // is no wrong-network state to surface (same as Albedo).
     network: appConfig.network,
     networkPassphrase: getExpectedNetworkPassphrase(),
     isExpectedNetwork: true,

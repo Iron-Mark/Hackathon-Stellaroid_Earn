@@ -62,7 +62,7 @@ const blocks: Block[] = [
   { type: "h2", text: "Wallets" },
   {
     type: "p",
-    text: "Connecting Freighter or Albedo shares your public wallet address with the app in your browser. Additional wallets are offered through Stellar Wallets Kit, which surfaces more options behind the \"More wallets\" choice. Across all of these I never see or handle private keys; every transaction is signed inside your own wallet.",
+    text: "Connecting a wallet shares your public wallet address with the app in your browser. The local More wallets picker connects directly to xBull, Rabet, LOBSTR, Hana, Klever, or Bitget. Across all of these I never see or handle private keys; every transaction is signed inside your own wallet.",
   },
   {
     type: "p",

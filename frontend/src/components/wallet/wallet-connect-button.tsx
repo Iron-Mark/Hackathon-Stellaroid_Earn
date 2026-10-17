@@ -31,7 +31,7 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Prefer the concrete wallet name (e.g. "xBull") when the connection came
-  // through the Stellar Wallets Kit aggregator.
+  // through the local extension-wallet picker.
   const activeLabel =
     wallet.providerLabel ??
     providers.find((provider) => provider.id === activeProvider)?.label ??
