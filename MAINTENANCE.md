@@ -89,10 +89,13 @@ Remove this adapter once upstream drops the vulnerable chain. Do not replace
 it with a raw `tinyglobby` alias: literal-directory and recursive-root behavior
 differs. Supported patterns and explicit restrictions are in the adapter README.
 
-As of 2026-10-17, full and production audits retain 14 low findings from the
-unused HOT/NEAR wallet chain's unpatched Elliptic dependency. See the
-[security checklist](docs/reference/security.md) for the reachability evidence
-and remaining limitation.
+The subsequent 2026-10-17 wallet remediation removes the broad wallet kit and
+its unused HOT/NEAR/Elliptic chain. Full and production npm audits report zero
+findings. Six direct wallet integrations retain existing session keys and
+wallet coverage, with a local chooser and signed-envelope validation. See the
+[integration notes](docs/reference/extension-wallets.md) for API, license,
+verification, and manual-extension limitations. Keep `npm run test:wallets`
+in the existing Frontend CI workflow; no extra workflow is required.
 
 ### Ecosystem version holds
 
