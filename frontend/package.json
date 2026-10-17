@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
+    "lint": "npm run test:lint-deps && eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
+    "test:lint-deps": "node --test scripts/next-lint-glob.test.mjs",
     "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/**/*.test.ts src/app/**/*.test.ts",
     "test:e2e": "playwright test",
     "gen:pwa": "node scripts/generate-pwa-icons.mjs && node scripts/generate-splash.mjs"
@@ -37,6 +38,7 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "fast-glob": "file:tools/next-lint-glob",
     "@eslint/eslintrc": "^3.3.7",
     "@modelcontextprotocol/client": "^2.0.0",
     "@playwright/test": "^1.62.1",
@@ -50,6 +52,9 @@
     "typescript": "^6.0.3"
   },
   "overrides": {
+    "@next/eslint-plugin-next@16.3.8": {
+      "fast-glob": "$fast-glob"
+    },
     "axios": "^1.18.1",
     "postcss": "8.5.23",
     "protobufjs": "^7.6.3",
