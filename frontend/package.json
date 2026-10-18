@@ -10,12 +10,14 @@
     "test:lint-deps": "node --test scripts/next-lint-glob.test.mjs",
     "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/**/*.test.ts src/app/**/*.test.ts",
     "test:e2e": "playwright test",
+    "test:wallets": "playwright test --config playwright.wallets.config.ts",
     "gen:pwa": "node scripts/generate-pwa-icons.mjs && node scripts/generate-splash.mjs"
   },
   "dependencies": {
     "@albedo-link/intent": "^0.13.0",
     "@base-ui/react": "^1.7.0",
-    "@creit.tech/stellar-wallets-kit": "^2.6.0",
+    "@creit.tech/xbull-wallet-connect": "0.4.0",
+    "@lobstrco/signer-extension-api": "2.0.0",
     "@modelcontextprotocol/server": "^2.0.0",
     "@stellar/freighter-api": "^6.0.1",
     "@stellar/stellar-sdk": "^17.0.0",

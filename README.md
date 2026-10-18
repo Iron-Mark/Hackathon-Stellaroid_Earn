@@ -69,7 +69,7 @@ Each monthly build cycle is preserved as a frozen snapshot at a pinned subdomain
 - **Mobile-first redesign** - app-style bottom navigation with a More sheet, auto-hiding header, bottom-sheet dialogs, full safe-area/notch handling.
 - **Developer docs hub** - [`/docs`](https://stellaroid.tech/docs): [contract reference](https://stellaroid.tech/docs/contract) (live tag v3.0.0: 19 functions, 17 error codes; source adds refresh/expiry writes), [integration](https://stellaroid.tech/docs/integration), [architecture](https://stellaroid.tech/docs/architecture), and [security posture](https://stellaroid.tech/docs/security).
 - **Content engine** - audience landing pages for [bootcamps](https://stellaroid.tech/verify-bootcamp-certificate), [employers](https://stellaroid.tech/verify-candidate-credentials), and [graduate payouts](https://stellaroid.tech/instant-payouts), plus a [guides library](https://stellaroid.tech/guides) and a [verifiable-credentials glossary](https://stellaroid.tech/glossary) - all with FAQPage/HowTo/DefinedTermSet structured data and an [`llms.txt`](https://stellaroid.tech/llms.txt).
-- **Multi-wallet signing** - Freighter and Albedo natively, WalletConnect for mobile wallets (LOBSTR, xBull, Hana, Freighter mobile), and on desktop xBull, Rabet, LOBSTR, Hana, Klever, and Bitget via [Stellar Wallets Kit](https://stellarwalletskit.dev/) - all behind one provider interface, lazy-loaded on first use. WalletConnect activates when a Reown project id is configured.
+- **Multi-wallet signing** - Freighter and Albedo natively, WalletConnect for mobile wallets (LOBSTR, xBull, Hana, Freighter mobile), and a local desktop picker for xBull, Rabet, LOBSTR, Hana, Klever, and Bitget using direct wallet APIs. Bridge SDKs load on first use. WalletConnect activates when a Reown project id is configured. See the [wallet integration notes](docs/reference/extension-wallets.md).
 
 The public entry flow is organized around three personas: **Issue**, **Verify**, and **Hire**. Verified proof pages now hand employers into `/employer` with the proof hash and candidate wallet preloaded, then require a review checklist before escrow creation. They also hand recruiters into `/talent/<address>?proof=<hash>` so the candidate passport can show a known proof without pretending wallet-wide credential discovery exists yet. Issuer registration now explains approval readiness before signing, and `/pilot` keeps the first rollout bounded to a small testnet issuer pilot. Employer proof packs include a recruiter-safe summary plus an unsigned standards-alignment preview for W3C VC 2.0 and Open Badges 3.0 mapping. That preview is not a signed standards credential yet.
 
@@ -212,7 +212,7 @@ const tx = new sdk.TransactionBuilder(account, {
   .setTimeout(30)
   .build();
 
-const signedXdr = await wallet.sign(tx.toXdr());        // Freighter / Albedo / Stellar Wallets Kit
+const signedXdr = await wallet.sign(tx.toXdr());        // The selected wallet provider
 const sent = await server.sendTransaction(sdk.TransactionBuilder.fromXdr(signedXdr, passphrase));
 const result = await server.pollTransaction(sent.hash);
 ```
