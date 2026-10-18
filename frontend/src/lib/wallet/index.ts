@@ -18,7 +18,7 @@ import type {
 // Registry of supported wallets. Order = display priority in the picker.
 // - "walletconnect" reaches mobile wallets (LOBSTR, xBull, Hana, Freighter
 //   mobile…) over the WalletConnect relay; works on desktop (QR) and mobile.
-// - "swk" is the Stellar Wallets Kit aggregator, scoped to desktop browser
+// - "swk" retains the legacy provider ID for six direct desktop browser
 //   EXTENSIONS (xBull, Rabet, LOBSTR, Hana…); it is hidden on mobile.
 const PROVIDERS: WalletProviderModule[] = [
   freighterProvider,

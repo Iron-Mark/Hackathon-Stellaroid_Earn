@@ -17,6 +17,7 @@ import {
 import type { WalletProviderId, WalletProviderMeta } from "@/lib/wallet/types";
 import type { WalletSnapshot } from "@/lib/types";
 import { WalletConnectModal } from "@/components/wallet/walletconnect-modal";
+import { ExtensionWalletModal } from "@/components/wallet/extension-wallet-modal";
 
 const initialWalletState: WalletSnapshot = {
   status: "disconnected",
@@ -144,6 +145,7 @@ export function FreighterWalletProvider({ children }: { children: ReactNode }) {
     <FreighterWalletContext.Provider value={value}>
       {children}
       <WalletConnectModal />
+      <ExtensionWalletModal />
     </FreighterWalletContext.Provider>
   );
 }
