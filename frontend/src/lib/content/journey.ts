@@ -301,10 +301,16 @@ export const journeyCredits: JourneyCreditGroup[] = [
         href: "https://github.com/stellar/freighter",
       },
       {
-        name: "@creit.tech/stellar-wallets-kit",
-        role: "Adds six more wallets behind one interface",
-        license: "MIT",
-        href: "https://github.com/Creit-Tech/Stellar-Wallets-Kit",
+        name: "@creit.tech/xbull-wallet-connect",
+        role: "xBull extension and web-popup bridge",
+        license: "AGPL-3.0",
+        href: "https://github.com/Creit-Tech/xBull-Wallet-Connect",
+      },
+      {
+        name: "@lobstrco/signer-extension-api",
+        role: "LOBSTR extension messaging bridge",
+        license: "GPL-3.0",
+        href: "https://github.com/Lobstrco/lobstr-browser-extension",
       },
       {
         name: "Albedo",

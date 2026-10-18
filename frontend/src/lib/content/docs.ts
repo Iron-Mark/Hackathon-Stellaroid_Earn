@@ -186,7 +186,7 @@ export const docsPages: DocPage[] = [
       },
       {
         "question": "Which wallets does Stellaroid Earn support?",
-        "answer": "Freighter (a browser extension, set to Testnet) and Albedo (a web-based wallet that also covers the mobile signing path) natively, plus WalletConnect for mobile apps such as LOBSTR, xBull, Hana, and Freighter mobile, and a \"More wallets\" picker (xBull, Rabet, LOBSTR, Hana, Klever, Bitget) via Stellar Wallets Kit. Reads never require a wallet; writes are signed by whichever wallet you connect."
+        "answer": "Freighter (a browser extension, set to Testnet) and Albedo (a web-based wallet that also covers the mobile signing path) natively, plus WalletConnect for mobile apps such as LOBSTR, xBull, Hana, and Freighter mobile, and a local More wallets picker (xBull, Rabet, LOBSTR, Hana, Klever, Bitget) using direct wallet APIs. Reads never require a wallet; writes are signed by whichever wallet you connect."
       },
       {
         "question": "Where can I inspect the deployed contract?",
@@ -809,7 +809,7 @@ export const docsPages: DocPage[] = [
       "stellar-sdk"
     ],
     "navLabel": "Integration",
-    "lede": "How the Stellaroid Earn Next.js frontend talks to Stellar: a config layer of NEXT_PUBLIC_* env vars, a multi-provider wallet layer (Freighter, Albedo, WalletConnect, and a Stellar Wallets Kit picker), and a contract client that simulates reads and signs-and-submits writes over Soroban RPC.",
+    "lede": "How the Stellaroid Earn Next.js frontend talks to Stellar: a config layer of NEXT_PUBLIC_* env vars, a multi-provider wallet layer (Freighter, Albedo, WalletConnect, and a local extension picker), and a contract client that simulates reads and signs-and-submits writes over Soroban RPC.",
     "blocks": [
       {
         "type": "p",
@@ -831,7 +831,7 @@ export const docsPages: DocPage[] = [
         "type": "ul",
         "items": [
           "Config layer (`frontend/src/lib/config.ts`) — reads all `NEXT_PUBLIC_*` env vars once into a single `appConfig` object, maps network names to canonical passphrases, and exposes guards like `hasRequiredConfig()`.",
-          "Wallet provider layer (`frontend/src/lib/wallet/`), a registry of providers behind one three-method interface (`read`, `connect`, `sign`). Four providers ship today: Freighter (desktop extension) and Albedo (web wallet, also mobile) natively, WalletConnect (Reown relay, for mobile apps like LOBSTR and xBull), and a \"More wallets\" entry backed by Stellar Wallets Kit. The active provider id is persisted in `localStorage` so sessions survive reloads.",
+          "Wallet provider layer (`frontend/src/lib/wallet/`), a registry of providers behind one three-method interface (`read`, `connect`, `sign`). Four providers ship today: Freighter (desktop extension), Albedo (web wallet, also mobile), WalletConnect (Reown relay), and a local More wallets entry using six direct wallet APIs. The legacy swk provider ID and storage keys remain compatible with existing sessions.",
           "Contract client (`frontend/src/lib/contract-client.ts`) — builds transactions with `@stellar/stellar-sdk`. Reads run as signature-free simulations sourced from a read-only address; writes are prepared by the RPC, signed by the active wallet, submitted, and polled to confirmation.",
           "UI layer (`components/`, `hooks/`) — everything touching a wallet is marked `\"use client\"`, because both wallet SDKs are browser-only APIs that cannot run in Server Components."
         ]
@@ -977,11 +977,11 @@ export const docsPages: DocPage[] = [
             "Built on raw @walletconnect/sign-client (no web3modal or EVM); requires NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID, otherwise the option is hidden"
           ],
           [
-            "More wallets (Stellar Wallets Kit)",
+            "More wallets (direct APIs)",
             "extension",
-            "Kit auth modal (xBull, Rabet, LOBSTR, Hana, Klever, Bitget)",
+            "Local chooser (xBull, Rabet, LOBSTR, Hana, Klever, Bitget)",
             "No, desktop extensions; the entry is hidden on mobile browsers",
-            "Lazy-loaded on first use; picker icons are self-hosted so the CSP img-src stays 'self'"
+            "Bridge SDKs load on first use; icons are self-hosted. Returned transactions must preserve the original payload and carry a valid signature for the requested account and network"
           ]
         ]
       },

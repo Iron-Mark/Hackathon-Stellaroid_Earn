@@ -280,7 +280,7 @@ export default function CaseStudyPage() {
             <SubHeading>Two wallets natively, six more through a kit</SubHeading>
             <p className="text-text-muted">
               Freighter and Albedo directly, plus LOBSTR, xBull, Hana, Rabet, Klever
-              and Bitget through Stellar Wallets Kit. All behind one provider
+              and Bitget through direct wallet APIs. All behind one provider
               interface, lazy loaded so the multi-megabyte SDK stays out of first
               load.
             </p>
