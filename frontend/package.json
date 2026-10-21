@@ -42,7 +42,7 @@
   "devDependencies": {
     "fast-glob": "file:tools/next-lint-glob",
     "@eslint/eslintrc": "^3.3.7",
-    "@modelcontextprotocol/client": "^2.0.0",
+    "@modelcontextprotocol/client": "^2.3.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.4.0",
     "@types/qrcode": "^1.5.6",
