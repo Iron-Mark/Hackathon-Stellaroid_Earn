@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+This file provides repository-specific guidance for coding agents working in this repository.
 
 ## What this repo is
 
@@ -61,6 +61,7 @@ The integration follows the flow documented in `docs/reference/freighter-integra
 - **Contract client** (`lib/`) builds transactions with `@stellar/stellar-sdk`: read-only calls via `simulateTransaction` using the read address; writes sign via Freighter and submit via Soroban RPC. Handles ScVal arg serialization, return-value decoding, and error normalization.
 - **UI components** are marked `"use client"` because Freighter is a browser-only API.
 - **Security** (`next.config.ts`): CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and HSTS on every route. `/proof/[hash]` pages validate the hash format before any RPC call and use `revalidate=60` for CDN caching. `robots.ts` keeps `/proof/[hash]/embed`, `/talent/*`, `/opportunity/*`, and `/api/` out of search; proof detail pages stay crawlable on purpose, for portfolio sharing.
+- **MCP surface** (`frontend/src/app/api/[transport]/route.ts`): Read-only public MCP endpoint at `/api/mcp` with per-IP rate limiting, batch caps, and a fast `HEAD /api/mcp` handler returning `204` (`Allow: GET, POST, DELETE, HEAD`, `Cache-Control: no-store`), verified live on `https://stellaroid.tech/api/mcp` on 2026-11-20. Frontend `npm audit` is clean (`0` vulnerabilities) as of 2026-11-20.
 
 When editing the frontend, treat the integration guide as the canonical spec.
 
