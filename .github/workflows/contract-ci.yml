@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup Rust
         # Pinned to a commit SHA rather than the mutable `stable` branch ref so a
@@ -58,7 +58,7 @@ jobs:
       # (~21 MB). Rebuilding this small WASM is cheaper than storing `target/`.
       # New key prefix so runners do not restore the bloated `contract-cargo-*` entries.
       - name: Cache Cargo
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: |
             ~/.cargo/registry

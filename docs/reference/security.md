@@ -79,3 +79,12 @@ out of scope for this testnet MVP submission:
 ---
 
 Last maintenance review: 2026-10-17. The dependency audit was refreshed; the historical control assessments above were not a new independent security audit.
+
+## CI supply-chain maintenance
+
+Actions references are pinned to full commit SHAs. The MCP publishing job also
+pins the Linux amd64 publisher release and verifies its SHA-256 before extraction
+or execution. Update the version and expected digest together using the asset
+digest published by `modelcontextprotocol/registry`; never restore a mutable
+`releases/latest` download or skip the checksum when a download fails. This change
+does not publish a registry version or alter the job's existing OIDC permissions.
