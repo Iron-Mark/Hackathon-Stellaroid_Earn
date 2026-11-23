@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink, Globe } from "lucide-react";
 import { appConfig } from "@/lib/config";
+import { AskAiRow } from "@/components/layout/ask-ai-row";
 import { FooterTagline } from "@/components/layout/footer-tagline";
 import { FooterProgramLink } from "@/components/layout/footer-program-link";
 import { LocaleToggle } from "@/components/layout/locale-toggle";
@@ -53,6 +54,7 @@ export function SiteFooter() {
             <div className="text-[13px] text-text-muted leading-relaxed">
               <FooterTagline />
             </div>
+            <AskAiRow />
           </div>
 
           {/* Nav wrapper — 2-col grid on xs, 3-col flex row on sm, dissolves at lg */}
