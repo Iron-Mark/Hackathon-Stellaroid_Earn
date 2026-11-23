@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Check, Copy, Wallet, Wifi } from "lucide-react";
 import { Button, Badge, useToast } from "@/components/ui";
 import { useFreighterWallet } from "@/hooks/use-freighter-wallet";
 import { shortenAddress } from "@/lib/format";
 import { appConfig } from "@/lib/config";
+
+const emptySubscribe = () => () => {};
 
 interface WalletConnectButtonProps {
   sidebar?: boolean;
@@ -27,6 +29,11 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
     isMobileBrowser,
   } = useFreighterWallet();
   const { toast } = useToast();
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -220,6 +227,7 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
               key={provider.id}
               variant={index === 0 ? "primary" : "secondary"}
               size="sm"
+              disabled={!hydrated}
               onClick={() => void connectWallet(provider.id)}
               className="w-full"
             >
@@ -262,6 +270,7 @@ export function WalletConnectButton({ sidebar = false }: WalletConnectButtonProp
           key={provider.id}
           variant={index === 0 ? "primary" : "secondary"}
           size="sm"
+          disabled={!hydrated}
           onClick={() => void connectWallet(provider.id)}
         >
           <Wallet className="w-3.5 h-3.5" aria-hidden="true" />
